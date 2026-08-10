@@ -619,10 +619,14 @@
               Verifique e instale automaticamente novas atualizações a partir da pasta de Atualizações.
             </p>
 
-            <div style="display: flex; gap: 0.5rem;">
-              <button type="button" class="btn" id="btnRunSystemUpdate" onclick="checkAndInstallUpdate()" style="width: 100%; padding: 0.75rem 1rem; background: #0284c7; color: #ffffff; font-weight: 600; justify-content: center; border: 1px solid #0369a1; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);">
-                <i class="fa-solid fa-cloud-arrow-down"></i> Atualização
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button type="button" class="btn" id="btnRunSystemUpdate" onclick="checkAndInstallUpdate()" style="flex: 1; min-width: 160px; padding: 0.75rem 1rem; background: #0284c7; color: #ffffff; font-weight: 600; justify-content: center; border: 1px solid #0369a1; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);" title="Verificar se existe versão mais recente na pasta Atualizações">
+                <i class="fa-solid fa-cloud-arrow-down"></i> Verificar Atualização
               </button>
+              <button type="button" class="btn btn-secondary" onclick="document.getElementById('systemUpdateFileInput').click()" style="flex: 1; min-width: 160px; padding: 0.75rem 1rem; font-weight: 600; justify-content: center;" title="Carregar ficheiro SIGEC_V1.6.json diretamente do computador">
+                <i class="fa-solid fa-folder-open"></i> Carregar Ficheiro .json
+              </button>
+              <input type="file" id="systemUpdateFileInput" accept=".json" style="display: none;" onchange="handleSystemUpdateFileSelect(event)">
             </div>
           </div>
 
@@ -1610,7 +1614,7 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- Main JavaScript App -->
-  <script src="app.js?v=20260810_v13"></script>
+  <script src="app.js?v=20260810_v14"></script>
 
   <!-- Override saveContact and switchTab to guarantee proper modal behavior regardless of app.js cache -->
   <script>
