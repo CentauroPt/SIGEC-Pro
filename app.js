@@ -3658,6 +3658,232 @@ function saveDatabase() {
   if (!saveSuccess) {
     showToast('Aviso: Limite de armazenamento local atingido. Exporte um Backup JSON.', 'warning');
   }
+
+  // Sincronização automática em segundo plano com o servidor GitHub (se o Token estiver configurado)
+  const ghToken = localStorage.getItem('sigec_pro_gh_token');
+  if (ghToken && typeof syncDatabaseToGitHub === 'function') {
+    syncDatabaseToGitHub(true);
+  }
+}
+
+// ==========================================
+// 1B. SERVIDOR REMOTO GITHUB (SINCRONIZAÇÃO EM NUVEM - OPÇÃO 2)
+// ==========================================
+
+function utf8ToBase64(str) {
+  return window.btoa(unescape(encodeURIComponent(str)));
+}
+
+function base64ToUtf8(str) {
+  return decodeURIComponent(escape(window.atob(str)));
+}
+
+function getGitHubConfig() {
+  return {
+    owner: localStorage.getItem('sigec_pro_gh_owner') || 'centauropt',
+    repo: localStorage.getItem('sigec_pro_gh_repo') || 'SIGEC-Pro',
+    path: localStorage.getItem('sigec_pro_gh_path') || 'data/db.json',
+    token: localStorage.getItem('sigec_pro_gh_token') || ''
+  };
+}
+
+function renderGitHubSettingsForm() {
+  const cfg = getGitHubConfig();
+  const ownerEl = document.getElementById('githubRepoOwner');
+  const repoEl = document.getElementById('githubRepoName');
+  const pathEl = document.getElementById('githubFilePath');
+  const tokenEl = document.getElementById('githubPersonalToken');
+  const badge = document.getElementById('githubSyncStatusBadge');
+
+  if (ownerEl) ownerEl.value = cfg.owner;
+  if (repoEl) repoEl.value = cfg.repo;
+  if (pathEl) pathEl.value = cfg.path;
+  if (tokenEl) tokenEl.value = cfg.token;
+
+  if (badge) {
+    if (cfg.token) {
+      badge.innerHTML = '<i class="fa-solid fa-cloud-check"></i> Servidor Ativo & Ligado';
+      badge.style.background = '#dcfce7';
+      badge.style.color = '#15803d';
+      badge.style.borderColor = '#86efac';
+    } else {
+      badge.innerHTML = '<i class="fa-solid fa-cloud"></i> Leitura Pública / Sem Token';
+      badge.style.background = '#fef9c3';
+      badge.style.color = '#a16207';
+      badge.style.borderColor = '#fef08a';
+    }
+  }
+}
+
+function handleSaveGitHubSettings(event) {
+  if (event && event.preventDefault) event.preventDefault();
+
+  const ownerEl = document.getElementById('githubRepoOwner');
+  const repoEl = document.getElementById('githubRepoName');
+  const pathEl = document.getElementById('githubFilePath');
+  const tokenEl = document.getElementById('githubPersonalToken');
+
+  if (!ownerEl || !repoEl || !pathEl) return;
+
+  const owner = ownerEl.value.trim() || 'centauropt';
+  const repo = repoEl.value.trim() || 'SIGEC-Pro';
+  const path = pathEl.value.trim() || 'data/db.json';
+  const token = tokenEl ? tokenEl.value.trim() : '';
+
+  localStorage.setItem('sigec_pro_gh_owner', owner);
+  localStorage.setItem('sigec_pro_gh_repo', repo);
+  localStorage.setItem('sigec_pro_gh_path', path);
+  localStorage.setItem('sigec_pro_gh_token', token);
+
+  renderGitHubSettingsForm();
+  showToast('Definições do servidor GitHub guardadas com sucesso!');
+  alert(`✅ Definições do Servidor GitHub Guardadas!\n\nRepositório: ${owner}/${repo}\nFicheiro no Servidor: ${path}\nStatus: ${token ? 'Modo Escrita (Token Configurado)' : 'Modo Leitura'}`);
+}
+
+async function syncDatabaseToGitHub(silent = false) {
+  const cfg = getGitHubConfig();
+  if (!cfg.token) {
+    if (!silent) {
+      alert("Aviso: Para sincronizar/enviar dados para o GitHub, insira o seu Token de Acesso Pessoal (PAT) no bloco 'Servidor Remoto GitHub' da página de Configuração.");
+    }
+    return false;
+  }
+
+  try {
+    const apiUrl = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}`;
+    
+    let existingSha = null;
+    try {
+      const getRes = await fetch(apiUrl, {
+        headers: {
+          'Authorization': `token ${cfg.token}`,
+          'Accept': 'application/vnd.github.v3+json'
+        }
+      });
+      if (getRes.ok) {
+        const fileData = await getRes.json();
+        existingSha = fileData.sha;
+      }
+    } catch (getErr) {
+      console.warn('Ficheiro de dados ainda não existe no servidor GitHub. Será criado agora.');
+    }
+
+    const dbString = JSON.stringify(db, null, 2);
+    const contentBase64 = utf8ToBase64(dbString);
+
+    const payload = {
+      message: `Atualização automática de dados SIGEC-Pro - ${new Date().toISOString()}`,
+      content: contentBase64
+    };
+    if (existingSha) payload.sha = existingSha;
+
+    const putRes = await fetch(apiUrl, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${cfg.token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/vnd.github.v3+json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (putRes.ok) {
+      localStorage.setItem('sigec_pro_last_gh_sync', new Date().toISOString());
+      if (typeof logUserActivity === 'function') {
+        logUserActivity('Servidor GitHub', `Dados sincronizados com sucesso no servidor GitHub (${cfg.owner}/${cfg.repo}).`);
+      }
+      if (!silent) {
+        showToast('Dados sincronizados com o servidor GitHub!');
+        alert(`✅ Sincronização Concluída!\n\nTodos os dados do programa foram registados e salvaguardados com sucesso no servidor GitHub (${cfg.owner}/${cfg.repo}).`);
+      }
+      return true;
+    } else {
+      const errData = await putRes.json();
+      console.error('Erro ao enviar dados para GitHub:', errData);
+      if (!silent) {
+        alert(`Erro na Sincronização com o Servidor GitHub:\n\n${errData.message || 'Falha ao autenticar ou gravar no repositório.'}`);
+      }
+      return false;
+    }
+  } catch (err) {
+    console.error('Falha de ligação ao servidor GitHub:', err);
+    if (!silent) {
+      alert(`Falha de Ligação:\nNão foi possível contactar o servidor GitHub: ${err.message}`);
+    }
+    return false;
+  }
+}
+
+async function loadDatabaseFromGitHub(silent = false) {
+  const cfg = getGitHubConfig();
+  try {
+    const rawUrl = `https://raw.githubusercontent.com/${cfg.owner}/${cfg.repo}/main/${cfg.path}?t=${Date.now()}`;
+    const res = await fetch(rawUrl);
+
+    if (!res.ok) {
+      if (!silent) alert(`Não foi possível encontrar o ficheiro de dados no servidor GitHub (${rawUrl}).`);
+      return false;
+    }
+
+    const remoteDb = await res.json();
+    if (!remoteDb || typeof remoteDb !== 'object') return false;
+
+    if (Array.isArray(remoteDb.clientes)) {
+      remoteDb.clientes.forEach(incCli => {
+        const idx = db.clientes.findIndex(c => c.id === incCli.id);
+        if (idx >= 0) {
+          db.clientes[idx] = { ...incCli, ...db.clientes[idx] };
+        } else {
+          db.clientes.push(incCli);
+        }
+      });
+    }
+
+    if (Array.isArray(remoteDb.contactos)) {
+      remoteDb.contactos.forEach(incCon => {
+        const idx = db.contactos.findIndex(c => c.id === incCon.id);
+        if (idx >= 0) {
+          db.contactos[idx] = { ...incCon, ...db.contactos[idx] };
+        } else {
+          db.contactos.push(incCon);
+        }
+      });
+    }
+
+    if (Array.isArray(remoteDb.projetos)) {
+      remoteDb.projetos.forEach(incProj => {
+        const idx = db.projetos.findIndex(p => p.id === incProj.id);
+        if (idx >= 0) {
+          db.projetos[idx] = { ...incProj, ...db.projetos[idx] };
+        } else {
+          db.projetos.push(incProj);
+        }
+      });
+    }
+
+    if (Array.isArray(remoteDb.usuarios)) {
+      remoteDb.usuarios.forEach(incUser => {
+        const idx = db.usuarios.findIndex(u => u.id === incUser.id);
+        if (idx >= 0) {
+          db.usuarios[idx] = { ...incUser, ...db.usuarios[idx] };
+        } else {
+          db.usuarios.push(incUser);
+        }
+      });
+    }
+
+    saveDatabase();
+
+    if (!silent) {
+      showToast('Dados do servidor GitHub carregados com sucesso!');
+      alert(`✅ Dados do Servidor Carregados!\n\nA base de dados do programa foi sincronizada a partir do servidor GitHub com sucesso.`);
+    }
+    return true;
+  } catch (err) {
+    console.error('Erro ao carregar dados do GitHub:', err);
+    if (!silent) alert(`Erro ao carregar dados do servidor GitHub: ${err.message}`);
+    return false;
+  }
 }
 
 // Gerador de UUIDs simples
@@ -6197,6 +6423,7 @@ function renderDatabaseOverview() {
   if (badge) {
     badge.textContent = `${(db.clientes || []).length} Clientes | ${(db.contactos || []).length} Contactos | ${(db.projetos || []).length} Projetos | ${((db.interacoes || []).length + (db.interacoesProjetos || []).length)} Interações`;
   }
+  if (typeof renderGitHubSettingsForm === 'function') renderGitHubSettingsForm();
 }
 
 // ==========================================

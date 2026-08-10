@@ -625,6 +625,58 @@
             </div>
           </div>
 
+          <!-- BLOCO: Sincronização em Tempo Real com o Servidor GitHub -->
+          <div class="card" style="border: 1px solid #cbd5e1; background: #ffffff; padding: 1.25rem; grid-column: 1 / -1;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.85rem; flex-wrap: wrap;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 42px; height: 42px; border-radius: 8px; background: #0969da; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                  <i class="fa-brands fa-github"></i>
+                </div>
+                <div>
+                  <h3 style="font-size: 1.05rem; color: #0969da; margin: 0; font-weight: 700;">Servidor Remoto GitHub (Sincronização em Nuvem - Opção 2)</h3>
+                  <span style="font-size: 0.78rem; color: #57606a;">Registo e Persistência Automática de Alterações no Repositório do GitHub</span>
+                </div>
+              </div>
+              <span id="githubSyncStatusBadge" style="padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.78rem; font-weight: 600; background: #ddf4ff; color: #0969da; border: 1px solid #54aeff;">
+                <i class="fa-solid fa-cloud"></i> Servidor Ativo
+              </span>
+            </div>
+
+            <p style="font-size: 0.85rem; color: #24292f; margin-bottom: 1rem; line-height: 1.4;">
+              Configure a sua conta GitHub para que todas as alterações efetuadas no programa (Clientes, Contactos, Projetos, Utilizadores e PINs) sejam sincronizadas e gravadas automaticamente no servidor do GitHub.
+            </p>
+
+            <form onsubmit="handleSaveGitHubSettings(event)" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.85rem; margin-bottom: 1rem;">
+              <div>
+                <label style="font-size: 0.8rem; font-weight: 600; color: #475569; display: block; margin-bottom: 0.3rem;">Proprietário / Utilizador GitHub:</label>
+                <input type="text" id="githubRepoOwner" class="form-control" placeholder="Ex: centauropt" style="padding: 0.6rem; border-radius: 6px; font-size: 0.88rem;" required>
+              </div>
+              <div>
+                <label style="font-size: 0.8rem; font-weight: 600; color: #475569; display: block; margin-bottom: 0.3rem;">Nome do Repositório:</label>
+                <input type="text" id="githubRepoName" class="form-control" placeholder="Ex: SIGEC-Pro" style="padding: 0.6rem; border-radius: 6px; font-size: 0.88rem;" required>
+              </div>
+              <div>
+                <label style="font-size: 0.8rem; font-weight: 600; color: #475569; display: block; margin-bottom: 0.3rem;">Caminho do Ficheiro de Dados:</label>
+                <input type="text" id="githubFilePath" class="form-control" placeholder="data/db.json" style="padding: 0.6rem; border-radius: 6px; font-size: 0.88rem;" required>
+              </div>
+              <div>
+                <label style="font-size: 0.8rem; font-weight: 600; color: #475569; display: block; margin-bottom: 0.3rem;">Token de Acesso Pessoal (PAT):</label>
+                <input type="password" id="githubPersonalToken" class="form-control" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="padding: 0.6rem; border-radius: 6px; font-size: 0.88rem;">
+              </div>
+              <div style="grid-column: 1 / -1; display: flex; gap: 0.65rem; flex-wrap: wrap; margin-top: 0.25rem;">
+                <button type="submit" class="btn btn-primary" style="background: #0969da; font-weight: 600; padding: 0.65rem 1.25rem;">
+                  <i class="fa-solid fa-floppy-disk"></i> Guardar Definições do Servidor
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="syncDatabaseToGitHub(false)" style="background: #2da44e; color: #ffffff; border: none; font-weight: 600; padding: 0.65rem 1.25rem;">
+                  <i class="fa-solid fa-cloud-arrow-up"></i> Sincronizar para o Servidor Agora
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="loadDatabaseFromGitHub(false)" style="background: #f6f8fa; color: #24292f; border: 1px solid #d0d7de; font-weight: 600; padding: 0.65rem 1.25rem;">
+                  <i class="fa-solid fa-cloud-arrow-down"></i> Carregar Dados do Servidor
+                </button>
+              </div>
+            </form>
+          </div>
+
           <!-- BLOCO 5: Gestão de Utilizadores & Controlo de Acesso Multi-Utilizador -->
           <div id="adminUserManagementBlock" class="card" style="border: 1px solid #93c5fd; background: #eff6ff; padding: 1.25rem; grid-column: 1 / -1;">
             <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
