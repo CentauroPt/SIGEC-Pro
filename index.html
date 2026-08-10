@@ -203,6 +203,9 @@
         <button type="button" class="btn btn-danger" onclick="closeApplicationWithSave()" title="Guardar todos os dados e Fechar Aplicação" style="font-weight: 600;">
           <i class="fa-solid fa-power-off"></i> Guardar e Fechar
         </button>
+        <button type="button" class="btn btn-secondary" onclick="forceCloseWindowTab()" title="Fechar aplicação ou fechar janela" style="font-weight: 600; background: #64748b; color: #ffffff; border: none;">
+          <i class="fa-solid fa-xmark"></i> Fechar
+        </button>
       </div>
     </div>
   </header>
@@ -1346,9 +1349,14 @@
       <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.75rem;">
         Pode fechar este separador do navegador com toda a segurança.
       </p>
-      <button class="btn btn-primary" onclick="reopenApplication()" style="margin: 0 auto; width: auto; padding: 0.75rem 1.75rem;">
-        <i class="fa-solid fa-rotate-left"></i> Reabrir Aplicação
-      </button>
+      <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+        <button type="button" class="btn" onclick="forceCloseWindowTab()" style="padding: 0.75rem 1.75rem; background: #ef4444; color: #ffffff; border: none; font-weight: 700; border-radius: 8px; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);">
+          <i class="fa-solid fa-xmark"></i> Fechar Janela
+        </button>
+        <button type="button" class="btn btn-primary" onclick="reopenApplication()" style="padding: 0.75rem 1.75rem;">
+          <i class="fa-solid fa-rotate-left"></i> Reabrir Aplicação
+        </button>
+      </div>
     </div>
   </div>
 
@@ -1605,7 +1613,7 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- Main JavaScript App -->
-  <script src="app.js?v=20260810_v10"></script>
+  <script src="app.js?v=20260810_v12"></script>
 
   <!-- Override saveContact and switchTab to guarantee proper modal behavior regardless of app.js cache -->
   <script>

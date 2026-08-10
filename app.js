@@ -6673,18 +6673,38 @@ function saveAllChangesManual() {
   saveProgramChangesInternal();
 }
 
-function closeApplicationWithSave() {
+async function closeApplicationWithSave() {
   saveDatabase();
   clearFormDirty();
-  showToast('Todos os dados foram guardados com sucesso!');
+
+  const ghToken = localStorage.getItem('sigec_pro_gh_token');
+  if (ghToken && typeof syncDatabaseToGitHub === 'function') {
+    showToast('A sincronizar com o servidor GitHub antes de fechar...', 'info');
+    await syncDatabaseToGitHub(false, true);
+  }
+
+  showToast('Todos os dados foram guardados e sincronizados com sucesso!');
   setTimeout(() => {
-    document.getElementById('closeAppOverlay').classList.add('active');
+    const overlay = document.getElementById('closeAppOverlay');
+    if (overlay) overlay.classList.add('active');
     try {
       window.close();
     } catch (err) {
-      console.log('window.close bloquedo pelo navegador:', err);
+      console.log('window.close bloqueado pelo navegador:', err);
     }
-  }, 400);
+  }, 300);
+}
+
+function forceCloseWindowTab() {
+  try {
+    saveDatabase();
+  } catch (e) {}
+  try {
+    window.close();
+  } catch (err) {}
+  setTimeout(() => {
+    window.location.href = "about:blank";
+  }, 100);
 }
 
 function reopenApplication() {
