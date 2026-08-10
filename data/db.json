@@ -3276,6 +3276,15 @@
   ],
   "userLogs": [
     {
+      "id": "log-1786373041449-823",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "timestamp": "2026-08-10T14:44:01.449Z"
+    },
+    {
       "id": "log-1786373010625-963",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -12265,15 +12274,6 @@
       "tipoAcao": "Segurança",
       "descricao": "Email de redefinição de palavra-passe enviado de jmcenturio@alegria-activity.com para jmcenturio@alegria-activity.com.",
       "timestamp": "2026-08-10T09:47:46.843Z"
-    },
-    {
-      "id": "log-1786355248048-41",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Ficha do Utilizador",
-      "descricao": "Ficha do utilizador José Centúrio aberta após autenticação de Administrador.",
-      "timestamp": "2026-08-10T09:47:28.048Z"
     }
   ]
 }
