@@ -6539,7 +6539,12 @@ function closeDriveModal() {
 function saveAllChangesManual() {
   saveDatabase();
   clearFormDirty();
-  showToast('Todas as alterações efetuadas no programa foram guardadas com sucesso!');
+  const ghToken = localStorage.getItem('sigec_pro_gh_token');
+  if (ghToken && typeof syncDatabaseToGitHub === 'function') {
+    syncDatabaseToGitHub(false);
+  } else {
+    showToast('Dados guardados no computador. Ligue o servidor no separador Configuração para gravar na nuvem.', 'warning');
+  }
 }
 
 function closeApplicationWithSave() {
