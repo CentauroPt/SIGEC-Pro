@@ -3550,15 +3550,7 @@ function ensureRecoveredProjects() {
 }
 
 function purgeGeneratedMockData() {
-  if (Array.isArray(db.clientes)) {
-    db.clientes = db.clientes.filter(c => c && c.id && !c.id.includes('-v13-') && !c.id.includes('-v14-') && !c.id.includes('-v15-') && c.nome !== "TECNIMUNDI - Engenharia e Soluções, Lda." && c.nome !== "REPETAL - Reciclagem de Plásticos, S.A.");
-  }
-  if (Array.isArray(db.contactos)) {
-    db.contactos = db.contactos.filter(c => c && c.id && !c.id.includes('-v13-') && !c.id.includes('-v14-') && !c.id.includes('-v15-'));
-  }
-  if (Array.isArray(db.projetos)) {
-    db.projetos = db.projetos.filter(p => p && p.id && !p.id.includes('-v13-') && !p.id.includes('-v14-') && !p.id.includes('-v15-') && !p.nome.includes("REPETAL") && !p.nome.includes("Parque Tecnológico") && p.id !== "proj-banc-001" && p.id !== "proj-estrat-2040" && !p.nome.includes("Estratégia 2040") && !p.nome.includes("Unidade Móvel Bancária"));
-  }
+  // Função desativada para garantir que nenhum dado de backup importado pelo utilizador seja eliminado ao recarregar a página
 }
 
 function loadInitialExcelData() {
@@ -9561,7 +9553,7 @@ function importDatabaseJSON(event) {
   }
 
   const reader = new FileReader();
-  reader.onload = function(e) {
+  reader.onload = async function(e) {
     try {
       const parsed = JSON.parse(e.target.result);
       const data = parsed.database || parsed;
@@ -9583,10 +9575,10 @@ function importDatabaseJSON(event) {
 
       saveDatabase();
 
-      // Sincroniza imediatamente o backup importado com o Servidor GitHub
+      // Sincroniza imediatamente o backup importado com o Servidor GitHub (aguarda conclusão)
       const ghToken = localStorage.getItem('sigec_pro_gh_token');
       if (ghToken && typeof syncDatabaseToGitHub === 'function') {
-        syncDatabaseToGitHub(false);
+        await syncDatabaseToGitHub(false);
       }
 
       if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
