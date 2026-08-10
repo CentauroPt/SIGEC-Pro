@@ -3760,12 +3760,11 @@ async function syncDatabaseToGitHub(silent = false) {
   try {
     const fetchLatestSha = async () => {
       try {
-        const getRes = await fetch(`${apiUrl}?t=${Date.now()}`, {
+        const getRes = await fetch(apiUrl, {
           method: 'GET',
           headers: {
             'Authorization': authHeader,
-            'Accept': 'application/vnd.github.v3+json',
-            'Cache-Control': 'no-cache'
+            'Accept': 'application/vnd.github.v3+json'
           }
         });
         if (getRes.status === 200) {
