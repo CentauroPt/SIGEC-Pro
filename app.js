@@ -3758,7 +3758,9 @@ async function syncDatabaseToGitHub(silent = false) {
   const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
 
   try {
+    // Helper para obter o SHA atual do ficheiro (com ou sem cabeçalho de auth como fallback)
     const fetchLatestSha = async () => {
+      // 1. Tenta com autenticação
       try {
         const getRes = await fetch(apiUrl, {
           method: 'GET',
@@ -3769,11 +3771,28 @@ async function syncDatabaseToGitHub(silent = false) {
         });
         if (getRes.status === 200) {
           const fileData = await getRes.json();
-          return fileData.sha;
+          if (fileData && fileData.sha) return fileData.sha;
         }
       } catch (e) {
-        console.warn('Erro ao obter sha do ficheiro:', e);
+        console.warn('Erro ao obter SHA com auth:', e);
       }
+
+      // 2. Fallback sem autenticação (para repositórios públicos)
+      try {
+        const publicRes = await fetch(apiUrl, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+        if (publicRes.status === 200) {
+          const fileData = await publicRes.json();
+          if (fileData && fileData.sha) return fileData.sha;
+        }
+      } catch (e) {
+        console.warn('Erro ao obter SHA público:', e);
+      }
+
       return null;
     };
 
