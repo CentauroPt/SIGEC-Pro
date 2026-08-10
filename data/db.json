@@ -3163,22 +3163,6 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "proj-rec-bcn",
-      "nome": "Unidade Móvel Bancária",
-      "tipo": "Compra UM",
-      "clienteId": "cli-imp-085",
-      "contacto1Id": "con-1785515106421-857",
-      "contacto2Id": "con-imp-137",
-      "dataInicio": "2026-07-27",
-      "dataFim": "2026-08-31",
-      "estado": "Em Orçamento",
-      "viatura": "",
-      "matricula": "",
-      "documents": [],
-      "media": [],
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
       "id": "proj-camp-001",
       "clienteId": "cli-1785514129444-833",
       "nome": "Huawei SmartBus",
@@ -3275,6 +3259,33 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1786373049612-330",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "timestamp": "2026-08-10T14:44:09.612Z"
+    },
+    {
+      "id": "log-1786373047310-234",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "timestamp": "2026-08-10T14:44:07.310Z"
+    },
+    {
+      "id": "log-1786373041449-823",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "timestamp": "2026-08-10T14:44:01.449Z"
+    },
     {
       "id": "log-1786373010625-963",
       "usuarioId": "usr-admin-001",
@@ -12247,33 +12258,6 @@
       "tipoAcao": "Cópia de Segurança",
       "descricao": "Backup do sistema \"SIGEC-Pro_Backup_10-08-2026-11:49:58.json\" gerado.",
       "timestamp": "2026-08-10T09:49:58.833Z"
-    },
-    {
-      "id": "log-1786355339987-262",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Ficha do Utilizador",
-      "descricao": "Dados de registo e PIN do utilizador José Centúrio atualizados com sucesso.",
-      "timestamp": "2026-08-10T09:48:59.987Z"
-    },
-    {
-      "id": "log-1786355266843-955",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Segurança",
-      "descricao": "Email de redefinição de palavra-passe enviado de jmcenturio@alegria-activity.com para jmcenturio@alegria-activity.com.",
-      "timestamp": "2026-08-10T09:47:46.843Z"
-    },
-    {
-      "id": "log-1786355248048-41",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Ficha do Utilizador",
-      "descricao": "Ficha do utilizador José Centúrio aberta após autenticação de Administrador.",
-      "timestamp": "2026-08-10T09:47:28.048Z"
     }
   ]
 }
