@@ -3650,12 +3650,6 @@ function saveDatabase() {
   if (!saveSuccess) {
     showToast('Aviso: Limite de armazenamento local atingido. Exporte um Backup JSON.', 'warning');
   }
-
-  // Sincronização automática em segundo plano com o servidor GitHub (se o Token estiver configurado)
-  const ghToken = localStorage.getItem('sigec_pro_gh_token');
-  if (ghToken && typeof syncDatabaseToGitHub === 'function') {
-    syncDatabaseToGitHub(true);
-  }
 }
 
 // ==========================================
@@ -6655,12 +6649,7 @@ function closeDriveModal() {
 function saveAllChangesManual() {
   saveDatabase();
   clearFormDirty();
-  const ghToken = localStorage.getItem('sigec_pro_gh_token');
-  if (ghToken && typeof syncDatabaseToGitHub === 'function') {
-    syncDatabaseToGitHub(false, true);
-  } else {
-    showToast('Dados guardados no computador. Ligue o servidor no separador Configuração para gravar na nuvem.', 'warning');
-  }
+  showToast('Todas as alterações efetuadas foram guardadas no programa com sucesso!');
 }
 
 function closeApplicationWithSave() {
