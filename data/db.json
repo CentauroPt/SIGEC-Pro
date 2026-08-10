@@ -3163,22 +3163,6 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "proj-rec-bcn",
-      "nome": "Unidade Móvel Bancária",
-      "tipo": "Compra UM",
-      "clienteId": "cli-imp-085",
-      "contacto1Id": "con-1785515106421-857",
-      "contacto2Id": "con-imp-137",
-      "dataInicio": "2026-07-27",
-      "dataFim": "2026-08-31",
-      "estado": "Em Orçamento",
-      "viatura": "",
-      "matricula": "",
-      "documents": [],
-      "media": [],
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
       "id": "proj-camp-001",
       "clienteId": "cli-1785514129444-833",
       "nome": "Huawei SmartBus",
@@ -3275,6 +3259,24 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1786360938798-877",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Cópia de Segurança",
+      "descricao": "Backup do sistema \"SIGEC-Pro_Backup_10-08-2026-13:22:18.json\" gerado.",
+      "timestamp": "2026-08-10T11:22:18.798Z"
+    },
+    {
+      "id": "log-1786360891897-890",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "timestamp": "2026-08-10T11:21:31.897Z"
+    },
     {
       "id": "log-1786360890504-87",
       "usuarioId": "usr-admin-001",
