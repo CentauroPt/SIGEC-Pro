@@ -3276,24 +3276,6 @@
   ],
   "userLogs": [
     {
-      "id": "log-1786372788771-779",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "timestamp": "2026-08-10T14:39:48.771Z"
-    },
-    {
-      "id": "log-1786372773369-690",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "timestamp": "2026-08-10T14:39:33.369Z"
-    },
-    {
       "id": "log-1786372770515-869",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
