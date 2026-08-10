@@ -3754,12 +3754,7 @@ function handleSaveGitHubSettings(event) {
 
 let isSyncingToGitHub = false;
 
-async function syncDatabaseToGitHub(silent = false) {
-  if (isSyncingToGitHub) {
-    console.log('Sincronização com o GitHub já em curso. Pedido concorrente ignorado.');
-    return false;
-  }
-
+async function syncDatabaseToGitHub(silent = false, force = false) {
   const cfg = getGitHubConfig();
   const token = (cfg.token || '').trim();
 
@@ -3768,6 +3763,15 @@ async function syncDatabaseToGitHub(silent = false) {
       alert("Aviso: Para sincronizar/enviar dados para o GitHub, insira o seu Token de Acesso Pessoal (PAT) no bloco 'Servidor Remoto GitHub' da página de Configuração.");
     }
     return false;
+  }
+
+  if (isSyncingToGitHub && !force) {
+    console.log('Sincronização em curso. Aguardando conclusão para sincronizar a versão mais recente...');
+    let waitCount = 0;
+    while (isSyncingToGitHub && waitCount < 15) {
+      await new Promise(r => setTimeout(r, 200));
+      waitCount++;
+    }
   }
 
   isSyncingToGitHub = true;
@@ -3784,107 +3788,82 @@ async function syncDatabaseToGitHub(silent = false) {
   ];
 
   try {
-    let existingSha = null;
-
-    for (const authHeader of authHeadersToTry) {
-      try {
-        const getRes = await fetch(apiUrl, {
-          method: 'GET',
-          headers: {
-            'Authorization': authHeader,
-            'Accept': 'application/vnd.github.v3+json'
+    const fetchLiveSha = async () => {
+      for (const authHeader of authHeadersToTry) {
+        try {
+          const res = await fetch(`${apiUrl}?ref=main&t=${Date.now()}`, {
+            method: 'GET',
+            headers: {
+              'Authorization': authHeader,
+              'Accept': 'application/vnd.github.v3+json',
+              'Cache-Control': 'no-cache'
+            }
+          });
+          if (res.status === 200) {
+            const data = await res.json();
+            if (data && data.sha) return data.sha;
           }
-        });
-        if (getRes.status === 200) {
-          const fileData = await getRes.json();
-          if (fileData && fileData.sha) {
-            existingSha = fileData.sha;
-            break;
-          }
-        }
-      } catch (e) {
-        console.warn('Tentativa GET com auth falhou:', e);
+        } catch (e) {}
       }
-    }
+      return null;
+    };
 
-    if (!existingSha) {
-      try {
-        const publicRes = await fetch(apiUrl, {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/vnd.github.v3+json'
-          }
-        });
-        if (publicRes.status === 200) {
-          const fileData = await publicRes.json();
-          if (fileData && fileData.sha) existingSha = fileData.sha;
-        }
-      } catch (e) {
-        console.warn('Tentativa GET pública falhou:', e);
-      }
-    }
-
+    let currentSha = await fetchLiveSha();
     const dbString = JSON.stringify(db, null, 2);
     const contentBase64 = utf8ToBase64(dbString);
 
-    const sendPutWithHeader = async (shaVal, authHdr) => {
+    let putSuccess = false;
+    let attempts = 0;
+    let lastError = null;
+
+    while (attempts < 3 && !putSuccess) {
+      attempts++;
+
       const payload = {
         message: `Atualização automática de dados SIGEC-Pro - ${new Date().toISOString()}`,
         content: contentBase64
       };
-      if (shaVal) payload.sha = shaVal;
+      if (currentSha) payload.sha = currentSha;
 
-      return await fetch(apiUrl, {
-        method: 'PUT',
-        headers: {
-          'Authorization': authHdr,
-          'Content-Type': 'application/json',
-          'Accept': 'application/vnd.github.v3+json'
-        },
-        body: JSON.stringify(payload)
-      });
-    };
+      let putRes = null;
+      let primaryAuth = authHeadersToTry[0];
 
-    let primaryAuthHeader = authHeadersToTry[0];
-    let putRes = await sendPutWithHeader(existingSha, primaryAuthHeader);
-
-    if (!putRes.ok) {
-      let errBodyText = "";
       try {
-        const errJson = await putRes.clone().json();
-        errBodyText = errJson.message || JSON.stringify(errJson);
-      } catch (e) {
-        errBodyText = await putRes.clone().text().catch(() => "");
+        putRes = await fetch(apiUrl, {
+          method: 'PUT',
+          headers: {
+            'Authorization': primaryAuth,
+            'Content-Type': 'application/json',
+            'Accept': 'application/vnd.github.v3+json'
+          },
+          body: JSON.stringify(payload)
+        });
+      } catch (errPut) {
+        lastError = errPut.message;
       }
 
-      const match = errBodyText.match(/does not match ([a-f0-9]{40})/i);
-      if (match && match[1]) {
-        const targetSha = match[1];
-        putRes = await sendPutWithHeader(targetSha, primaryAuthHeader);
+      if (putRes && (putRes.status === 200 || putRes.status === 201)) {
+        putSuccess = true;
+        break;
       }
 
-      if (!putRes.ok && (putRes.status === 409 || putRes.status === 422 || putRes.status === 401)) {
-        for (const altAuth of authHeadersToTry) {
-          const freshRes = await fetch(apiUrl, {
-            method: 'GET',
-            headers: { 'Authorization': altAuth, 'Accept': 'application/vnd.github.v3+json' }
-          }).catch(() => null);
+      if (putRes) {
+        const errJson = await putRes.json().catch(() => ({}));
+        const errMsg = errJson.message || '';
+        lastError = errMsg;
 
-          let freshSha = existingSha;
-          if (freshRes && freshRes.status === 200) {
-            const freshData = await freshRes.json();
-            if (freshData && freshData.sha) freshSha = freshData.sha;
-          }
-
-          putRes = await sendPutWithHeader(freshSha, altAuth);
-          if (putRes.ok) break;
+        const match = errMsg.match(/does not match ([a-f0-9]{40})/i);
+        if (match && match[1]) {
+          currentSha = match[1];
+        } else {
+          currentSha = await fetchLiveSha();
         }
       }
     }
 
     isSyncingToGitHub = false;
 
-    if (putRes.status === 200 || putRes.status === 201) {
+    if (putSuccess) {
       localStorage.setItem('sigec_pro_last_gh_sync', new Date().toISOString());
       if (typeof logUserActivity === 'function') {
         logUserActivity('Servidor GitHub', `Dados sincronizados com sucesso no servidor GitHub (${owner}/${repo}).`);
@@ -3895,17 +3874,10 @@ async function syncDatabaseToGitHub(silent = false) {
       }
       return true;
     } else {
-      const errData = await putRes.json().catch(() => ({ message: 'Erro desconhecido' }));
-      console.error('Erro ao enviar dados para GitHub:', putRes.status, errData);
-      
+      console.error('Falha final na sincronização GitHub:', lastError);
       if (!silent) {
-        if (putRes.status === 404) {
-          alert(`Erro de Ligação (404 Not Found):\n\nO GitHub não encontrou o repositório "${owner}/${repo}". Verifique o utilizador e repositório.`);
-        } else if (putRes.status === 401) {
-          alert(`Erro de Autenticação (401 Unauthorized):\n\nO Token introduzido é inválido ou expirou. Verifique o Token no bloco 'Servidor Remoto GitHub'.`);
-        } else if (putRes.status !== 409) {
-          alert(`Erro na Sincronização com o Servidor GitHub (${putRes.status}):\n\n${errData.message || 'Falha ao autenticar ou gravar no repositório.'}`);
-        }
+        showToast('Erro na sincronização com o servidor GitHub.', 'danger');
+        alert(`Erro na Sincronização com o Servidor GitHub:\n\n${lastError || 'Não foi possível atualizar os dados no repositório.'}`);
       }
       return false;
     }
@@ -4010,7 +3982,7 @@ async function handleFullServerSync(silent = false) {
 
   if (!silent) showToast('A sincronizar com o servidor GitHub...', 'info');
 
-  const uploadSuccess = await syncDatabaseToGitHub(silent);
+  const uploadSuccess = await syncDatabaseToGitHub(silent, true);
 
   saveDatabase();
   renderDatabaseOverview();
@@ -9599,10 +9571,10 @@ function importDatabaseJSON(event) {
 
       saveDatabase();
 
-      // Sincroniza imediatamente o backup importado com o Servidor GitHub (aguarda conclusão)
+      let syncSuccess = false;
       const ghToken = localStorage.getItem('sigec_pro_gh_token');
       if (ghToken && typeof syncDatabaseToGitHub === 'function') {
-        await syncDatabaseToGitHub(false);
+        syncSuccess = await syncDatabaseToGitHub(false, true);
       }
 
       if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
@@ -9612,8 +9584,16 @@ function importDatabaseJSON(event) {
       if (typeof renderProjectPageMainGrid === 'function') renderProjectPageMainGrid();
       if (typeof updateInstalledVersionUI === 'function') updateInstalledVersionUI();
 
-      showToast("Base de dados reposta e sincronizada no servidor!");
-      alert(`✅ Reposição e Sincronização Concluída!\n\nOs dados foram repostos a partir da cópia de segurança e salvaguardados com sucesso no servidor GitHub.\n\nRegistos carregados:\n- ${db.clientes.length} Clientes\n- ${db.contactos.length} Contactos\n- ${db.projetos.length} Projetos`);
+      if (syncSuccess) {
+        showToast("Base de dados reposta e sincronizada no servidor!");
+        alert(`✅ Reposição e Sincronização Concluída com Sucesso!\n\nOs dados foram repostos a partir da cópia de segurança e salvaguardados no servidor GitHub com sucesso.\n\nRegistos carregados:\n- ${db.clientes.length} Clientes\n- ${db.contactos.length} Contactos\n- ${db.projetos.length} Projetos`);
+      } else if (!ghToken) {
+        showToast("Base de dados reposta localmente no computador.", "warning");
+        alert(`⚠️ Reposição Local Concluída com Sucesso!\n\nOs dados foram carregados no seu computador (${db.clientes.length} Clientes, ${db.contactos.length} Contactos, ${db.projetos.length} Projetos).\n\nAtenção: Para que fiquem também gravados no Servidor GitHub, insira o seu Token de Acesso Pessoal (PAT) na página de Configuração e clique no botão 'Sincronizar'.`);
+      } else {
+        showToast("Dados repostos localmente, mas falhou a gravação no servidor.", "danger");
+        alert(`⚠️ Reposição Local Efetuada com Sucesso!\n\nOs dados foram registados no seu computador, mas a gravação no servidor GitHub encontrou uma recusa ou falha.\n\nClique no botão 'Sincronizar' na página de Configuração para gravar a nova versão no servidor.`);
+      }
     } catch (err) {
       console.error("Erro na reposição de dados:", err);
       showToast("Erro na reposição do ficheiro.", "danger");
