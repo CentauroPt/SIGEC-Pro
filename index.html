@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Centauro - Sistema de Gestão</title>
+  <title>SIGEC-Pro - Sistema de Gestão</title>
+
+  <!-- App Favicon & Icons -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="Images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="Images/logo_sinergia_icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="Images/apple-touch-icon.png">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,6 +24,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
+  <!-- Updates Registry -->
+  <script src="Atualizações/updates_registry.js"></script>
+
   <!-- Stylesheet -->
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -26,34 +35,44 @@
   <!-- Top Application Header -->
   <header class="app-header">
     <div class="brand-container">
-      <div class="brand-logo" title="Centauro Gestão">
-        <!-- SVG Centaur Logo -->
-        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-          <!-- Stylized Centaur Silhouette -->
-          <path d="M48 8c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4zm-8 12c-2.5 0-4.8 1.1-6.4 2.8L28 17.2V12c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h1.6l4 4.8C25.3 28.5 24 31.1 24 34v2h-6.2l-3.4-6.8c-.6-1.2-1.8-2-3.2-2H4c-1.1 0-2 .9-2 2s.9 2 2 2h7.2l3.4 6.8c.6 1.2 1.8 2 3.2 2H24v6c0 2.2 1.8 4 4 4h4v12c0 1.1.9 2 2 2s2-.9 2-2V48h4v12c0 1.1.9 2 2 2s2-.9 2-2V48h6.2l3.4 6.8c.6 1.2 1.8 2 3.2 2H60c1.1 0 2-.9 2-2s-.9-2-2-2h-7.2l-3.4-6.8c-.6-1.2-1.8-2-3.2-2H44v-6c0-2.2-1.8-4-4-4h-4v-4.2c2.1-1.1 3.7-3 4.2-5.3l3.6.9c1.1.3 2.2-.4 2.5-1.5s-.4-2.2-1.5-2.5l-4-1c-1.1-.3-2.2.4-2.5 1.5-.1.4-.1.8 0 1.2C38 31.8 36.1 30 33.8 30H32v-5.2l7.6 7.6c.4.4.9.6 1.4.6s1-.2 1.4-.6c.8-.8.8-2 0-2.8L35.6 23c2-1.8 4.6-3 7.4-3h5c1.1 0 2-.9 2-2s-.9-2-2-2h-8z"/>
-        </svg>
+      <div class="brand-logo" title="SIGEC-Pro Gestão">
+        <img src="Images/logo_sinergia_icon.png" alt="SIGEC-Pro Sinergia Logo">
       </div>
       <div>
-        <h1 class="brand-title">CENTAURO</h1>
+        <h1 class="brand-title">SIGEC-Pro</h1>
         <p class="brand-subtitle">Sistema Integrado de Gestão de Clientes & Projetos</p>
       </div>
     </div>
 
     <div class="header-actions">
       <nav class="nav-tabs">
-        <button class="nav-btn active" data-tab="tab-clientes" onclick="switchTab('tab-clientes')">
-          <i class="fa-solid fa-building-user"></i> Ficha de Clientes
+        <button class="nav-btn active" data-tab="tab-home" onclick="switchTab('tab-home')">
+          <i class="fa-solid fa-house"></i> Menu Geral
+        </button>
+        <button class="nav-btn" data-tab="tab-clientes" onclick="switchTab('tab-clientes')">
+          <i class="fa-solid fa-building-user"></i> Clientes
+        </button>
+        <button class="nav-btn" data-tab="tab-contactos" onclick="switchTab('tab-contactos')">
+          <i class="fa-solid fa-address-book"></i> Contactos
         </button>
         <button class="nav-btn" data-tab="tab-projetos" onclick="switchTab('tab-projetos')">
-          <i class="fa-solid fa-diagram-project"></i> Ficha de Projetos
+          <i class="fa-solid fa-diagram-project"></i> Projetos
         </button>
         <button class="nav-btn" data-tab="tab-database" onclick="switchTab('tab-database')">
-          <i class="fa-solid fa-database"></i> Bases de Dados
+          <i class="fa-solid fa-gear"></i> Configuração
         </button>
       </nav>
 
       <button class="btn btn-secondary" onclick="openDriveModal()" title="Sincronização Google Drive (jjota26@gmail.com)">
         <i class="fa-brands fa-google-drive"></i> Google Drive
+      </button>
+
+      <button class="btn btn-success" onclick="saveAllChangesManual()" title="Guardar todas as alterações efetuadas no programa" style="font-weight: 600;">
+        <i class="fa-solid fa-floppy-disk"></i> Guardar Alterações
+      </button>
+
+      <button class="btn btn-danger" onclick="closeApplicationWithSave()" title="Guardar todos os dados e Fechar Aplicação" style="font-weight: 600;">
+        <i class="fa-solid fa-power-off"></i> Guardar e Fechar
       </button>
     </div>
   </header>
@@ -61,39 +80,475 @@
   <!-- Main Layout -->
   <main class="main-layout">
 
-    <!-- Global Search Toolbar -->
-    <section class="search-toolbar">
-      <div class="search-inputs-group">
-        <select id="searchCategory" class="search-category-select">
-          <option value="clientes">Buscar Clientes (Qualquer Campo)</option>
-          <option value="contactos">Buscar Contactos (Qualquer Campo)</option>
-          <option value="projetos_nome">Buscar Clientes por Nome do Projeto</option>
-        </select>
-        <div class="search-field-container">
-          <i class="fa-solid fa-magnifying-glass search-icon"></i>
-          <input type="text" id="globalSearchQuery" placeholder="Escreva aqui o termo de pesquisa..." onkeypress="handleSearchKeyPress(event)">
+    <!-- TAB 0: MENU GERAL / PÁGINA DE ENTRADA -->
+    <section id="tab-home" class="tab-content active">
+      <!-- Pesquisa Global no Menu de Entrada -->
+      <div class="card" style="margin-bottom: 1.5rem; padding: 1.25rem;">
+        <div class="search-toolbar" style="margin-bottom: 0;">
+          <div class="search-inputs-group">
+            <select id="searchCategory" class="search-category-select">
+              <option value="clientes">Buscar Clientes</option>
+              <option value="contactos">Buscar Contactos</option>
+              <option value="projetos_nome">Buscar Projetos</option>
+            </select>
+            <div class="search-field-container">
+              <i class="fa-solid fa-magnifying-glass search-icon"></i>
+              <input type="text" id="globalSearchQuery" placeholder="Escreva aqui o termo de pesquisa..." onkeypress="handleSearchKeyPress(event)">
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="executeGlobalSearch()">
+              <i class="fa-solid fa-search"></i> Pesquisar Global
+            </button>
+            <button type="button" class="btn btn-sm btn-secondary" onclick="exportSearchToPDF('global')" title="Imprimir Pesquisa em PDF" style="gap: 0.35rem; font-size: 0.8rem; padding: 0.45rem 0.65rem;">
+              <i class="fa-solid fa-file-pdf" style="color: #ef4444;"></i> PDF
+            </button>
+            <button type="button" class="btn btn-sm btn-secondary" onclick="exportSearchToExcel('global')" title="Exportar Pesquisa em Excel" style="gap: 0.35rem; font-size: 0.8rem; padding: 0.45rem 0.65rem;">
+              <i class="fa-solid fa-file-excel" style="color: #10b981;"></i> Excel
+            </button>
+          </div>
         </div>
       </div>
-      <button class="btn btn-primary" onclick="executeGlobalSearch()">
-        <i class="fa-solid fa-search"></i> Pesquisar
-      </button>
+
+
+
+      <!-- Grid de Botões do Menu Geral -->
+      <div class="menu-cards-grid">
+        <button type="button" class="main-menu-card" onclick="switchTab('tab-clientes')">
+          <div class="menu-card-icon">
+            <i class="fa-solid fa-building-user"></i>
+          </div>
+          <div class="menu-card-title">Clientes</div>
+          <div class="menu-card-desc">Gerir e registar fichas de clientes, moradas e contactos associados</div>
+        </button>
+
+        <button type="button" class="main-menu-card" onclick="switchTab('tab-contactos')">
+          <div class="menu-card-icon">
+            <i class="fa-solid fa-address-book"></i>
+          </div>
+          <div class="menu-card-title">Contactos</div>
+          <div class="menu-card-desc">Consultar e gerir a lista de contactos diretos de todos os clientes</div>
+        </button>
+
+        <button type="button" class="main-menu-card" onclick="switchTab('tab-projetos')">
+          <div class="menu-card-icon">
+            <i class="fa-solid fa-diagram-project"></i>
+          </div>
+          <div class="menu-card-title">Projetos</div>
+          <div class="menu-card-desc">Criar, gerir e acompanhar fichas de projetos e registo de ocorrências</div>
+        </button>
+
+        <button type="button" class="main-menu-card" onclick="switchTab('tab-database')">
+          <div class="menu-card-icon">
+            <i class="fa-solid fa-gear"></i>
+          </div>
+          <div class="menu-card-title">Configuração</div>
+          <div class="menu-card-desc">Cópias de segurança, importação e exportação de dados do sistema</div>
+        </button>
+      </div>
+
+      <!-- Seção Principal do Dashboard: Projetos Recentes & Atalhos -->
+      <div class="dashboard-sections-grid">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i class="fa-solid fa-clock-rotate-left"></i> Projetos em Acompanhamento
+            </h3>
+            <button class="btn btn-secondary" onclick="switchTab('tab-projetos')" style="font-size: 0.82rem; padding: 0.35rem 0.75rem;">
+              Ver Todos <i class="fa-solid fa-arrow-right" style="margin-left: 4px;"></i>
+            </button>
+          </div>
+          <div id="dashRecentProjectsContainer" class="dash-projects-scroll-container">
+            <!-- Projetos renderizados via JS -->
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i class="fa-solid fa-bolt"></i> Ações Rápidas
+            </h3>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.85rem; padding: 1rem 0.5rem;">
+            <button class="btn btn-primary" onclick="switchTab('tab-clientes'); resetClientForm();" style="justify-content: flex-start; gap: 0.75rem;">
+              <i class="fa-solid fa-user-plus" style="width: 18px;"></i> Registar Novo Cliente
+            </button>
+            <button class="btn btn-secondary" onclick="switchTab('tab-contactos');" style="justify-content: flex-start; gap: 0.75rem;">
+              <i class="fa-solid fa-address-card" style="width: 18px;"></i> Gerir Contactos
+            </button>
+            <button class="btn btn-secondary" onclick="switchTab('tab-projetos'); resetProjectForm();" style="justify-content: flex-start; gap: 0.75rem;">
+              <i class="fa-solid fa-folder-plus" style="width: 18px;"></i> Criar Novo Projeto
+            </button>
+            <button class="btn btn-secondary" onclick="exportDatabaseJSON();" style="justify-content: flex-start; gap: 0.75rem;">
+              <i class="fa-solid fa-download" style="width: 18px; color: var(--primary-blue);"></i> Cópia de Segurança (JSON)
+            </button>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- TAB 1: FICHA DE CLIENTES -->
-    <section id="tab-clientes" class="tab-content active">
+    <section id="tab-clientes" class="tab-content">
       <div class="card">
         <div class="card-header">
           <h2 class="card-title">
             <i class="fa-solid fa-id-card"></i> Registo / Ficha do Cliente
           </h2>
-          <div>
+          <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <div class="view-mode-toggle">
+              <button type="button" class="view-toggle-btn" id="btnClientViewList" onclick="setClientViewMode('list')" title="Visualização em Lista">
+                <i class="fa-solid fa-list"></i> Lista
+              </button>
+              <button type="button" class="view-toggle-btn active" id="btnClientViewGrid" onclick="setClientViewMode('grid')" title="Visualização em Cartões">
+                <i class="fa-solid fa-border-all"></i> Cartões
+              </button>
+            </div>
             <button class="btn btn-secondary" onclick="resetClientForm()">
-              <i class="fa-solid fa-plus"></i> Novo Cliente
+              <i class="fa-solid fa-user-plus"></i> Novo Cliente
             </button>
           </div>
         </div>
 
-        <form id="clientForm" onsubmit="saveClient(event)">
+        <!-- Indicador KPI de Clientes -->
+        <div class="dashboard-kpi-grid single-kpi-grid">
+          <div class="kpi-card kpi-clients">
+            <div class="kpi-icon-wrapper">
+              <i class="fa-solid fa-building-user"></i>
+            </div>
+            <div class="kpi-content">
+              <span class="kpi-label">Clientes Registados</span>
+              <span class="kpi-number kpi-total-clientes">0</span>
+              <div class="kpi-subtext kpi-clientes-breakdown">
+                <!-- JS rendered -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de Pesquisa Específica da Página de Clientes -->
+        <div class="page-search-toolbar">
+          <i class="fa-solid fa-magnifying-glass search-icon" style="color: var(--primary-blue); font-size: 1.1rem;"></i>
+          <input type="text" id="clientPageSearchQuery" placeholder="Pesquisar apenas Clientes por nome, NIF, morada, localidade..." oninput="renderClientPageMainGrid()" onkeypress="handlePageSearchKeyPress(event, 'clientes')">
+          <button class="btn btn-primary" onclick="executePageSearch('clientes')">
+            <i class="fa-solid fa-search"></i> Pesquisar Clientes
+          </button>
+          <button type="button" class="btn btn-sm btn-secondary" onclick="exportSearchToPDF('clientes')" title="Imprimir Pesquisa em PDF" style="gap: 0.35rem; font-size: 0.8rem; padding: 0.45rem 0.65rem; white-space: nowrap;">
+            <i class="fa-solid fa-file-pdf" style="color: #ef4444;"></i> PDF
+          </button>
+          <button type="button" class="btn btn-sm btn-secondary" onclick="exportSearchToExcel('clientes')" title="Exportar Pesquisa em Excel" style="gap: 0.35rem; font-size: 0.8rem; padding: 0.45rem 0.65rem; white-space: nowrap;">
+            <i class="fa-solid fa-file-excel" style="color: #10b981;"></i> Excel
+          </button>
+        </div>
+
+        <div style="margin-top: 1rem; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.05rem; color: #1e3a8a; margin-bottom: 1rem;">
+            <i class="fa-solid fa-building-user"></i> Lista Completa de Clientes
+          </h3>
+          <div id="clientPageMainGrid" class="contacts-grid">
+            <!-- Dynamic Clients Rendered Here -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 2: PÁGINA DE CONTACTOS -->
+    <section id="tab-contactos" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <i class="fa-solid fa-address-book"></i> Registo / Ficha de Contacto
+          </h2>
+          <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <div class="view-mode-toggle">
+              <button type="button" class="view-toggle-btn" id="btnContactViewList" onclick="setContactViewMode('list')" title="Visualização em Lista">
+                <i class="fa-solid fa-list"></i> Lista
+              </button>
+              <button type="button" class="view-toggle-btn active" id="btnContactViewGrid" onclick="setContactViewMode('grid')" title="Visualização em Cartões">
+                <i class="fa-solid fa-border-all"></i> Cartões
+              </button>
+            </div>
+            <button class="btn btn-secondary" onclick="openContactModalForNew()">
+              <i class="fa-solid fa-user-plus"></i> Novo Contacto
+            </button>
+          </div>
+        </div>
+
+        <!-- Indicador KPI de Contactos -->
+        <div class="dashboard-kpi-grid single-kpi-grid">
+          <div class="kpi-card kpi-contacts">
+            <div class="kpi-icon-wrapper">
+              <i class="fa-solid fa-address-book"></i>
+            </div>
+            <div class="kpi-content">
+              <span class="kpi-label">Contactos Diretos</span>
+              <span class="kpi-number kpi-total-contactos">0</span>
+              <div class="kpi-subtext kpi-contactos-breakdown">
+                <!-- JS rendered -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de Pesquisa Específica da Página de Contactos -->
+        <div class="page-search-toolbar">
+          <i class="fa-solid fa-magnifying-glass search-icon" style="color: var(--primary-blue); font-size: 1.1rem;"></i>
+          <input type="text" id="contactPageSearchQuery" placeholder="Pesquisar apenas Contactos por nome, empresa, cargo, email..." oninput="renderContactPageMainGrid()" onkeypress="handlePageSearchKeyPress(event, 'contactos')">
+          <button class="btn btn-primary" onclick="executePageSearch('contactos')">
+            <i class="fa-solid fa-search"></i> Pesquisar Contactos
+          </button>
+          <button type="button" class="btn btn-sm btn-secondary" onclick="exportSearchToPDF('contactos')" title="Imprimir Pesquisa em PDF" style="gap: 0.35rem; font-size: 0.8rem; padding: 0.45rem 0.65rem; white-space: nowrap;">
+            <i class="fa-solid fa-file-pdf" style="color: #ef4444;"></i> PDF
+          </button>
+          <button type="button" class="btn btn-sm btn-secondary" onclick="exportSearchToExcel('contactos')" title="Exportar Pesquisa em Excel" style="gap: 0.35rem; font-size: 0.8rem; padding: 0.45rem 0.65rem; white-space: nowrap;">
+            <i class="fa-solid fa-file-excel" style="color: #10b981;"></i> Excel
+          </button>
+        </div>
+
+        <div style="margin-top: 1rem;">
+          <h3 style="font-size: 1.05rem; color: #1e3a8a; margin-bottom: 1rem;">
+            <i class="fa-solid fa-users"></i> Lista Completa de Contactos
+          </h3>
+          <div id="contactPageMainGrid" class="contacts-grid">
+            <!-- Dynamic Contacts Rendered Here -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: FICHA DE PROJETOS -->
+    <section id="tab-projetos" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <i class="fa-solid fa-briefcase"></i> Registo / Ficha do Projeto
+          </h2>
+          <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <div class="view-mode-toggle">
+              <button type="button" class="view-toggle-btn" id="btnProjectViewList" onclick="setProjectViewMode('list')" title="Visualização em Lista">
+                <i class="fa-solid fa-list"></i> Lista
+              </button>
+              <button type="button" class="view-toggle-btn active" id="btnProjectViewGrid" onclick="setProjectViewMode('grid')" title="Visualização em Cartões">
+                <i class="fa-solid fa-border-all"></i> Cartões
+              </button>
+            </div>
+            <button class="btn btn-secondary" onclick="resetProjectForm()">
+              <i class="fa-solid fa-folder-plus"></i> Novo Projeto
+            </button>
+          </div>
+        </div>
+
+        <!-- Indicador KPI de Projetos -->
+        <div class="dashboard-kpi-grid single-kpi-grid">
+          <div class="kpi-card kpi-projects">
+            <div class="kpi-icon-wrapper">
+              <i class="fa-solid fa-diagram-project"></i>
+            </div>
+            <div class="kpi-content">
+              <span class="kpi-label">Projetos Ativos</span>
+              <span class="kpi-number kpi-total-projetos">0</span>
+              <div class="kpi-subtext kpi-projetos-breakdown">
+                <!-- JS rendered -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de Pesquisa Específica da Página de Projetos -->
+        <div class="page-search-toolbar">
+          <i class="fa-solid fa-magnifying-glass search-icon" style="color: var(--primary-blue); font-size: 1.1rem;"></i>
+          <input type="text" id="projectPageSearchQuery" placeholder="Pesquisar apenas Projetos por nome, tipo, cliente, estado..." oninput="renderProjectPageMainGrid()" onkeypress="handlePageSearchKeyPress(event, 'projetos_nome')">
+          <button class="btn btn-primary" onclick="executePageSearch('projetos_nome')">
+            <i class="fa-solid fa-search"></i> Pesquisar Projetos
+          </button>
+          <button type="button" class="btn btn-sm btn-secondary" onclick="exportSearchToPDF('projetos')" title="Imprimir Pesquisa em PDF" style="gap: 0.35rem; font-size: 0.8rem; padding: 0.45rem 0.65rem; white-space: nowrap;">
+            <i class="fa-solid fa-file-pdf" style="color: #ef4444;"></i> PDF
+          </button>
+          <button type="button" class="btn btn-sm btn-secondary" onclick="exportSearchToExcel('projetos')" title="Exportar Pesquisa em Excel" style="gap: 0.35rem; font-size: 0.8rem; padding: 0.45rem 0.65rem; white-space: nowrap;">
+            <i class="fa-solid fa-file-excel" style="color: #10b981;"></i> Excel
+          </button>
+        </div>
+
+        <div style="margin-top: 1rem; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.05rem; color: #1e3a8a; margin-bottom: 1rem;">
+            <i class="fa-solid fa-folder-open"></i> Lista Completa de Projetos
+          </h3>
+          <div id="projectPageMainGrid" class="contacts-grid">
+            <!-- Dynamic Projects Rendered Here -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 4: CONFIGURAÇÃO DO SISTEMA -->
+    <section id="tab-database" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <i class="fa-solid fa-gear"></i> Configuração do Sistema
+          </h2>
+          <div>
+            <span class="badge badge-blue" id="dbStatsBadge">0 Clientes | 0 Contactos | 0 Projetos</span>
+          </div>
+        </div>
+
+        <p style="color: var(--text-muted); font-size: 0.92rem; margin-top: 0.5rem; margin-bottom: 1.5rem;">
+          Gerir cópias de segurança (backups), exportações completas e importações por ficheiro.
+        </p>
+
+        <!-- Grelha Reordenada de Botões e Controles de Configuração -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem;">
+          
+          <!-- BLOCO 1: Cópia de Segurança Completa -->
+          <div class="card" style="border: 1px solid var(--soft-blue-border); background: #f8fafc; padding: 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+              <div style="width: 42px; height: 42px; border-radius: 8px; background: #dbeafe; color: #1e40af; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                <i class="fa-solid fa-shield-halved"></i>
+              </div>
+              <div>
+                <h3 style="font-size: 1rem; color: #1e3a8a; margin: 0; font-weight: 700;">Cópia de Segurança Completa</h3>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Backup integral dos dados do sistema</span>
+              </div>
+            </div>
+            <p style="font-size: 0.85rem; color: #475569; margin-bottom: 1rem; line-height: 1.4;">
+              Exporte todos os registos do programa (Clientes, Contactos, Projetos e Interações) para um ficheiro de cópia de segurança.
+            </p>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button type="button" class="btn btn-primary" onclick="exportDatabaseJSON()" style="flex: 1.2; justify-content: center;">
+                <i class="fa-solid fa-download"></i> Criar Backup
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="triggerDatabaseImport()" style="flex: 1; justify-content: center;">
+                <i class="fa-solid fa-upload"></i> Restaurar Backup
+              </button>
+              <input type="file" id="fullDatabaseImportInput" accept=".json" onchange="importDatabaseJSON(event)" style="display:none;">
+            </div>
+          </div>
+
+          <!-- BLOCO 2: Importar Ficheiros por Ficha -->
+          <div class="card" style="border: 1px solid var(--soft-blue-border); background: #f8fafc; padding: 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+              <div style="width: 42px; height: 42px; border-radius: 8px; background: #e0e7ff; color: #3730a3; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                <i class="fa-solid fa-file-import"></i>
+              </div>
+              <div>
+                <h3 style="font-size: 1rem; color: #1e3a8a; margin: 0; font-weight: 700;">Importação de Ficheiros</h3>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Carregar ficheiros JSON, Excel (.xlsx) ou CSV</span>
+              </div>
+            </div>
+            <p style="font-size: 0.85rem; color: #475569; margin-bottom: 1rem; line-height: 1.4;">
+              Importe listagens específicas de Clientes, Contactos ou Projetos diretamente para o sistema.
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <button type="button" class="btn btn-outline" onclick="triggerCategoryImport('clientes')" style="justify-content: flex-start;">
+                <i class="fa-solid fa-building" style="color: var(--primary-blue); width: 20px;"></i> Importar Ficheiro de Clientes
+              </button>
+              <button type="button" class="btn btn-outline" onclick="triggerCategoryImport('contactos')" style="justify-content: flex-start;">
+                <i class="fa-solid fa-address-book" style="color: var(--primary-blue); width: 20px;"></i> Importar Ficheiro de Contactos
+              </button>
+              <button type="button" class="btn btn-outline" onclick="triggerCategoryImport('projetos')" style="justify-content: flex-start;">
+                <i class="fa-solid fa-folder-open" style="color: var(--primary-blue); width: 20px;"></i> Importar Ficheiro de Projetos
+              </button>
+              <input type="file" id="categoryImportInput" accept=".json,.xlsx,.xls,.csv" onchange="handleCategoryImport(event)" style="display:none;">
+            </div>
+          </div>
+
+          <!-- BLOCO 3: Atualização do Sistema -->
+          <div class="card" style="border: 1px solid #bae6fd; background: #f0f9ff; padding: 1.25rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.75rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 42px; height: 42px; border-radius: 8px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                  <i class="fa-solid fa-arrows-rotate"></i>
+                </div>
+                <div>
+                  <h3 style="font-size: 1rem; color: #0369a1; margin: 0; font-weight: 700;">Atualização do Sistema</h3>
+                  <span style="font-size: 0.78rem; color: #0284c7;">Versão Instalada: <strong id="installedVersionBadge" style="color: #0369a1;">V1.0</strong></span>
+                </div>
+              </div>
+            </div>
+
+            <p style="font-size: 0.85rem; color: #334155; margin-bottom: 1rem; line-height: 1.4;">
+              Verifique e instale automaticamente novas atualizações a partir da pasta de Atualizações.
+            </p>
+
+            <div style="display: flex; gap: 0.5rem;">
+              <button type="button" class="btn" id="btnRunSystemUpdate" onclick="checkAndInstallUpdate()" style="width: 100%; padding: 0.75rem 1rem; background: #0284c7; color: #ffffff; font-weight: 600; justify-content: center; border: 1px solid #0369a1; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);">
+                <i class="fa-solid fa-cloud-arrow-down"></i> Atualização
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL 1: JANELA DE RESULTADOS DE PESQUISA (EXCEL & PDF) -->
+  <div id="searchResultModal" class="modal-overlay">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title" id="searchModalTitle">
+          <i class="fa-solid fa-magnifying-glass"></i> Resultados da Pesquisa
+        </h3>
+        <button class="action-icon-btn" onclick="closeSearchModal()" style="color: #ffffff; font-size: 1.2rem;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div id="searchModalSummary" style="margin-bottom: 1rem; font-weight: 500; color: var(--text-muted);">
+          A carregar resultados...
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table" id="searchResultTable">
+            <thead id="searchResultTableHead">
+              <!-- Dynamic Headings -->
+            </thead>
+            <tbody id="searchResultTableBody">
+              <!-- Dynamic Body -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="modal-footer-export-btns">
+          <button class="btn btn-excel" onclick="exportSearchResultsToExcel()">
+            <i class="fa-solid fa-file-excel"></i> Exportar para Excel (.xlsx)
+          </button>
+          <button class="btn btn-pdf" onclick="exportSearchResultsToPDF()">
+            <i class="fa-solid fa-file-pdf"></i> Exportar para PDF (.pdf)
+          </button>
+        </div>
+
+        <button class="btn btn-close" onclick="closeSearchModal()">
+          <i class="fa-solid fa-xmark"></i> Fechar Janela
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE FICHA DE CLIENTE -->
+  <div id="clientModal" class="modal-overlay">
+    <div class="modal-window" style="max-width: 1240px; width: 94vw;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="clientModalTitle">
+          <i class="fa-solid fa-building-user"></i> Registo / Ficha do Cliente
+        </h3>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <button type="submit" form="clientForm" class="btn btn-primary btn-sm" style="padding: 0.25rem 0.65rem; font-size: 0.8rem; font-weight: 600; background: #ffffff; color: var(--primary-blue); border: none;" title="Guardar Alterações do Cliente">
+            <i class="fa-solid fa-floppy-disk"></i> Guardar
+          </button>
+          <button type="button" class="action-icon-btn" onclick="closeClientModal()" style="color: #ffffff; font-size: 1.2rem;">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <form id="clientForm" onsubmit="saveClient(event)">
+        <div class="modal-body">
           <input type="hidden" id="clientId">
 
           <div class="form-grid">
@@ -107,74 +562,88 @@
               </select>
             </div>
 
-            <!-- Campos Condicionais para Estatal -->
+            <!-- Campo Condicional para Estatal (Ministério) -->
             <div id="estatalFieldsContainer" class="form-grid col-8 conditional-field">
-              <div class="form-group col-6">
+              <div class="form-group col-12">
                 <label for="ministerio">Ministério *</label>
                 <input type="text" id="ministerio" class="form-control" placeholder="ex: Ministério da Economia">
               </div>
-              <div class="form-group col-6">
-                <label for="secretariaEstado">Secretaria de Estado *</label>
-                <input type="text" id="secretariaEstado" class="form-control" placeholder="ex: Secretaria de Estado do Turismo">
+            </div>
+
+            <!-- Secção de Separadores Dinâmicos para Cliente Estatal -->
+            <div id="estatalSeparadoresWrapper" class="col-12 conditional-field" style="display: none; margin-top: 0.5rem; margin-bottom: 1rem;">
+              <div class="estatal-tabs-bar">
+                <div id="estatalTabsList" class="estatal-tabs-list">
+                  <!-- As abas dos separadores serão renderizadas dinamicamente aqui -->
+                </div>
+                <button type="button" class="btn-add-tab" onclick="addEstatalSeparador()" title="Acrescente outro separador (+)">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+              <div id="estatalTabsContent" class="estatal-tabs-content">
+                <!-- Conteúdo do separador ativo renderizado via JS -->
               </div>
             </div>
 
-            <!-- Dados Básicos -->
-            <div class="form-group col-8">
-              <label for="clientNome">Nome / Razão Social *</label>
-              <input type="text" id="clientNome" class="form-control" placeholder="Nome completo da empresa ou cliente" required>
-            </div>
+            <!-- Campos da Ficha Padrão (Privado / Fundação) -->
+            <div id="standardClientFields" class="form-grid col-12" style="margin: 0; padding: 0;">
+              <!-- Dados Básicos -->
+              <div class="form-group col-8">
+                <label for="clientNome">Nome / Razão Social *</label>
+                <input type="text" id="clientNome" class="form-control" placeholder="Nome completo da empresa ou cliente">
+              </div>
 
-            <div class="form-group col-4">
-              <label for="clientContribuinte">Contribuinte (NIF) *</label>
-              <input type="text" id="clientContribuinte" class="form-control" placeholder="999999999" maxlength="9" required>
-            </div>
+              <div class="form-group col-4">
+                <label for="clientContribuinte">Contribuinte (NIF) *</label>
+                <input type="text" id="clientContribuinte" class="form-control" placeholder="999999999" maxlength="9">
+              </div>
 
-            <!-- Direção / Morada -->
-            <div class="form-group col-8">
-              <label for="clientDirecao1">Direção (Linha 1) *</label>
-              <input type="text" id="clientDirecao1" class="form-control" placeholder="Rua, Avenida, Praça..." required>
-            </div>
+              <!-- Direção / Morada -->
+              <div class="form-group col-8">
+                <label for="clientDirecao1">Direção (Linha 1)</label>
+                <input type="text" id="clientDirecao1" class="form-control" placeholder="Rua, Avenida, Praça...">
+              </div>
 
-            <div class="form-group col-4">
-              <label for="clientDirecao2">Direção (Linha 2)</label>
-              <input type="text" id="clientDirecao2" class="form-control" placeholder="Bloco, Edifício, Referência...">
-            </div>
+              <div class="form-group col-4">
+                <label for="clientDirecao2">Direção (Linha 2)</label>
+                <input type="text" id="clientDirecao2" class="form-control" placeholder="Bloco, Edifício, Referência...">
+              </div>
 
-            <div class="form-group col-2">
-              <label for="clientNumero">Nº</label>
-              <input type="text" id="clientNumero" class="form-control" placeholder="123">
-            </div>
+              <div class="form-group col-2">
+                <label for="clientNumero">Nº</label>
+                <input type="text" id="clientNumero" class="form-control" placeholder="123">
+              </div>
 
-            <div class="form-group col-2">
-              <label for="clientAndar">Andar</label>
-              <input type="text" id="clientAndar" class="form-control" placeholder="2º Dto">
-            </div>
+              <div class="form-group col-2">
+                <label for="clientAndar">Andar</label>
+                <input type="text" id="clientAndar" class="form-control" placeholder="2º Dto">
+              </div>
 
-            <div class="form-group col-4">
-              <label for="clientCodigoPostal">Código Postal (Portugal) *</label>
-              <input type="text" id="clientCodigoPostal" class="form-control" placeholder="1000-001" maxlength="8" oninput="formatCodigoPostal(this)" required>
-            </div>
+              <div class="form-group col-4">
+                <label for="clientCodigoPostal">Código Postal (Portugal)</label>
+                <input type="text" id="clientCodigoPostal" class="form-control" placeholder="1000-001" maxlength="8" oninput="formatCodigoPostal(this)">
+              </div>
 
-            <div class="form-group col-4">
-              <label for="clientLocalidade">Localidade *</label>
-              <input type="text" id="clientLocalidade" class="form-control" placeholder="ex: Lisboa, Porto, Tavira" required>
-            </div>
+              <div class="form-group col-4">
+                <label for="clientLocalidade">Localidade</label>
+                <input type="text" id="clientLocalidade" class="form-control" placeholder="ex: Lisboa, Porto, Tavira">
+              </div>
 
-            <!-- Contactos da Empresa -->
-            <div class="form-group col-4">
-              <label for="clientTelefone">Telefone</label>
-              <input type="tel" id="clientTelefone" class="form-control" placeholder="210 000 000">
-            </div>
+              <!-- Contactos da Empresa -->
+              <div class="form-group col-4">
+                <label for="clientTelefone">Telefone</label>
+                <input type="tel" id="clientTelefone" class="form-control" placeholder="210 000 000">
+              </div>
 
-            <div class="form-group col-4">
-              <label for="clientTelemovel">Telemóvel</label>
-              <input type="tel" id="clientTelemovel" class="form-control" placeholder="910 000 000">
-            </div>
+              <div class="form-group col-4">
+                <label for="clientTelemovel">Telemóvel</label>
+                <input type="tel" id="clientTelemovel" class="form-control" placeholder="910 000 000">
+              </div>
 
-            <div class="form-group col-4">
-              <label for="clientEmail">Email</label>
-              <input type="email" id="clientEmail" class="form-control" placeholder="contacto@empresa.pt">
+              <div class="form-group col-4">
+                <label for="clientEmail">Email</label>
+                <input type="email" id="clientEmail" class="form-control" placeholder="contacto@empresa.pt">
+              </div>
             </div>
           </div>
 
@@ -240,285 +709,67 @@
               <span class="empty-state">Nenhum contacto/interação registada com este cliente.</span>
             </div>
           </div>
+        </div>
 
-          <!-- Barra de Ações do Formulário de Cliente -->
-          <div class="form-actions-bar">
-            <button type="button" class="btn btn-danger" onclick="deleteCurrentClient()" id="btnDeleteClient" style="display: none;">
-              <i class="fa-solid fa-trash"></i> Apagar Cliente
-            </button>
-            <button type="button" class="btn btn-close" onclick="resetClientForm()">
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="deleteCurrentClient()" id="btnDeleteClient" style="display: none;">
+            <i class="fa-solid fa-trash"></i> Apagar Cliente
+          </button>
+          <div style="margin-left: auto; display: flex; gap: 0.5rem;">
+            <button type="button" class="btn btn-close" onclick="closeClientModal()">
               <i class="fa-solid fa-xmark"></i> Fechar Ficha
             </button>
-            <button type="submit" class="btn btn-primary">
-              <i class="fa-solid fa-floppy-disk"></i> Guardar Cliente
-            </button>
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <!-- TAB 2: FICHA DE PROJETOS -->
-    <section id="tab-projetos" class="tab-content">
-      <div class="card">
-        <div class="card-header">
-          <h2 class="card-title">
-            <i class="fa-solid fa-briefcase"></i> Registo / Ficha do Projeto
-          </h2>
-          <div>
-            <button class="btn btn-secondary" onclick="resetProjectForm()">
-              <i class="fa-solid fa-plus"></i> Novo Projeto
+            <button type="submit" class="btn btn-primary" style="font-weight: 600;">
+              <i class="fa-solid fa-floppy-disk"></i> Guardar Alterações
             </button>
           </div>
         </div>
-
-        <form id="projectForm" onsubmit="saveProject(event)">
-          <input type="hidden" id="projectId">
-
-          <div class="form-grid">
-            <div class="form-group col-8">
-              <label for="projectNome">Nome do Projeto *</label>
-              <input type="text" id="projectNome" class="form-control" placeholder="ex: Campanha de Verão 2026" required>
-            </div>
-
-            <div class="form-group col-4">
-              <label for="projectTipo">Tipo de Projeto *</label>
-              <select id="projectTipo" class="form-control" required>
-                <option value="Compra UM">Compra UM</option>
-                <option value="Aluguer UM">Aluguer UM</option>
-                <option value="Campanha">Campanha</option>
-              </select>
-            </div>
-
-            <div class="form-group col-6">
-              <label for="projectClienteId">Nome do Cliente *</label>
-              <select id="projectClienteId" class="form-control" onchange="handleProjectClientSelectChange()" required>
-                <option value="">-- Selecione um Cliente --</option>
-              </select>
-            </div>
-
-            <div class="form-group col-3">
-              <label for="projectContacto1">Contacto do Cliente (1) *</label>
-              <select id="projectContacto1" class="form-control" required>
-                <option value="">-- Selecione Contacto --</option>
-              </select>
-            </div>
-
-            <div class="form-group col-3">
-              <label for="projectContacto2">Contacto do Cliente (2)</label>
-              <select id="projectContacto2" class="form-control">
-                <option value="">-- Opcional / Selecione --</option>
-              </select>
-            </div>
-
-            <div class="form-group col-3">
-              <label for="projectDataInicio">Data de Início *</label>
-              <input type="date" id="projectDataInicio" class="form-control" required>
-            </div>
-
-            <div class="form-group col-3">
-              <label for="projectDataFim">Data de Fim *</label>
-              <input type="date" id="projectDataFim" class="form-control" required>
-            </div>
-
-            <div class="form-group col-2">
-              <label for="projectEstado">Estado *</label>
-              <select id="projectEstado" class="form-control" required>
-                <option value="Adjudicado">Adjudicado</option>
-                <option value="Não adjudicado">Não adjudicado</option>
-              </select>
-            </div>
-
-            <div class="form-group col-2">
-              <label for="projectViatura">Viatura</label>
-              <input type="text" id="projectViatura" class="form-control" placeholder="ex: Carrinha Box">
-            </div>
-
-            <div class="form-group col-2">
-              <label for="projectMatricula">Matrícula</label>
-              <input type="text" id="projectMatricula" class="form-control" placeholder="AA-00-AA" style="text-transform: uppercase;">
-            </div>
-          </div>
-
-          <!-- Barra de Ações do Formulário de Projeto -->
-          <div class="form-actions-bar">
-            <button type="button" class="btn btn-danger" onclick="deleteCurrentProject()" id="btnDeleteProject" style="display: none;">
-              <i class="fa-solid fa-trash"></i> Apagar Projeto
-            </button>
-            <button type="button" class="btn btn-close" onclick="resetProjectForm()">
-              <i class="fa-solid fa-xmark"></i> Fechar Ficha
-            </button>
-            <button type="submit" class="btn btn-primary">
-              <i class="fa-solid fa-floppy-disk"></i> Guardar Projeto
-            </button>
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <!-- TAB 3: BASES DE DADOS -->
-    <section id="tab-database" class="tab-content">
-      <div class="card">
-        <div class="card-header">
-          <h2 class="card-title">
-            <i class="fa-solid fa-table"></i> Gestão Integrada de Bases de Dados
-          </h2>
-          <div>
-            <span class="badge badge-blue" id="dbStatsBadge">0 Clientes | 0 Contactos | 0 Projetos</span>
-          </div>
-        </div>
-
-        <div style="margin-bottom: 1.5rem;">
-          <h3 style="font-size: 1.05rem; color: #1e3a8a; margin-bottom: 0.75rem;">
-            <i class="fa-solid fa-building"></i> Base de Dados de Clientes
-          </h3>
-          <div class="table-responsive">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Tipo</th>
-                  <th>Nome / Razão Social</th>
-                  <th>NIF</th>
-                  <th>Código Postal</th>
-                  <th>Localidade</th>
-                  <th>Telefone / Telemóvel</th>
-                  <th>Email</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody id="dbClientsTableBody">
-                <!-- Dynamic Rows -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div style="margin-bottom: 1.5rem;">
-          <h3 style="font-size: 1.05rem; color: #1e3a8a; margin-bottom: 0.75rem;">
-            <i class="fa-solid fa-folder"></i> Base de Dados de Projetos
-          </h3>
-          <div class="table-responsive">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Nome do Projeto</th>
-                  <th>Tipo</th>
-                  <th>Cliente</th>
-                  <th>Datas</th>
-                  <th>Estado</th>
-                  <th>Viatura / Matrícula</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody id="dbProjectsTableBody">
-                <!-- Dynamic Rows -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div>
-          <h3 style="font-size: 1.05rem; color: #1e3a8a; margin-bottom: 0.75rem;">
-            <i class="fa-solid fa-address-book"></i> Base de Dados de Contactos
-          </h3>
-          <div class="table-responsive">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Nome Completo</th>
-                  <th>Empresa / Cliente</th>
-                  <th>Cargo</th>
-                  <th>Telefone / Telemóvel</th>
-                  <th>Email</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody id="dbContactsTableBody">
-                <!-- Dynamic Rows -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- MODAL 1: JANELA DE RESULTADOS DE PESQUISA (EXCEL & PDF) -->
-  <div id="searchResultModal" class="modal-overlay">
-    <div class="modal-window">
-      <div class="modal-header">
-        <h3 class="modal-title" id="searchModalTitle">
-          <i class="fa-solid fa-magnifying-glass"></i> Resultados da Pesquisa
-        </h3>
-        <button class="action-icon-btn" onclick="closeSearchModal()" style="color: #ffffff; font-size: 1.2rem;">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <div class="modal-body">
-        <div id="searchModalSummary" style="margin-bottom: 1rem; font-weight: 500; color: var(--text-muted);">
-          A carregar resultados...
-        </div>
-
-        <div class="table-responsive">
-          <table class="data-table" id="searchResultTable">
-            <thead id="searchResultTableHead">
-              <!-- Dynamic Headings -->
-            </thead>
-            <tbody id="searchResultTableBody">
-              <!-- Dynamic Body -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <div class="modal-footer-export-btns">
-          <button class="btn btn-excel" onclick="exportSearchResultsToExcel()">
-            <i class="fa-solid fa-file-excel"></i> Exportar para Excel (.xlsx)
-          </button>
-          <button class="btn btn-pdf" onclick="exportSearchResultsToPDF()">
-            <i class="fa-solid fa-file-pdf"></i> Exportar para PDF (.pdf)
-          </button>
-        </div>
-
-        <button class="btn btn-close" onclick="closeSearchModal()">
-          <i class="fa-solid fa-xmark"></i> Fechar Janela
-        </button>
-      </div>
+      </form>
     </div>
   </div>
 
   <!-- MODAL 2: EDITAR / ADICIONAR CONTACTO -->
   <div id="contactModal" class="modal-overlay">
-    <div class="modal-window" style="max-width: 650px;">
-      <div class="modal-header">
-        <h3 class="modal-title" id="contactModalTitle">
-          <i class="fa-solid fa-user-gear"></i> Ficha de Contacto
-        </h3>
-        <button class="action-icon-btn" onclick="closeContactModal()" style="color: #ffffff; font-size: 1.2rem;">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
+    <div class="modal-window" style="max-width: 900px; width: 90vw;">
       <form id="contactForm" onsubmit="saveContact(event)">
+        <div class="modal-header">
+          <h3 class="modal-title" id="contactModalTitle">
+            <i class="fa-solid fa-user-gear"></i> Ficha de Contacto
+          </h3>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <button type="button" class="btn btn-primary btn-sm" style="padding: 0.25rem 0.65rem; font-size: 0.8rem; font-weight: 600; background: #ffffff; color: var(--primary-blue); border: none;" title="Guardar Alterações do Contacto" onclick="saveContact(null)">
+              <i class="fa-solid fa-floppy-disk"></i> Guardar
+            </button>
+            <button type="button" class="action-icon-btn" onclick="closeContactModal()" style="color: #ffffff; font-size: 1.2rem;">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        </div>
+
         <div class="modal-body">
           <input type="hidden" id="contactId">
 
           <div class="form-grid">
+            <div class="form-group col-12">
+              <label for="contactClienteId">Cliente Associado (Empresa) *</label>
+              <select id="contactClienteId" class="form-control" required>
+                <option value="">-- Selecione o Cliente --</option>
+              </select>
+            </div>
+
             <div class="form-group col-6">
               <label for="contactNome">Nome *</label>
               <input type="text" id="contactNome" class="form-control" required placeholder="Primeiro Nome">
             </div>
 
             <div class="form-group col-6">
-              <label for="contactApelido">Apelido *</label>
-              <input type="text" id="contactApelido" class="form-control" required placeholder="Último Nome">
+              <label for="contactApelido">Apelido</label>
+              <input type="text" id="contactApelido" class="form-control" placeholder="Último Nome">
             </div>
 
             <div class="form-group col-12">
-              <label for="contactCargo">Cargo *</label>
-              <input type="text" id="contactCargo" class="form-control" required placeholder="ex: Diretor de Compras / Gerente">
+              <label for="contactCargo">Cargo</label>
+              <input type="text" id="contactCargo" class="form-control" placeholder="ex: Diretor de Compras / Gerente">
             </div>
 
             <div class="form-group col-6">
@@ -552,8 +803,8 @@
             <button type="button" class="btn btn-close" onclick="closeContactModal()">
               <i class="fa-solid fa-xmark"></i> Fechar
             </button>
-            <button type="submit" class="btn btn-primary">
-              <i class="fa-solid fa-floppy-disk"></i> Guardar Contacto
+            <button type="button" class="btn btn-primary" style="font-weight: 600;" onclick="saveContact(null)">
+              <i class="fa-solid fa-floppy-disk"></i> Guardar Alterações
             </button>
           </div>
         </div>
@@ -561,7 +812,7 @@
     </div>
   </div>
 
-  <!-- MODAL DE REGISTO DE CONTACTO REALIZADO / INTERAÇÃO -->
+  <!-- MODAL DE REGISTO DE CONTACTO REALIZADO / INTERAÇÃO DO CLIENTE -->
   <div id="interactionModal" class="modal-overlay">
     <div class="modal-window" style="max-width: 750px;">
       <div class="modal-header">
@@ -607,12 +858,334 @@
     </div>
   </div>
 
+  <!-- MODAL DE FICHA DE PROJETO -->
+  <div id="projectModal" class="modal-overlay">
+    <div class="modal-window" style="max-width: 1240px; width: 94vw;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="projectModalTitle">
+          <i class="fa-solid fa-diagram-project"></i> Registo / Ficha do Projeto
+        </h3>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <button type="submit" form="projectForm" class="btn btn-primary btn-sm" style="padding: 0.25rem 0.65rem; font-size: 0.8rem; font-weight: 600; background: #ffffff; color: var(--primary-blue); border: none;" title="Guardar Alterações do Projeto">
+            <i class="fa-solid fa-floppy-disk"></i> Guardar
+          </button>
+          <button type="button" class="action-icon-btn" onclick="closeProjectModal()" style="color: #ffffff; font-size: 1.2rem;">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <form id="projectForm" onsubmit="saveProject(event)">
+        <div class="modal-body">
+          <input type="hidden" id="projectId">
+
+          <div class="form-grid">
+            <div class="form-group col-8">
+              <label for="projectNome">Nome do Projeto *</label>
+              <input type="text" id="projectNome" class="form-control" placeholder="ex: Campanha de Verão 2026" required>
+            </div>
+
+            <div class="form-group col-4">
+              <label for="projectTipo">Tipo de Projeto *</label>
+              <select id="projectTipo" class="form-control" required>
+                <option value="Compra UM">Compra UM</option>
+                <option value="Aluguer UM">Aluguer UM</option>
+                <option value="Campanha">Campanha</option>
+                <option value="Aguardar">Aguardar</option>
+              </select>
+            </div>
+
+            <div class="form-group col-6">
+              <label for="projectClienteId">Nome do Cliente *</label>
+              <select id="projectClienteId" class="form-control" onchange="handleProjectClientSelectChange()" required>
+                <option value="">-- Selecione um Cliente --</option>
+              </select>
+            </div>
+
+            <div class="form-group col-3">
+              <label for="projectContacto1">Contacto do Cliente (1) *</label>
+              <select id="projectContacto1" class="form-control" required>
+                <option value="">-- Selecione Contacto --</option>
+              </select>
+            </div>
+
+            <div class="form-group col-3">
+              <label for="projectContacto2">Contacto do Cliente (2)</label>
+              <select id="projectContacto2" class="form-control">
+                <option value="">-- Opcional / Selecione --</option>
+              </select>
+            </div>
+
+            <div class="form-group col-3">
+              <label for="projectDataInicio">Data de Início *</label>
+              <input type="date" id="projectDataInicio" class="form-control" required>
+            </div>
+
+            <div class="form-group col-3">
+              <label for="projectDataFim">Data de Fim</label>
+              <input type="date" id="projectDataFim" class="form-control">
+            </div>
+
+            <div class="form-group col-2">
+              <label for="projectEstado">Estado *</label>
+              <select id="projectEstado" class="form-control" required>
+                <option value="Adjudicado">Adjudicado</option>
+                <option value="Não adjudicado">Não adjudicado</option>
+                <option value="Em Orçamento">Em Orçamento</option>
+                <option value="Em Curso">Em Curso</option>
+                <option value="Concluído">Concluído</option>
+                <option value="Aguardar">Aguardar</option>
+                <option value="Cancelado">Cancelado</option>
+              </select>
+            </div>
+
+            <div class="form-group col-2">
+              <label for="projectViatura">Viatura</label>
+              <input type="text" id="projectViatura" class="form-control" placeholder="ex: Carrinha Box">
+            </div>
+
+            <div class="form-group col-2">
+              <label for="projectMatricula">Matrícula</label>
+              <input type="text" id="projectMatricula" class="form-control" placeholder="AA-00-AA" style="text-transform: uppercase;">
+            </div>
+          </div>
+
+          <!-- Secção Integrada de Registo de Contactos / Notas do Projeto -->
+          <div class="embedded-section">
+            <div class="embedded-header">
+              <h3 class="embedded-title">
+                <i class="fa-solid fa-phone-volume"></i> Registo de Contactos / Notas do Projeto
+              </h3>
+            </div>
+
+            <!-- Formulário em Linha: Campo de Data + Campo em frente de Escrita Livre Auto-expansível -->
+            <div class="inline-interaction-container">
+              <div class="inline-interaction-row">
+                <div class="form-group inline-date-col">
+                  <label for="quickProjectInteractionData">Data do Registo *</label>
+                  <input type="datetime-local" id="quickProjectInteractionData" class="form-control">
+                </div>
+                <div class="form-group inline-text-col">
+                  <label for="quickProjectInteractionText">Registo do Projeto (Escrita Livre) *</label>
+                  <textarea id="quickProjectInteractionText" class="auto-expand-textarea" placeholder="Escreva aqui livremente os detalhes e notas do projeto..." oninput="autoExpandTextarea(this)"></textarea>
+                </div>
+                <div style="align-self: flex-end;">
+                  <button type="button" class="btn btn-primary" onclick="addQuickProjectInteraction()" style="white-space: nowrap;">
+                    <i class="fa-solid fa-plus"></i> Adicionar Registo
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div id="projectInteractionsGrid" class="interactions-grid">
+              <span class="empty-state">Nenhum registo efetuado para este projeto.</span>
+            </div>
+          </div>
+
+          <!-- Secção de Documentos do Projeto -->
+          <div class="card" style="margin-top: 1.25rem; background: var(--primary-blue-light); border: 1px solid var(--soft-blue-border);">
+            <div class="card-header" style="padding-bottom: 0.75rem; border-bottom: 1px solid var(--soft-blue-border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+              <h3 class="card-title" style="font-size: 1.05rem; color: var(--navy-dark); margin: 0;">
+                <i class="fa-solid fa-folder-open"></i> Documentos do Projeto
+              </h3>
+              <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                <input type="file" id="projectDocsInput" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.rar,.csv,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onchange="handleProjectDocsUpload(event)" style="display: none;">
+                <button type="button" class="btn btn-primary btn-sm" onclick="triggerProjectDocsUpload()">
+                  <i class="fa-solid fa-cloud-arrow-up"></i> Importar Documentos
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="exportProjectDocsAll()">
+                  <i class="fa-solid fa-cloud-arrow-down"></i> Exportar Documentos
+                </button>
+              </div>
+            </div>
+            <div class="card-body" style="padding: 1rem;">
+              <div id="projectDocsGrid" class="media-grid">
+                <!-- Ficheiros de documentos renderizados via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Secção de Fotografias e Vídeos do Projeto -->
+          <div class="card" style="margin-top: 1.25rem; background: var(--primary-blue-light); border: 1px solid var(--soft-blue-border);">
+            <div class="card-header" style="padding-bottom: 0.75rem; border-bottom: 1px solid var(--soft-blue-border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+              <h3 class="card-title" style="font-size: 1.05rem; color: var(--navy-dark); margin: 0;">
+                <i class="fa-solid fa-photo-film"></i> Fotografias e Vídeos do Projeto
+              </h3>
+              <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                <input type="file" id="projectMediaInput" multiple accept="image/*,video/*" onchange="handleProjectMediaUpload(event)" style="display: none;">
+                <button type="button" class="btn btn-primary btn-sm" onclick="triggerProjectMediaUpload()">
+                  <i class="fa-solid fa-cloud-arrow-up"></i> Importar Fotos / Vídeos
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="exportProjectMediaZip()">
+                  <i class="fa-solid fa-cloud-arrow-down"></i> Exportar Fotos / Vídeos
+                </button>
+              </div>
+            </div>
+            <div class="card-body" style="padding: 1rem;">
+              <div id="projectMediaGrid" class="media-grid">
+                <!-- Miniaturas de fotos e vídeos renderizadas via JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="duplicateCurrentProject()" id="btnDuplicateProject" style="display: none; background: #e0f2fe; color: #0369a1; border-color: #7dd3fc;">
+            <i class="fa-solid fa-copy"></i> Duplicar Projeto
+          </button>
+          <button type="button" class="btn btn-danger" onclick="deleteCurrentProject()" id="btnDeleteProject" style="display: none;">
+            <i class="fa-solid fa-trash"></i> Apagar Projeto
+          </button>
+          <div style="margin-left: auto; display: flex; gap: 0.5rem;">
+            <button type="button" class="btn btn-close" onclick="closeProjectModal()">
+              <i class="fa-solid fa-xmark"></i> Fechar Ficha
+            </button>
+            <button type="submit" class="btn btn-primary" style="font-weight: 600;">
+              <i class="fa-solid fa-floppy-disk"></i> Guardar Alterações
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL DE EDITAR REGISTO DO PROJETO -->
+  <div id="projectInteractionModal" class="modal-overlay">
+    <div class="modal-window" style="max-width: 750px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="projectInteractionModalTitle">
+          <i class="fa-solid fa-phone-volume"></i> Editar Registo do Projeto
+        </h3>
+        <button class="action-icon-btn" onclick="closeProjectInteractionModal()" style="color: #ffffff; font-size: 1.2rem;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="projectInteractionForm" onsubmit="saveProjectInteraction(event)">
+        <div class="modal-body">
+          <input type="hidden" id="projectInteractionId">
+
+          <div class="form-grid">
+            <div class="form-group col-4">
+              <label for="projectInteractionData">Data do Registo *</label>
+              <input type="datetime-local" id="projectInteractionData" class="form-control" required>
+            </div>
+
+            <div class="form-group col-8">
+              <label for="projectInteractionDescricao">Registo Livre do Projeto (Expande Automaticamente) *</label>
+              <textarea id="projectInteractionDescricao" class="auto-expand-textarea" placeholder="Escreva livremente as notas do projeto..." oninput="autoExpandTextarea(this)" required></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="deleteCurrentProjectInteractionModal()" id="btnDeleteProjectInteraction" style="display: none;">
+            <i class="fa-solid fa-trash"></i> Apagar Registo
+          </button>
+          <div style="margin-left: auto; display: flex; gap: 0.5rem;">
+            <button type="button" class="btn btn-close" onclick="closeProjectInteractionModal()">
+              <i class="fa-solid fa-xmark"></i> Fechar
+            </button>
+            <button type="submit" class="btn btn-primary">
+              <i class="fa-solid fa-floppy-disk"></i> Guardar Registo
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- OVERLAY DE SESSÃO ENCERRADA COM SEGURANÇA -->
+  <div id="closeAppOverlay" class="modal-overlay" style="z-index: 9999; background: rgba(15, 23, 42, 0.9);">
+    <div class="modal-window" style="max-width: 500px; text-align: center; padding: 2.5rem 1.5rem;">
+      <div style="font-size: 3.5rem; color: #10b981; margin-bottom: 1rem;">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <h2 style="color: #1e3a8a; font-size: 1.5rem; margin-bottom: 0.75rem;">Dados Guardados com Sucesso!</h2>
+      <p style="color: var(--text-main); font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem;">
+        A sua sessão foi encerrada com segurança e todas as informações de Clientes, Contactos e Projetos foram guardadas.
+      </p>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.75rem;">
+        Pode fechar este separador do navegador com toda a segurança.
+      </p>
+      <button class="btn btn-primary" onclick="reopenApplication()" style="margin: 0 auto; width: auto; padding: 0.75rem 1.75rem;">
+        <i class="fa-solid fa-rotate-left"></i> Reabrir Aplicação
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL DE RESOLUÇÃO DE DADOS DUPLICADOS -->
+  <div id="duplicateResolutionModal" class="modal-overlay" style="z-index: 9999;">
+    <div class="modal-window" style="max-width: 620px; padding: 1.75rem;">
+      <div class="modal-header" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+        <h3 class="modal-title" style="color: #ffffff; font-size: 1.15rem;">
+          <i class="fa-solid fa-triangle-exclamation"></i> Duplicação Detetada
+        </h3>
+        <button class="action-icon-btn" onclick="closeDuplicateResolutionModal()" style="color: #ffffff; font-size: 1.2rem;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body" style="padding: 1.5rem 0;">
+        <div style="background-color: #fef3c7; border: 1px solid #fde68a; border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.25rem; color: #92400e; font-size: 0.92rem; line-height: 1.5;">
+          <i class="fa-solid fa-circle-info" style="font-size: 1.1rem; color: #d97706; margin-right: 0.4rem;"></i>
+          <span id="duplicateModalText">Foi detetado um registo duplicado na base de dados.</span>
+        </div>
+
+        <p style="font-weight: 600; color: var(--navy-dark); font-size: 0.95rem; margin-bottom: 1rem;">
+          Como pretende proceder com este registo duplicado?
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+          <!-- Opção 1: Manter Anterior (Apagar/Descartar Novo) -->
+          <button type="button" class="btn" onclick="resolveDuplicateAction('keep_existing')" style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; text-align: left; padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between; border-radius: var(--radius-md); cursor: pointer;">
+            <div>
+              <strong style="color: #0f172a; display: block; font-size: 0.95rem; margin-bottom: 0.2rem;">
+                <i class="fa-solid fa-trash-can" style="color: #ef4444; margin-right: 0.4rem;"></i> Descartar Novo (Apagar o Atual)
+              </strong>
+              <span style="font-size: 0.82rem; color: #64748b;">Cancela a criação e apaga os dados novos que está a introduzir, mantendo a ficha anterior intacta.</span>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="color: #94a3b8; font-size: 1.1rem;"></i>
+          </button>
+
+          <!-- Opção 2: Apagar Anterior (Substituir pelo Novo) -->
+          <button type="button" class="btn" onclick="resolveDuplicateAction('replace_existing')" style="background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; text-align: left; padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between; border-radius: var(--radius-md); cursor: pointer;">
+            <div>
+              <strong style="color: #991b1b; display: block; font-size: 0.95rem; margin-bottom: 0.2rem;">
+                <i class="fa-solid fa-rotate" style="color: #dc2626; margin-right: 0.4rem;"></i> Substituir Anterior (Apagar o Anterior)
+              </strong>
+              <span style="font-size: 0.82rem; color: #b91c1c;">Apaga a ficha anterior existente e substitui-a integralmente pelos novos dados introduzidos.</span>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="color: #f87171; font-size: 1.1rem;"></i>
+          </button>
+
+          <!-- Opção 3: Combinar / Fundir Dados de Ambos -->
+          <button type="button" class="btn" onclick="resolveDuplicateAction('merge')" style="background: #eff6ff; color: #1e40af; border: 1px solid #93c5fd; text-align: left; padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between; border-radius: var(--radius-md); cursor: pointer;">
+            <div>
+              <strong style="color: #1e3a8a; display: block; font-size: 0.95rem; margin-bottom: 0.2rem;">
+                <i class="fa-solid fa-code-merge" style="color: #2563eb; margin-right: 0.4rem;"></i> Combinar Informação de Ambos
+              </strong>
+              <span style="font-size: 0.82rem; color: #1d4ed8;">Funde os dados, preenchendo as informações em falta na ficha anterior com os novos dados introduzidos.</span>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="color: #60a5fa; font-size: 1.1rem;"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="justify-content: flex-end;">
+        <button type="button" class="btn btn-secondary" onclick="closeDuplicateResolutionModal()">
+          <i class="fa-solid fa-xmark"></i> Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL 3: INTEGRACAO E BACKUP GOOGLE DRIVE -->
   <div id="driveModal" class="modal-overlay">
-    <div class="modal-window" style="max-width: 650px;">
+    <div class="modal-window" style="max-width: 700px;">
       <div class="modal-header">
         <h3 class="modal-title">
-          <i class="fa-brands fa-google-drive"></i> Gestão & Backup no Google Drive
+          <i class="fa-brands fa-google-drive"></i> Gestão & Guardar no Google Drive (jjota26@gmail.com)
         </h3>
         <button class="action-icon-btn" onclick="closeDriveModal()" style="color: #ffffff; font-size: 1.2rem;">
           <i class="fa-solid fa-xmark"></i>
@@ -620,32 +1193,52 @@
       </div>
 
       <div class="modal-body">
-        <div style="background-color: var(--soft-blue-bg); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.25rem;">
-          <h4 style="color: #1e3a8a; margin-bottom: 0.5rem;"><i class="fa-solid fa-shield-halved"></i> Conta associada: jjota26@gmail.com</h4>
+        <div style="background-color: var(--soft-blue-bg); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.25rem; border: 1px solid var(--soft-blue-border);">
+          <h4 style="color: #1e3a8a; margin-bottom: 0.5rem;"><i class="fa-solid fa-shield-halved"></i> Conta Google: jjota26@gmail.com</h4>
           <p style="font-size: 0.88rem; color: var(--text-main);">
-            Os dados do programa <strong>Centauro</strong> são armazenados localmente com extrema rapidez e podem ser exportados/sincronizados diretamente para a sua conta Google Drive.
+            O programa <strong>SIGEC-Pro</strong> e o ficheiro de dados podem ser guardados diretamente na sua conta Google Drive.
           </p>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 1rem;">
           <div style="border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-md);">
-            <h5 style="font-weight: 600; margin-bottom: 0.4rem;"><i class="fa-solid fa-download"></i> Cópia de Segurança Local (JSON)</h5>
+            <h5 style="font-weight: 600; margin-bottom: 0.4rem; color: #1e3a8a;"><i class="fa-solid fa-cloud-arrow-up"></i> 1. Guardar o Programa no Google Drive</h5>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
-              Descarregue o ficheiro de base de dados completo para guardar na sua pasta do Google Drive ou computador.
+              Foi criado o pacote comprimido do programa <code>Programa_SIGEC-Pro_jjota26.zip</code> no seu computador. Clique no botão abaixo para abrir o seu Google Drive e arrastar o ficheiro/pasta:
             </p>
-            <button class="btn btn-primary" onclick="exportDatabaseJSON()">
-              <i class="fa-solid fa-file-export"></i> Descarregar Backup (centauro_db.json)
+            <a href="https://drive.google.com" target="_blank" class="btn btn-primary">
+              <i class="fa-brands fa-google-drive"></i> Abrir Google Drive (drive.google.com)
+            </a>
+          </div>
+
+          <div style="border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-md);">
+            <h5 style="font-weight: 600; margin-bottom: 0.4rem; color: #1e3a8a;"><i class="fa-solid fa-cloud-arrow-up"></i> 2. Guardar Cópia de Segurança na Pasta "Backups"</h5>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+              Descarregue o ficheiro de cópia de segurança <code>Backup_SIGEC-Pro_jjota26_Data_Hora.json</code> com todos os registos para guardar na pasta <strong>Backups</strong> do Google Drive (<code>jjota26@gmail.com</code>).
+            </p>
+            <button class="btn btn-primary" onclick="exportDatabaseJSON()" style="background: #1e40af;">
+              <i class="fa-solid fa-file-export"></i> Criar Backup para Pasta "Backups"
             </button>
           </div>
 
           <div style="border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-md);">
-            <h5 style="font-weight: 600; margin-bottom: 0.4rem;"><i class="fa-solid fa-upload"></i> Restaurar / Importar Base de Dados</h5>
+            <h5 style="font-weight: 600; margin-bottom: 0.4rem; color: #1e3a8a;"><i class="fa-solid fa-file-import"></i> 3. Restaurar / Carregar do Google Drive</h5>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
-              Selecione um ficheiro <code>centauro_db.json</code> anteriormente guardado no seu Google Drive para restaurar.
+              Selecione um ficheiro de backup guardado na pasta <strong>Backups</strong> do seu Google Drive (<code>jjota26@gmail.com</code>).
             </p>
             <input type="file" id="importFileInput" accept=".json" style="display: none;" onchange="importDatabaseJSON(event)">
-            <button class="btn btn-secondary" onclick="document.getElementById('importFileInput').click()">
-              <i class="fa-solid fa-file-import"></i> Carregar Ficheiro de Backup
+            <button class="btn btn-secondary" onclick="document.getElementById('importFileInput').click()" style="background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; font-weight: 600;">
+              <i class="fa-solid fa-file-import" style="color: #0284c7;"></i> Carregar Backup do Google Drive
+            </button>
+          </div>
+
+          <div style="border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-md);">
+            <h5 style="font-weight: 600; margin-bottom: 0.4rem; color: #0369a1;"><i class="fa-solid fa-arrows-rotate"></i> 4. Ficheiros de Atualização na Pasta "Atualizações"</h5>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+              Guarde os novos ficheiros de atualização (ex.: <code>SIGEC_V1.1.json</code>) na pasta <strong>Atualizações</strong> da sua conta Google Drive (<code>jjota26@gmail.com</code>).
+            </p>
+            <button class="btn btn-secondary" onclick="checkAndInstallUpdate()" style="background: #f0f9ff; color: #0284c7; border: 1px solid #7dd3fc; font-weight: 600;">
+              <i class="fa-solid fa-cloud-arrow-down" style="color: #0284c7;"></i> Verificar Pasta "Atualizações" no Drive
             </button>
           </div>
         </div>
@@ -653,7 +1246,7 @@
 
       <div class="modal-footer">
         <div style="font-size: 0.8rem; color: var(--text-muted);">
-          Estado: <strong style="color: var(--success-green);"><i class="fa-solid fa-circle-check"></i> Base de dados Ativa & Protegida</strong>
+          Conta: <strong style="color: #1e3a8a;"><i class="fa-solid fa-user-check"></i> jjota26@gmail.com</strong>
         </div>
         <button class="btn btn-close" onclick="closeDriveModal()">
           <i class="fa-solid fa-xmark"></i> Fechar Janela
@@ -662,10 +1255,269 @@
     </div>
   </div>
 
+  <!-- MODAL VISUALIZADOR DE FOTOS E VÍDEOS -->
+  <div id="mediaViewerModal" class="modal-overlay">
+    <div class="modal-window" style="max-width: 900px; padding: 1.5rem;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="mediaViewerTitle" style="font-size: 1.1rem; color: #ffffff;">
+          <i class="fa-solid fa-eye"></i> Visualizar Ficheiro
+        </h3>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <button class="btn btn-secondary btn-sm" id="btnDownloadCurrentMedia">
+            <i class="fa-solid fa-download"></i> Descarregar
+          </button>
+          <button class="action-icon-btn" onclick="closeMediaViewerModal()" style="color: #ffffff; font-size: 1.2rem;">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+      <div class="modal-body" style="text-align: center; padding: 1.5rem 0; overflow: auto; max-height: 75vh;">
+        <div id="mediaViewerContainer"></div>
+      </div>
+      <div class="modal-footer" style="justify-content: space-between;">
+        <span id="mediaViewerInfo" style="font-size: 0.85rem; color: var(--text-muted);"></span>
+        <button type="button" class="btn btn-secondary" onclick="closeMediaViewerModal()">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE TRANSFERÊNCIA DE CONTACTO ENTRE CLIENTES -->
+  <div id="transferContactModal" class="modal-overlay">
+    <div class="modal-window" style="max-width: 550px; padding: 1.5rem;">
+      <div class="modal-header">
+        <h3 class="modal-title" style="color: #ffffff; font-size: 1.1rem;">
+          <i class="fa-solid fa-arrow-right-arrow-left"></i> Mudar Contacto para Outro Cliente
+        </h3>
+        <button class="action-icon-btn" onclick="closeTransferContactModal()" style="color: #ffffff; font-size: 1.2rem;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="transferContactForm" onsubmit="saveTransferContact(event)">
+        <div class="modal-body" style="padding: 1.25rem 0;">
+          <input type="hidden" id="transferContactId">
+          
+          <div style="background: var(--soft-blue-bg); border: 1px solid var(--soft-blue-border); padding: 0.85rem; border-radius: var(--radius-sm); margin-bottom: 1.25rem;">
+            <p style="font-size: 0.9rem; color: var(--navy-dark); margin: 0;">
+              Contacto: <strong id="transferContactName" style="color: var(--primary-blue);"></strong>
+            </p>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.35rem;">
+              Cliente Atual: <span id="transferCurrentClientName" style="font-weight: 600;"></span>
+            </p>
+          </div>
+
+          <div class="form-group">
+            <label for="transferTargetClientId">Selecione o Novo Cliente *</label>
+            <select id="transferTargetClientId" class="form-control" required style="width: 100%; padding: 0.55rem;" onchange="handleTransferTargetClientChange()">
+              <option value="">-- Selecione o Novo Cliente --</option>
+            </select>
+          </div>
+
+          <div id="transferSubTabGroup" class="form-group" style="display: none; margin-top: 1rem;">
+            <label for="transferTargetSubTabIndex">Selecione o Separador / Organismo de Destino *</label>
+            <select id="transferTargetSubTabIndex" class="form-control" style="width: 100%; padding: 0.55rem;">
+              <!-- Opções de separador carregadas dinamicamente -->
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer" style="justify-content: flex-end; gap: 0.5rem;">
+          <button type="button" class="btn btn-close" onclick="closeTransferContactModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-check"></i> Transferir Contacto
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+
+  <!-- Modal para Mover Contacto entre Separadores Estatais -->
+  <div id="moveSubTabContactModal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <i class="fa-solid fa-folder-tree"></i> Mover Contacto para outro Separador
+        </h3>
+        <button type="button" class="action-icon-btn" onclick="closeMoveSubTabContactModal()">&times;</button>
+      </div>
+      <form onsubmit="saveMoveSubTabContact(event)">
+        <div class="modal-body" style="padding: 1.25rem;">
+          <input type="hidden" id="moveSubTabContactId">
+          <p id="moveSubTabContactInfo" style="font-size: 0.9rem; color: var(--navy-dark); margin-bottom: 1rem;"></p>
+          <div class="form-group">
+            <label for="targetSubTabIndex">Selecione o Novo Separador *</label>
+            <select id="targetSubTabIndex" class="form-control" required style="padding: 0.55rem;">
+              <!-- Sub-tabs options -->
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer" style="justify-content: flex-end; gap: 0.5rem;">
+          <button type="button" class="btn btn-close" onclick="closeMoveSubTabContactModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-check"></i> Mover para Separador
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Toast Notifications Container -->
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- Main JavaScript App -->
-  <script src="app.js"></script>
+  <script src="app.js?v=20260808e"></script>
+
+  <!-- Override saveContact and switchTab to guarantee proper modal behavior regardless of app.js cache -->
+  <script>
+  window.switchTab = function(tabId) {
+    if (typeof isFormDirty !== 'undefined' && isFormDirty) {
+      if (!confirm('Existem alterações não guardadas no formulário. Deseja sair sem guardar?')) {
+        return;
+      }
+      if (typeof clearFormDirty === 'function') clearFormDirty();
+    }
+
+    var cm = document.getElementById('clientModal'); if (cm) cm.classList.remove('active');
+    var pm = document.getElementById('projectModal'); if (pm) pm.classList.remove('active');
+    var tm = document.getElementById('contactModal'); if (tm) tm.classList.remove('active');
+
+    document.querySelectorAll('.tab-content').forEach(function(tab) { tab.classList.remove('active'); });
+    document.querySelectorAll('.nav-btn').forEach(function(btn) { btn.classList.remove('active'); });
+
+    var targetTab = document.getElementById(tabId);
+    var targetBtn = document.querySelector('.nav-btn[data-tab="' + tabId + '"]');
+
+    if (targetTab) targetTab.classList.add('active');
+    if (targetBtn) targetBtn.classList.add('active');
+
+    if (tabId === 'tab-database') {
+      if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
+    } else if (tabId === 'tab-contactos') {
+      if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
+    } else if (tabId === 'tab-clientes') {
+      if (typeof renderClientPageMainGrid === 'function') renderClientPageMainGrid();
+    } else if (tabId === 'tab-projetos') {
+      if (typeof updateClientProjectOptions === 'function') updateClientProjectOptions();
+      if (typeof renderProjectPageMainGrid === 'function') renderProjectPageMainGrid();
+    } else if (tabId === 'tab-home') {
+      if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
+    }
+  };
+
+  window.saveContact = function(e) {
+    if (e && e.preventDefault) e.preventDefault();
+
+    var selectEl = document.getElementById('contactClienteId');
+    var selectedClienteId = (selectEl ? selectEl.value : '') || (typeof currentClientId !== 'undefined' ? currentClientId : '');
+    if (!selectedClienteId) {
+      if (typeof showToast === 'function') showToast('Selecione um cliente para associar ao contacto.', 'danger');
+      return;
+    }
+
+    var nomeEl = document.getElementById('contactNome');
+    var nome = nomeEl ? nomeEl.value.trim() : '';
+    if (!nome) {
+      if (typeof showToast === 'function') showToast('Por favor, preencha o Nome do contacto.', 'danger');
+      return;
+    }
+
+    var idEl = document.getElementById('contactId');
+    var id = (idEl ? idEl.value : '') || (typeof generateId === 'function' ? generateId('con') : 'con-' + Date.now());
+
+    var apelido = (document.getElementById('contactApelido') || {}).value || '';
+    var cargo = (document.getElementById('contactCargo') || {}).value || '';
+    var telefone = (document.getElementById('contactTelefone') || {}).value || '';
+    var telemovel = (document.getElementById('contactTelemovel') || {}).value || '';
+    var email = (document.getElementById('contactEmail') || {}).value || '';
+    var notas = (document.getElementById('contactNotas') || {}).value || '';
+
+    apelido = apelido.trim();
+    cargo = cargo.trim();
+    telefone = telefone.trim();
+    telemovel = telemovel.trim();
+    email = email.trim();
+    notas = notas.trim();
+
+    var existingIndex = -1;
+    if (typeof db !== 'undefined' && db.contactos) {
+      for (var i = 0; i < db.contactos.length; i++) {
+        if (db.contactos[i].id === id) { existingIndex = i; break; }
+      }
+    }
+
+    var finalSubTabIndex = 0;
+    if (typeof currentSubTabContactIndex !== 'undefined' && currentSubTabContactIndex !== null && currentSubTabContactIndex !== undefined) {
+      finalSubTabIndex = Number(currentSubTabContactIndex);
+    } else if (existingIndex >= 0 && db.contactos[existingIndex].subTabIndex !== undefined && db.contactos[existingIndex].subTabIndex !== null) {
+      finalSubTabIndex = Number(db.contactos[existingIndex].subTabIndex);
+    } else if (typeof activeEstatalSeparadorIndex !== 'undefined') {
+      finalSubTabIndex = Number(activeEstatalSeparadorIndex || 0);
+    }
+
+    var contactObj = {
+      id: id,
+      clienteId: selectedClienteId,
+      subTabIndex: finalSubTabIndex,
+      nome: nome,
+      apelido: apelido,
+      cargo: cargo,
+      telefone: telefone,
+      telemovel: telemovel,
+      email: email,
+      notas: notas,
+      createdAt: existingIndex >= 0 ? db.contactos[existingIndex].createdAt : new Date().toISOString()
+    };
+
+    if (typeof currentSubTabContactIndex !== 'undefined') currentSubTabContactIndex = null;
+
+    if (existingIndex >= 0) {
+      db.contactos[existingIndex] = contactObj;
+      if (typeof showToast === 'function') showToast('Contacto atualizado com sucesso!');
+    } else {
+      db.contactos.push(contactObj);
+      if (typeof showToast === 'function') showToast('Novo contacto adicionado!');
+    }
+
+    if (typeof saveDatabase === 'function') saveDatabase();
+    if (typeof closeContactModal === 'function') closeContactModal();
+    if (typeof currentClientId !== 'undefined' && currentClientId && typeof refreshClientSubLists === 'function') refreshClientSubLists(currentClientId);
+    if (selectedClienteId && selectedClienteId !== (typeof currentClientId !== 'undefined' ? currentClientId : '') && typeof refreshClientSubLists === 'function') refreshClientSubLists(selectedClienteId);
+    if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
+    if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
+    if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
+  };
+  </script>
+
+  <!-- MODAL DE CONFIRMAÇÃO DE NOVA ATUALIZAÇÃO DETETADA -->
+  <div id="updateConfirmationModal" class="modal-overlay" style="z-index: 9999;">
+    <div class="modal-window" style="max-width: 520px; padding: 1.75rem; text-align: center;">
+      <div style="width: 60px; height: 60px; border-radius: 50%; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.25rem auto; border: 2px solid #bae6fd;">
+        <i class="fa-solid fa-cloud-arrow-down"></i>
+      </div>
+
+      <h3 style="color: #0369a1; font-size: 1.3rem; margin-bottom: 0.75rem; font-weight: 700;">Nova Atualização Detetada!</h3>
+
+      <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.25rem;">
+        <p style="color: #334155; font-size: 0.92rem; margin-bottom: 0.4rem;">Foi encontrada uma nova versão disponível na pasta <strong>Atualizações</strong>:</p>
+        <strong id="newDetectedVersionName" style="font-size: 1.25rem; color: #0284c7; letter-spacing: 0.5px;">SIGEC_V1.1</strong>
+      </div>
+
+      <p style="font-size: 0.95rem; color: var(--navy-dark); font-weight: 600; margin-bottom: 1.5rem;">
+        Deseja proceder à instalação desta atualização agora?
+      </p>
+
+      <div style="display: flex; gap: 1rem; justify-content: center;">
+        <button type="button" class="btn" onclick="resolveSystemUpdateConfirm(false)" style="flex: 1; padding: 0.75rem 1.25rem; background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; font-weight: 600; justify-content: center;">
+          <i class="fa-solid fa-xmark"></i> Não
+        </button>
+        <button type="button" class="btn" onclick="resolveSystemUpdateConfirm(true)" style="flex: 1; padding: 0.75rem 1.25rem; background: #0284c7; color: #ffffff; border: none; font-weight: 600; justify-content: center; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);">
+          <i class="fa-solid fa-check"></i> Sim
+        </button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
