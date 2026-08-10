@@ -3549,6 +3549,9 @@ function ensureRecoveredProjects() {
 
   if (!Array.isArray(db.projetos)) db.projetos = [];
 
+  // Purga estrita de qualquer dado fictício/gerado em atualizações anteriores
+  purgeGeneratedMockData();
+
   recoveredProjects.forEach(recProj => {
     const idx = db.projetos.findIndex(p => p.id === recProj.id || (p.nome && p.nome.toLowerCase().includes(recProj.nome.toLowerCase().slice(0, 15))));
     if (idx < 0) {
@@ -3557,6 +3560,18 @@ function ensureRecoveredProjects() {
       db.projetos[idx] = { ...recProj, ...db.projetos[idx] };
     }
   });
+}
+
+function purgeGeneratedMockData() {
+  if (Array.isArray(db.clientes)) {
+    db.clientes = db.clientes.filter(c => c && c.id && !c.id.includes('-v13-') && !c.id.includes('-v14-') && !c.id.includes('-v15-') && c.nome !== "TECNIMUNDI - Engenharia e Soluções, Lda." && c.nome !== "REPETAL - Reciclagem de Plásticos, S.A.");
+  }
+  if (Array.isArray(db.contactos)) {
+    db.contactos = db.contactos.filter(c => c && c.id && !c.id.includes('-v13-') && !c.id.includes('-v14-') && !c.id.includes('-v15-'));
+  }
+  if (Array.isArray(db.projetos)) {
+    db.projetos = db.projetos.filter(p => p && p.id && !p.id.includes('-v13-') && !p.id.includes('-v14-') && !p.id.includes('-v15-') && !p.nome.includes("REPETAL") && !p.nome.includes("Parque Tecnológico"));
+  }
 }
 
 function loadInitialExcelData() {
@@ -8120,9 +8135,7 @@ if (!window.SIGEC_AVAILABLE_UPDATES || window.SIGEC_AVAILABLE_UPDATES.length ===
       "createdAt": "2026-08-09T22:15:00.000Z",
       "system": "SIGEC-Pro",
       "database": {
-        "clientes": [
-          { "id": "cli-imp-001", "nome": "EDP", "contribuinte": "500000034", "tipoCliente": "Privado", "localidade": "Lisboa", "email": "rui.cabrita@edp.com" }
-        ],
+        "clientes": [],
         "contactos": [], "projetos": [], "interacoes": [], "interacoesProjetos": [], "deletedProjectIds": []
       }
     },
@@ -8132,15 +8145,9 @@ if (!window.SIGEC_AVAILABLE_UPDATES || window.SIGEC_AVAILABLE_UPDATES.length ===
       "createdAt": "2026-08-09T22:28:00.000Z",
       "system": "SIGEC-Pro",
       "database": {
-        "clientes": [
-          { "id": "cli-v13-005", "nome": "REPETAL - Reciclagem de Plásticos, S.A.", "contribuinte": "508112233", "tipoCliente": "Privado", "localidade": "Matosinhos" }
-        ],
-        "contactos": [
-          { "id": "con-v13-004", "clienteId": "cli-v13-005", "nome": "António", "apelido": "Carvalho", "cargo": "Diretor Técnico" }
-        ],
-        "projetos": [
-          { "id": "proj-v13-003", "clienteId": "cli-v13-005", "nome": "Linha de Reciclagem Automatizada REPETAL V1.3", "tipo": "Automação Industrial", "estado": "Novo" }
-        ],
+        "clientes": [],
+        "contactos": [],
+        "projetos": [],
         "interacoes": [], "interacoesProjetos": [], "deletedProjectIds": []
       }
     },
@@ -8150,15 +8157,9 @@ if (!window.SIGEC_AVAILABLE_UPDATES || window.SIGEC_AVAILABLE_UPDATES.length ===
       "createdAt": "2026-08-09T22:35:00.000Z",
       "system": "SIGEC-Pro",
       "database": {
-        "clientes": [
-          { "id": "cli-v14-006", "nome": "TECNIMUNDI - Engenharia e Soluções, Lda.", "contribuinte": "507654321", "tipoCliente": "Privado", "localidade": "Lisboa", "email": "contacto@tecnimundi.pt" }
-        ],
-        "contactos": [
-          { "id": "con-v14-005", "clienteId": "cli-v14-006", "nome": "Bernardo", "apelido": "Silva", "cargo": "Gestor de Contratualização", "email": "bsilva@tecnimundi.pt" }
-        ],
-        "projetos": [
-          { "id": "proj-v14-004", "clienteId": "cli-v14-006", "nome": "Automação do Parque Tecnológico V1.4", "tipo": "Sistemas de Controlo", "estado": "Novo" }
-        ],
+        "clientes": [],
+        "contactos": [],
+        "projetos": [],
         "interacoes": [], "interacoesProjetos": [], "deletedProjectIds": []
       }
     }
@@ -8466,8 +8467,20 @@ document.addEventListener('DOMContentLoaded', function() {
 // ==========================================
 
 function exportDatabaseJSON() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+
+  const dateFormatted = `${year}-${month}-${day}`;
+  const timeFormatted = `${hours}h${minutes}m${seconds}s`;
+  const fileName = `SIGEC-Pro_Backup_${dateFormatted}-${timeFormatted}.json`;
+
   const backupData = {
-    exportDate: new Date().toISOString(),
+    exportDate: now.toISOString(),
     system: "SIGEC-Pro",
     version: getInstalledVersion(),
     database: {
@@ -8483,8 +8496,6 @@ function exportDatabaseJSON() {
   const jsonStr = JSON.stringify(backupData, null, 2);
   const blob = new Blob([jsonStr], { type: 'application/json' });
   const a = document.createElement('a');
-  const dateStr = new Date().toISOString().slice(0, 10);
-  const fileName = `SIGEC-Pro_Backup_${dateStr}.json`;
 
   a.href = URL.createObjectURL(blob);
   a.download = fileName;
