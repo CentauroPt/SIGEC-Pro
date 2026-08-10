@@ -1866,7 +1866,12 @@
               </p>
               <div>
                 <label style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.25rem;">Novo PIN / Palavra-passe:</label>
-                <input type="password" id="profileUserPin" class="form-control" placeholder="Introduza o PIN (mínimo 3 caracteres)" required style="padding: 0.65rem; border-radius: 6px; background: #ffffff; max-width: 340px;">
+                <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                  <input type="password" id="profileUserPin" class="form-control" placeholder="Introduza o PIN (mínimo 3 caracteres)" required style="padding: 0.65rem; border-radius: 6px; background: #ffffff; flex: 1; min-width: 200px;">
+                  <button type="button" onclick="sendPasswordResetEmailToUser()" class="btn btn-secondary" title="Enviar email ao utilizador com link para redefinir a palavra-passe" style="background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; font-weight: 600; padding: 0.65rem 0.85rem; font-size: 0.85rem; white-space: nowrap;">
+                    <i class="fa-solid fa-envelope-circle-check"></i> Enviar Link por Email
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -1905,6 +1910,44 @@
             <!-- Rendered dynamically -->
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: REDEFINIR PALAVRA-PASSE / PIN VIA LINK DE EMAIL -->
+  <div id="resetPasswordModal" class="modal-overlay" style="z-index: 9999;">
+    <div class="modal-window" style="max-width: 440px; border-radius: 12px; overflow: hidden;">
+      <div class="modal-header" style="background: #0284c7; color: #ffffff;">
+        <h3 class="modal-title" style="color: #ffffff; font-size: 1.05rem;">
+          <i class="fa-solid fa-key" style="color: #ffffff;"></i> Redefinir Palavra-passe / PIN
+        </h3>
+        <button class="action-icon-btn" onclick="closeResetPasswordModal()" style="color: #ffffff;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body" style="padding: 1.25rem;">
+        <div id="resetPasswordUserInfo" style="padding: 0.75rem; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; margin-bottom: 1rem; font-size: 0.88rem; color: #0369a1;">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <form onsubmit="handleSaveResetPasswordFromToken(event)">
+          <input type="hidden" id="resetPasswordUserId">
+          <input type="hidden" id="resetPasswordToken">
+
+          <div style="margin-bottom: 1rem;">
+            <label style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Nova Palavra-passe / PIN Secreto:</label>
+            <input type="password" id="resetPasswordNewPin" class="form-control" placeholder="Mínimo 3 caracteres" required style="padding: 0.75rem; border-radius: 8px; border: 1.5px solid #cbd5e1;" autofocus>
+          </div>
+
+          <div style="margin-bottom: 1.25rem;">
+            <label style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Confirmar Nova Palavra-passe / PIN:</label>
+            <input type="password" id="resetPasswordConfirmPin" class="form-control" placeholder="Repita o novo PIN" required style="padding: 0.75rem; border-radius: 8px; border: 1.5px solid #cbd5e1;">
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 0.75rem; background: #16a34a; font-weight: 700;">
+            <i class="fa-solid fa-check"></i> Redefinir e Guardar Novo PIN
+          </button>
+        </form>
       </div>
     </div>
   </div>

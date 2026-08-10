@@ -8356,6 +8356,7 @@ function getAdminPin() {
 function initSecurityAuthCheck() {
   ensureUsersInitialized();
   renderUserManagementGrid();
+  if (typeof checkPasswordResetUrlParams === 'function') checkPasswordResetUrlParams();
 
   const isAuth = sessionStorage.getItem('sigec_pro_authenticated');
   const overlay = document.getElementById('loginOverlay');
@@ -8807,6 +8808,148 @@ function handleSaveUserProfile(event) {
   logUserActivity('Ficha do Utilizador', `Dados de registo e PIN do utilizador ${nome} atualizados com sucesso.`);
   showToast(`Ficha do utilizador ${nome} atualizada com sucesso!`);
   alert(`✅ Ficha Atualizada!\n\nOs dados de registo e o PIN do utilizador "${nome}" foram guardados no programa com sucesso.`);
+}
+
+function sendPasswordResetEmailToUser() {
+  ensureUsersInitialized();
+  const nameInput = document.getElementById('profileUserName');
+  const emailInput = document.getElementById('profileUserEmail');
+  const idInput = document.getElementById('profileUserId');
+
+  if (!emailInput || !emailInput.value.trim()) {
+    alert("Por favor, insira um endereço de email válido na ficha do utilizador.");
+    return;
+  }
+
+  const adminUser = db.usuarios.find(u => u.role === 'admin') || db.usuarios[0];
+  const adminEmail = adminUser ? adminUser.email : 'jmcenturio@alegria-activity.com';
+  const adminName = adminUser ? adminUser.nome : 'Administrador do Sistema';
+
+  const userEmail = emailInput.value.trim();
+  const userName = nameInput ? nameInput.value.trim() : 'Utilizador';
+  const userId = idInput ? idInput.value : '';
+
+  const baseUrl = window.location.origin + window.location.pathname;
+  const resetToken = "rst-" + Date.now() + "-" + Math.floor(Math.random() * 10000);
+  const resetLink = `${baseUrl}?resetToken=${resetToken}&userId=${encodeURIComponent(userId)}`;
+
+  const subject = encodeURIComponent(`[SIGEC-Pro] Alteração de Palavra-passe / PIN - ${userName}`);
+  const body = encodeURIComponent(
+    `Olá ${userName},\n\n` +
+    `O Administrador do Sistema (${adminName} - ${adminEmail}) enviou-lhe esta mensagem para redefinição da sua palavra-passe / PIN de acesso ao programa SIGEC-Pro.\n\n` +
+    `Para redefinir o seu PIN de acesso com segurança, por favor clique no link abaixo:\n\n` +
+    `${resetLink}\n\n` +
+    `Remetente (Administrador): ${adminName} (${adminEmail})\n` +
+    `Destinatário: ${userName} (${userEmail})\n\n` +
+    `Com os melhores cumprimentos,\n` +
+    `SIGEC-Pro - Gestão Empresarial`
+  );
+
+  window.open(`mailto:${userEmail}?subject=${subject}&body=${body}`, '_blank');
+
+  logUserActivity('Segurança', `Email de redefinição de palavra-passe enviado de ${adminEmail} para ${userEmail}.`);
+  showToast(`Email de recuperação preparado de ${adminEmail} para ${userEmail}!`);
+  alert(
+    `✅ Email de Recuperação Preparado!\n\n` +
+    `Remetente (Administrador): ${adminName} (${adminEmail})\n` +
+    `Destinatário: ${userName} (${userEmail})\n\n` +
+    `Foi aberto o cliente de email a partir da conta do Administrador (${adminEmail}) com a mensagem e o link de segurança pré-preenchidos.\n\n` +
+    `Link de Redefinição Gerado:\n${resetLink}`
+  );
+}
+
+function openResetPasswordModalFromParams(userId, token) {
+  ensureUsersInitialized();
+  const user = db.usuarios.find(u => u.id === userId);
+  if (!user) return;
+
+  const modal = document.getElementById('resetPasswordModal');
+  const info = document.getElementById('resetPasswordUserInfo');
+  const userIdEl = document.getElementById('resetPasswordUserId');
+  const tokenEl = document.getElementById('resetPasswordToken');
+  const pinInput = document.getElementById('resetPasswordNewPin');
+  const confirmInput = document.getElementById('resetPasswordConfirmPin');
+
+  if (info) {
+    info.innerHTML = `
+      <div style="font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">${user.nome}</div>
+      <div>Email registado: <strong>${user.email}</strong></div>
+      <div style="font-size: 0.78rem; color: #64748b; margin-top: 0.25rem;">Insira a sua nova palavra-passe / PIN de acesso nos campos abaixo.</div>
+    `;
+  }
+
+  if (userIdEl) userIdEl.value = user.id;
+  if (tokenEl) tokenEl.value = token;
+  if (pinInput) pinInput.value = '';
+  if (confirmInput) confirmInput.value = '';
+
+  if (modal) modal.classList.add('active');
+}
+
+function closeResetPasswordModal() {
+  const modal = document.getElementById('resetPasswordModal');
+  if (modal) modal.classList.remove('active');
+}
+
+function handleSaveResetPasswordFromToken(event) {
+  if (event && event.preventDefault) event.preventDefault();
+
+  const userIdEl = document.getElementById('resetPasswordUserId');
+  const pinInput = document.getElementById('resetPasswordNewPin');
+  const confirmInput = document.getElementById('resetPasswordConfirmPin');
+
+  if (!userIdEl || !pinInput || !confirmInput) return;
+
+  const userId = userIdEl.value;
+  const newPin = pinInput.value.trim();
+  const confirmPin = confirmInput.value.trim();
+
+  if (!newPin || newPin.length < 3) {
+    alert("O novo PIN deve ter pelo menos 3 caracteres.");
+    return;
+  }
+
+  if (newPin !== confirmPin) {
+    alert("As palavras-passe / PINs introduzidas não coincidem.");
+    return;
+  }
+
+  ensureUsersInitialized();
+  const user = db.usuarios.find(u => u.id === userId);
+  if (user) {
+    user.pin = newPin;
+    if (user.role === 'admin') {
+      localStorage.setItem('sigec_pro_security_pin', newPin);
+    }
+    saveDatabase();
+
+    logUserActivity('Segurança', `Palavra-passe / PIN do utilizador ${user.nome} redefinido via link de segurança.`);
+    showToast(`Palavra-passe do utilizador ${user.nome} redefinida com sucesso!`);
+    alert(`✅ Palavra-passe Atualizada com Sucesso!\n\nA nova palavra-passe / PIN do utilizador "${user.nome}" foi guardada no programa.`);
+  }
+
+  closeResetPasswordModal();
+
+  // Clean URL params
+  if (window.history && window.history.replaceState) {
+    const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+    window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+  }
+}
+
+function checkPasswordResetUrlParams() {
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('resetToken') && urlParams.has('userId')) {
+      const resetToken = urlParams.get('resetToken');
+      const userId = urlParams.get('userId');
+      setTimeout(() => {
+        openResetPasswordModalFromParams(userId, resetToken);
+      }, 500);
+    }
+  } catch (e) {
+    console.warn('Aviso ao verificar parâmetros de redefinição de password:', e);
+  }
 }
 
 function handleUserActivityFilterChange() {
