@@ -3902,12 +3902,18 @@ async function syncDatabaseToGitHub(silent = false) {
 
 async function loadDatabaseFromGitHub(silent = false) {
   const cfg = getGitHubConfig();
+  const token = (cfg.token || '').trim();
+  const authHeader = token ? (token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`) : null;
+
   try {
-    const rawUrl = `https://raw.githubusercontent.com/${cfg.owner}/${cfg.repo}/main/${cfg.path}?t=${Date.now()}`;
-    const res = await fetch(rawUrl);
+    const apiUrl = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}`;
+    const headers = { 'Accept': 'application/vnd.github.v3.raw' };
+    if (authHeader) headers['Authorization'] = authHeader;
+
+    const res = await fetch(apiUrl, { method: 'GET', headers: headers, cache: 'no-store' });
 
     if (!res.ok) {
-      if (!silent) alert(`Não foi possível encontrar o ficheiro de dados no servidor GitHub (${rawUrl}).`);
+      if (!silent) alert(`Não foi possível encontrar o ficheiro de dados no servidor GitHub (${apiUrl}).`);
       return false;
     }
 
@@ -3983,25 +3989,14 @@ async function handleFullServerSync(silent = false) {
 
   saveDatabase();
 
-  if (!silent) showToast('A iniciar sincronização bidirecional com o servidor GitHub...', 'info');
+  if (!silent) showToast('A sincronizar com o servidor GitHub...', 'info');
 
-  const uploadSuccess = await syncDatabaseToGitHub(true);
-  const downloadSuccess = await loadDatabaseFromGitHub(true);
+  const uploadSuccess = await syncDatabaseToGitHub(silent);
 
   saveDatabase();
   renderDatabaseOverview();
 
-  if (!silent) {
-    if (uploadSuccess || downloadSuccess) {
-      showToast('Sincronização com o servidor efetuada com sucesso!');
-      alert(`✅ Sincronização Concluída com Sucesso!\n\nTodos os dados locais e do servidor GitHub foram sincronizados em tempo real.\n\nTotal na Base de Dados:\n- ${db.clientes.length} Clientes\n- ${db.contactos.length} Contactos\n- ${db.projetos.length} Projetos`);
-    } else {
-      showToast('Falha na sincronização com o servidor.', 'danger');
-      alert('Erro na Sincronização: Verifique a ligação à internet e as definições do Token de acesso do GitHub.');
-    }
-  }
-
-  return (uploadSuccess || downloadSuccess);
+  return uploadSuccess;
 }
 
 // Gerador de UUIDs simples
