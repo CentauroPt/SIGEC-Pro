@@ -8468,16 +8468,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function exportDatabaseJSON() {
   const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
   const day = String(now.getDate()).padStart(2, '0');
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const year = now.getFullYear();
   const hours = String(now.getHours()).padStart(2, '0');
   const minutes = String(now.getMinutes()).padStart(2, '0');
   const seconds = String(now.getSeconds()).padStart(2, '0');
 
-  const dateFormatted = `${year}-${month}-${day}`;
-  const timeFormatted = `${hours}h${minutes}m${seconds}s`;
-  const fileName = `SIGEC-Pro_Backup_${dateFormatted}-${timeFormatted}.json`;
+  const fileName = `SIGEC-Pro_Backup_${day}-${month}-${year}-${hours}:${minutes}:${seconds}.json`;
 
   const backupData = {
     exportDate: now.toISOString(),
