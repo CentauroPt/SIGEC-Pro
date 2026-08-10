@@ -3163,6 +3163,22 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
+      "id": "proj-rec-bcn",
+      "nome": "Unidade Móvel Bancária",
+      "tipo": "Compra UM",
+      "clienteId": "cli-imp-085",
+      "contacto1Id": "con-1785515106421-857",
+      "contacto2Id": "con-imp-137",
+      "dataInicio": "2026-07-27",
+      "dataFim": "2026-08-31",
+      "estado": "Em Orçamento",
+      "viatura": "",
+      "matricula": "",
+      "documents": [],
+      "media": [],
+      "createdAt": "2026-07-31T16:30:00.000Z"
+    },
+    {
       "id": "proj-camp-001",
       "clienteId": "cli-1785514129444-833",
       "nome": "Huawei SmartBus",
@@ -3233,18 +3249,18 @@
   ],
   "interacoesProjetos": [
     {
+      "id": "pint-1785515214270-793",
+      "projectId": "proj-rec-bcn",
+      "data": "2026-07-27T18:00",
+      "descricao": "Reunião on line com o administrador e o diretor comercial para a aquisição de duas unidades móveis de diferente tamanho",
+      "createdAt": "2026-07-31T16:26:54.270Z"
+    },
+    {
       "id": "pint-1785516024411-80",
       "projectId": "proj-rec-ccdrn",
       "data": "2026-07-31T18:39",
       "descricao": "Reunião com a Dra. Gabriela e a Dra. Isaura para a avaliação de possíveis ajudas para a campanha Estratégia NORTE 2040",
       "createdAt": "2026-07-31T16:40:24.411Z"
-    },
-    {
-      "id": "proji-1786376417464-ve0bb",
-      "projectId": "proj-1786376417464-775",
-      "data": "2026-07-27T18:00",
-      "descricao": "Reunião on line com o administrador e o diretor comercial para a aquisição de duas unidades móveis de diferente tamanho",
-      "createdAt": "2026-08-10T15:40:17.464Z"
     }
   ],
   "usuarios": [
@@ -3259,6 +3275,15 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1786376515620-731",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "timestamp": "2026-08-10T15:41:55.620Z"
+    },
     {
       "id": "log-1786376513694-748",
       "usuarioId": "usr-admin-001",
@@ -12249,15 +12274,6 @@
       "tipoAcao": "Servidor GitHub",
       "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
       "timestamp": "2026-08-10T14:29:33.180Z"
-    },
-    {
-      "id": "log-1786372170465-733",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "timestamp": "2026-08-10T14:29:30.466Z"
     }
   ]
 }
