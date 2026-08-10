@@ -3791,12 +3791,11 @@ async function syncDatabaseToGitHub(silent = false, force = false) {
     const fetchLiveSha = async () => {
       for (const authHeader of authHeadersToTry) {
         try {
-          const res = await fetch(`${apiUrl}?ref=main&t=${Date.now()}`, {
+          const res = await fetch(apiUrl, {
             method: 'GET',
             headers: {
               'Authorization': authHeader,
-              'Accept': 'application/vnd.github.v3+json',
-              'Cache-Control': 'no-cache'
+              'Accept': 'application/vnd.github.v3+json'
             }
           });
           if (res.status === 200) {
@@ -6551,7 +6550,7 @@ function saveAllChangesManual() {
   clearFormDirty();
   const ghToken = localStorage.getItem('sigec_pro_gh_token');
   if (ghToken && typeof syncDatabaseToGitHub === 'function') {
-    syncDatabaseToGitHub(false);
+    syncDatabaseToGitHub(false, true);
   } else {
     showToast('Dados guardados no computador. Ligue o servidor no separador Configuração para gravar na nuvem.', 'warning');
   }
