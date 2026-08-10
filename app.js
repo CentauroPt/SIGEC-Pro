@@ -4301,6 +4301,28 @@ function renderContactPageMainGrid() {
   }
 }
 
+let currentClientFilterTab = 'all';
+
+function setClientFilterTab(filter) {
+  currentClientFilterTab = filter;
+  document.querySelectorAll('.client-filter-tab').forEach(b => {
+    b.classList.remove('active', 'btn-primary');
+    b.classList.add('btn-secondary');
+  });
+
+  let activeId = 'tabClientFilterAll';
+  if (filter === 'privado') activeId = 'tabClientFilterPrivado';
+  if (filter === 'estatal') activeId = 'tabClientFilterEstatal';
+
+  const activeBtn = document.getElementById(activeId);
+  if (activeBtn) {
+    activeBtn.classList.add('active', 'btn-primary');
+    activeBtn.classList.remove('btn-secondary');
+  }
+
+  renderClientPageMainGrid();
+}
+
 function renderClientPageMainGrid() {
   const container = document.getElementById('clientPageMainGrid');
   if (!container) return;
@@ -4308,6 +4330,13 @@ function renderClientPageMainGrid() {
 
   const query = document.getElementById('clientPageSearchQuery')?.value.trim() || '';
   let clientsList = [...(db.clientes || [])];
+
+  // Filtro por Separador: Todos os Clientes, Clientes Privados, Entidades Públicas / Estatal
+  if (currentClientFilterTab === 'privado') {
+    clientsList = clientsList.filter(cli => cli && (cli.tipoCliente === 'Privado' || !cli.tipoCliente || cli.tipoCliente === 'Empresa'));
+  } else if (currentClientFilterTab === 'estatal') {
+    clientsList = clientsList.filter(cli => cli && (cli.tipoCliente === 'Público' || cli.tipoCliente === 'Estatal' || cli.tipoCliente === 'Governamental' || (cli.ministerio && cli.ministerio.trim() !== '')));
+  }
 
   if (query) {
     const qNorm = normalizeText(query);
@@ -7879,20 +7908,34 @@ function resolveDuplicateAction(action) {
     showToast('Registo novo descartado. Mantida a ficha anterior intacta.', 'warning');
     closeDuplicateResolutionModal();
   } else if (action === 'replace_existing') {
+    const oldId = newObj.id;
     newObj.id = existingMatch.id;
+
     if (type === 'cliente') {
       const idx = db.clientes.findIndex(c => c.id === existingMatch.id);
       if (idx >= 0) db.clientes[idx] = newObj;
+      if (oldId && oldId !== existingMatch.id) {
+        db.clientes = db.clientes.filter(c => c.id !== oldId);
+        (db.contactos || []).forEach(con => { if (con.clienteId === oldId) con.clienteId = existingMatch.id; });
+        (db.projetos || []).forEach(proj => { if (proj.clienteId === oldId) proj.clienteId = existingMatch.id; });
+      }
       if (typeof closeClientModal === 'function') closeClientModal();
       renderClientPageMainGrid();
     } else if (type === 'contacto') {
       const idx = db.contactos.findIndex(c => c.id === existingMatch.id);
       if (idx >= 0) db.contactos[idx] = newObj;
+      if (oldId && oldId !== existingMatch.id) {
+        db.contactos = db.contactos.filter(c => c.id !== oldId);
+      }
       if (typeof closeContactModal === 'function') closeContactModal();
       renderContactPageMainGrid();
     } else if (type === 'projeto') {
       const idx = db.projetos.findIndex(p => p.id === existingMatch.id);
       if (idx >= 0) db.projetos[idx] = newObj;
+      if (oldId && oldId !== existingMatch.id) {
+        db.projetos = db.projetos.filter(p => p.id !== oldId);
+        (db.interacoesProjetos || []).forEach(inter => { if (inter.projetoId === oldId) inter.projetoId = existingMatch.id; });
+      }
       if (typeof closeProjectModal === 'function') closeProjectModal();
       renderProjectPageMainGrid();
     }
@@ -7903,7 +7946,9 @@ function resolveDuplicateAction(action) {
     if (onProceed) onProceed(existingMatch.id);
     showToast('Registo anterior substituído e atualizado com os novos dados!');
   } else if (action === 'merge') {
-    // Combinar informações: preencher campos em falta na ficha existente com os novos dados
+    // Fusão Total: transfere toda a informação do registo duplicado para o registo principal e apaga o registo duplicado
+    const duplicateId = newObj.id;
+
     Object.keys(newObj).forEach(key => {
       if (key === 'id') return;
       if (Array.isArray(newObj[key])) {
@@ -7914,19 +7959,31 @@ function resolveDuplicateAction(action) {
           }
         });
       } else if (newObj[key] !== null && newObj[key] !== undefined && newObj[key] !== '') {
-        if (!existingMatch[key]) {
+        if (!existingMatch[key] || existingMatch[key] === '') {
           existingMatch[key] = newObj[key];
         }
       }
     });
 
     if (type === 'cliente') {
+      if (duplicateId && duplicateId !== existingMatch.id) {
+        db.clientes = db.clientes.filter(c => c && c.id !== duplicateId);
+        (db.contactos || []).forEach(con => { if (con.clienteId === duplicateId) con.clienteId = existingMatch.id; });
+        (db.projetos || []).forEach(proj => { if (proj.clienteId === duplicateId) proj.clienteId = existingMatch.id; });
+      }
       if (typeof closeClientModal === 'function') closeClientModal();
       renderClientPageMainGrid();
     } else if (type === 'contacto') {
+      if (duplicateId && duplicateId !== existingMatch.id) {
+        db.contactos = db.contactos.filter(c => c && c.id !== duplicateId);
+      }
       if (typeof closeContactModal === 'function') closeContactModal();
       renderContactPageMainGrid();
     } else if (type === 'projeto') {
+      if (duplicateId && duplicateId !== existingMatch.id) {
+        db.projetos = db.projetos.filter(p => p && p.id !== duplicateId);
+        (db.interacoesProjetos || []).forEach(inter => { if (inter.projetoId === duplicateId) inter.projetoId = existingMatch.id; });
+      }
       if (typeof closeProjectModal === 'function') closeProjectModal();
       renderProjectPageMainGrid();
     }
@@ -7936,7 +7993,7 @@ function resolveDuplicateAction(action) {
     renderDatabaseOverview();
     closeDuplicateResolutionModal();
     if (onProceed) onProceed(existingMatch.id);
-    showToast('Informações dos dois registos combinadas com sucesso!');
+    showToast('Ficheiros duplicados fundidos com sucesso! O registo duplicado foi apagado e a informação foi totalmente transferida.');
   }
 }
 

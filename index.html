@@ -371,9 +371,23 @@
         </div>
 
         <div style="margin-top: 1rem; margin-bottom: 1.5rem;">
-          <h3 style="font-size: 1.05rem; color: #1e3a8a; margin-bottom: 1rem;">
-            <i class="fa-solid fa-building-user"></i> Lista Completa de Clientes
-          </h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
+            <h3 style="font-size: 1.05rem; color: #1e3a8a; margin: 0;">
+              <i class="fa-solid fa-building-user"></i> Lista de Clientes
+            </h3>
+            <!-- Separadores de Filtro: Todos os Clientes, Clientes Privados, Entidades Públicas / Estatal -->
+            <div style="display: flex; gap: 0.35rem; background: #f1f5f9; padding: 0.25rem; border-radius: 8px; border: 1px solid #cbd5e1; flex-wrap: wrap;">
+              <button type="button" class="btn btn-sm client-filter-tab btn-primary active" id="tabClientFilterAll" onclick="setClientFilterTab('all')" style="font-weight: 600; font-size: 0.8rem; padding: 0.35rem 0.75rem;">
+                <i class="fa-solid fa-layer-group"></i> Todos os Clientes
+              </button>
+              <button type="button" class="btn btn-sm client-filter-tab btn-secondary" id="tabClientFilterPrivado" onclick="setClientFilterTab('privado')" style="font-weight: 600; font-size: 0.8rem; padding: 0.35rem 0.75rem;">
+                <i class="fa-solid fa-briefcase"></i> Clientes Privados
+              </button>
+              <button type="button" class="btn btn-sm client-filter-tab btn-secondary" id="tabClientFilterEstatal" onclick="setClientFilterTab('estatal')" style="font-weight: 600; font-size: 0.8rem; padding: 0.35rem 0.75rem;">
+                <i class="fa-solid fa-landmark" style="color: #0284c7;"></i> Entidades Públicas / Estatal
+              </button>
+            </div>
+          </div>
           <div id="clientPageMainGrid" class="contacts-grid">
             <!-- Dynamic Clients Rendered Here -->
           </div>
@@ -1585,7 +1599,7 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- Main JavaScript App -->
-  <script src="app.js?v=20260810_v17"></script>
+  <script src="app.js?v=20260810_v18"></script>
 
   <!-- Override saveContact and switchTab to guarantee proper modal behavior regardless of app.js cache -->
   <script>
