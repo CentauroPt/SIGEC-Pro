@@ -667,11 +667,8 @@
                 <button type="submit" class="btn btn-primary" style="background: #0969da; font-weight: 600; padding: 0.65rem 1.25rem;">
                   <i class="fa-solid fa-floppy-disk"></i> Guardar Definições do Servidor
                 </button>
-                <button type="button" class="btn btn-secondary" onclick="syncDatabaseToGitHub(false)" style="background: #2da44e; color: #ffffff; border: none; font-weight: 600; padding: 0.65rem 1.25rem;">
-                  <i class="fa-solid fa-cloud-arrow-up"></i> Sincronizar para o Servidor Agora
-                </button>
-                <button type="button" class="btn btn-secondary" onclick="loadDatabaseFromGitHub(false)" style="background: #f6f8fa; color: #24292f; border: 1px solid #d0d7de; font-weight: 600; padding: 0.65rem 1.25rem;">
-                  <i class="fa-solid fa-cloud-arrow-down"></i> Carregar Dados do Servidor
+                <button type="button" class="btn btn-secondary" onclick="handleFullServerSync(false)" style="background: #16a34a; color: #ffffff; border: none; font-weight: 700; padding: 0.65rem 1.4rem; box-shadow: 0 3px 8px rgba(22, 163, 74, 0.3);">
+                  <i class="fa-solid fa-rotate"></i> Sincronizar
                 </button>
               </div>
             </form>

@@ -3980,6 +3980,38 @@ async function loadDatabaseFromGitHub(silent = false) {
   }
 }
 
+async function handleFullServerSync(silent = false) {
+  const ghToken = localStorage.getItem('sigec_pro_gh_token');
+  if (!ghToken) {
+    if (!silent) {
+      alert("Aviso: Para sincronizar os dados com o servidor GitHub, insira o seu Token de Acesso Pessoal (PAT) no campo abaixo e clique em 'Guardar Definições do Servidor'.");
+    }
+    return false;
+  }
+
+  saveDatabase();
+
+  if (!silent) showToast('A iniciar sincronização bidirecional com o servidor GitHub...', 'info');
+
+  const uploadSuccess = await syncDatabaseToGitHub(true);
+  const downloadSuccess = await loadDatabaseFromGitHub(true);
+
+  saveDatabase();
+  renderDatabaseOverview();
+
+  if (!silent) {
+    if (uploadSuccess || downloadSuccess) {
+      showToast('Sincronização com o servidor efetuada com sucesso!');
+      alert(`✅ Sincronização Concluída com Sucesso!\n\nTodos os dados locais e do servidor GitHub foram sincronizados em tempo real.\n\nTotal na Base de Dados:\n- ${db.clientes.length} Clientes\n- ${db.contactos.length} Contactos\n- ${db.projetos.length} Projetos`);
+    } else {
+      showToast('Falha na sincronização com o servidor.', 'danger');
+      alert('Erro na Sincronização: Verifique a ligação à internet e as definições do Token de acesso do GitHub.');
+    }
+  }
+
+  return (uploadSuccess || downloadSuccess);
+}
+
 // Gerador de UUIDs simples
 function generateId(prefix = 'id') {
   return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
@@ -9551,6 +9583,12 @@ function importDatabaseJSON(event) {
 
       saveDatabase();
 
+      // Sincroniza imediatamente o backup importado com o Servidor GitHub
+      const ghToken = localStorage.getItem('sigec_pro_gh_token');
+      if (ghToken && typeof syncDatabaseToGitHub === 'function') {
+        syncDatabaseToGitHub(false);
+      }
+
       if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
       if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
       if (typeof renderClientPageMainGrid === 'function') renderClientPageMainGrid();
@@ -9558,8 +9596,8 @@ function importDatabaseJSON(event) {
       if (typeof renderProjectPageMainGrid === 'function') renderProjectPageMainGrid();
       if (typeof updateInstalledVersionUI === 'function') updateInstalledVersionUI();
 
-      showToast("Base de dados reposta com sucesso!");
-      alert(`✅ Reposição de Dados Concluída!\n\nOs dados foram repostos com sucesso a partir da cópia de segurança.\n\nRegistos carregados:\n- ${db.clientes.length} Clientes\n- ${db.contactos.length} Contactos\n- ${db.projetos.length} Projetos`);
+      showToast("Base de dados reposta e sincronizada no servidor!");
+      alert(`✅ Reposição e Sincronização Concluída!\n\nOs dados foram repostos a partir da cópia de segurança e salvaguardados com sucesso no servidor GitHub.\n\nRegistos carregados:\n- ${db.clientes.length} Clientes\n- ${db.contactos.length} Contactos\n- ${db.projetos.length} Projetos`);
     } catch (err) {
       console.error("Erro na reposição de dados:", err);
       showToast("Erro na reposição do ficheiro.", "danger");
