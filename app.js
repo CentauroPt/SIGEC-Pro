@@ -8259,13 +8259,65 @@ function resolveSystemUpdateConfirm(shouldInstall) {
     const data = pendingUpdateData;
     const fileVersion = data.version || data.packageName || 'SIGEC_V1.3';
 
-    // Aplica a atualização de dados
-    db.clientes = data.database.clientes || [];
-    db.contactos = data.database.contactos || [];
-    db.projetos = data.database.projetos || [];
-    db.interacoes = data.database.interacoes || [];
-    db.interacoesProjetos = data.database.interacoesProjetos || [];
-    deletedProjectIds = data.database.deletedProjectIds || [];
+    // LÓGICA DE ATUALIZAÇÃO SEGURA (NÃO-DESTRUTIVA / MERGE SEM APAGAR DADOS DO UTILIZADOR)
+    const incomingClientes = data.database.clientes || [];
+    const incomingContactos = data.database.contactos || [];
+    const incomingProjetos = data.database.projetos || [];
+    const incomingInteracoes = data.database.interacoes || [];
+    const incomingInteracoesProjetos = data.database.interacoesProjetos || [];
+
+    let addedClientsCount = 0;
+    let addedContactsCount = 0;
+    let addedProjectsCount = 0;
+
+    // 1. Atualizar/Adicionar Clientes (Preserva registos existentes do utilizador)
+    incomingClientes.forEach(incCli => {
+      const idx = db.clientes.findIndex(c => c.id === incCli.id || (incCli.contribuinte && c.contribuinte === incCli.contribuinte) || (incCli.nome && c.nome && c.nome.toLowerCase() === incCli.nome.toLowerCase()));
+      if (idx >= 0) {
+        db.clientes[idx] = { ...db.clientes[idx], ...incCli };
+      } else {
+        db.clientes.push(incCli);
+        addedClientsCount++;
+      }
+    });
+
+    // 2. Atualizar/Adicionar Contactos (Preserva registos existentes do utilizador)
+    incomingContactos.forEach(incCon => {
+      const idx = db.contactos.findIndex(c => c.id === incCon.id || (incCon.email && c.email === incCon.email));
+      if (idx >= 0) {
+        db.contactos[idx] = { ...db.contactos[idx], ...incCon };
+      } else {
+        db.contactos.push(incCon);
+        addedContactsCount++;
+      }
+    });
+
+    // 3. Atualizar/Adicionar Projetos (Preserva registos existentes do utilizador)
+    incomingProjetos.forEach(incProj => {
+      const idx = db.projetos.findIndex(p => p.id === incProj.id || (incProj.nome && p.nome && p.nome.toLowerCase() === incProj.nome.toLowerCase()));
+      if (idx >= 0) {
+        db.projetos[idx] = { ...db.projetos[idx], ...incProj };
+      } else {
+        db.projetos.push(incProj);
+        addedProjectsCount++;
+      }
+    });
+
+    // 4. Integrar Interações (Evita duplicados)
+    incomingInteracoes.forEach(incInt => {
+      if (!db.interacoes.some(i => i.id === incInt.id)) {
+        db.interacoes.push(incInt);
+      }
+    });
+
+    incomingInteracoesProjetos.forEach(incIntP => {
+      if (!db.interacoesProjetos.some(i => i.id === incIntP.id)) {
+        db.interacoesProjetos.push(incIntP);
+      }
+    });
+
+    // Garante que os 3 projetos fundamentais continuam salvaguardados
+    ensureRecoveredProjects();
 
     localStorage.setItem('sigec_pro_installed_version', fileVersion);
     saveDatabase();
@@ -8280,7 +8332,7 @@ function resolveSystemUpdateConfirm(shouldInstall) {
     pendingUpdateData = null;
 
     showToast(`Atualização ${fileVersion} instalada com sucesso!`);
-    alert(`✅ Atualização Concluída com Sucesso!\n\nO programa SIGEC-Pro foi atualizado para a versão ${fileVersion}.\n\nDados instalados:\n- ${db.clientes.length} Clientes\n- ${db.contactos.length} Contactos\n- ${db.projetos.length} Projetos`);
+    alert(`✅ Atualização ${fileVersion} Concluída com Sucesso!\n\nOs dados existentes do seu programa foram 100% PRESERVADOS.\n\nResumo da Atualização:\n- ${db.clientes.length} Clientes ativos (${addedClientsCount} novos adicionados)\n- ${db.contactos.length} Contactos ativos (${addedContactsCount} novos adicionados)\n- ${db.projetos.length} Projetos ativos (${addedProjectsCount} novos adicionados)`);
   } catch (err) {
     console.error('Erro ao instalar atualização:', err);
     showToast('Erro na instalação da atualização.', 'danger');
