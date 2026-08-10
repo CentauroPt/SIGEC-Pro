@@ -3163,22 +3163,6 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "proj-rec-bcn",
-      "nome": "Unidade Móvel Bancária",
-      "tipo": "Compra UM",
-      "clienteId": "cli-imp-085",
-      "contacto1Id": "con-1785515106421-857",
-      "contacto2Id": "con-imp-137",
-      "dataInicio": "2026-07-27",
-      "dataFim": "2026-08-31",
-      "estado": "Em Orçamento",
-      "viatura": "",
-      "matricula": "",
-      "documents": [],
-      "media": [],
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
       "id": "proj-camp-001",
       "clienteId": "cli-1785514129444-833",
       "nome": "Huawei SmartBus",
@@ -3275,6 +3259,15 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1786362253812-312",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "timestamp": "2026-08-10T11:44:13.812Z"
+    },
     {
       "id": "log-1786362252433-781",
       "usuarioId": "usr-admin-001",
