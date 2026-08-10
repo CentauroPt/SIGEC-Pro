@@ -3178,22 +3178,6 @@
       "contacto2Id": "con-1785825214404-496",
       "documents": [],
       "media": []
-    },
-    {
-      "id": "proj-1786376417464-775",
-      "nome": "Unidade Móvel Bancária (Cópia)",
-      "tipo": "Compra UM",
-      "clienteId": "cli-imp-085",
-      "contacto1Id": "con-1785515106421-857",
-      "contacto2Id": "con-imp-137",
-      "dataInicio": "2026-07-27",
-      "dataFim": "2026-08-31",
-      "estado": "Em Orçamento",
-      "viatura": "",
-      "matricula": "",
-      "documents": [],
-      "media": [],
-      "createdAt": "2026-08-10T15:40:17.464Z"
     }
   ],
   "interacoes": [
@@ -3275,6 +3259,15 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1786376490692-248",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "timestamp": "2026-08-10T15:41:30.692Z"
+    },
     {
       "id": "log-1786376487081-25",
       "usuarioId": "usr-admin-001",
@@ -12265,15 +12258,6 @@
       "tipoAcao": "Servidor GitHub",
       "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
       "timestamp": "2026-08-10T14:28:36.784Z"
-    },
-    {
-      "id": "log-1786372113173-45",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "timestamp": "2026-08-10T14:28:33.173Z"
     }
   ]
 }
