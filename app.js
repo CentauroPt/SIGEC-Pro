@@ -3752,7 +3752,14 @@ function handleSaveGitHubSettings(event) {
   alert(`✅ Definições do Servidor GitHub Guardadas!\n\nRepositório: ${owner}/${repo}\nFicheiro no Servidor: ${path}\nStatus: ${token ? 'Modo Escrita (Token Configurado)' : 'Modo Leitura'}`);
 }
 
+let isSyncingToGitHub = false;
+
 async function syncDatabaseToGitHub(silent = false) {
+  if (isSyncingToGitHub) {
+    console.log('Sincronização com o GitHub já em curso. Pedido concorrente ignorado.');
+    return false;
+  }
+
   const cfg = getGitHubConfig();
   const token = (cfg.token || '').trim();
 
@@ -3763,12 +3770,13 @@ async function syncDatabaseToGitHub(silent = false) {
     return false;
   }
 
+  isSyncingToGitHub = true;
+
   const owner = (cfg.owner || 'centauropt').trim();
   const repo = (cfg.repo || 'SIGEC-Pro').trim();
   let path = (cfg.path || 'data/db.json').trim().replace(/^\/+/, '');
   const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
 
-  // Formatos de autenticação suportados pelo GitHub API (token ghp_ vs Bearer github_pat_)
   const authHeadersToTry = [
     token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`,
     `token ${token}`,
@@ -3778,7 +3786,6 @@ async function syncDatabaseToGitHub(silent = false) {
   try {
     let existingSha = null;
 
-    // 1. Tenta obter o SHA mais recente com autenticação e fallback sem autenticação
     for (const authHeader of authHeadersToTry) {
       try {
         const getRes = await fetch(apiUrl, {
@@ -3800,7 +3807,6 @@ async function syncDatabaseToGitHub(silent = false) {
       }
     }
 
-    // Fallback público (caso o repositório seja público)
     if (!existingSha) {
       try {
         const publicRes = await fetch(apiUrl, {
@@ -3842,7 +3848,6 @@ async function syncDatabaseToGitHub(silent = false) {
     let primaryAuthHeader = authHeadersToTry[0];
     let putRes = await sendPutWithHeader(existingSha, primaryAuthHeader);
 
-    // Se falhar com 409 (SHA mismatch), 422 ou 401, extrai o SHA retornado pela mensagem do GitHub e faz a re-tentativa imediata
     if (!putRes.ok) {
       let errBodyText = "";
       try {
@@ -3873,18 +3878,11 @@ async function syncDatabaseToGitHub(silent = false) {
 
           putRes = await sendPutWithHeader(freshSha, altAuth);
           if (putRes.ok) break;
-
-          if (!putRes.ok) {
-            const altErrText = await putRes.clone().text().catch(() => "");
-            const altMatch = altErrText.match(/does not match ([a-f0-9]{40})/i);
-            if (altMatch && altMatch[1]) {
-              putRes = await sendPutWithHeader(altMatch[1], altAuth);
-              if (putRes.ok) break;
-            }
-          }
         }
       }
     }
+
+    isSyncingToGitHub = false;
 
     if (putRes.status === 200 || putRes.status === 201) {
       localStorage.setItem('sigec_pro_last_gh_sync', new Date().toISOString());
@@ -3905,13 +3903,14 @@ async function syncDatabaseToGitHub(silent = false) {
           alert(`Erro de Ligação (404 Not Found):\n\nO GitHub não encontrou o repositório "${owner}/${repo}". Verifique o utilizador e repositório.`);
         } else if (putRes.status === 401) {
           alert(`Erro de Autenticação (401 Unauthorized):\n\nO Token introduzido é inválido ou expirou. Verifique o Token no bloco 'Servidor Remoto GitHub'.`);
-        } else {
+        } else if (putRes.status !== 409) {
           alert(`Erro na Sincronização com o Servidor GitHub (${putRes.status}):\n\n${errData.message || 'Falha ao autenticar ou gravar no repositório.'}`);
         }
       }
       return false;
     }
   } catch (err) {
+    isSyncingToGitHub = false;
     console.error('Falha de ligação ao servidor GitHub:', err);
     if (!silent) {
       alert(`Falha de Ligação:\nNão foi possível contactar o servidor GitHub: ${err.message}`);
