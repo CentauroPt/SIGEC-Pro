@@ -3474,25 +3474,28 @@ function loadDatabase() {
     let rawInteracoesProjetos = localStorage.getItem(STORAGE_KEYS.INTERACOES_PROJETOS);
     if (rawInteracoesProjetos === null) rawInteracoesProjetos = localStorage.getItem('centauro_db_interacoes_projetos_v6');
 
-    // Se é a primeira utilização (sem dados em localStorage), carrega os dados iniciais do Excel
-    let parsedClientes = rawClientes !== null ? JSON.parse(rawClientes) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? [...(INITIAL_EXCEL_DATABASE.clientes || [])] : []);
-    let parsedContactos = rawContactos !== null ? JSON.parse(rawContactos) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? [...(INITIAL_EXCEL_DATABASE.contactos || [])] : []);
-    let parsedProjetos = (rawProjetos !== null && JSON.parse(rawProjetos).length > 0) ? JSON.parse(rawProjetos) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? [...(INITIAL_EXCEL_DATABASE.projetos || [])] : []);
-
     let rawUsuarios = localStorage.getItem('sigec_pro_usuarios');
     let rawUserLogs = localStorage.getItem('sigec_pro_user_logs');
 
-    db.clientes = parsedClientes;
-    db.contactos = parsedContactos;
-    db.projetos = filterDeletedProjects(parsedProjetos);
-    db.interacoes = rawInteracoes ? JSON.parse(rawInteracoes) : [];
-    db.interacoesProjetos = rawInteracoesProjetos ? JSON.parse(rawInteracoesProjetos) : [];
-    db.usuarios = rawUsuarios ? JSON.parse(rawUsuarios) : [];
-    db.userLogs = rawUserLogs ? JSON.parse(rawUserLogs) : [];
+    const isFirstTimeRun = (rawClientes === null && rawProjetos === null);
+
+    db.clientes = rawClientes !== null ? JSON.parse(rawClientes) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? [...(INITIAL_EXCEL_DATABASE.clientes || [])] : []);
+    db.contactos = rawContactos !== null ? JSON.parse(rawContactos) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? [...(INITIAL_EXCEL_DATABASE.contactos || [])] : []);
+    db.projetos = rawProjetos !== null ? filterDeletedProjects(JSON.parse(rawProjetos)) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? filterDeletedProjects([...(INITIAL_EXCEL_DATABASE.projetos || [])]) : []);
+    db.interacoes = rawInteracoes !== null ? JSON.parse(rawInteracoes) : [];
+    db.interacoesProjetos = rawInteracoesProjetos !== null ? JSON.parse(rawInteracoesProjetos) : [];
+    db.usuarios = rawUsuarios !== null ? JSON.parse(rawUsuarios) : [];
+    db.userLogs = rawUserLogs !== null ? JSON.parse(rawUserLogs) : [];
 
     if (typeof ensureUsersInitialized === 'function') ensureUsersInitialized();
 
-    ensureRecoveredProjects();
+    if (isFirstTimeRun && typeof ensureRecoveredProjects === 'function') {
+      ensureRecoveredProjects();
+    }
+
+    if (typeof purgeGeneratedMockData === 'function') {
+      purgeGeneratedMockData();
+    }
 
     saveDatabase();
   } catch (err) {
@@ -3503,7 +3506,6 @@ function loadDatabase() {
       db.projetos = filterDeletedProjects([...(INITIAL_EXCEL_DATABASE.projetos || [])]);
       db.interacoes = [];
       db.interacoesProjetos = [];
-      ensureRecoveredProjects();
       saveDatabase();
     }
   }
@@ -3513,9 +3515,9 @@ function ensureRecoveredProjects() {
   const recoveredProjects = [
     {
       "id": "proj-camp-001",
-      "clienteId": "cli-imp-005",
-      "nome": "Campanha SmartBus Huawei PT - Rota Escolar e Cidadania Digital",
-      "tipo": "Exposição Itinerante",
+      "clienteId": "cli-imp-086",
+      "nome": "Campanha Nacional de Literacia Digital Huawei",
+      "tipo": "Ação Comercial",
       "dataInicio": "2026-02-01",
       "dataFim": "2026-06-30",
       "estado": "Adjudicado",
@@ -3523,37 +3525,13 @@ function ensureRecoveredProjects() {
       "matricula": "99-HB-22",
       "obs": "Itineração por escolas de Braga, Porto, Gaia, Aveiro, Viseu, Évora, Portimão e Torres Vedras.",
       "createdAt": "2026-07-31T17:00:00.000Z"
-    },
-    {
-      "id": "proj-banc-001",
-      "clienteId": "cli-imp-085",
-      "nome": "Projeto Unidade Móvel Bancária - Atendimento Financeiro Itinerante",
-      "tipo": "Ação Comercial",
-      "dataInicio": "2026-03-01",
-      "dataFim": "2026-11-30",
-      "estado": "Em Curso",
-      "viatura": "Unidade Móvel Bancária BCN 01",
-      "matricula": "UB-20-BC",
-      "obs": "Serviço móvel de atendimento bancário e inclusão financeira itinerante em regiões sem balcão fixo.",
-      "createdAt": "2026-07-31T17:30:00.000Z"
-    },
-    {
-      "id": "proj-estrat-2040",
-      "clienteId": "cli-imp-084",
-      "nome": "Projeto Estratégia 2040 - Roteiro de Inovação e Futuro Regional",
-      "tipo": "Prospeção / Eventos",
-      "dataInicio": "2026-01-15",
-      "dataFim": "2026-12-31",
-      "estado": "Adjudicado",
-      "viatura": "Unidade Móvel Estratégia 2040",
-      "matricula": "EST-20-40",
-      "obs": "Roteiro itinerante de consulta pública e dinamização da Estratégia 2040 para o desenvolvimento territorial.",
-      "createdAt": "2026-07-31T17:45:00.000Z"
     }
   ];
 
   if (!Array.isArray(deletedProjectIds)) deletedProjectIds = [];
-  deletedProjectIds = deletedProjectIds.filter(id => !["proj-camp-001", "proj-banc-001", "proj-estrat-2040"].includes(id));
+  if (!deletedProjectIds.includes("proj-banc-001")) deletedProjectIds.push("proj-banc-001");
+  if (!deletedProjectIds.includes("proj-estrat-2040")) deletedProjectIds.push("proj-estrat-2040");
+  deletedProjectIds = deletedProjectIds.filter(id => !["proj-camp-001"].includes(id));
   saveDeletedProjectIds();
 
   if (!Array.isArray(db.projetos)) db.projetos = [];
@@ -3579,7 +3557,7 @@ function purgeGeneratedMockData() {
     db.contactos = db.contactos.filter(c => c && c.id && !c.id.includes('-v13-') && !c.id.includes('-v14-') && !c.id.includes('-v15-'));
   }
   if (Array.isArray(db.projetos)) {
-    db.projetos = db.projetos.filter(p => p && p.id && !p.id.includes('-v13-') && !p.id.includes('-v14-') && !p.id.includes('-v15-') && !p.nome.includes("REPETAL") && !p.nome.includes("Parque Tecnológico"));
+    db.projetos = db.projetos.filter(p => p && p.id && !p.id.includes('-v13-') && !p.id.includes('-v14-') && !p.id.includes('-v15-') && !p.nome.includes("REPETAL") && !p.nome.includes("Parque Tecnológico") && p.id !== "proj-banc-001" && p.id !== "proj-estrat-2040" && !p.nome.includes("Estratégia 2040") && !p.nome.includes("Unidade Móvel Bancária"));
   }
 }
 
@@ -8214,33 +8192,33 @@ function resolveSystemUpdateConfirm(shouldInstall) {
     let addedContactsCount = 0;
     let addedProjectsCount = 0;
 
-    // 1. Atualizar/Adicionar Clientes (Preserva registos existentes do utilizador)
+    // 1. Atualizar/Adicionar Clientes (RESPEITO ABSOLUTO: Preserva 100% dos registos existentes do utilizador)
     incomingClientes.forEach(incCli => {
       const idx = db.clientes.findIndex(c => c.id === incCli.id || (incCli.contribuinte && c.contribuinte === incCli.contribuinte) || (incCli.nome && c.nome && c.nome.toLowerCase() === incCli.nome.toLowerCase()));
       if (idx >= 0) {
-        db.clientes[idx] = { ...db.clientes[idx], ...incCli };
+        db.clientes[idx] = { ...incCli, ...db.clientes[idx] };
       } else {
         db.clientes.push(incCli);
         addedClientsCount++;
       }
     });
 
-    // 2. Atualizar/Adicionar Contactos (Preserva registos existentes do utilizador)
+    // 2. Atualizar/Adicionar Contactos (RESPEITO ABSOLUTO: Preserva 100% dos registos existentes do utilizador)
     incomingContactos.forEach(incCon => {
       const idx = db.contactos.findIndex(c => c.id === incCon.id || (incCon.email && c.email === incCon.email));
       if (idx >= 0) {
-        db.contactos[idx] = { ...db.contactos[idx], ...incCon };
+        db.contactos[idx] = { ...incCon, ...db.contactos[idx] };
       } else {
         db.contactos.push(incCon);
         addedContactsCount++;
       }
     });
 
-    // 3. Atualizar/Adicionar Projetos (Preserva registos existentes do utilizador)
+    // 3. Atualizar/Adicionar Projetos (RESPEITO ABSOLUTO: Preserva 100% dos registos existentes do utilizador)
     incomingProjetos.forEach(incProj => {
       const idx = db.projetos.findIndex(p => p.id === incProj.id || (incProj.nome && p.nome && p.nome.toLowerCase() === incProj.nome.toLowerCase()));
       if (idx >= 0) {
-        db.projetos[idx] = { ...db.projetos[idx], ...incProj };
+        db.projetos[idx] = { ...incProj, ...db.projetos[idx] };
       } else {
         db.projetos.push(incProj);
         addedProjectsCount++;
