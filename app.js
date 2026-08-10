@@ -6651,10 +6651,26 @@ function closeDriveModal() {
 // 11. GRAVAÇÃO MANUAL E ENCERRAMENTO SEGURO DA APLICAÇÃO
 // ==========================================
 
+function saveProgramChangesInternal() {
+  try {
+    saveDatabase();
+    clearFormDirty();
+
+    if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
+    if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
+    if (typeof renderClientPageMainGrid === 'function') renderClientPageMainGrid();
+    if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
+    if (typeof renderProjectPageMainGrid === 'function') renderProjectPageMainGrid();
+
+    showToast('Todas as alterações foram registadas na base de dados interna do programa com sucesso!');
+  } catch (err) {
+    console.error('Erro ao guardar alterações internas no programa:', err);
+    showToast('Erro ao guardar alterações no programa.', 'danger');
+  }
+}
+
 function saveAllChangesManual() {
-  saveDatabase();
-  clearFormDirty();
-  showToast('Todas as alterações efetuadas foram guardadas no programa com sucesso!');
+  saveProgramChangesInternal();
 }
 
 function closeApplicationWithSave() {

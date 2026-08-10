@@ -196,7 +196,7 @@
         </button>
       </nav>
 
-      <button class="btn btn-success" onclick="saveAllChangesManual()" title="Guardar todas as alterações efetuadas no programa" style="font-weight: 600;">
+      <button class="btn btn-success" onclick="saveProgramChangesInternal()" title="Guardar todas as alterações na base de dados interna do programa" style="font-weight: 600;" id="btnSaveProgramChanges">
         <i class="fa-solid fa-floppy-disk"></i> Guardar Alterações
       </button>
 
@@ -1604,7 +1604,7 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- Main JavaScript App -->
-  <script src="app.js?v=20260810_v7"></script>
+  <script src="app.js?v=20260810_v8"></script>
 
   <!-- Override saveContact and switchTab to guarantee proper modal behavior regardless of app.js cache -->
   <script>
