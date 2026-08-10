@@ -29,6 +29,56 @@
 
   <!-- Stylesheet -->
   <link rel="stylesheet" href="styles.css">
+  
+  <!-- Critical Login Screen Styles (Guarantees perfect rendering even before external CSS loads) -->
+  <style>
+    .login-overlay {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0369a1 100%) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      z-index: 999999 !important;
+      padding: 1.5rem !important;
+      transition: opacity 0.3s ease, visibility 0.3s ease !important;
+    }
+    .login-overlay.hidden {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+    .login-card {
+      width: 100% !important;
+      max-width: 420px !important;
+      background: rgba(255, 255, 255, 0.96) !important;
+      backdrop-filter: blur(16px) !important;
+      border-radius: 16px !important;
+      padding: 2.25rem 2rem !important;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
+      text-align: center !important;
+      margin: auto !important;
+    }
+    .login-logo-circle {
+      width: 72px !important;
+      height: 72px !important;
+      border-radius: 50% !important;
+      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      margin: 0 auto 0.5rem auto !important;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2) !important;
+    }
+    .login-logo-circle img {
+      width: 46px !important;
+      height: 46px !important;
+      object-fit: contain !important;
+    }
+  </style>
 </head>
 <body>
 
@@ -37,7 +87,7 @@
     <div class="login-card">
       <div class="login-header">
         <div class="login-logo-circle">
-          <img src="Images/logo_sinergia_icon.png" alt="Sinergia Logo">
+          <img src="Images/logo_sinergia_icon.png" alt="Sinergia" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';"><i class="fa-solid fa-shield-halved" style="display:none; font-size: 2.2rem; color: #0284c7;"></i>
         </div>
         <h2 style="color: #0f172a; font-size: 1.5rem; font-weight: 700; margin: 0.75rem 0 0.25rem 0;">SIGEC-Pro</h2>
         <p style="color: #64748b; font-size: 0.88rem; margin: 0;">Sistema de Gestão Empresarial</p>
