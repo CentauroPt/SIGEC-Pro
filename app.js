@@ -3830,22 +3830,47 @@ async function syncDatabaseToGitHub(silent = false) {
     let primaryAuthHeader = authHeadersToTry[0];
     let putRes = await sendPutWithHeader(existingSha, primaryAuthHeader);
 
-    // Se falhar com 401 ou 422, tenta os cabeçalhos/versões de SHA alternativos
-    if (!putRes.ok && (putRes.status === 409 || putRes.status === 422 || putRes.status === 401)) {
-      for (const altAuth of authHeadersToTry) {
-        const freshRes = await fetch(apiUrl, {
-          method: 'GET',
-          headers: { 'Authorization': altAuth, 'Accept': 'application/vnd.github.v3+json' }
-        }).catch(() => null);
+    // Se falhar com 409 (SHA mismatch), 422 ou 401, extrai o SHA retornado pela mensagem do GitHub e faz a re-tentativa imediata
+    if (!putRes.ok) {
+      let errBodyText = "";
+      try {
+        const errJson = await putRes.clone().json();
+        errBodyText = errJson.message || JSON.stringify(errJson);
+      } catch (e) {
+        errBodyText = await putRes.clone().text().catch(() => "");
+      }
 
-        let freshSha = existingSha;
-        if (freshRes && freshRes.status === 200) {
-          const freshData = await freshRes.json();
-          if (freshData && freshData.sha) freshSha = freshData.sha;
+      const match = errBodyText.match(/does not match ([a-f0-9]{40})/i);
+      if (match && match[1]) {
+        const targetSha = match[1];
+        putRes = await sendPutWithHeader(targetSha, primaryAuthHeader);
+      }
+
+      if (!putRes.ok && (putRes.status === 409 || putRes.status === 422 || putRes.status === 401)) {
+        for (const altAuth of authHeadersToTry) {
+          const freshRes = await fetch(apiUrl, {
+            method: 'GET',
+            headers: { 'Authorization': altAuth, 'Accept': 'application/vnd.github.v3+json' }
+          }).catch(() => null);
+
+          let freshSha = existingSha;
+          if (freshRes && freshRes.status === 200) {
+            const freshData = await freshRes.json();
+            if (freshData && freshData.sha) freshSha = freshData.sha;
+          }
+
+          putRes = await sendPutWithHeader(freshSha, altAuth);
+          if (putRes.ok) break;
+
+          if (!putRes.ok) {
+            const altErrText = await putRes.clone().text().catch(() => "");
+            const altMatch = altErrText.match(/does not match ([a-f0-9]{40})/i);
+            if (altMatch && altMatch[1]) {
+              putRes = await sendPutWithHeader(altMatch[1], altAuth);
+              if (putRes.ok) break;
+            }
+          }
         }
-
-        putRes = await sendPutWithHeader(freshSha, altAuth);
-        if (putRes.ok) break;
       }
     }
 
