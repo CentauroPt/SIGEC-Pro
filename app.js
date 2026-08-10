@@ -8380,39 +8380,53 @@ function verifyLoginPin() {
   const errorMsg = document.getElementById('loginErrorMessage');
   const overlay = document.getElementById('loginOverlay');
   
-  if (!userInput || !pinInput) return;
-  const enteredUserText = typeof normalizeText === 'function' ? normalizeText(userInput.value.trim()) : userInput.value.trim().toLowerCase();
+  if (!pinInput) return;
+  const enteredUserText = userInput ? (typeof normalizeText === 'function' ? normalizeText(userInput.value.trim()) : userInput.value.trim().toLowerCase()) : '';
   const enteredPin = pinInput.value.trim();
 
-  if (!enteredUserText) {
+  if (!enteredPin) {
     if (errorMsg) {
-      errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Por favor, insira o seu Nome ou Email.';
+      errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Por favor, insira o seu PIN de acesso.';
       errorMsg.style.display = 'block';
     }
-    userInput.style.borderColor = '#dc2626';
-    setTimeout(() => { if (userInput) userInput.style.borderColor = '#cbd5e1'; }, 1500);
+    pinInput.style.borderColor = '#dc2626';
+    setTimeout(() => { if (pinInput) pinInput.style.borderColor = '#cbd5e1'; }, 1500);
     return;
   }
 
-  let matchedUser = db.usuarios.find(u => {
-    const normName = typeof normalizeText === 'function' ? normalizeText(u.nome || '') : (u.nome || '').toLowerCase();
-    const normEmail = typeof normalizeText === 'function' ? normalizeText(u.email || '') : (u.email || '').toLowerCase();
-    return normName === enteredUserText || normEmail === enteredUserText || normName.includes(enteredUserText) || enteredUserText.includes(normName);
-  });
+  const masterAdminPin = getAdminPin();
+  const adminUser = db.usuarios.find(u => u.role === 'admin') || db.usuarios[0];
 
-  if (!matchedUser) {
-    const isMasterAdminKeyword = ['jose', 'centurio', 'administrador', 'admin', 'jmcenturio'].some(kw => enteredUserText.includes(kw));
-    if (isMasterAdminKeyword) {
-      matchedUser = db.usuarios.find(u => u.role === 'admin') || db.usuarios[0];
+  let matchedUser = null;
+
+  if (enteredUserText) {
+    matchedUser = db.usuarios.find(u => {
+      const normName = typeof normalizeText === 'function' ? normalizeText(u.nome || '') : (u.nome || '').toLowerCase();
+      const normEmail = typeof normalizeText === 'function' ? normalizeText(u.email || '') : (u.email || '').toLowerCase();
+      return normName === enteredUserText || normEmail === enteredUserText || normName.includes(enteredUserText) || enteredUserText.includes(normName);
+    });
+
+    if (!matchedUser) {
+      const isMasterAdminKeyword = ['jose', 'centurio', 'administrador', 'admin', 'jmcenturio'].some(kw => enteredUserText.includes(kw));
+      if (isMasterAdminKeyword) {
+        matchedUser = adminUser;
+      }
+    }
+  } else {
+    // Se o campo de utilizador estiver em branco, assume o Administrador se o PIN coincidir
+    if (enteredPin === masterAdminPin || (adminUser && enteredPin === adminUser.pin)) {
+      matchedUser = adminUser;
     }
   }
 
-  if (matchedUser && matchedUser.pin === enteredPin) {
+  const isPinValid = matchedUser && (enteredPin === matchedUser.pin || enteredPin === masterAdminPin || (adminUser && enteredPin === adminUser.pin));
+
+  if (isPinValid && matchedUser) {
     sessionStorage.setItem('sigec_pro_authenticated', 'true');
     sessionStorage.setItem('sigec_pro_active_user_id', matchedUser.id);
 
     if (errorMsg) errorMsg.style.display = 'none';
-    userInput.value = '';
+    if (userInput) userInput.value = '';
     pinInput.value = '';
     
     if (overlay) {
@@ -8428,7 +8442,7 @@ function verifyLoginPin() {
       errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Utilizador ou PIN incorreto. Tente novamente.';
       errorMsg.style.display = 'block';
     }
-    userInput.style.borderColor = '#dc2626';
+    if (userInput) userInput.style.borderColor = '#dc2626';
     pinInput.style.borderColor = '#dc2626';
     showToast('Utilizador ou PIN incorreto!', 'danger');
     setTimeout(() => {
