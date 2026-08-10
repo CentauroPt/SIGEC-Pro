@@ -3163,6 +3163,22 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
+      "id": "proj-rec-bcn",
+      "nome": "Unidade Móvel Bancária",
+      "tipo": "Compra UM",
+      "clienteId": "cli-imp-085",
+      "contacto1Id": "con-1785515106421-857",
+      "contacto2Id": "con-imp-137",
+      "dataInicio": "2026-07-27",
+      "dataFim": "2026-08-31",
+      "estado": "Em Orçamento",
+      "viatura": "",
+      "matricula": "",
+      "documents": [],
+      "media": [],
+      "createdAt": "2026-07-31T16:30:00.000Z"
+    },
+    {
       "id": "proj-camp-001",
       "clienteId": "cli-1785514129444-833",
       "nome": "Huawei SmartBus",
@@ -3178,22 +3194,6 @@
       "contacto2Id": "con-1785825214404-496",
       "documents": [],
       "media": []
-    },
-    {
-      "id": "proj-1786370937885-844",
-      "nome": "teste",
-      "tipo": "Compra UM",
-      "clienteId": "cli-imp-002",
-      "contacto1Id": "con-imp-004",
-      "contacto2Id": "",
-      "dataInicio": "2026-08-10",
-      "dataFim": "",
-      "estado": "Em Curso",
-      "viatura": "",
-      "matricula": "",
-      "documents": [],
-      "media": [],
-      "createdAt": "2026-08-10T14:08:57.885Z"
     }
   ],
   "interacoes": [
@@ -3275,6 +3275,15 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1786371402395-748",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "timestamp": "2026-08-10T14:16:42.395Z"
+    },
     {
       "id": "log-1786371392177-211",
       "usuarioId": "usr-admin-001",
