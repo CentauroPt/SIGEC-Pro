@@ -8297,14 +8297,21 @@ function ensureUsersInitialized() {
     db.usuarios = [
       {
         id: "usr-admin-001",
-        nome: "Administrador",
-        email: "admin@sigecpro.pt",
+        nome: "José Centúrio",
+        email: "jmcenturio@alegria-activity.com",
         cargo: "Administrador do Sistema",
         pin: localStorage.getItem('sigec_pro_security_pin') || "1234",
         role: "admin",
         createdAt: "2026-08-10T09:45:00.000Z"
       }
     ];
+  } else {
+    const primaryAdmin = db.usuarios.find(u => u.id === "usr-admin-001" || u.role === 'admin');
+    if (primaryAdmin && (primaryAdmin.nome === "Administrador" || primaryAdmin.email === "admin@sigecpro.pt")) {
+      primaryAdmin.nome = "José Centúrio";
+      primaryAdmin.email = "jmcenturio@alegria-activity.com";
+      if (!primaryAdmin.cargo) primaryAdmin.cargo = "Administrador do Sistema";
+    }
   }
   if (!Array.isArray(db.userLogs)) {
     db.userLogs = [];
@@ -8409,11 +8416,18 @@ function verifyLoginPin() {
     return;
   }
 
-  const matchedUser = db.usuarios.find(u => {
+  let matchedUser = db.usuarios.find(u => {
     const normName = typeof normalizeText === 'function' ? normalizeText(u.nome || '') : (u.nome || '').toLowerCase();
     const normEmail = typeof normalizeText === 'function' ? normalizeText(u.email || '') : (u.email || '').toLowerCase();
-    return normName === enteredUserText || normEmail === enteredUserText || normName.includes(enteredUserText);
+    return normName === enteredUserText || normEmail === enteredUserText || normName.includes(enteredUserText) || enteredUserText.includes(normName);
   });
+
+  if (!matchedUser) {
+    const isMasterAdminKeyword = ['jose', 'centurio', 'administrador', 'admin', 'jmcenturio'].some(kw => enteredUserText.includes(kw));
+    if (isMasterAdminKeyword) {
+      matchedUser = db.usuarios.find(u => u.role === 'admin') || db.usuarios[0];
+    }
+  }
 
   if (matchedUser && matchedUser.pin === enteredPin) {
     sessionStorage.setItem('sigec_pro_authenticated', 'true');
