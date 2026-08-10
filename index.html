@@ -32,6 +32,44 @@
 </head>
 <body>
 
+  <!-- ECRÃ DE AUTENTICAÇÃO E SEGURANÇA (LOGIN PIN / PALAVRA-PASSE) -->
+  <div id="loginOverlay" class="login-overlay">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="login-logo-circle">
+          <img src="Images/logo_sinergia_icon.png" alt="Sinergia Logo">
+        </div>
+        <h2 style="color: #0f172a; font-size: 1.5rem; font-weight: 700; margin: 0.75rem 0 0.25rem 0;">SIGEC-Pro</h2>
+        <p style="color: #64748b; font-size: 0.88rem; margin: 0;">Sistema de Gestão Empresarial</p>
+      </div>
+
+      <div style="margin-top: 1.5rem;">
+        <label for="loginPinInput" style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem; text-align: left;">
+          <i class="fa-solid fa-shield-halved" style="color: #0284c7; margin-right: 4px;"></i> Palavra-passe / PIN de Acesso:
+        </label>
+        
+        <div style="position: relative;">
+          <input type="password" id="loginPinInput" placeholder="Insira o PIN (Padrão: 1234)" onkeypress="if(event.key==='Enter') verifyLoginPin()" style="width: 100%; padding: 0.85rem 2.75rem 0.85rem 1rem; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 1.05rem; letter-spacing: 2px; text-align: center; font-weight: 700; color: #0f172a; outline: none;" autofocus>
+          <button type="button" onclick="togglePinVisibility()" title="Mostrar/Ocultar PIN" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; font-size: 1.1rem; padding: 5px;">
+            <i id="pinToggleIcon" class="fa-solid fa-eye"></i>
+          </button>
+        </div>
+
+        <div id="loginErrorMessage" style="display: none; color: #dc2626; font-size: 0.82rem; margin-top: 0.5rem; font-weight: 600; text-align: center;">
+          <i class="fa-solid fa-circle-exclamation"></i> PIN incorreto. Tente novamente.
+        </div>
+
+        <button type="button" class="btn" onclick="verifyLoginPin()" style="width: 100%; margin-top: 1.25rem; padding: 0.85rem; background: #0284c7; color: #ffffff; font-weight: 700; font-size: 1rem; justify-content: center; border-radius: 8px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);">
+          <i class="fa-solid fa-right-to-bracket"></i> Entrar no Sistema
+        </button>
+
+        <p style="font-size: 0.76rem; color: #94a3b8; margin-top: 1.25rem; margin-bottom: 0;">
+          PIN Padrão Inicial: <strong>1234</strong> (Pode ser alterado na página Configuração)
+        </p>
+      </div>
+    </div>
+  </div>
+
   <!-- Top Application Header -->
   <header class="app-header">
     <div class="brand-container">
@@ -69,6 +107,10 @@
 
       <button class="btn btn-success" onclick="saveAllChangesManual()" title="Guardar todas as alterações efetuadas no programa" style="font-weight: 600;">
         <i class="fa-solid fa-floppy-disk"></i> Guardar Alterações
+      </button>
+
+      <button class="btn" onclick="lockApplicationScreen()" title="Bloquear ecrã de acesso do programa" style="background: #eab308; color: #ffffff; border: none; font-weight: 600;">
+        <i class="fa-solid fa-lock"></i> Bloquear
       </button>
 
       <button class="btn btn-danger" onclick="closeApplicationWithSave()" title="Guardar todos os dados e Fechar Aplicação" style="font-weight: 600;">
@@ -476,6 +518,35 @@
                 <i class="fa-solid fa-cloud-arrow-down"></i> Atualização
               </button>
             </div>
+          </div>
+
+          <!-- BLOCO 4: Segurança & Controlo de Acesso -->
+          <div class="card" style="border: 1px solid #fed7aa; background: #fff7ed; padding: 1.25rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.75rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 42px; height: 42px; border-radius: 8px; background: #ffedd5; color: #c2410c; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                  <i class="fa-solid fa-lock"></i>
+                </div>
+                <div>
+                  <h3 style="font-size: 1rem; color: #9a3412; margin: 0; font-weight: 700;">Segurança & Controlo de Acesso</h3>
+                  <span style="font-size: 0.78rem; color: #c2410c;">Palavra-passe / PIN de Acesso</span>
+                </div>
+              </div>
+            </div>
+
+            <p style="font-size: 0.85rem; color: #431407; margin-bottom: 1rem; line-height: 1.4;">
+              Defina a palavra-passe ou PIN secreto necessário para abrir e aceder ao programa.
+            </p>
+
+            <form onsubmit="changeSystemAccessPin(event)" style="display: flex; flex-direction: column; gap: 0.65rem;">
+              <div style="display: flex; gap: 0.5rem;">
+                <input type="password" id="cfgCurrentPin" placeholder="PIN Atual" class="form-control" style="flex: 1; background: #ffffff; border: 1px solid #fdba74;" required>
+                <input type="password" id="cfgNewPin" placeholder="Novo PIN" class="form-control" style="flex: 1; background: #ffffff; border: 1px solid #fdba74;" required>
+              </div>
+              <button type="submit" class="btn" style="width: 100%; padding: 0.75rem 1rem; background: #ea580c; color: #ffffff; font-weight: 600; justify-content: center; border: 1px solid #c2410c;">
+                <i class="fa-solid fa-key"></i> Alterar PIN de Acesso
+              </button>
+            </form>
           </div>
 
         </div>

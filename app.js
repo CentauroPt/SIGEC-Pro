@@ -8225,3 +8225,124 @@ function resolveSystemUpdateConfirm(shouldInstall) {
     alert(`Erro na Atualização:\nOcorreu um erro ao instalar a atualização: ${err.message}`);
   }
 }
+
+// ==========================================
+// 22. SISTEMA DE AUTENTICAÇÃO E SEGURANÇA POR PIN
+// ==========================================
+
+function getStoredPin() {
+  return localStorage.getItem('sigec_pro_security_pin') || '1234';
+}
+
+function initSecurityAuthCheck() {
+  const isAuth = sessionStorage.getItem('sigec_pro_authenticated');
+  const overlay = document.getElementById('loginOverlay');
+  
+  if (isAuth === 'true') {
+    if (overlay) overlay.classList.add('hidden');
+  } else {
+    if (overlay) {
+      overlay.classList.remove('hidden');
+      const pinInput = document.getElementById('loginPinInput');
+      if (pinInput) setTimeout(() => pinInput.focus(), 150);
+    }
+  }
+}
+
+function verifyLoginPin() {
+  const pinInput = document.getElementById('loginPinInput');
+  const errorMsg = document.getElementById('loginErrorMessage');
+  const overlay = document.getElementById('loginOverlay');
+  
+  if (!pinInput) return;
+  const enteredPin = pinInput.value.trim();
+  const validPin = getStoredPin();
+
+  if (enteredPin === validPin) {
+    sessionStorage.setItem('sigec_pro_authenticated', 'true');
+    if (errorMsg) errorMsg.style.display = 'none';
+    pinInput.value = '';
+    
+    if (overlay) {
+      overlay.classList.add('hidden');
+    }
+    showToast('Acesso autorizado! Bem-vindo ao SIGEC-Pro.');
+  } else {
+    if (errorMsg) errorMsg.style.display = 'block';
+    pinInput.style.borderColor = '#dc2626';
+    showToast('PIN de acesso incorreto!', 'danger');
+    setTimeout(() => {
+      if (pinInput) pinInput.style.borderColor = '#cbd5e1';
+    }, 1500);
+  }
+}
+
+function togglePinVisibility() {
+  const pinInput = document.getElementById('loginPinInput');
+  const icon = document.getElementById('pinToggleIcon');
+  if (!pinInput || !icon) return;
+
+  if (pinInput.type === 'password') {
+    pinInput.type = 'text';
+    icon.classList.remove('fa-eye');
+    icon.classList.add('fa-eye-slash');
+  } else {
+    pinInput.type = 'password';
+    icon.classList.remove('fa-eye-slash');
+    icon.classList.add('fa-eye');
+  }
+}
+
+function lockApplicationScreen() {
+  sessionStorage.removeItem('sigec_pro_authenticated');
+  const overlay = document.getElementById('loginOverlay');
+  const errorMsg = document.getElementById('loginErrorMessage');
+  
+  if (errorMsg) errorMsg.style.display = 'none';
+  if (overlay) {
+    overlay.classList.remove('hidden');
+    const pinInput = document.getElementById('loginPinInput');
+    if (pinInput) {
+      pinInput.value = '';
+      setTimeout(() => pinInput.focus(), 150);
+    }
+  }
+  showToast('Ecrã de acesso bloqueado com sucesso.', 'info');
+}
+
+function changeSystemAccessPin(event) {
+  if (event && event.preventDefault) event.preventDefault();
+
+  const currentPinInput = document.getElementById('cfgCurrentPin');
+  const newPinInput = document.getElementById('cfgNewPin');
+
+  if (!currentPinInput || !newPinInput) return;
+
+  const currentPin = currentPinInput.value.trim();
+  const newPin = newPinInput.value.trim();
+
+  const storedPin = getStoredPin();
+
+  if (currentPin !== storedPin) {
+    showToast('Erro: O PIN Atual introduzido está incorreto.', 'danger');
+    alert('Erro de Segurança:\nO PIN Atual introduzido não coincide com a palavra-passe do sistema.');
+    return;
+  }
+
+  if (!newPin || newPin.length < 3) {
+    showToast('Erro: O novo PIN deve conter pelo menos 3 caracteres.', 'warning');
+    alert('Erro de Validação:\nO novo PIN deve ter pelo menos 3 caracteres.');
+    return;
+  }
+
+  localStorage.setItem('sigec_pro_security_pin', newPin);
+  currentPinInput.value = '';
+  newPinInput.value = '';
+
+  showToast('Palavra-passe / PIN de acesso alterado com sucesso!');
+  alert(`✅ Segurança Atualizada com Sucesso!\n\nA sua nova palavra-passe / PIN de acesso foi definida com sucesso.\nGuarde a nova palavra-passe em local seguro.`);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  initSecurityAuthCheck();
+});
