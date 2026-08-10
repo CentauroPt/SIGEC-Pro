@@ -3178,6 +3178,22 @@
       "contacto2Id": "con-1785825214404-496",
       "documents": [],
       "media": []
+    },
+    {
+      "id": "proj-1786370937885-844",
+      "nome": "teste",
+      "tipo": "Compra UM",
+      "clienteId": "cli-imp-002",
+      "contacto1Id": "con-imp-004",
+      "contacto2Id": "",
+      "dataInicio": "2026-08-10",
+      "dataFim": "",
+      "estado": "Em Curso",
+      "viatura": "",
+      "matricula": "",
+      "documents": [],
+      "media": [],
+      "createdAt": "2026-08-10T14:08:57.885Z"
     }
   ],
   "interacoes": [
@@ -3259,6 +3275,15 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1786370936806-42",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "timestamp": "2026-08-10T14:08:56.806Z"
+    },
     {
       "id": "log-1786370934758-861",
       "usuarioId": "usr-admin-001",
