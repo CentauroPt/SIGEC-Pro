@@ -601,31 +601,6 @@
             </div>
           </div>
 
-          <!-- BLOCO 3: Atualização do Sistema -->
-          <div class="card" style="border: 1px solid #bae6fd; background: #f0f9ff; padding: 1.25rem;">
-            <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.75rem;">
-              <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <div style="width: 42px; height: 42px; border-radius: 8px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
-                  <i class="fa-solid fa-arrows-rotate"></i>
-                </div>
-                <div>
-                  <h3 style="font-size: 1rem; color: #0369a1; margin: 0; font-weight: 700;">Atualização do Sistema</h3>
-                  <span style="font-size: 0.78rem; color: #0284c7;">Versão Instalada: <strong id="installedVersionBadge" style="color: #0369a1;">V1.0</strong></span>
-                </div>
-              </div>
-            </div>
-
-            <p style="font-size: 0.85rem; color: #334155; margin-bottom: 1rem; line-height: 1.4;">
-              Verifique e instale automaticamente novas atualizações a partir da pasta de Atualizações.
-            </p>
-
-            <div style="display: flex; gap: 0.5rem;">
-              <button type="button" class="btn" id="btnRunSystemUpdate" onclick="checkAndInstallUpdate()" style="width: 100%; padding: 0.75rem 1rem; background: #0284c7; color: #ffffff; font-weight: 600; justify-content: center; border: 1px solid #0369a1; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);" title="Verificar e instalar versão mais recente da pasta Atualizações">
-                <i class="fa-solid fa-cloud-arrow-down"></i> Atualização
-              </button>
-            </div>
-          </div>
-
           <!-- BLOCO: Sincronização em Tempo Real com o Servidor GitHub -->
           <div class="card" style="border: 1px solid #cbd5e1; background: #ffffff; padding: 1.25rem; grid-column: 1 / -1;">
             <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.85rem; flex-wrap: wrap;">
@@ -634,7 +609,7 @@
                   <i class="fa-brands fa-github"></i>
                 </div>
                 <div>
-                  <h3 style="font-size: 1.05rem; color: #0969da; margin: 0; font-weight: 700;">Servidor Remoto GitHub (Sincronização em Nuvem - Opção 2)</h3>
+                  <h3 style="font-size: 1.05rem; color: #0969da; margin: 0; font-weight: 700;">Sincronizar com o Servidor</h3>
                   <span style="font-size: 0.78rem; color: #57606a;">Registo e Persistência Automática de Alterações no Repositório do GitHub</span>
                 </div>
               </div>
@@ -1610,7 +1585,7 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- Main JavaScript App -->
-  <script src="app.js?v=20260810_v15"></script>
+  <script src="app.js?v=20260810_v17"></script>
 
   <!-- Override saveContact and switchTab to guarantee proper modal behavior regardless of app.js cache -->
   <script>

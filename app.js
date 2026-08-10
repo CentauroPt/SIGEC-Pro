@@ -3754,7 +3754,7 @@ async function syncDatabaseToGitHub(silent = false, force = false) {
 
   if (!token) {
     if (!silent) {
-      alert("Aviso: Para sincronizar/enviar dados para o GitHub, insira o seu Token de Acesso Pessoal (PAT) no bloco 'Servidor Remoto GitHub' da página de Configuração.");
+      alert("Aviso: Para sincronizar/enviar dados para o GitHub, insira o seu Token de Acesso Pessoal (PAT) no bloco 'Sincronizar com o Servidor' da página de Configuração.");
     }
     return false;
   }
