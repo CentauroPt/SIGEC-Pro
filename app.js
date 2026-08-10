@@ -3998,6 +3998,106 @@ function generateId(prefix = 'id') {
   return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 }
 
+async function autoSyncServerOnStartup() {
+  const cfg = getGitHubConfig();
+  const owner = (cfg.owner || 'centauropt').trim();
+  const repo = (cfg.repo || 'SIGEC-Pro').trim();
+  const path = (cfg.path || 'data/db.json').trim().replace(/^\/+/, '');
+
+  if (!owner || !repo || !path) return;
+
+  try {
+    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+    const token = (cfg.token || '').trim();
+    const headers = { 'Accept': 'application/vnd.github.v3.raw' };
+    if (token) {
+      headers['Authorization'] = token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`;
+    }
+
+    const res = await fetch(apiUrl, { method: 'GET', headers: headers, cache: 'no-store' });
+    if (!res.ok) return;
+
+    const remoteDb = await res.json();
+    if (!remoteDb || typeof remoteDb !== 'object') return;
+
+    let hasUpdates = false;
+
+    if (Array.isArray(remoteDb.clientes) && remoteDb.clientes.length > 0) {
+      if (!db.clientes || db.clientes.length < remoteDb.clientes.length) {
+        db.clientes = remoteDb.clientes;
+        hasUpdates = true;
+      } else {
+        remoteDb.clientes.forEach(incCli => {
+          const idx = db.clientes.findIndex(c => c && c.id === incCli.id);
+          if (idx < 0) {
+            db.clientes.push(incCli);
+            hasUpdates = true;
+          }
+        });
+      }
+    }
+
+    if (Array.isArray(remoteDb.contactos) && remoteDb.contactos.length > 0) {
+      if (!db.contactos || db.contactos.length < remoteDb.contactos.length) {
+        db.contactos = remoteDb.contactos;
+        hasUpdates = true;
+      } else {
+        remoteDb.contactos.forEach(incCon => {
+          const idx = db.contactos.findIndex(c => c && c.id === incCon.id);
+          if (idx < 0) {
+            db.contactos.push(incCon);
+            hasUpdates = true;
+          }
+        });
+      }
+    }
+
+    if (Array.isArray(remoteDb.projetos) && remoteDb.projetos.length > 0) {
+      if (!db.projetos || db.projetos.length < remoteDb.projetos.length) {
+        db.projetos = remoteDb.projetos;
+        hasUpdates = true;
+      } else {
+        remoteDb.projetos.forEach(incProj => {
+          const idx = db.projetos.findIndex(p => p && p.id === incProj.id);
+          if (idx < 0) {
+            db.projetos.push(incProj);
+            hasUpdates = true;
+          }
+        });
+      }
+    }
+
+    if (Array.isArray(remoteDb.interacoes) && remoteDb.interacoes.length > 0) {
+      if (!db.interacoes || db.interacoes.length < remoteDb.interacoes.length) {
+        db.interacoes = remoteDb.interacoes;
+        hasUpdates = true;
+      }
+    }
+
+    if (Array.isArray(remoteDb.usuarios) && remoteDb.usuarios.length > 0) {
+      remoteDb.usuarios.forEach(incUser => {
+        const idx = db.usuarios.findIndex(u => u && u.id === incUser.id);
+        if (idx < 0) {
+          db.usuarios.push(incUser);
+          hasUpdates = true;
+        }
+      });
+    }
+
+    if (hasUpdates) {
+      saveDatabase();
+      if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
+      if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
+      if (typeof renderClientPageMainGrid === 'function') renderClientPageMainGrid();
+      if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
+      if (typeof renderProjectPageMainGrid === 'function') renderProjectPageMainGrid();
+      console.log('Base de dados sincronizada automaticamente a partir do servidor GitHub!');
+    }
+  } catch (err) {
+    console.warn('Auto-sincronização do servidor em segundo plano:', err);
+  }
+}
+
 // ==========================================
 // 2. INICIALIZAÇÃO DA INTERFACE & NAVEGAÇÃO
 // ==========================================
@@ -4010,6 +4110,9 @@ document.addEventListener('DOMContentLoaded', () => {
   renderProjectPageMainGrid();
   renderContactPageMainGrid();
   renderHomeDashboard();
+
+  // Sincroniza automaticamente os dados salvaguardados no Servidor GitHub ao carregar a página
+  autoSyncServerOnStartup();
 
   // Escutar alterações nos campos para controlo de confirmação de edições
   document.addEventListener('input', (e) => {
