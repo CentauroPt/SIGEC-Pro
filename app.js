@@ -3807,62 +3807,66 @@ async function syncDatabaseToGitHub(silent = false, force = false) {
       return null;
     };
 
-    let currentSha = await fetchLiveSha();
-    const dbString = JSON.stringify(db, null, 2);
-    const contentBase64 = utf8ToBase64(dbString);
-
-    let putSuccess = false;
-    let attempts = 0;
-    let lastError = null;
-
-    while (attempts < 3 && !putSuccess) {
-      attempts++;
-
+    const sendPutWithAllAuths = async (shaVal) => {
+      const dbString = JSON.stringify(db, null, 2);
+      const contentBase64 = utf8ToBase64(dbString);
       const payload = {
-        message: `Atualização automática de dados SIGEC-Pro - ${new Date().toISOString()}`,
+        message: `Atualização de dados SIGEC-Pro - ${new Date().toISOString()}`,
         content: contentBase64
       };
-      if (currentSha) payload.sha = currentSha;
+      if (shaVal) payload.sha = shaVal;
 
-      let putRes = null;
-      let primaryAuth = authHeadersToTry[0];
+      for (const authHdr of authHeadersToTry) {
+        try {
+          const res = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+              'Authorization': authHdr,
+              'Content-Type': 'application/json',
+              'Accept': 'application/vnd.github.v3+json'
+            },
+            body: JSON.stringify(payload)
+          });
 
-      try {
-        putRes = await fetch(apiUrl, {
-          method: 'PUT',
-          headers: {
-            'Authorization': primaryAuth,
-            'Content-Type': 'application/json',
-            'Accept': 'application/vnd.github.v3+json'
-          },
-          body: JSON.stringify(payload)
-        });
-      } catch (errPut) {
-        lastError = errPut.message;
-      }
+          if (res.status === 200 || res.status === 201) {
+            return { ok: true, status: res.status };
+          }
 
-      if (putRes && (putRes.status === 200 || putRes.status === 201)) {
-        putSuccess = true;
-        break;
-      }
-
-      if (putRes) {
-        const errJson = await putRes.json().catch(() => ({}));
-        const errMsg = errJson.message || '';
-        lastError = errMsg;
-
-        const match = errMsg.match(/does not match ([a-f0-9]{40})/i);
-        if (match && match[1]) {
-          currentSha = match[1];
-        } else {
-          currentSha = await fetchLiveSha();
+          const errJson = await res.clone().json().catch(() => ({}));
+          const errMsg = errJson.message || '';
+          const match = errMsg.match(/does not match ([a-f0-9]{40})/i);
+          if (match && match[1]) {
+            return { ok: false, status: 409, correctSha: match[1], message: errMsg };
+          }
+          if (res.status === 422 && errMsg.includes("sha")) {
+            return { ok: false, status: 422, needSha: true, message: errMsg };
+          }
+          if (res.status === 401 || res.status === 403) {
+            continue;
+          }
+          return { ok: false, status: res.status, message: errMsg };
+        } catch (e) {
+          console.warn('Erro na tentativa PUT:', e);
         }
       }
+      return { ok: false, status: 500, message: 'Erro de ligação' };
+    };
+
+    let currentSha = await fetchLiveSha();
+    let putResult = await sendPutWithAllAuths(currentSha);
+
+    if (!putResult.ok && (putResult.correctSha || putResult.needSha || putResult.status === 409)) {
+      if (putResult.correctSha) {
+        currentSha = putResult.correctSha;
+      } else {
+        currentSha = await fetchLiveSha();
+      }
+      putResult = await sendPutWithAllAuths(currentSha);
     }
 
     isSyncingToGitHub = false;
 
-    if (putSuccess) {
+    if (putResult.ok) {
       localStorage.setItem('sigec_pro_last_gh_sync', new Date().toISOString());
       if (typeof logUserActivity === 'function') {
         logUserActivity('Servidor GitHub', `Dados sincronizados com sucesso no servidor GitHub (${owner}/${repo}).`);
@@ -3873,10 +3877,10 @@ async function syncDatabaseToGitHub(silent = false, force = false) {
       }
       return true;
     } else {
-      console.error('Falha final na sincronização GitHub:', lastError);
+      console.error('Falha final na sincronização GitHub:', putResult.message);
       if (!silent) {
         showToast('Erro na sincronização com o servidor GitHub.', 'danger');
-        alert(`Erro na Sincronização com o Servidor GitHub:\n\n${lastError || 'Não foi possível atualizar os dados no repositório.'}`);
+        alert(`Erro na Sincronização com o Servidor GitHub (${putResult.status || 'Erro'}):\n\n${putResult.message || 'Não foi possível atualizar os dados no repositório.'}`);
       }
       return false;
     }
