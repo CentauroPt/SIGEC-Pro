@@ -3434,7 +3434,9 @@ let db = {
   contactos: [],
   projetos: [],
   interacoes: [],
-  interacoesProjetos: []
+  interacoesProjetos: [],
+  usuarios: [],
+  userLogs: []
 };
 
 let isFormDirty = false;
@@ -3477,11 +3479,18 @@ function loadDatabase() {
     let parsedContactos = rawContactos !== null ? JSON.parse(rawContactos) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? [...(INITIAL_EXCEL_DATABASE.contactos || [])] : []);
     let parsedProjetos = (rawProjetos !== null && JSON.parse(rawProjetos).length > 0) ? JSON.parse(rawProjetos) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? [...(INITIAL_EXCEL_DATABASE.projetos || [])] : []);
 
+    let rawUsuarios = localStorage.getItem('sigec_pro_usuarios');
+    let rawUserLogs = localStorage.getItem('sigec_pro_user_logs');
+
     db.clientes = parsedClientes;
     db.contactos = parsedContactos;
     db.projetos = filterDeletedProjects(parsedProjetos);
     db.interacoes = rawInteracoes ? JSON.parse(rawInteracoes) : [];
     db.interacoesProjetos = rawInteracoesProjetos ? JSON.parse(rawInteracoesProjetos) : [];
+    db.usuarios = rawUsuarios ? JSON.parse(rawUsuarios) : [];
+    db.userLogs = rawUserLogs ? JSON.parse(rawUserLogs) : [];
+
+    if (typeof ensureUsersInitialized === 'function') ensureUsersInitialized();
 
     ensureRecoveredProjects();
 
@@ -3643,6 +3652,8 @@ function saveDatabase() {
 
     const s4 = safeSetStorage(STORAGE_KEYS.INTERACOES, JSON.stringify(db.interacoes || []));
     const s5 = safeSetStorage(STORAGE_KEYS.INTERACOES_PROJETOS, JSON.stringify(db.interacoesProjetos || []));
+    safeSetStorage('sigec_pro_usuarios', JSON.stringify(db.usuarios || []));
+    safeSetStorage('sigec_pro_user_logs', JSON.stringify(db.userLogs || []));
 
     if (typeof saveDeletedProjectIds === 'function') saveDeletedProjectIds();
 
@@ -8277,11 +8288,75 @@ function resolveSystemUpdateConfirm(shouldInstall) {
 // 22. SISTEMA DE AUTENTICAÇÃO E SEGURANÇA POR PIN
 // ==========================================
 
+// ==========================================
+// 22. SISTEMA MULTI-UTILIZADOR, REGISTO E HISTÓRICO DE ATIVIDADE REAL
+// ==========================================
+
+function ensureUsersInitialized() {
+  if (!Array.isArray(db.usuarios) || db.usuarios.length === 0) {
+    db.usuarios = [
+      {
+        id: "usr-admin-001",
+        nome: "Administrador",
+        email: "admin@sigecpro.pt",
+        cargo: "Administrador do Sistema",
+        pin: localStorage.getItem('sigec_pro_security_pin') || "1234",
+        role: "admin",
+        createdAt: "2026-08-10T09:45:00.000Z"
+      }
+    ];
+  }
+  if (!Array.isArray(db.userLogs)) {
+    db.userLogs = [];
+  }
+}
+
+function logUserActivity(tipoAcao, descricao) {
+  ensureUsersInitialized();
+  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || (db.usuarios[0] ? db.usuarios[0].id : "usr-admin-001");
+  const user = db.usuarios.find(u => u.id === activeUserId) || db.usuarios[0] || { id: "usr-admin-001", nome: "Administrador", email: "admin@sigecpro.pt" };
+
+  const logEntry = {
+    id: "log-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
+    usuarioId: user.id,
+    usuarioNome: user.nome,
+    usuarioEmail: user.email || "",
+    tipoAcao: tipoAcao,
+    descricao: descricao,
+    timestamp: new Date().toISOString()
+  };
+
+  db.userLogs.unshift(logEntry);
+  if (db.userLogs.length > 1000) db.userLogs.pop();
+  saveDatabase();
+}
+
+function renderUserSelectOptions() {
+  ensureUsersInitialized();
+  const select = document.getElementById('loginUserSelect');
+  if (!select) return;
+
+  select.innerHTML = db.usuarios.map(u => 
+    `<option value="${u.id}">${u.nome} (${u.cargo || (u.role === 'admin' ? 'Administrador' : 'Utilizador')})</option>`
+  ).join('');
+}
+
 function getStoredPin() {
-  return localStorage.getItem('sigec_pro_security_pin') || '1234';
+  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
+  const user = (db.usuarios || []).find(u => u.id === activeUserId) || (db.usuarios || [])[0];
+  return user ? user.pin : (localStorage.getItem('sigec_pro_security_pin') || '1234');
+}
+
+function getAdminPin() {
+  ensureUsersInitialized();
+  const adminUser = db.usuarios.find(u => u.role === 'admin') || db.usuarios[0];
+  return adminUser ? adminUser.pin : (localStorage.getItem('sigec_pro_security_pin') || '1234');
 }
 
 function initSecurityAuthCheck() {
+  ensureUsersInitialized();
+  renderUserManagementGrid();
+
   const isAuth = sessionStorage.getItem('sigec_pro_authenticated');
   const overlay = document.getElementById('loginOverlay');
   
@@ -8290,64 +8365,567 @@ function initSecurityAuthCheck() {
   } else {
     if (overlay) {
       overlay.classList.remove('hidden');
-      const pinInput = document.getElementById('loginPinInput');
-      if (pinInput) setTimeout(() => pinInput.focus(), 150);
+      const userInput = document.getElementById('loginUserInput');
+      if (userInput) setTimeout(() => userInput.focus(), 150);
     }
   }
 }
 
+function toggleLoginRegisterMode(isRegister) {
+  const loginMode = document.getElementById('loginFormMode');
+  const regMode = document.getElementById('registerFormMode');
+  const errorMsg = document.getElementById('loginErrorMessage');
+
+  if (errorMsg) errorMsg.style.display = 'none';
+
+  if (isRegister) {
+    if (loginMode) loginMode.style.display = 'none';
+    if (regMode) regMode.style.display = 'block';
+  } else {
+    if (regMode) regMode.style.display = 'none';
+    if (loginMode) loginMode.style.display = 'block';
+  }
+}
+
 function verifyLoginPin() {
+  ensureUsersInitialized();
+  const userInput = document.getElementById('loginUserInput');
   const pinInput = document.getElementById('loginPinInput');
   const errorMsg = document.getElementById('loginErrorMessage');
   const overlay = document.getElementById('loginOverlay');
   
-  if (!pinInput) return;
+  if (!userInput || !pinInput) return;
+  const enteredUserText = typeof normalizeText === 'function' ? normalizeText(userInput.value.trim()) : userInput.value.trim().toLowerCase();
   const enteredPin = pinInput.value.trim();
-  const validPin = getStoredPin();
 
-  if (enteredPin === validPin) {
+  if (!enteredUserText) {
+    if (errorMsg) {
+      errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Por favor, insira o seu Nome ou Email.';
+      errorMsg.style.display = 'block';
+    }
+    userInput.style.borderColor = '#dc2626';
+    setTimeout(() => { if (userInput) userInput.style.borderColor = '#cbd5e1'; }, 1500);
+    return;
+  }
+
+  const matchedUser = db.usuarios.find(u => {
+    const normName = typeof normalizeText === 'function' ? normalizeText(u.nome || '') : (u.nome || '').toLowerCase();
+    const normEmail = typeof normalizeText === 'function' ? normalizeText(u.email || '') : (u.email || '').toLowerCase();
+    return normName === enteredUserText || normEmail === enteredUserText || normName.includes(enteredUserText);
+  });
+
+  if (matchedUser && matchedUser.pin === enteredPin) {
     sessionStorage.setItem('sigec_pro_authenticated', 'true');
+    sessionStorage.setItem('sigec_pro_active_user_id', matchedUser.id);
+
     if (errorMsg) errorMsg.style.display = 'none';
+    userInput.value = '';
     pinInput.value = '';
     
     if (overlay) {
       overlay.classList.add('hidden');
     }
-    showToast('Acesso autorizado! Bem-vindo ao SIGEC-Pro.');
+
+    renderUserManagementGrid();
+
+    logUserActivity('Início de Sessão', `Acesso autorizado ao programa efetuado por ${matchedUser.nome}.`);
+    showToast(`Acesso autorizado! Bem-vindo(a), ${matchedUser.nome}.`);
   } else {
-    if (errorMsg) errorMsg.style.display = 'block';
+    if (errorMsg) {
+      errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Utilizador ou PIN incorreto. Tente novamente.';
+      errorMsg.style.display = 'block';
+    }
+    userInput.style.borderColor = '#dc2626';
     pinInput.style.borderColor = '#dc2626';
-    showToast('PIN de acesso incorreto!', 'danger');
+    showToast('Utilizador ou PIN incorreto!', 'danger');
     setTimeout(() => {
+      if (userInput) userInput.style.borderColor = '#cbd5e1';
       if (pinInput) pinInput.style.borderColor = '#cbd5e1';
     }, 1500);
   }
 }
 
-function togglePinVisibility() {
-  const pinInput = document.getElementById('loginPinInput');
-  const icon = document.getElementById('pinToggleIcon');
-  if (!pinInput || !icon) return;
+function handleUserSelfRegistration(event) {
+  if (event && event.preventDefault) event.preventDefault();
 
-  if (pinInput.type === 'password') {
-    pinInput.type = 'text';
-    icon.classList.remove('fa-eye');
-    icon.classList.add('fa-eye-slash');
+  const nameInput = document.getElementById('regUserName');
+  const emailInput = document.getElementById('regUserEmail');
+  const cargoInput = document.getElementById('regUserCargo');
+  const pinInput = document.getElementById('regUserPin');
+
+  if (!nameInput || !emailInput || !cargoInput || !pinInput) return;
+
+  const nome = nameInput.value.trim();
+  const email = emailInput.value.trim();
+  const cargo = cargoInput.value.trim();
+  const pin = pinInput.value.trim();
+
+  if (!nome || !email || !pin || pin.length < 3) {
+    alert("Preencha todos os campos corretamente. A palavra-passe/PIN deve ter pelo menos 3 caracteres.");
+    return;
+  }
+
+  ensureUsersInitialized();
+  if (db.usuarios.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+    alert("Já existe um utilizador registado com este endereço de email.");
+    return;
+  }
+
+  const newUser = {
+    id: "usr-" + Date.now(),
+    nome: nome,
+    email: email,
+    cargo: cargo,
+    pin: pin,
+    role: "user",
+    createdAt: new Date().toISOString()
+  };
+
+  db.usuarios.push(newUser);
+  saveDatabase();
+
+  nameInput.value = '';
+  emailInput.value = '';
+  cargoInput.value = '';
+  pinInput.value = '';
+
+  logUserActivity('Registo de Utilizador', `Novo utilizador ${nome} (${email}) registado no sistema.`);
+  showToast(`Utilizador ${nome} registado com sucesso! Pode agora iniciar sessão.`);
+  alert(`✅ Registo de Utilizador Concluído!\n\nUtilizador: ${nome}\nEmail: ${email}\nCargo: ${cargo}\n\nO seu registo foi guardado no programa. Selecione o seu nome para entrar.`);
+
+  toggleLoginRegisterMode(false);
+}
+
+function renderUserManagementGrid() {
+  ensureUsersInitialized();
+  const block = document.getElementById('adminUserManagementBlock');
+  const navBtnConfig = document.getElementById('navBtnConfiguracao') || document.querySelector('.nav-btn[data-tab="tab-database"]');
+  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
+  const activeUser = db.usuarios.find(u => u.id === activeUserId) || db.usuarios[0];
+
+  const isAdmin = activeUser ? (activeUser.role === 'admin') : true;
+
+  if (navBtnConfig) {
+    navBtnConfig.style.display = isAdmin ? 'inline-flex' : 'none';
+  }
+
+  if (block) {
+    block.style.display = isAdmin ? 'block' : 'none';
+  }
+
+  if (!isAdmin) {
+    const configTab = document.getElementById('tab-database');
+    if (configTab && configTab.classList.contains('active')) {
+      if (typeof switchTab === 'function') switchTab('tab-home');
+    }
+    return;
+  }
+
+  const tbody = document.getElementById('userManagementTableBody');
+  if (!tbody) return;
+
+  if (db.usuarios.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 1.5rem;">Nenhum utilizador registado.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = db.usuarios.map(u => {
+    const isPrimaryAdmin = u.role === 'admin';
+    const logCount = (db.userLogs || []).filter(l => l.usuarioId === u.id).length;
+
+    return `
+      <tr onclick="openUserActivityLogFlow('${u.id}')" style="cursor: pointer; transition: background 0.15s ease-in-out;" onmouseover="this.style.background='#f0f9ff'" onmouseout="this.style.background='transparent'">
+        <td>
+          <div style="display: flex; align-items: center; gap: 0.65rem;">
+            <div style="width: 36px; height: 36px; border-radius: 50%; background: ${isPrimaryAdmin ? '#dbeafe' : '#f1f5f9'}; color: ${isPrimaryAdmin ? '#1d4ed8' : '#475569'}; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.95rem;">
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <div>
+              <strong style="color: #0f172a; font-size: 0.92rem; display: block;">${u.nome}</strong>
+              <span style="font-size: 0.75rem; color: #64748b;">ID: ${u.id}</span>
+            </div>
+          </div>
+        </td>
+        <td style="color: #334155; font-size: 0.88rem;">${u.email}</td>
+        <td style="color: #334155; font-size: 0.88rem;">${u.cargo || 'Não especificado'}</td>
+        <td>
+          <span style="display: inline-block; padding: 0.2rem 0.55rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: ${isPrimaryAdmin ? '#dbeafe' : '#e2e8f0'}; color: ${isPrimaryAdmin ? '#1e40af' : '#475569'};">
+            ${isPrimaryAdmin ? 'Administrador' : 'Utilizador Padrão'}
+          </span>
+        </td>
+        <td style="text-align: center;">
+          <div style="display: flex; gap: 0.4rem; justify-content: center; flex-wrap: wrap;" onclick="event.stopPropagation()">
+            ${!isPrimaryAdmin ? `
+              <button type="button" class="btn btn-secondary" onclick="event.stopPropagation(); deleteRegisteredUser('${u.id}')" title="Eliminar utilizador" style="padding: 0.4rem 0.65rem; font-size: 0.8rem; background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5;">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            ` : ''}
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function openRegisterUserModal() {
+  const modal = document.getElementById('userRegisterModal');
+  if (modal) modal.classList.add('active');
+}
+
+function closeRegisterUserModal() {
+  const modal = document.getElementById('userRegisterModal');
+  if (modal) modal.classList.remove('active');
+}
+
+function handleUserRegistration(event) {
+  if (event && event.preventDefault) event.preventDefault();
+
+  const nameInput = document.getElementById('cfgRegUserName');
+  const emailInput = document.getElementById('cfgRegUserEmail');
+  const cargoInput = document.getElementById('cfgRegUserCargo');
+  const roleSelect = document.getElementById('cfgRegUserRole');
+  const pinInput = document.getElementById('cfgRegUserPin');
+
+  if (!nameInput || !emailInput || !cargoInput || !roleSelect || !pinInput) return;
+
+  const nome = nameInput.value.trim();
+  const email = emailInput.value.trim();
+  const cargo = cargoInput.value.trim();
+  const role = roleSelect.value;
+  const pin = pinInput.value.trim();
+
+  if (!nome || !email || !pin || pin.length < 3) {
+    alert("Preencha todos os campos. O PIN deve ter pelo menos 3 caracteres.");
+    return;
+  }
+
+  ensureUsersInitialized();
+  if (db.usuarios.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+    alert("Já existe um utilizador registado com este email.");
+    return;
+  }
+
+  const newUser = {
+    id: "usr-" + Date.now(),
+    nome: nome,
+    email: email,
+    cargo: cargo,
+    pin: pin,
+    role: role,
+    createdAt: new Date().toISOString()
+  };
+
+  db.usuarios.push(newUser);
+  saveDatabase();
+
+  nameInput.value = '';
+  emailInput.value = '';
+  cargoInput.value = '';
+  pinInput.value = '';
+
+  closeRegisterUserModal();
+  renderUserManagementGrid();
+  renderUserSelectOptions();
+
+  logUserActivity('Gestão de Utilizadores', `Utilizador ${nome} (${email}) adicionado à administração do sistema.`);
+  showToast(`Utilizador ${nome} registado com sucesso!`);
+}
+
+let pendingTargetProfileUserId = null;
+
+function openUserActivityLogFlow(userId) {
+  pendingTargetProfileUserId = userId;
+  const adminModal = document.getElementById('adminAuthModal');
+  const pinInput = document.getElementById('adminAuthPinInput');
+  
+  if (pinInput) pinInput.value = '';
+  if (adminModal) adminModal.classList.add('active');
+}
+
+function closeAdminAuthModal() {
+  const adminModal = document.getElementById('adminAuthModal');
+  if (adminModal) adminModal.classList.remove('active');
+  pendingTargetProfileUserId = null;
+}
+
+function confirmAdminAuthForActivityLog(event) {
+  if (event && event.preventDefault) event.preventDefault();
+
+  const pinInput = document.getElementById('adminAuthPinInput');
+  if (!pinInput || !pendingTargetProfileUserId) return;
+
+  const enteredPin = pinInput.value.trim();
+  const adminPin = getAdminPin();
+
+  if (enteredPin !== adminPin) {
+    showToast('Erro: Palavra-passe/PIN de Administrador incorreto.', 'danger');
+    alert('Acesso Negado:\nA palavra-passe de Administrador introduzida não está correta.');
+    return;
+  }
+
+  const targetUserId = pendingTargetProfileUserId;
+  closeAdminAuthModal();
+  openUserProfileModal(targetUserId, 'info');
+}
+
+function openUserProfileModal(userId, initialTab = 'info') {
+  ensureUsersInitialized();
+  const user = db.usuarios.find(u => u.id === userId);
+  if (!user) return;
+
+  pendingTargetProfileUserId = userId;
+
+  const modal = document.getElementById('userProfileModal');
+  const title = document.getElementById('userProfileModalTitle');
+  const badge = document.getElementById('userProfileBadge');
+
+  if (title) title.textContent = `Ficha do Utilizador - ${user.nome}`;
+  if (badge) badge.textContent = user.role === 'admin' ? 'Administrador do Sistema' : 'Utilizador Padrão';
+
+  // Fill Tab 1 Info
+  const idInput = document.getElementById('profileUserId');
+  const nameInput = document.getElementById('profileUserName');
+  const emailInput = document.getElementById('profileUserEmail');
+  const cargoInput = document.getElementById('profileUserCargo');
+  const roleSelect = document.getElementById('profileUserRole');
+  const pinInput = document.getElementById('profileUserPin');
+
+  if (idInput) idInput.value = user.id;
+  if (nameInput) nameInput.value = user.nome || '';
+  if (emailInput) emailInput.value = user.email || '';
+  if (cargoInput) cargoInput.value = user.cargo || '';
+  if (roleSelect) roleSelect.value = user.role || 'user';
+  if (pinInput) pinInput.value = user.pin || '';
+
+  // Reset Date Filter to 'all'
+  const filterSelect = document.getElementById('userActivityDateRange');
+  const customDateInput = document.getElementById('userActivityCustomDate');
+  if (filterSelect) filterSelect.value = 'all';
+  if (customDateInput) {
+    customDateInput.value = '';
+    customDateInput.style.display = 'none';
+  }
+
+  switchUserProfileTab(initialTab);
+
+  if (modal) modal.classList.add('active');
+  logUserActivity('Ficha do Utilizador', `Ficha do utilizador ${user.nome} aberta após autenticação de Administrador.`);
+}
+
+function closeUserProfileModal() {
+  const modal = document.getElementById('userProfileModal');
+  if (modal) modal.classList.remove('active');
+  pendingTargetProfileUserId = null;
+}
+
+function switchUserProfileTab(tabName) {
+  const tabInfo = document.getElementById('userProfileTabInfo');
+  const tabActivity = document.getElementById('userProfileTabActivity');
+  const btnInfo = document.getElementById('tabBtnUserProfileInfo');
+  const btnActivity = document.getElementById('tabBtnUserProfileActivity');
+
+  if (tabName === 'info') {
+    if (tabInfo) tabInfo.style.display = 'block';
+    if (tabActivity) tabActivity.style.display = 'none';
+    if (btnInfo) {
+      btnInfo.style.borderBottomColor = '#38bdf8';
+      btnInfo.style.color = '#ffffff';
+      btnInfo.style.fontWeight = '700';
+    }
+    if (btnActivity) {
+      btnActivity.style.borderBottomColor = 'transparent';
+      btnActivity.style.color = '#94a3b8';
+      btnActivity.style.fontWeight = '600';
+    }
   } else {
-    pinInput.type = 'password';
-    icon.classList.remove('fa-eye-slash');
-    icon.classList.add('fa-eye');
+    if (tabInfo) tabInfo.style.display = 'none';
+    if (tabActivity) tabActivity.style.display = 'block';
+    if (btnActivity) {
+      btnActivity.style.borderBottomColor = '#38bdf8';
+      btnActivity.style.color = '#ffffff';
+      btnActivity.style.fontWeight = '700';
+    }
+    if (btnInfo) {
+      btnInfo.style.borderBottomColor = 'transparent';
+      btnInfo.style.color = '#94a3b8';
+      btnInfo.style.fontWeight = '600';
+    }
+    renderUserProfileActivityTimeline();
+  }
+}
+
+function handleSaveUserProfile(event) {
+  if (event && event.preventDefault) event.preventDefault();
+
+  const idInput = document.getElementById('profileUserId');
+  const nameInput = document.getElementById('profileUserName');
+  const emailInput = document.getElementById('profileUserEmail');
+  const cargoInput = document.getElementById('profileUserCargo');
+  const roleSelect = document.getElementById('profileUserRole');
+  const pinInput = document.getElementById('profileUserPin');
+
+  if (!idInput || !nameInput || !emailInput || !cargoInput || !roleSelect || !pinInput) return;
+
+  const userId = idInput.value;
+  const nome = nameInput.value.trim();
+  const email = emailInput.value.trim();
+  const cargo = cargoInput.value.trim();
+  const role = roleSelect.value;
+  const pin = pinInput.value.trim();
+
+  if (!nome || !email || !pin || pin.length < 3) {
+    alert("Preencha todos os campos. O PIN deve ter pelo menos 3 caracteres.");
+    return;
+  }
+
+  ensureUsersInitialized();
+  const userIndex = db.usuarios.findIndex(u => u.id === userId);
+  if (userIndex < 0) return;
+
+  if (db.usuarios.some((u, idx) => idx !== userIndex && u.email.toLowerCase() === email.toLowerCase())) {
+    alert("Já existe outro utilizador registado com este email.");
+    return;
+  }
+
+  db.usuarios[userIndex] = {
+    ...db.usuarios[userIndex],
+    nome: nome,
+    email: email,
+    cargo: cargo,
+    role: role,
+    pin: pin
+  };
+
+  if (role === 'admin') {
+    localStorage.setItem('sigec_pro_security_pin', pin);
+  }
+
+  saveDatabase();
+  renderUserManagementGrid();
+  renderUserSelectOptions();
+
+  logUserActivity('Ficha do Utilizador', `Dados de registo e PIN do utilizador ${nome} atualizados com sucesso.`);
+  showToast(`Ficha do utilizador ${nome} atualizada com sucesso!`);
+  alert(`✅ Ficha Atualizada!\n\nOs dados de registo e o PIN do utilizador "${nome}" foram guardados no programa com sucesso.`);
+}
+
+function handleUserActivityFilterChange() {
+  const filterSelect = document.getElementById('userActivityDateRange');
+  const customDateInput = document.getElementById('userActivityCustomDate');
+
+  if (!filterSelect || !customDateInput) return;
+
+  if (filterSelect.value === 'custom') {
+    customDateInput.style.display = 'inline-block';
+  } else {
+    customDateInput.style.display = 'none';
+  }
+
+  renderUserProfileActivityTimeline();
+}
+
+function renderUserProfileActivityTimeline() {
+  ensureUsersInitialized();
+  const userId = pendingTargetProfileUserId || (document.getElementById('profileUserId') ? document.getElementById('profileUserId').value : null);
+  if (!userId) return;
+
+  const user = db.usuarios.find(u => u.id === userId);
+  const timeline = document.getElementById('userProfileActivityTimeline');
+  if (!timeline) return;
+
+  const filterSelect = document.getElementById('userActivityDateRange');
+  const customDateInput = document.getElementById('userActivityCustomDate');
+  const rangeMode = filterSelect ? filterSelect.value : 'all';
+
+  let userLogs = (db.userLogs || []).filter(l => l.usuarioId === userId);
+
+  const now = new Date();
+  if (rangeMode === 'today') {
+    userLogs = userLogs.filter(l => {
+      const d = new Date(l.timestamp);
+      return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
+    });
+  } else if (rangeMode === '7days') {
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    userLogs = userLogs.filter(l => new Date(l.timestamp) >= sevenDaysAgo);
+  } else if (rangeMode === '30days') {
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    userLogs = userLogs.filter(l => new Date(l.timestamp) >= thirtyDaysAgo);
+  } else if (rangeMode === 'custom' && customDateInput && customDateInput.value) {
+    const selectedDateStr = customDateInput.value;
+    userLogs = userLogs.filter(l => {
+      const d = new Date(l.timestamp);
+      const formattedD = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      return formattedD === selectedDateStr;
+    });
+  }
+
+  if (userLogs.length === 0) {
+    timeline.innerHTML = `
+      <div style="padding: 2.5rem 1rem; text-align: center; color: #64748b; background: #f8fafc; border-radius: 8px; border: 1px dashed #cbd5e1;">
+        <i class="fa-solid fa-calendar-xmark" style="font-size: 2.2rem; color: #94a3b8; margin-bottom: 0.75rem;"></i>
+        <h4 style="margin: 0 0 0.4rem 0; color: #334155;">Sem Atividade para o Período Selecionado</h4>
+        <p style="font-size: 0.85rem; margin: 0; color: #64748b;">Nenhum registo de atividade real corresponde ao filtro de data selecionado.</p>
+      </div>
+    `;
+    return;
+  }
+
+  timeline.innerHTML = userLogs.map(log => {
+    const dateObj = new Date(log.timestamp);
+    const formattedDate = `${String(dateObj.getDate()).padStart(2, '0')}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${dateObj.getFullYear()} ${String(dateObj.getHours()).padStart(2, '0')}:${String(dateObj.getMinutes()).padStart(2, '0')}:${String(dateObj.getSeconds()).padStart(2, '0')}`;
+
+    return `
+      <div style="display: flex; gap: 0.85rem; padding: 0.85rem; border-bottom: 1px solid #e2e8f0; align-items: flex-start;">
+        <div style="width: 34px; height: 34px; border-radius: 50%; background: #0284c7; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; margin-top: 2px;">
+          <i class="fa-solid fa-list-check"></i>
+        </div>
+        <div style="flex: 1;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+            <span style="font-weight: 700; color: #0369a1; font-size: 0.88rem;">${log.tipoAcao}</span>
+            <span style="font-size: 0.76rem; color: #64748b; background: #f1f5f9; padding: 0.15rem 0.55rem; border-radius: 4px; font-weight: 600;">${formattedDate}</span>
+          </div>
+          <p style="margin: 0; font-size: 0.85rem; color: #334155; line-height: 1.4;">${log.descricao}</p>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function deleteRegisteredUser(userId) {
+  ensureUsersInitialized();
+  const user = db.usuarios.find(u => u.id === userId);
+  if (!user) return;
+
+  if (user.role === 'admin') {
+    alert("Não é possível eliminar a conta do Administrador principal.");
+    return;
+  }
+
+  if (confirm(`Tem a certeza que deseja eliminar o utilizador "${user.nome}" (${user.email})?`)) {
+    db.usuarios = db.usuarios.filter(u => u.id !== userId);
+    saveDatabase();
+    renderUserManagementGrid();
+    renderUserSelectOptions();
+
+    logUserActivity('Gestão de Utilizadores', `Utilizador ${user.nome} (${user.email}) eliminado do sistema.`);
+    showToast(`Utilizador ${user.nome} eliminado com sucesso.`);
   }
 }
 
 function lockApplicationScreen() {
   sessionStorage.removeItem('sigec_pro_authenticated');
+  sessionStorage.removeItem('sigec_pro_active_user_id');
+
   const overlay = document.getElementById('loginOverlay');
   const errorMsg = document.getElementById('loginErrorMessage');
   
   if (errorMsg) errorMsg.style.display = 'none';
   if (overlay) {
     overlay.classList.remove('hidden');
+    renderUserSelectOptions();
+    toggleLoginRegisterMode(false);
+
     const pinInput = document.getElementById('loginPinInput');
     if (pinInput) {
       pinInput.value = '';
@@ -8382,10 +8960,22 @@ function changeSystemAccessPin(event) {
     return;
   }
 
-  localStorage.setItem('sigec_pro_security_pin', newPin);
+  ensureUsersInitialized();
+  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || db.usuarios[0].id;
+  const user = db.usuarios.find(u => u.id === activeUserId) || db.usuarios[0];
+
+  if (user) {
+    user.pin = newPin;
+    if (user.role === 'admin') {
+      localStorage.setItem('sigec_pro_security_pin', newPin);
+    }
+    saveDatabase();
+  }
+
   currentPinInput.value = '';
   newPinInput.value = '';
 
+  logUserActivity('Segurança', `Palavra-passe / PIN de acesso alterado por ${user ? user.nome : 'utilizador'}.`);
   showToast('Palavra-passe / PIN de acesso alterado com sucesso!');
   alert(`✅ Segurança Atualizada com Sucesso!\n\nA sua nova palavra-passe / PIN de acesso foi definida com sucesso.\nGuarde a nova palavra-passe em local seguro.`);
 }
@@ -8432,6 +9022,10 @@ function exportDatabaseJSON() {
   document.body.appendChild(a);
   a.click();
   a.remove();
+
+  if (typeof logUserActivity === 'function') {
+    logUserActivity('Cópia de Segurança', `Backup do sistema "${fileName}" gerado.`);
+  }
 
   showToast('Cópia de segurança (Backup) criada com sucesso!');
   alert(`✅ Cópia de Segurança Gerada com Sucesso!\n\nFicheiro: ${fileName}\n\nEste ficheiro contém a totalidade dos dados do seu programa (${db.clientes.length} Clientes, ${db.contactos.length} Contactos, ${db.projetos.length} Projetos).`);

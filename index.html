@@ -93,29 +93,74 @@
         <p style="color: #64748b; font-size: 0.88rem; margin: 0;">Sistema de Gestão Empresarial</p>
       </div>
 
-      <div style="margin-top: 1.5rem;">
-        <label for="loginPinInput" style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem; text-align: left;">
-          <i class="fa-solid fa-shield-halved" style="color: #0284c7; margin-right: 4px;"></i> Palavra-passe / PIN de Acesso:
-        </label>
-        
-        <div style="position: relative;">
-          <input type="password" id="loginPinInput" placeholder="Insira o PIN (Padrão: 1234)" onkeypress="if(event.key==='Enter') verifyLoginPin()" style="width: 100%; padding: 0.85rem 2.75rem 0.85rem 1rem; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 1.05rem; letter-spacing: 2px; text-align: center; font-weight: 700; color: #0f172a; outline: none;" autofocus>
-          <button type="button" onclick="togglePinVisibility()" title="Mostrar/Ocultar PIN" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; font-size: 1.1rem; padding: 5px;">
-            <i id="pinToggleIcon" class="fa-solid fa-eye"></i>
+      <div style="margin-top: 1.25rem;">
+        <div id="loginFormMode">
+          <label for="loginUserInput" style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.4rem; text-align: left;">
+            <i class="fa-solid fa-user-circle" style="color: #0284c7; margin-right: 4px;"></i> Nome ou Email do Utilizador:
+          </label>
+          <input type="text" id="loginUserInput" placeholder="Insira o seu Nome ou Email" onkeypress="if(event.key==='Enter') verifyLoginPin()" style="width: 100%; margin-bottom: 1rem; padding: 0.85rem 1rem; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 0.95rem; font-weight: 600; color: #0f172a; outline: none;" autofocus>
+
+          <label for="loginPinInput" style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.4rem; text-align: left;">
+            <i class="fa-solid fa-key" style="color: #0284c7; margin-right: 4px;"></i> Palavra-passe / PIN de Acesso:
+          </label>
+          
+          <div style="position: relative;">
+            <input type="password" id="loginPinInput" placeholder="Insira o PIN / Palavra-passe" onkeypress="if(event.key==='Enter') verifyLoginPin()" style="width: 100%; padding: 0.85rem 2.75rem 0.85rem 1rem; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 1.05rem; letter-spacing: 2px; text-align: center; font-weight: 700; color: #0f172a; outline: none;" autofocus>
+            <button type="button" onclick="togglePinVisibility()" title="Mostrar/Ocultar PIN" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; font-size: 1.1rem; padding: 5px;">
+              <i id="pinToggleIcon" class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+
+          <div id="loginErrorMessage" style="display: none; color: #dc2626; font-size: 0.82rem; margin-top: 0.5rem; font-weight: 600; text-align: center;">
+            <i class="fa-solid fa-circle-exclamation"></i> PIN incorreto. Tente novamente.
+          </div>
+
+          <button type="button" class="btn" onclick="verifyLoginPin()" style="width: 100%; margin-top: 1.25rem; padding: 0.85rem; background: #0284c7; color: #ffffff; font-weight: 700; font-size: 1rem; justify-content: center; border-radius: 8px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);">
+            <i class="fa-solid fa-right-to-bracket"></i> Entrar no Sistema
           </button>
+
+          <div style="margin-top: 1rem; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 0.85rem;">
+            <button type="button" onclick="toggleLoginRegisterMode(true)" style="background: none; border: none; color: #0284c7; font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: underline;">
+              <i class="fa-solid fa-user-plus"></i> Registrar Novo Utilizador
+            </button>
+          </div>
         </div>
 
-        <div id="loginErrorMessage" style="display: none; color: #dc2626; font-size: 0.82rem; margin-top: 0.5rem; font-weight: 600; text-align: center;">
-          <i class="fa-solid fa-circle-exclamation"></i> PIN incorreto. Tente novamente.
+        <div id="registerFormMode" style="display: none; text-align: left;">
+          <h3 style="font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 0.85rem; text-align: center;">
+            <i class="fa-solid fa-id-card" style="color: #0284c7;"></i> Registo de Novo Utilizador
+          </h3>
+
+          <form onsubmit="handleUserSelfRegistration(event)" style="display: flex; flex-direction: column; gap: 0.65rem;">
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600; color: #475569;">Nome Completo:</label>
+              <input type="text" id="regUserName" class="form-control" placeholder="Ex: Maria Santos" style="padding: 0.6rem; border-radius: 6px; font-size: 0.9rem;" required>
+            </div>
+
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600; color: #475569;">Email de Acesso:</label>
+              <input type="email" id="regUserEmail" class="form-control" placeholder="maria@empresa.com" style="padding: 0.6rem; border-radius: 6px; font-size: 0.9rem;" required>
+            </div>
+
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600; color: #475569;">Cargo / Função:</label>
+              <input type="text" id="regUserCargo" class="form-control" placeholder="Ex: Gestora de Projetos" style="padding: 0.6rem; border-radius: 6px; font-size: 0.9rem;" required>
+            </div>
+
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600; color: #475569;">Palavra-passe / PIN Secreto:</label>
+              <input type="password" id="regUserPin" class="form-control" placeholder="Mínimo 3 caracteres" style="padding: 0.6rem; border-radius: 6px; font-size: 0.9rem;" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; padding: 0.75rem; background: #16a34a; font-weight: 700; justify-content: center;">
+              <i class="fa-solid fa-user-check"></i> Criar e Guardar Registo
+            </button>
+
+            <button type="button" onclick="toggleLoginRegisterMode(false)" style="background: none; border: none; color: #64748b; font-size: 0.82rem; font-weight: 600; cursor: pointer; text-align: center; margin-top: 0.5rem;">
+              <i class="fa-solid fa-arrow-left"></i> Voltar ao Início de Sessão
+            </button>
+          </form>
         </div>
-
-        <button type="button" class="btn" onclick="verifyLoginPin()" style="width: 100%; margin-top: 1.25rem; padding: 0.85rem; background: #0284c7; color: #ffffff; font-weight: 700; font-size: 1rem; justify-content: center; border-radius: 8px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);">
-          <i class="fa-solid fa-right-to-bracket"></i> Entrar no Sistema
-        </button>
-
-        <p style="font-size: 0.76rem; color: #94a3b8; margin-top: 1.25rem; margin-bottom: 0;">
-          PIN Padrão Inicial: <strong>1234</strong> (Pode ser alterado na página Configuração)
-        </p>
       </div>
     </div>
   </div>
@@ -146,7 +191,7 @@
         <button class="nav-btn" data-tab="tab-projetos" onclick="switchTab('tab-projetos')">
           <i class="fa-solid fa-diagram-project"></i> Projetos
         </button>
-        <button class="nav-btn" data-tab="tab-database" onclick="switchTab('tab-database')">
+        <button id="navBtnConfiguracao" class="nav-btn" data-tab="tab-database" onclick="switchTab('tab-database')">
           <i class="fa-solid fa-gear"></i> Configuração
         </button>
       </nav>
@@ -580,37 +625,45 @@
             </div>
           </div>
 
-          <!-- BLOCO 4: Segurança & Controlo de Acesso -->
-          <div class="card" style="border: 1px solid #fed7aa; background: #fff7ed; padding: 1.25rem;">
-            <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.75rem;">
+          <!-- BLOCO 5: Gestão de Utilizadores & Controlo de Acesso Multi-Utilizador -->
+          <div id="adminUserManagementBlock" class="card" style="border: 1px solid #93c5fd; background: #eff6ff; padding: 1.25rem; grid-column: 1 / -1;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
               <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <div style="width: 42px; height: 42px; border-radius: 8px; background: #ffedd5; color: #c2410c; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
-                  <i class="fa-solid fa-lock"></i>
+                <div style="width: 42px; height: 42px; border-radius: 8px; background: #dbeafe; color: #1d4ed8; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                  <i class="fa-solid fa-users-gear"></i>
                 </div>
                 <div>
-                  <h3 style="font-size: 1rem; color: #9a3412; margin: 0; font-weight: 700;">Segurança & Controlo de Acesso</h3>
-                  <span style="font-size: 0.78rem; color: #c2410c;">Palavra-passe / PIN de Acesso</span>
+                  <h3 style="font-size: 1.05rem; color: #1e40af; margin: 0; font-weight: 700;">Gestão de Utilizadores & Registos de Acesso</h3>
+                  <span style="font-size: 0.78rem; color: #2563eb;">Registo, Definição de PIN/Password e Histórico de Atividade Real por Utilizador</span>
                 </div>
+              </div>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button type="button" class="btn" onclick="lockApplicationScreen()" title="Bloquear ecrã de acesso do programa" style="background: #eab308; color: #ffffff; font-weight: 600; border: none; box-shadow: 0 2px 6px rgba(234, 179, 8, 0.3);">
+                  <i class="fa-solid fa-lock"></i> Bloquear Programa
+                </button>
+                <button type="button" class="btn btn-primary" onclick="openRegisterUserModal()" style="background: #2563eb;">
+                  <i class="fa-solid fa-user-plus"></i> Registrar Novo Utilizador
+                </button>
               </div>
             </div>
 
-            <p style="font-size: 0.85rem; color: #431407; margin-bottom: 1rem; line-height: 1.4;">
-              Defina a palavra-passe ou PIN secreto necessário para abrir e aceder ao programa.
-            </p>
-
-            <form onsubmit="changeSystemAccessPin(event)" style="display: flex; flex-direction: column; gap: 0.65rem;">
-              <div style="display: flex; gap: 0.5rem;">
-                <input type="password" id="cfgCurrentPin" placeholder="PIN Atual" class="form-control" style="flex: 1; background: #ffffff; border: 1px solid #fdba74;" required>
-                <input type="password" id="cfgNewPin" placeholder="Novo PIN" class="form-control" style="flex: 1; background: #ffffff; border: 1px solid #fdba74;" required>
-              </div>
-              <button type="submit" class="btn" style="width: 100%; padding: 0.75rem 1rem; background: #ea580c; color: #ffffff; font-weight: 600; justify-content: center; border: 1px solid #c2410c;">
-                <i class="fa-solid fa-key"></i> Alterar PIN de Acesso
-              </button>
-            </form>
-
-            <button type="button" class="btn" onclick="lockApplicationScreen()" title="Bloquear ecrã de acesso do programa" style="width: 100%; margin-top: 0.75rem; background: #eab308; color: #ffffff; font-weight: 600; justify-content: center; border: none; box-shadow: 0 2px 6px rgba(234, 179, 8, 0.3);">
-              <i class="fa-solid fa-lock"></i> Bloquear Programa
-            </button>
+            <!-- Tabela de Utilizadores Registados -->
+            <div class="table-responsive" style="background: #ffffff; border-radius: 8px; border: 1px solid #cbd5e1; padding: 0.5rem; margin-bottom: 0.5rem;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Utilizador</th>
+                    <th>Email</th>
+                    <th>Cargo / Função</th>
+                    <th>Tipo de Conta</th>
+                    <th style="text-align: center;">Ações & Atividade Real</th>
+                  </tr>
+                </thead>
+                <tbody id="userManagementTableBody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
           </div>
 
         </div>
@@ -1507,6 +1560,18 @@
   <!-- Override saveContact and switchTab to guarantee proper modal behavior regardless of app.js cache -->
   <script>
   window.switchTab = function(tabId) {
+    if (tabId === 'tab-database' || tabId === 'tab-configuracao') {
+      var activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
+      var activeUser = (typeof db !== 'undefined' && db.usuarios) ? db.usuarios.find(function(u) { return u.id === activeUserId; }) : null;
+      var isAdmin = activeUser ? (activeUser.role === 'admin') : true;
+
+      if (!isAdmin) {
+        if (typeof showToast === 'function') showToast('Acesso à Configuração restrito ao Administrador.', 'warning');
+        alert('Acesso Restrito:\nA página de Configuração é acessível exclusivamente ao Administrador do Sistema.');
+        tabId = 'tab-home';
+      }
+    }
+
     if (typeof isFormDirty !== 'undefined' && isFormDirty) {
       if (!confirm('Existem alterações não guardadas no formulário. Deseja sair sem guardar?')) {
         return;
@@ -1529,6 +1594,7 @@
 
     if (tabId === 'tab-database') {
       if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
+      if (typeof renderUserManagementGrid === 'function') renderUserManagementGrid();
     } else if (tabId === 'tab-contactos') {
       if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
     } else if (tabId === 'tab-clientes') {
@@ -1650,6 +1716,195 @@
         <button type="button" class="btn" onclick="resolveSystemUpdateConfirm(true)" style="flex: 1; padding: 0.75rem 1.25rem; background: #0284c7; color: #ffffff; border: none; font-weight: 600; justify-content: center; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);">
           <i class="fa-solid fa-check"></i> Sim
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: REGISTAR NOVO UTILIZADOR (CONFIGURAÇÃO) -->
+  <div id="userRegisterModal" class="modal-overlay">
+    <div class="modal-window" style="max-width: 480px; border-radius: 12px; overflow: hidden;">
+      <div class="modal-header" style="background: #1e3a8a; color: #ffffff;">
+        <h3 class="modal-title" style="color: #ffffff; font-size: 1rem;">
+          <i class="fa-solid fa-user-plus" style="color: #60a5fa;"></i> Registrar Novo Utilizador
+        </h3>
+        <button class="action-icon-btn" onclick="closeRegisterUserModal()" style="color: #ffffff;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body" style="padding: 1.25rem;">
+        <form onsubmit="handleUserRegistration(event)" style="display: flex; flex-direction: column; gap: 0.85rem;">
+          <div>
+            <label style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.25rem;">Nome Completo:</label>
+            <input type="text" id="cfgRegUserName" class="form-control" placeholder="Ex: António Silva" required>
+          </div>
+
+          <div>
+            <label style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.25rem;">Email de Acesso:</label>
+            <input type="email" id="cfgRegUserEmail" class="form-control" placeholder="antonio@empresa.pt" required>
+          </div>
+
+          <div>
+            <label style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.25rem;">Cargo / Função:</label>
+            <input type="text" id="cfgRegUserCargo" class="form-control" placeholder="Ex: Diretor Técnico" required>
+          </div>
+
+          <div>
+            <label style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.25rem;">Perfil de Acesso:</label>
+            <select id="cfgRegUserRole" class="form-control" required style="background: #ffffff;">
+              <option value="user">Utilizador Padrão</option>
+              <option value="admin">Administrador do Sistema</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.25rem;">Palavra-passe / PIN Secreto:</label>
+            <input type="password" id="cfgRegUserPin" class="form-control" placeholder="Mínimo 3 caracteres" required>
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
+            <button type="button" class="btn btn-secondary" onclick="closeRegisterUserModal()" style="flex: 1; justify-content: center;">
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center; background: #2563eb;">
+              <i class="fa-solid fa-save"></i> Guardar Utilizador
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: AUTENTICAÇÃO DE ADMINISTRADOR PARA HISTÓRICO DE ATIVIDADE -->
+  <div id="adminAuthModal" class="modal-overlay" style="z-index: 9999;">
+    <div class="modal-window" style="max-width: 420px; border-radius: 12px; overflow: hidden;">
+      <div class="modal-header" style="background: #1e293b; color: #ffffff;">
+        <h3 class="modal-title" style="color: #ffffff; font-size: 1rem;">
+          <i class="fa-solid fa-shield-halved" style="color: #38bdf8;"></i> Autenticação de Administrador
+        </h3>
+        <button class="action-icon-btn" onclick="closeAdminAuthModal()" style="color: #ffffff;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body" style="padding: 1.25rem;">
+        <p style="font-size: 0.88rem; color: #334155; margin-bottom: 1rem; line-height: 1.4;">
+          Para consultar o histórico de atividade real deste utilizador, insira a <strong>palavra-passe/PIN de Administrador</strong>:
+        </p>
+
+        <form onsubmit="confirmAdminAuthForActivityLog(event)">
+          <input type="password" id="adminAuthPinInput" placeholder="Insira o PIN de Administrador" class="form-control" style="padding: 0.75rem; border-radius: 8px; border: 1.5px solid #cbd5e1; font-weight: 700; text-align: center; margin-bottom: 1rem;" autofocus required>
+          <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 0.75rem; background: #0284c7;">
+            <i class="fa-solid fa-unlock-keyhole"></i> Desbloquear Histórico Real
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: FICHA DO UTILIZADOR (REGISTO, DEFINIÇÃO DE PIN E ATIVIDADE COM FILTRO POR DIAS) -->
+  <div id="userProfileModal" class="modal-overlay" style="z-index: 9998;">
+    <div class="modal-window" style="max-width: 740px; max-height: 90vh; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;">
+      <div class="modal-header" style="background: #0f172a; color: #ffffff;">
+        <div style="display: flex; align-items: center; gap: 0.65rem;">
+          <i class="fa-solid fa-address-card" style="color: #38bdf8; font-size: 1.25rem;"></i>
+          <div>
+            <h3 class="modal-title" id="userProfileModalTitle" style="color: #ffffff; font-size: 1.05rem; margin: 0;">Ficha do Utilizador</h3>
+            <span id="userProfileBadge" style="font-size: 0.75rem; color: #94a3b8;">Utilizador do Sistema</span>
+          </div>
+        </div>
+        <button class="action-icon-btn" onclick="closeUserProfileModal()" style="color: #ffffff;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Separadores (Tabs) da Ficha do Utilizador -->
+      <div style="display: flex; background: #1e293b; padding: 0 1rem; border-bottom: 1px solid #334155;">
+        <button type="button" id="tabBtnUserProfileInfo" onclick="switchUserProfileTab('info')" style="padding: 0.75rem 1.25rem; background: transparent; border: none; border-bottom: 3px solid #38bdf8; color: #ffffff; font-weight: 700; font-size: 0.88rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fa-solid fa-id-card"></i> Dados de Registo & PIN
+        </button>
+        <button type="button" id="tabBtnUserProfileActivity" onclick="switchUserProfileTab('activity')" style="padding: 0.75rem 1.25rem; background: transparent; border: none; border-bottom: 3px solid transparent; color: #94a3b8; font-weight: 600; font-size: 0.88rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fa-solid fa-clock-rotate-left"></i> Histórico de Atividade Real
+        </button>
+      </div>
+
+      <div class="modal-body" style="padding: 1.25rem; overflow-y: auto; flex: 1; background: #ffffff;">
+        <!-- SEPARADOR 1: DADOS DE REGISTO & DEFINIÇÃO DE PIN -->
+        <div id="userProfileTabInfo" style="display: block;">
+          <form onsubmit="handleSaveUserProfile(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+            <input type="hidden" id="profileUserId">
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div>
+                <label style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Nome Completo:</label>
+                <input type="text" id="profileUserName" class="form-control" placeholder="Ex: Maria Santos" required style="padding: 0.65rem; border-radius: 6px;">
+              </div>
+              <div>
+                <label style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Email de Acesso:</label>
+                <input type="email" id="profileUserEmail" class="form-control" placeholder="maria@empresa.com" required style="padding: 0.65rem; border-radius: 6px;">
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div>
+                <label style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Cargo / Função:</label>
+                <input type="text" id="profileUserCargo" class="form-control" placeholder="Ex: Gestora de Projetos" required style="padding: 0.65rem; border-radius: 6px;">
+              </div>
+              <div>
+                <label style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Perfil de Acesso:</label>
+                <select id="profileUserRole" class="form-control" required style="padding: 0.65rem; border-radius: 6px; background: #ffffff;">
+                  <option value="user">Utilizador Padrão</option>
+                  <option value="admin">Administrador do Sistema</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="margin-top: 0.5rem; padding: 1rem; background: #f8fafc; border-radius: 8px; border: 1px solid #cbd5e1;">
+              <h4 style="margin: 0 0 0.65rem 0; font-size: 0.9rem; color: #0f172a; font-weight: 700; display: flex; align-items: center; gap: 0.4rem;">
+                <i class="fa-solid fa-key" style="color: #0284c7;"></i> Definição de Palavra-passe / PIN Secreto
+              </h4>
+              <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 0.75rem;">
+                Defina a palavra-passe ou PIN secreto necessário para este utilizador abrir e aceder ao programa.
+              </p>
+              <div>
+                <label style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.25rem;">Novo PIN / Palavra-passe:</label>
+                <input type="password" id="profileUserPin" class="form-control" placeholder="Introduza o PIN (mínimo 3 caracteres)" required style="padding: 0.65rem; border-radius: 6px; background: #ffffff; max-width: 340px;">
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 0.5rem;">
+              <button type="button" class="btn btn-secondary" onclick="closeUserProfileModal()">
+                Cancelar
+              </button>
+              <button type="submit" class="btn btn-primary" style="background: #0284c7; padding: 0.65rem 1.25rem;">
+                <i class="fa-solid fa-floppy-disk"></i> Guardar Ficha do Utilizador
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- SEPARADOR 2: HISTÓRICO DE ATIVIDADE REAL COM FILTRO POR DIAS -->
+        <div id="userProfileTabActivity" style="display: none;">
+          <!-- Barra de Filtro por Dias -->
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 1rem; padding: 0.75rem; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-filter" style="color: #0284c7;"></i>
+              <label style="font-size: 0.85rem; font-weight: 700; color: #0369a1;">Filtrar Atividade por Dias:</label>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+              <select id="userActivityDateRange" onchange="handleUserActivityFilterChange()" class="form-control" style="padding: 0.45rem 0.75rem; font-size: 0.85rem; font-weight: 600; border-radius: 6px; background: #ffffff; border: 1px solid #cbd5e1;">
+                <option value="all">Todos os Dias</option>
+                <option value="today">Hoje</option>
+                <option value="7days">Últimos 7 dias</option>
+                <option value="30days">Últimos 30 dias</option>
+                <option value="custom">Data Específica...</option>
+              </select>
+              <input type="date" id="userActivityCustomDate" onchange="renderUserProfileActivityTimeline()" class="form-control" style="display: none; padding: 0.4rem 0.6rem; font-size: 0.85rem; border-radius: 6px; background: #ffffff; border: 1px solid #cbd5e1;">
+            </div>
+          </div>
+
+          <div id="userProfileActivityTimeline">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
       </div>
     </div>
   </div>
