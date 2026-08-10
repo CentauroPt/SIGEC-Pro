@@ -3663,11 +3663,31 @@ function saveDatabase() {
 // ==========================================
 
 function utf8ToBase64(str) {
-  return window.btoa(unescape(encodeURIComponent(str)));
+  try {
+    const bytes = new TextEncoder().encode(str);
+    let bin = '';
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+      bin += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(bin);
+  } catch (e) {
+    return window.btoa(unescape(encodeURIComponent(str)));
+  }
 }
 
 function base64ToUtf8(str) {
-  return decodeURIComponent(escape(window.atob(str)));
+  try {
+    const bin = window.atob(str);
+    const len = bin.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = bin.charCodeAt(i);
+    }
+    return new TextDecoder().decode(bytes);
+  } catch (e) {
+    return decodeURIComponent(escape(window.atob(str)));
+  }
 }
 
 function getGitHubConfig() {
@@ -9551,17 +9571,27 @@ function importDatabaseJSON(event) {
   reader.onload = async function(e) {
     try {
       const parsed = JSON.parse(e.target.result);
-      const data = parsed.database || parsed;
+      const data = parsed.database || parsed.db || parsed;
 
-      if (!data.clientes || !data.contactos || !data.projetos) {
-        throw new Error("O ficheiro selecionado não tem a estrutura válida de backup do SIGEC-Pro.");
+      const clientesArr = data.clientes || parsed.clientes || [];
+      const contactosArr = data.contactos || parsed.contactos || [];
+      const projetosArr = data.projetos || parsed.projetos || [];
+      const interacoesArr = data.interacoes || parsed.interacoes || [];
+      const interacoesProjetosArr = data.interacoesProjetos || parsed.interacoesProjetos || [];
+      const usuariosArr = data.usuarios || parsed.usuarios || null;
+
+      if (!clientesArr && !contactosArr && !projetosArr) {
+        throw new Error("O ficheiro selecionado não contém listas válidas de clientes, contactos ou projetos.");
       }
 
-      db.clientes = data.clientes || [];
-      db.contactos = data.contactos || [];
-      db.projetos = data.projetos || [];
-      db.interacoes = data.interacoes || [];
-      db.interacoesProjetos = data.interacoesProjetos || [];
+      db.clientes = Array.isArray(clientesArr) ? clientesArr : [];
+      db.contactos = Array.isArray(contactosArr) ? contactosArr : [];
+      db.projetos = Array.isArray(projetosArr) ? projetosArr : [];
+      db.interacoes = Array.isArray(interacoesArr) ? interacoesArr : [];
+      db.interacoesProjetos = Array.isArray(interacoesProjetosArr) ? interacoesProjetosArr : [];
+      if (Array.isArray(usuariosArr) && usuariosArr.length > 0) {
+        db.usuarios = usuariosArr;
+      }
       deletedProjectIds = data.deletedProjectIds || [];
 
       if (parsed.version) {
