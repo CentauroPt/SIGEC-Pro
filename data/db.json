@@ -3276,7 +3276,7 @@
     {
       "id": "usr-1786381890691",
       "nome": "teste",
-      "email": "aa@aa.com",
+      "email": "jjota26@gmail.com",
       "cargo": "teste",
       "pin": "1234",
       "role": "user",
@@ -3284,6 +3284,51 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1786383782084-395",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Segurança",
+      "descricao": "Email de redefinição de palavra-passe enviado de jmcenturio@alegria-activity.com para jjota26@gmail.com.",
+      "timestamp": "2026-08-10T17:43:02.084Z"
+    },
+    {
+      "id": "log-1786383777905-914",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Dados de registo e PIN do utilizador teste atualizados com sucesso.",
+      "timestamp": "2026-08-10T17:42:57.905Z"
+    },
+    {
+      "id": "log-1786383738585-191",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Segurança",
+      "descricao": "Email de redefinição de palavra-passe enviado de jmcenturio@alegria-activity.com para aa@aa.com.",
+      "timestamp": "2026-08-10T17:42:18.585Z"
+    },
+    {
+      "id": "log-1786383720941-941",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Ficha do utilizador teste aberta após autenticação de Administrador.",
+      "timestamp": "2026-08-10T17:42:00.941Z"
+    },
+    {
+      "id": "log-1786383444381-397",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "timestamp": "2026-08-10T17:37:24.381Z"
+    },
     {
       "id": "log-1786382524937-925",
       "usuarioId": "usr-admin-001",
@@ -12238,51 +12283,6 @@
       "tipoAcao": "Servidor GitHub",
       "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
       "timestamp": "2026-08-10T15:00:01.610Z"
-    },
-    {
-      "id": "log-1786373999579-721",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "timestamp": "2026-08-10T14:59:59.579Z"
-    },
-    {
-      "id": "log-1786373997122-756",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "timestamp": "2026-08-10T14:59:57.122Z"
-    },
-    {
-      "id": "log-1786373994974-417",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "timestamp": "2026-08-10T14:59:54.974Z"
-    },
-    {
-      "id": "log-1786373987871-183",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "timestamp": "2026-08-10T14:59:47.871Z"
-    },
-    {
-      "id": "log-1786373985531-543",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "timestamp": "2026-08-10T14:59:45.531Z"
     }
   ]
 }
