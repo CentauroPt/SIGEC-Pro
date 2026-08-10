@@ -4016,64 +4016,70 @@ async function autoSyncServerOnStartup() {
 
     let hasUpdates = false;
 
-    if (Array.isArray(remoteDb.clientes) && remoteDb.clientes.length > 0) {
-      if (!db.clientes || db.clientes.length < remoteDb.clientes.length) {
-        db.clientes = remoteDb.clientes;
-        hasUpdates = true;
-      } else {
-        remoteDb.clientes.forEach(incCli => {
-          const idx = db.clientes.findIndex(c => c && c.id === incCli.id);
-          if (idx < 0) {
-            db.clientes.push(incCli);
-            hasUpdates = true;
-          }
-        });
-      }
+    // Se a base local estiver completamente vazia, carrega do servidor
+    if ((!db.clientes || db.clientes.length === 0) && Array.isArray(remoteDb.clientes) && remoteDb.clientes.length > 0) {
+      db.clientes = remoteDb.clientes;
+      hasUpdates = true;
+    } else if (Array.isArray(remoteDb.clientes)) {
+      // Caso contrário, funde os registos preservando totalmente os dados locais do utilizador
+      remoteDb.clientes.forEach(incCli => {
+        if (!incCli || !incCli.id) return;
+        const idx = db.clientes.findIndex(c => c && c.id === incCli.id);
+        if (idx < 0) {
+          db.clientes.push(incCli);
+          hasUpdates = true;
+        } else {
+          db.clientes[idx] = { ...incCli, ...db.clientes[idx] };
+        }
+      });
     }
 
-    if (Array.isArray(remoteDb.contactos) && remoteDb.contactos.length > 0) {
-      if (!db.contactos || db.contactos.length < remoteDb.contactos.length) {
-        db.contactos = remoteDb.contactos;
-        hasUpdates = true;
-      } else {
-        remoteDb.contactos.forEach(incCon => {
-          const idx = db.contactos.findIndex(c => c && c.id === incCon.id);
-          if (idx < 0) {
-            db.contactos.push(incCon);
-            hasUpdates = true;
-          }
-        });
-      }
+    if ((!db.contactos || db.contactos.length === 0) && Array.isArray(remoteDb.contactos) && remoteDb.contactos.length > 0) {
+      db.contactos = remoteDb.contactos;
+      hasUpdates = true;
+    } else if (Array.isArray(remoteDb.contactos)) {
+      remoteDb.contactos.forEach(incCon => {
+        if (!incCon || !incCon.id) return;
+        const idx = db.contactos.findIndex(c => c && c.id === incCon.id);
+        if (idx < 0) {
+          db.contactos.push(incCon);
+          hasUpdates = true;
+        } else {
+          db.contactos[idx] = { ...incCon, ...db.contactos[idx] };
+        }
+      });
     }
 
-    if (Array.isArray(remoteDb.projetos) && remoteDb.projetos.length > 0) {
-      if (!db.projetos || db.projetos.length < remoteDb.projetos.length) {
-        db.projetos = remoteDb.projetos;
-        hasUpdates = true;
-      } else {
-        remoteDb.projetos.forEach(incProj => {
-          const idx = db.projetos.findIndex(p => p && p.id === incProj.id);
-          if (idx < 0) {
-            db.projetos.push(incProj);
-            hasUpdates = true;
-          }
-        });
-      }
+    if ((!db.projetos || db.projetos.length === 0) && Array.isArray(remoteDb.projetos) && remoteDb.projetos.length > 0) {
+      db.projetos = remoteDb.projetos;
+      hasUpdates = true;
+    } else if (Array.isArray(remoteDb.projetos)) {
+      remoteDb.projetos.forEach(incProj => {
+        if (!incProj || !incProj.id) return;
+        const idx = db.projetos.findIndex(p => p && p.id === incProj.id);
+        if (idx < 0) {
+          db.projetos.push(incProj);
+          hasUpdates = true;
+        } else {
+          db.projetos[idx] = { ...incProj, ...db.projetos[idx] };
+        }
+      });
     }
 
-    if (Array.isArray(remoteDb.interacoes) && remoteDb.interacoes.length > 0) {
-      if (!db.interacoes || db.interacoes.length < remoteDb.interacoes.length) {
-        db.interacoes = remoteDb.interacoes;
-        hasUpdates = true;
-      }
+    if ((!db.interacoes || db.interacoes.length === 0) && Array.isArray(remoteDb.interacoes) && remoteDb.interacoes.length > 0) {
+      db.interacoes = remoteDb.interacoes;
+      hasUpdates = true;
     }
 
-    if (Array.isArray(remoteDb.usuarios) && remoteDb.usuarios.length > 0) {
+    if (Array.isArray(remoteDb.usuarios)) {
       remoteDb.usuarios.forEach(incUser => {
+        if (!incUser || !incUser.id) return;
         const idx = db.usuarios.findIndex(u => u && u.id === incUser.id);
         if (idx < 0) {
           db.usuarios.push(incUser);
           hasUpdates = true;
+        } else {
+          db.usuarios[idx] = { ...incUser, ...db.usuarios[idx] };
         }
       });
     }
@@ -4085,7 +4091,6 @@ async function autoSyncServerOnStartup() {
       if (typeof renderClientPageMainGrid === 'function') renderClientPageMainGrid();
       if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
       if (typeof renderProjectPageMainGrid === 'function') renderProjectPageMainGrid();
-      console.log('Base de dados sincronizada automaticamente a partir do servidor GitHub!');
     }
   } catch (err) {
     console.warn('Auto-sincronização do servidor em segundo plano:', err);
