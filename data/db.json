@@ -3163,6 +3163,22 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
+      "id": "proj-rec-bcn",
+      "nome": "Unidade Móvel Bancária",
+      "tipo": "Compra UM",
+      "clienteId": "cli-imp-085",
+      "contacto1Id": "con-1785515106421-857",
+      "contacto2Id": "con-imp-137",
+      "dataInicio": "2026-07-27",
+      "dataFim": "2026-08-31",
+      "estado": "Em Orçamento",
+      "viatura": "",
+      "matricula": "",
+      "documents": [],
+      "media": [],
+      "createdAt": "2026-07-31T16:30:00.000Z"
+    },
+    {
       "id": "proj-camp-001",
       "clienteId": "cli-1785514129444-833",
       "nome": "Huawei SmartBus",
