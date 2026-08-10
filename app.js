@@ -3754,13 +3754,20 @@ async function syncDatabaseToGitHub(silent = false) {
   const owner = (cfg.owner || 'centauropt').trim();
   const repo = (cfg.repo || 'SIGEC-Pro').trim();
   let path = (cfg.path || 'data/db.json').trim().replace(/^\/+/, '');
-  const authHeader = token.startsWith('ghp_') || token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`;
   const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
 
+  // Formatos de autenticação suportados pelo GitHub API (token ghp_ vs Bearer github_pat_)
+  const authHeadersToTry = [
+    token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`,
+    `token ${token}`,
+    `Bearer ${token}`
+  ];
+
   try {
-    // Helper para obter o SHA atual do ficheiro (com ou sem cabeçalho de auth como fallback)
-    const fetchLatestSha = async () => {
-      // 1. Tenta com autenticação
+    let existingSha = null;
+
+    // 1. Tenta obter o SHA mais recente com autenticação e fallback sem autenticação
+    for (const authHeader of authHeadersToTry) {
       try {
         const getRes = await fetch(apiUrl, {
           method: 'GET',
@@ -3771,13 +3778,18 @@ async function syncDatabaseToGitHub(silent = false) {
         });
         if (getRes.status === 200) {
           const fileData = await getRes.json();
-          if (fileData && fileData.sha) return fileData.sha;
+          if (fileData && fileData.sha) {
+            existingSha = fileData.sha;
+            break;
+          }
         }
       } catch (e) {
-        console.warn('Erro ao obter SHA com auth:', e);
+        console.warn('Tentativa GET com auth falhou:', e);
       }
+    }
 
-      // 2. Fallback sem autenticação (para repositórios públicos)
+    // Fallback público (caso o repositório seja público)
+    if (!existingSha) {
       try {
         const publicRes = await fetch(apiUrl, {
           method: 'GET',
@@ -3787,20 +3799,17 @@ async function syncDatabaseToGitHub(silent = false) {
         });
         if (publicRes.status === 200) {
           const fileData = await publicRes.json();
-          if (fileData && fileData.sha) return fileData.sha;
+          if (fileData && fileData.sha) existingSha = fileData.sha;
         }
       } catch (e) {
-        console.warn('Erro ao obter SHA público:', e);
+        console.warn('Tentativa GET pública falhou:', e);
       }
+    }
 
-      return null;
-    };
-
-    let existingSha = await fetchLatestSha();
     const dbString = JSON.stringify(db, null, 2);
     const contentBase64 = utf8ToBase64(dbString);
 
-    const sendPut = async (shaVal) => {
+    const sendPutWithHeader = async (shaVal, authHdr) => {
       const payload = {
         message: `Atualização automática de dados SIGEC-Pro - ${new Date().toISOString()}`,
         content: contentBase64
@@ -3810,7 +3819,7 @@ async function syncDatabaseToGitHub(silent = false) {
       return await fetch(apiUrl, {
         method: 'PUT',
         headers: {
-          'Authorization': authHeader,
+          'Authorization': authHdr,
           'Content-Type': 'application/json',
           'Accept': 'application/vnd.github.v3+json'
         },
@@ -3818,13 +3827,25 @@ async function syncDatabaseToGitHub(silent = false) {
       });
     };
 
-    let putRes = await sendPut(existingSha);
+    let primaryAuthHeader = authHeadersToTry[0];
+    let putRes = await sendPutWithHeader(existingSha, primaryAuthHeader);
 
-    // Se ocorrer conflito de versão (SHA mismatch / 409 / 422), obtém o SHA mais recente e re-envia imediatamente
-    if (!putRes.ok && (putRes.status === 409 || putRes.status === 422)) {
-      const freshSha = await fetchLatestSha();
-      if (freshSha) {
-        putRes = await sendPut(freshSha);
+    // Se falhar com 401 ou 422, tenta os cabeçalhos/versões de SHA alternativos
+    if (!putRes.ok && (putRes.status === 409 || putRes.status === 422 || putRes.status === 401)) {
+      for (const altAuth of authHeadersToTry) {
+        const freshRes = await fetch(apiUrl, {
+          method: 'GET',
+          headers: { 'Authorization': altAuth, 'Accept': 'application/vnd.github.v3+json' }
+        }).catch(() => null);
+
+        let freshSha = existingSha;
+        if (freshRes && freshRes.status === 200) {
+          const freshData = await freshRes.json();
+          if (freshData && freshData.sha) freshSha = freshData.sha;
+        }
+
+        putRes = await sendPutWithHeader(freshSha, altAuth);
+        if (putRes.ok) break;
       }
     }
 
@@ -3844,7 +3865,7 @@ async function syncDatabaseToGitHub(silent = false) {
       
       if (!silent) {
         if (putRes.status === 404) {
-          alert(`Erro de Ligação (404 Not Found):\n\nO GitHub não encontrou o repositório "${owner}/${repo}". Verifique o nome do utilizador e repositório.`);
+          alert(`Erro de Ligação (404 Not Found):\n\nO GitHub não encontrou o repositório "${owner}/${repo}". Verifique o utilizador e repositório.`);
         } else if (putRes.status === 401) {
           alert(`Erro de Autenticação (401 Unauthorized):\n\nO Token introduzido é inválido ou expirou. Verifique o Token no bloco 'Servidor Remoto GitHub'.`);
         } else {
