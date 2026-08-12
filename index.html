@@ -615,6 +615,34 @@
             </div>
           </div>
 
+          <!-- BLOCO 3: Recuperar e Importar Atualização por Ficheiro -->
+          <div class="card" style="border: 1.5px solid #0284c7; background: #f0f9ff; padding: 1.25rem; box-shadow: 0 2px 10px rgba(2, 132, 199, 0.08);">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+              <div style="width: 42px; height: 42px; border-radius: 8px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                <i class="fa-solid fa-cloud-arrow-down"></i>
+              </div>
+              <div>
+                <h3 style="font-size: 1rem; color: #0369a1; margin: 0; font-weight: 700;">Recuperar / Importar Atualização</h3>
+                <span style="font-size: 0.78rem; color: #0284c7;">Importação direta de pacote de atualização de software (.json)</span>
+              </div>
+            </div>
+            <p style="font-size: 0.85rem; color: #334155; margin-bottom: 1rem; line-height: 1.4;">
+              Importe e instale um ficheiro de atualização (ex: <code>SIGEC_V1.6.json</code>) para atualizar ou recuperar o sistema. Os seus dados atuais são <strong>100% preservados</strong>.
+            </p>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button type="button" class="btn btn-primary" onclick="triggerSystemUpdateImport()" style="flex: 1.2; justify-content: center; background: #0284c7; border-color: #0284c7; font-weight: 600;">
+                <i class="fa-solid fa-file-import"></i> Importar Ficheiro de Atualização
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="checkAndInstallUpdate(false)" style="flex: 1; justify-content: center; background: #ffffff; color: #0284c7; border-color: #bae6fd; font-weight: 600;" title="Verificar a pasta 'Atualizações' por novas versões">
+                <i class="fa-solid fa-rotate"></i> Verificar Pasta
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="generateUpdatePackage()" style="justify-content: center; background: #e0f2fe; color: #0369a1; border-color: #bae6fd; font-weight: 600;" title="Gerar Pacote .json de Atualização a partir dos Dados Atuais">
+                <i class="fa-solid fa-file-code"></i> Gerar Pacote
+              </button>
+              <input type="file" id="systemUpdateImportInput" accept=".json" onchange="handleSystemUpdateFileSelect(event)" style="display:none;">
+            </div>
+          </div>
+
           <!-- BLOCO: Sincronização em Tempo Real com o Servidor GitHub -->
           <div class="card" style="border: 1px solid #cbd5e1; background: #ffffff; padding: 1.25rem; grid-column: 1 / -1;">
             <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.85rem; flex-wrap: wrap;">

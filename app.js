@@ -8654,6 +8654,14 @@ function checkAndInstallUpdate(silentIfNoUpdate = false) {
   }
 }
 
+function triggerSystemUpdateImport() {
+  const fileInput = document.getElementById('systemUpdateImportInput');
+  if (fileInput) {
+    fileInput.value = '';
+    fileInput.click();
+  }
+}
+
 function handleSystemUpdateFileSelect(event) {
   const files = Array.from(event.target.files || []);
   if (files.length === 0) return;
@@ -8664,9 +8672,32 @@ function handleSystemUpdateFileSelect(event) {
   reader.onload = function(e) {
     try {
       const content = e.target.result;
-      const data = JSON.parse(content);
+      let data = JSON.parse(content);
 
-      if (!data || !data.database || !Array.isArray(data.database.clientes) || !Array.isArray(data.database.contactos) || !Array.isArray(data.database.projetos)) {
+      if (!data) {
+        showToast('Erro na Atualização: Ficheiro inválido ou vazio.', 'danger');
+        return;
+      }
+
+      // Normaliza se for um backup direto com arrays de clientes, contactos ou projetos
+      if (!data.database && (Array.isArray(data.clientes) || Array.isArray(data.contactos) || Array.isArray(data.projetos))) {
+        data = {
+          packageName: data.version || file.name.replace(/\.json$/i, ''),
+          version: data.version || file.name.replace(/\.json$/i, ''),
+          createdAt: new Date().toISOString(),
+          system: "SIGEC-Pro",
+          database: {
+            clientes: data.clientes || [],
+            contactos: data.contactos || [],
+            projetos: data.projetos || [],
+            interacoes: data.interacoes || [],
+            interacoesProjetos: data.interacoesProjetos || [],
+            deletedProjectIds: data.deletedProjectIds || []
+          }
+        };
+      }
+
+      if (!data.database || !Array.isArray(data.database.clientes) || !Array.isArray(data.database.contactos) || !Array.isArray(data.database.projetos)) {
         showToast('Erro na Atualização: O ficheiro selecionado não é um pacote válido do SIGEC-Pro.', 'danger');
         alert('Erro na Atualização:\nO ficheiro selecionado não é um pacote de atualização válido do SIGEC-Pro ou o formato está danificado.');
         return;
