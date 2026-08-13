@@ -5400,6 +5400,13 @@ function openContactModalForNew(forcedSubIndex = null) {
   document.getElementById('contactId').value = '';
   populateContactModalClientSelect(currentClientId);
   document.getElementById('btnDeleteContact').style.display = 'none';
+
+  // Inicializar registo de contactos realizados
+  window._currentContactLog = [];
+  renderContactLogList();
+  document.getElementById('contactLogDate').value = '';
+  document.getElementById('contactLogText').value = '';
+
   document.getElementById('contactModalTitle').innerHTML = '<i class="fa-solid fa-user-plus"></i> Novo Contacto do Cliente';
   document.getElementById('contactModal').classList.add('active');
 }
@@ -5418,6 +5425,12 @@ function openContactModalForEdit(contactId) {
   document.getElementById('contactTelemovel').value = contact.telemovel || '';
   document.getElementById('contactEmail').value = contact.email || '';
   document.getElementById('contactNotas').value = contact.notas || '';
+
+  // Carregar registo de contactos realizados
+  window._currentContactLog = (contact.registosContacto || []).map(r => Object.assign({}, r));
+  renderContactLogList();
+  document.getElementById('contactLogDate').value = '';
+  document.getElementById('contactLogText').value = '';
 
   document.getElementById('btnDeleteContact').style.display = 'inline-flex';
   document.getElementById('contactModalTitle').innerHTML = '<i class="fa-solid fa-user-pen"></i> Editar Ficha de Contacto';
@@ -5472,6 +5485,7 @@ function saveContact(e) {
     telemovel,
     email,
     notas,
+    registosContacto: window._currentContactLog || (existingIndex >= 0 ? (db.contactos[existingIndex].registosContacto || []) : []),
     createdAt: existingIndex >= 0 ? db.contactos[existingIndex].createdAt : new Date().toISOString()
   };
 
@@ -5503,6 +5517,50 @@ function saveContact(e) {
   renderContactPageMainGrid();
   renderHomeDashboard();
   renderDatabaseOverview();
+}
+
+function addContactLog() {
+  const dateVal = document.getElementById('contactLogDate').value;
+  const textVal = document.getElementById('contactLogText').value.trim();
+  if (!dateVal || !textVal) {
+    showToast('Preencha a data e o registo do contacto.', 'danger');
+    return;
+  }
+  if (!window._currentContactLog) window._currentContactLog = [];
+  window._currentContactLog.push({
+    id: 'log_' + Date.now(),
+    data: dateVal,
+    texto: textVal
+  });
+  document.getElementById('contactLogDate').value = '';
+  document.getElementById('contactLogText').value = '';
+  renderContactLogList();
+}
+
+function renderContactLogList() {
+  const list = document.getElementById('contactLogList');
+  if (!list) return;
+  const logs = window._currentContactLog || [];
+  if (logs.length === 0) {
+    list.innerHTML = '';
+    return;
+  }
+  const sorted = [...logs].sort((a, b) => new Date(b.data) - new Date(a.data));
+  list.innerHTML = sorted.map(r => {
+    const d = new Date(r.data);
+    const dateStr = isNaN(d) ? r.data : d.toLocaleString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    return `<div class="contact-log-item">
+      <div class="contact-log-item-date"><i class="fa-regular fa-calendar"></i> ${dateStr}</div>
+      <div class="contact-log-item-text">${r.texto.replace(/\n/g, '<br>')}</div>
+      <button class="contact-log-item-delete" onclick="deleteContactLog('${r.id}')" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+    </div>`;
+  }).join('');
+}
+
+function deleteContactLog(logId) {
+  if (!window._currentContactLog) return;
+  window._currentContactLog = window._currentContactLog.filter(r => r.id !== logId);
+  renderContactLogList();
 }
 
 function deleteCurrentContactModal() {

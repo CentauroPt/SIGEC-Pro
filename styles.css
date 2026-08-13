@@ -439,6 +439,113 @@ textarea.form-control {
   border-radius: 4px;
 }
 
+/* Registo de Contactos Realizados */
+.contact-log-section {
+  border: 1.5px solid var(--soft-blue-border);
+  border-radius: var(--radius-md);
+  margin: 1rem 1.5rem 0 1.5rem;
+  overflow: hidden;
+}
+
+.contact-log-header {
+  background: #f0f4ff;
+  border-bottom: 1.5px solid var(--soft-blue-border);
+  padding: 0.65rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--accent-blue);
+}
+
+.contact-log-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  background: #fff;
+  flex-wrap: wrap;
+}
+
+.contact-log-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.contact-log-field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 0;
+}
+
+.contact-log-field.date-field {
+  flex: 0 0 200px;
+}
+
+.contact-log-field.text-field {
+  flex: 1 1 250px;
+}
+
+.contact-log-field .form-control {
+  font-size: 0.88rem;
+}
+
+.contact-log-add-btn {
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+
+.contact-log-list {
+  border-top: 1px solid var(--soft-blue-border);
+}
+
+.contact-log-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid #eef2f7;
+  font-size: 0.88rem;
+}
+
+.contact-log-item:last-child {
+  border-bottom: none;
+}
+
+.contact-log-item-date {
+  flex: 0 0 140px;
+  color: var(--accent-blue);
+  font-weight: 600;
+  font-size: 0.82rem;
+  padding-top: 2px;
+}
+
+.contact-log-item-text {
+  flex: 1;
+  color: #333;
+  line-height: 1.5;
+}
+
+.contact-log-item-delete {
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: color 0.2s;
+}
+
+.contact-log-item-delete:hover {
+  color: #e53e3e;
+}
+
 /* Embedded Lists (Related Projects & Contacts) inside Ficha */
 .embedded-section {
   background: #f8fafc;

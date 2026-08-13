@@ -1044,10 +1044,32 @@
 
             <!-- Campo de Notas com Barra de Deslocação Vertical -->
             <div class="form-group col-12">
-              <label for="contactNotas">Notas (Barra de deslocação vertical para textos longos)</label>
+              <label for="contactNotas">Notas</label>
               <textarea id="contactNotas" class="form-control notes-textarea" placeholder="Escreva observações ou notas sobre este contacto..."></textarea>
             </div>
           </div>
+        </div>
+
+        <!-- Registo de Contactos Realizados -->
+        <div class="contact-log-section" id="contactLogSection">
+          <div class="contact-log-header">
+            <i class="fa-solid fa-phone-volume"></i>
+            <span>Registo de Contactos Realizados com este Contacto</span>
+          </div>
+          <div class="contact-log-form">
+            <div class="contact-log-field date-field">
+              <label>Data do Contacto *</label>
+              <input type="datetime-local" id="contactLogDate" class="form-control">
+            </div>
+            <div class="contact-log-field text-field">
+              <label>Registo do Contacto (Escrita Livre) *</label>
+              <textarea id="contactLogText" class="form-control" placeholder="Escreva aqui livremente os detalhes do contacto efetuado..." rows="2"></textarea>
+            </div>
+            <button type="button" class="btn btn-primary contact-log-add-btn" onclick="addContactLog()">
+              <i class="fa-solid fa-plus"></i> Adicionar Contacto
+            </button>
+          </div>
+          <div id="contactLogList" class="contact-log-list"></div>
         </div>
 
         <div class="modal-footer">
