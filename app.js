@@ -9489,10 +9489,7 @@ function openUserProfileModal(userId, initialTab = 'info') {
   const activeCheckbox = document.getElementById('profileUserActive');
   if (activeCheckbox) {
     activeCheckbox.checked = (user.active !== false);
-    const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
-    const currentUser = db.usuarios.find(u => u.id === activeUserId) || db.usuarios[0];
-    const isAdmin = currentUser ? (currentUser.role === 'admin') : true;
-    activeCheckbox.disabled = !isAdmin;
+    activeCheckbox.disabled = false;
   }
 
   // Reset Date Filter to 'all'
@@ -9586,19 +9583,15 @@ function handleSaveUserProfile(event) {
   }
 
   const activeCheckbox = document.getElementById('profileUserActive');
-  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
-  const currentUser = db.usuarios.find(u => u.id === activeUserId) || db.usuarios[0];
-  const isAdmin = currentUser ? (currentUser.role === 'admin') : true;
+  let newActiveState = activeCheckbox ? activeCheckbox.checked : (db.usuarios[userIndex].active !== false);
 
-  let newActiveState = db.usuarios[userIndex].active !== false;
-  if (activeCheckbox && isAdmin) {
-    newActiveState = activeCheckbox.checked;
-  }
-
-  if (userId === "usr-admin-001" && !newActiveState) {
-    alert("Não é possível bloquear o acesso do Administrador Principal do Sistema.");
-    if (activeCheckbox) activeCheckbox.checked = true;
-    return;
+  if (!newActiveState && (userId === "usr-admin-001" || db.usuarios[userIndex].role === 'admin')) {
+    const activeAdminCount = db.usuarios.filter(u => u.role === 'admin' && u.active !== false).length;
+    if (activeAdminCount <= 1) {
+      alert("Não é possível bloquear o acesso do único Administrador ativo do sistema.");
+      if (activeCheckbox) activeCheckbox.checked = true;
+      return;
+    }
   }
 
   db.usuarios[userIndex] = {
