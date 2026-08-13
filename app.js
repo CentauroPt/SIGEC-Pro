@@ -5401,14 +5401,11 @@ function openContactModalForNew(forcedSubIndex = null) {
   populateContactModalClientSelect(currentClientId);
   document.getElementById('btnDeleteContact').style.display = 'none';
 
-  // Inicializar registo de contactos realizados
-  window._currentContactLog = [];
-  renderContactLogList();
-  document.getElementById('contactLogDate').value = '';
-  document.getElementById('contactLogText').value = '';
-
   document.getElementById('contactModalTitle').innerHTML = '<i class="fa-solid fa-user-plus"></i> Novo Contacto do Cliente';
   document.getElementById('contactModal').classList.add('active');
+
+  // Renderizar lista de interações (vazia para novo contacto)
+  renderContactPersonInteractionsGrid([]);
 }
 
 function openContactModalForEdit(contactId) {
@@ -5426,15 +5423,13 @@ function openContactModalForEdit(contactId) {
   document.getElementById('contactEmail').value = contact.email || '';
   document.getElementById('contactNotas').value = contact.notas || '';
 
-  // Carregar registo de contactos realizados
-  window._currentContactLog = (contact.registosContacto || []).map(r => Object.assign({}, r));
-  renderContactLogList();
-  document.getElementById('contactLogDate').value = '';
-  document.getElementById('contactLogText').value = '';
-
   document.getElementById('btnDeleteContact').style.display = 'inline-flex';
   document.getElementById('contactModalTitle').innerHTML = '<i class="fa-solid fa-user-pen"></i> Editar Ficha de Contacto';
   document.getElementById('contactModal').classList.add('active');
+
+  // Renderizar interações deste contacto
+  const contactInteractions = (db.interacoes || []).filter(i => i.contactoId === contact.id);
+  renderContactPersonInteractionsGrid(contactInteractions);
 }
 
 function closeContactModal() {
@@ -5485,7 +5480,6 @@ function saveContact(e) {
     telemovel,
     email,
     notas,
-    registosContacto: window._currentContactLog || (existingIndex >= 0 ? (db.contactos[existingIndex].registosContacto || []) : []),
     createdAt: existingIndex >= 0 ? db.contactos[existingIndex].createdAt : new Date().toISOString()
   };
 
@@ -5519,48 +5513,198 @@ function saveContact(e) {
   renderDatabaseOverview();
 }
 
-function addContactLog() {
-  const dateVal = document.getElementById('contactLogDate').value;
-  const textVal = document.getElementById('contactLogText').value.trim();
-  if (!dateVal || !textVal) {
-    showToast('Preencha a data e o registo do contacto.', 'danger');
+// ==========================================
+// INTERAÇÕES DE CONTACTOS (PESSOAS)
+// ==========================================
+
+let currentContactPersonInteractionIdForModal = null;
+
+function addQuickContactInteraction() {
+  if (!currentContactIdForModal) {
+    showToast('Guarde ou selecione um Contacto primeiro!', 'danger');
     return;
   }
-  if (!window._currentContactLog) window._currentContactLog = [];
-  window._currentContactLog.push({
-    id: 'log_' + Date.now(),
-    data: dateVal,
-    texto: textVal
+
+  const dateVal = document.getElementById('quickContactInteractionData').value;
+  const textVal = document.getElementById('quickContactInteractionText').value.trim();
+
+  if (!textVal) {
+    showToast('Escreva o texto do contacto efetuado.', 'danger');
+    return;
+  }
+
+  const id = generateId('cpi');
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  const finalDate = dateVal || now.toISOString().slice(0, 16);
+
+  if (!db.interacoes) db.interacoes = [];
+
+  const intObj = {
+    id,
+    contactoId: currentContactIdForModal,
+    data: finalDate,
+    descricao: textVal,
+    createdAt: new Date().toISOString()
+  };
+
+  db.interacoes.push(intObj);
+  saveDatabase();
+
+  document.getElementById('quickContactInteractionText').value = '';
+  document.getElementById('quickContactInteractionText').style.height = 'auto';
+
+  const contactInteractions = db.interacoes.filter(i => i.contactoId === currentContactIdForModal);
+  renderContactPersonInteractionsGrid(contactInteractions);
+  showToast('Contacto registado com sucesso!');
+}
+
+function renderContactPersonInteractionsGrid(interactions) {
+  const grid = document.getElementById('contactPersonInteractionsGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  const quickDateInput = document.getElementById('quickContactInteractionData');
+  if (quickDateInput && !quickDateInput.value) {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    quickDateInput.value = now.toISOString().slice(0, 16);
+  }
+
+  if (!interactions || interactions.length === 0) {
+    grid.innerHTML = '<span class="empty-state">Nenhum contacto/interação registada com este contacto.</span>';
+    return;
+  }
+
+  const sorted = [...interactions].sort((a, b) => new Date(b.data || 0) - new Date(a.data || 0));
+
+  sorted.forEach(item => {
+    const formattedDate = item.data ? new Date(item.data).toLocaleString('pt-PT', { dateStyle: 'short', timeStyle: 'short' }) : '-';
+
+    const card = document.createElement('div');
+    card.className = 'interaction-card';
+    card.innerHTML = `
+      <div class="contact-card-actions">
+        <button type="button" class="action-icon-btn" onclick="openContactPersonInteractionModalForEdit('${item.id}')" title="Editar Registo">
+          <i class="fa-solid fa-pen-to-square"></i>
+        </button>
+        <button type="button" class="action-icon-btn danger" onclick="deleteContactPersonInteractionInline('${item.id}')" title="Apagar Registo">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
+      <div class="interaction-card-row">
+        <div class="interaction-card-date">
+          <i class="fa-regular fa-calendar-days"></i> ${formattedDate}
+        </div>
+        <div class="interaction-card-content">${item.descricao}</div>
+      </div>
+    `;
+    grid.appendChild(card);
   });
-  document.getElementById('contactLogDate').value = '';
-  document.getElementById('contactLogText').value = '';
-  renderContactLogList();
 }
 
-function renderContactLogList() {
-  const list = document.getElementById('contactLogList');
-  if (!list) return;
-  const logs = window._currentContactLog || [];
-  if (logs.length === 0) {
-    list.innerHTML = '';
+function openContactPersonInteractionModalForNew() {
+  if (!currentContactIdForModal) {
+    showToast('Guarde ou selecione um Contacto antes de registar contactos efetuados!', 'danger');
     return;
   }
-  const sorted = [...logs].sort((a, b) => new Date(b.data) - new Date(a.data));
-  list.innerHTML = sorted.map(r => {
-    const d = new Date(r.data);
-    const dateStr = isNaN(d) ? r.data : d.toLocaleString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-    return `<div class="contact-log-item">
-      <div class="contact-log-item-date"><i class="fa-regular fa-calendar"></i> ${dateStr}</div>
-      <div class="contact-log-item-text">${r.texto.replace(/\n/g, '<br>')}</div>
-      <button class="contact-log-item-delete" onclick="deleteContactLog('${r.id}')" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
-    </div>`;
-  }).join('');
+
+  currentContactPersonInteractionIdForModal = null;
+  document.getElementById('contactPersonInteractionForm').reset();
+  document.getElementById('contactPersonInteractionId').value = '';
+
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  document.getElementById('contactPersonInteractionData').value = now.toISOString().slice(0, 16);
+
+  document.getElementById('btnDeleteContactPersonInteraction').style.display = 'none';
+  document.getElementById('contactPersonInteractionModalTitle').innerHTML = '<i class="fa-solid fa-phone-volume"></i> Registar Contacto Realizado';
+  document.getElementById('contactPersonInteractionModal').classList.add('active');
 }
 
-function deleteContactLog(logId) {
-  if (!window._currentContactLog) return;
-  window._currentContactLog = window._currentContactLog.filter(r => r.id !== logId);
-  renderContactLogList();
+function openContactPersonInteractionModalForEdit(interactionId) {
+  const item = (db.interacoes || []).find(i => i.id === interactionId);
+  if (!item) return;
+
+  currentContactPersonInteractionIdForModal = item.id;
+  document.getElementById('contactPersonInteractionId').value = item.id;
+  document.getElementById('contactPersonInteractionData').value = item.data || '';
+  document.getElementById('contactPersonInteractionDescricao').value = item.descricao || '';
+
+  setTimeout(() => {
+    autoExpandTextarea(document.getElementById('contactPersonInteractionDescricao'));
+  }, 100);
+
+  document.getElementById('btnDeleteContactPersonInteraction').style.display = 'inline-flex';
+  document.getElementById('contactPersonInteractionModalTitle').innerHTML = '<i class="fa-solid fa-phone-volume"></i> Editar Registo de Contacto';
+  document.getElementById('contactPersonInteractionModal').classList.add('active');
+}
+
+function closeContactPersonInteractionModal() {
+  document.getElementById('contactPersonInteractionModal').classList.remove('active');
+}
+
+function saveContactPersonInteraction(e) {
+  if (e) e.preventDefault();
+
+  const id = document.getElementById('contactPersonInteractionId').value || generateId('cpi');
+  const dataVal = document.getElementById('contactPersonInteractionData').value;
+  const descricao = document.getElementById('contactPersonInteractionDescricao').value.trim();
+
+  if (!descricao) {
+    showToast('Preencha o registo do contacto.', 'danger');
+    return;
+  }
+
+  if (!db.interacoes) db.interacoes = [];
+
+  const existingIndex = db.interacoes.findIndex(i => i.id === id);
+  const intObj = {
+    id,
+    contactoId: currentContactIdForModal,
+    data: dataVal,
+    descricao,
+    createdAt: existingIndex >= 0 ? db.interacoes[existingIndex].createdAt : new Date().toISOString()
+  };
+
+  if (existingIndex >= 0) {
+    db.interacoes[existingIndex] = intObj;
+    showToast('Registo atualizado com sucesso!');
+  } else {
+    db.interacoes.push(intObj);
+    showToast('Registo adicionado com sucesso!');
+  }
+
+  saveDatabase();
+  closeContactPersonInteractionModal();
+
+  const contactInteractions = db.interacoes.filter(i => i.contactoId === currentContactIdForModal);
+  renderContactPersonInteractionsGrid(contactInteractions);
+}
+
+function deleteCurrentContactPersonInteractionModal() {
+  if (!currentContactPersonInteractionIdForModal) return;
+
+  if (confirm('Tem a certeza que deseja apagar este registo?')) {
+    db.interacoes = (db.interacoes || []).filter(i => i.id !== currentContactPersonInteractionIdForModal);
+    saveDatabase();
+    closeContactPersonInteractionModal();
+    showToast('Registo apagado com sucesso!', 'danger');
+
+    const contactInteractions = db.interacoes.filter(i => i.contactoId === currentContactIdForModal);
+    renderContactPersonInteractionsGrid(contactInteractions);
+  }
+}
+
+function deleteContactPersonInteractionInline(interactionId) {
+  if (confirm('Tem a certeza que deseja apagar este registo?')) {
+    db.interacoes = (db.interacoes || []).filter(i => i.id !== interactionId);
+    saveDatabase();
+    showToast('Registo apagado!', 'danger');
+
+    const contactInteractions = db.interacoes.filter(i => i.contactoId === currentContactIdForModal);
+    renderContactPersonInteractionsGrid(contactInteractions);
+  }
 }
 
 function deleteCurrentContactModal() {

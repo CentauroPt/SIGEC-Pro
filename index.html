@@ -1050,26 +1050,36 @@
           </div>
         </div>
 
-        <!-- Registo de Contactos Realizados -->
-        <div class="contact-log-section" id="contactLogSection">
-          <div class="contact-log-header">
-            <i class="fa-solid fa-phone-volume"></i>
-            <span>Registo de Contactos Realizados com este Contacto</span>
+        <!-- Secção Integrada de Registo de Contactos Realizados com este Contacto -->
+        <div class="embedded-section" style="margin: 0 1.5rem 0 1.5rem;">
+          <div class="embedded-header">
+            <h3 class="embedded-title">
+              <i class="fa-solid fa-phone-volume"></i> Registo de Contactos Realizados com este Contacto
+            </h3>
           </div>
-          <div class="contact-log-form">
-            <div class="contact-log-field date-field">
-              <label>Data do Contacto *</label>
-              <input type="datetime-local" id="contactLogDate" class="form-control">
+
+          <!-- Formulário em Linha: Data + Escrita Livre Auto-expansível -->
+          <div class="inline-interaction-container">
+            <div class="inline-interaction-row">
+              <div class="form-group inline-date-col">
+                <label for="quickContactInteractionData">Data do Contacto *</label>
+                <input type="datetime-local" id="quickContactInteractionData" class="form-control">
+              </div>
+              <div class="form-group inline-text-col">
+                <label for="quickContactInteractionText">Registo do Contacto (Escrita Livre) *</label>
+                <textarea id="quickContactInteractionText" class="auto-expand-textarea" placeholder="Escreva aqui livremente os detalhes do contacto efetuado..." oninput="autoExpandTextarea(this)"></textarea>
+              </div>
+              <div style="align-self: flex-end;">
+                <button type="button" class="btn btn-primary" onclick="addQuickContactInteraction()" style="white-space: nowrap;">
+                  <i class="fa-solid fa-plus"></i> Adicionar Contacto
+                </button>
+              </div>
             </div>
-            <div class="contact-log-field text-field">
-              <label>Registo do Contacto (Escrita Livre) *</label>
-              <textarea id="contactLogText" class="form-control" placeholder="Escreva aqui livremente os detalhes do contacto efetuado..." rows="2"></textarea>
-            </div>
-            <button type="button" class="btn btn-primary contact-log-add-btn" onclick="addContactLog()">
-              <i class="fa-solid fa-plus"></i> Adicionar Contacto
-            </button>
           </div>
-          <div id="contactLogList" class="contact-log-list"></div>
+
+          <div id="contactPersonInteractionsGrid" class="interactions-grid">
+            <span class="empty-state">Nenhum contacto/interação registada com este contacto.</span>
+          </div>
         </div>
 
         <div class="modal-footer">
@@ -1082,6 +1092,52 @@
             </button>
             <button type="button" class="btn btn-primary" style="font-weight: 600;" onclick="saveContact(null)">
               <i class="fa-solid fa-floppy-disk"></i> Guardar Alterações
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL DE REGISTO DE CONTACTO REALIZADO / INTERAÇÃO DO CONTACTO -->
+  <div id="contactPersonInteractionModal" class="modal-overlay">
+    <div class="modal-window" style="max-width: 750px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="contactPersonInteractionModalTitle">
+          <i class="fa-solid fa-phone-volume"></i> Editar Registo de Contacto
+        </h3>
+        <button class="action-icon-btn" onclick="closeContactPersonInteractionModal()" style="color: #ffffff; font-size: 1.2rem;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="contactPersonInteractionForm" onsubmit="saveContactPersonInteraction(event)">
+        <div class="modal-body">
+          <input type="hidden" id="contactPersonInteractionId">
+
+          <div class="form-grid">
+            <div class="form-group col-4">
+              <label for="contactPersonInteractionData">Data do Contacto *</label>
+              <input type="datetime-local" id="contactPersonInteractionData" class="form-control" required>
+            </div>
+
+            <div class="form-group col-8">
+              <label for="contactPersonInteractionDescricao">Registo Livre do Contacto (Expande Automaticamente) *</label>
+              <textarea id="contactPersonInteractionDescricao" class="auto-expand-textarea" placeholder="Escreva livremente as notas do contacto..." oninput="autoExpandTextarea(this)" required></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="deleteCurrentContactPersonInteractionModal()" id="btnDeleteContactPersonInteraction" style="display: none;">
+            <i class="fa-solid fa-trash"></i> Apagar Registo
+          </button>
+          <div style="margin-left: auto; display: flex; gap: 0.5rem;">
+            <button type="button" class="btn btn-close" onclick="closeContactPersonInteractionModal()">
+              <i class="fa-solid fa-xmark"></i> Fechar
+            </button>
+            <button type="submit" class="btn btn-primary">
+              <i class="fa-solid fa-floppy-disk"></i> Guardar Registo
             </button>
           </div>
         </div>
