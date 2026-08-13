@@ -713,6 +713,28 @@ textarea.form-control {
   margin-top: 0.75rem;
 }
 
+#contactPersonInteractionsGrid {
+  max-height: 240px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-blue) var(--soft-blue-bg);
+  padding-right: 4px;
+}
+
+#contactPersonInteractionsGrid::-webkit-scrollbar {
+  width: 6px;
+}
+
+#contactPersonInteractionsGrid::-webkit-scrollbar-track {
+  background: var(--soft-blue-bg);
+  border-radius: 4px;
+}
+
+#contactPersonInteractionsGrid::-webkit-scrollbar-thumb {
+  background-color: var(--accent-blue);
+  border-radius: 4px;
+}
+
 .interaction-card {
   background: #ffffff;
   border: 1px solid var(--border-color);
