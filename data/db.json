@@ -1439,7 +1439,7 @@
       "tipoCliente": "Privado",
       "ministerio": "",
       "secretariaEstado": "",
-      "nome": "BCN (Banco Caboverdiano de Negócios)",
+      "nome": "Banco Caboverdiano de Negócios - BCN",
       "contribuinte": "500001462",
       "direcao1": "Avenida Amílcar Cabral, n.º 44",
       "direcao2": "",
@@ -1459,7 +1459,7 @@
       "secretariaEstado": "",
       "nome": "Huawei Technologies Portugal",
       "contribuinte": "000000000",
-      "direcao1": "",
+      "direcao1": "Av. Amílcar Cabral / Praça Alexandre Albuquerque",
       "direcao2": "",
       "numero": "",
       "andar": "",
@@ -1467,7 +1467,7 @@
       "localidade": "Lisboa",
       "telefone": "+351 217 828 400",
       "telemovel": "",
-      "email": "",
+      "email": "bca@bca.cv",
       "createdAt": "2026-07-31T16:08:49.444Z"
     }
   ],
@@ -3303,6 +3303,24 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1786603119869-93",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Início de Sessão",
+      "descricao": "Acesso autorizado ao programa efetuado por José Centúrio.",
+      "timestamp": "2026-08-13T06:38:39.869Z"
+    },
+    {
+      "id": "log-1786535962567-156",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "timestamp": "2026-08-12T11:59:22.567Z"
+    },
     {
       "id": "log-1786535477324-185",
       "usuarioId": "usr-admin-001",
@@ -12284,24 +12302,6 @@
       "tipoAcao": "Servidor GitHub",
       "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
       "timestamp": "2026-08-10T15:00:33.781Z"
-    },
-    {
-      "id": "log-1786374031631-535",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "timestamp": "2026-08-10T15:00:31.631Z"
-    },
-    {
-      "id": "log-1786374029683-47",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "timestamp": "2026-08-10T15:00:29.684Z"
     }
   ]
 }
