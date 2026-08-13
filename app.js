@@ -9259,7 +9259,7 @@ function handleUserSelfRegistration(event) {
     cargo: cargo,
     pin: pin,
     role: "user",
-    active: true,
+    active: false,
     createdAt: new Date().toISOString()
   };
 
@@ -9271,9 +9271,9 @@ function handleUserSelfRegistration(event) {
   cargoInput.value = '';
   pinInput.value = '';
 
-  logUserActivity('Registo de Utilizador', `Novo utilizador ${nome} (${email}) registado no sistema.`);
-  showToast(`Utilizador ${nome} registado com sucesso! Pode agora iniciar sessão.`);
-  alert(`✅ Registo de Utilizador Concluído!\n\nUtilizador: ${nome}\nEmail: ${email}\nCargo: ${cargo}\n\nO seu registo foi guardado no programa. Selecione o seu nome para entrar.`);
+  logUserActivity('Registo de Utilizador', `Novo utilizador ${nome} (${email}) registado no sistema (Acesso pendente de ativação pelo Administrador).`);
+  showToast(`Registo efetuado! O acesso de ${nome} aguarda desativação do bloqueio pelo Administrador.`, 'warning');
+  alert(`✅ Registo de Utilizador Concluído!\n\nUtilizador: ${nome}\nEmail: ${email}\nCargo: ${cargo}\n\nO seu registo foi guardado no programa.\nO seu acesso encontra-se bloqueado por defeito até que o Administrador autorize a sua conta.`);
 
   toggleLoginRegisterMode(false);
 }
@@ -9400,7 +9400,7 @@ function handleUserRegistration(event) {
     cargo: cargo,
     pin: pin,
     role: role,
-    active: true,
+    active: role === 'admin' ? true : false,
     createdAt: new Date().toISOString()
   };
 
