@@ -1637,7 +1637,7 @@ textarea.form-control {
 
 .dashboard-sections-grid {
   display: grid;
-  grid-template-columns: 2.2fr 1fr;
+  grid-template-columns: 1fr;
   gap: 1.5rem;
   margin-top: 1.5rem;
 }
@@ -1650,7 +1650,7 @@ textarea.form-control {
 
 /* Container com barra de deslocamento vertical (scroll) para Projetos em Acompanhamento */
 .dash-projects-scroll-container {
-  max-height: 380px;
+  max-height: 480px;
   overflow-y: auto;
   padding: 0.25rem 0.5rem 0.25rem 0;
   border-radius: var(--radius-sm);
@@ -1832,7 +1832,7 @@ textarea.form-control {
 
 .dashboard-sections-grid {
   display: grid;
-  grid-template-columns: 2.2fr 1fr;
+  grid-template-columns: 1fr;
   gap: 1.5rem;
   margin-top: 1.5rem;
 }
@@ -1845,7 +1845,7 @@ textarea.form-control {
 
 /* Container com barra de deslocamento vertical (scroll) para Projetos em Acompanhamento */
 .dash-projects-scroll-container {
-  max-height: 380px;
+  max-height: 480px;
   overflow-y: auto;
   padding: 0.25rem 0.5rem 0.25rem 0;
   border-radius: var(--radius-sm);
