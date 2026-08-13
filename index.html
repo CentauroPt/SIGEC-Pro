@@ -1048,37 +1048,37 @@
               <textarea id="contactNotas" class="form-control notes-textarea" placeholder="Escreva observações ou notas sobre este contacto..."></textarea>
             </div>
           </div>
-        </div>
 
-        <!-- Secção Integrada de Registo de Contactos Realizados com este Contacto -->
-        <div class="embedded-section" style="margin: 0 1.5rem 0 1.5rem;">
-          <div class="embedded-header">
-            <h3 class="embedded-title">
-              <i class="fa-solid fa-phone-volume"></i> Registo de Contactos Realizados com este Contacto
-            </h3>
-          </div>
+          <!-- Secção Integrada de Registo de Contactos Realizados com este Contacto -->
+          <div class="embedded-section">
+            <div class="embedded-header">
+              <h3 class="embedded-title">
+                <i class="fa-solid fa-phone-volume"></i> Registo de Contactos Realizados com este Contacto
+              </h3>
+            </div>
 
-          <!-- Formulário em Linha: Data + Escrita Livre Auto-expansível -->
-          <div class="inline-interaction-container">
-            <div class="inline-interaction-row">
-              <div class="form-group inline-date-col">
-                <label for="quickContactInteractionData">Data do Contacto *</label>
-                <input type="datetime-local" id="quickContactInteractionData" class="form-control">
-              </div>
-              <div class="form-group inline-text-col">
-                <label for="quickContactInteractionText">Registo do Contacto (Escrita Livre) *</label>
-                <textarea id="quickContactInteractionText" class="auto-expand-textarea" placeholder="Escreva aqui livremente os detalhes do contacto efetuado..." oninput="autoExpandTextarea(this)"></textarea>
-              </div>
-              <div style="align-self: flex-end;">
-                <button type="button" class="btn btn-primary" onclick="addQuickContactInteraction()" style="white-space: nowrap;">
-                  <i class="fa-solid fa-plus"></i> Adicionar Contacto
-                </button>
+            <!-- Formulário em Linha: Data + Escrita Livre Auto-expansível -->
+            <div class="inline-interaction-container">
+              <div class="inline-interaction-row">
+                <div class="form-group inline-date-col">
+                  <label for="quickContactInteractionData">Data do Contacto *</label>
+                  <input type="datetime-local" id="quickContactInteractionData" class="form-control">
+                </div>
+                <div class="form-group inline-text-col">
+                  <label for="quickContactInteractionText">Registo do Contacto (Escrita Livre) *</label>
+                  <textarea id="quickContactInteractionText" class="auto-expand-textarea" placeholder="Escreva aqui livremente os detalhes do contacto efetuado..." oninput="autoExpandTextarea(this)"></textarea>
+                </div>
+                <div style="align-self: flex-end;">
+                  <button type="button" class="btn btn-primary" onclick="addQuickContactInteraction()" style="white-space: nowrap;">
+                    <i class="fa-solid fa-plus"></i> Adicionar Contacto
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div id="contactPersonInteractionsGrid" class="interactions-grid">
-            <span class="empty-state">Nenhum contacto/interação registada com este contacto.</span>
+            <div id="contactPersonInteractionsGrid" class="interactions-grid">
+              <span class="empty-state">Nenhum contacto/interação registada com este contacto.</span>
+            </div>
           </div>
         </div>
 
