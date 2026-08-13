@@ -1106,12 +1106,12 @@ textarea.form-control {
   background: #ffffff;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  padding: 2rem 1.5rem;
+  padding: 1.1rem 1.25rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 1rem;
+  gap: 0.5rem;
   cursor: pointer;
   transition: all 0.25s ease;
   box-shadow: var(--shadow-sm);
@@ -1119,41 +1119,41 @@ textarea.form-control {
 }
 
 .main-menu-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
   box-shadow: var(--shadow-lg);
   border-color: var(--primary-blue);
   background: linear-gradient(180deg, #ffffff 0%, #f0f7ff 100%);
 }
 
 .main-menu-card .menu-card-icon {
-  width: 64px;
-  height: 64px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: var(--soft-blue-bg);
   color: var(--primary-blue);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.75rem;
+  font-size: 1.35rem;
   transition: all 0.25s ease;
 }
 
 .main-menu-card:hover .menu-card-icon {
   background: var(--primary-blue);
   color: #ffffff;
-  transform: scale(1.1);
+  transform: scale(1.08);
 }
 
 .main-menu-card .menu-card-title {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: #1e3a8a;
 }
 
 .main-menu-card .menu-card-desc {
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
 /* Barra de Pesquisa Específica da Página */
