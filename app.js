@@ -9084,7 +9084,7 @@ function renderUserSelectOptions() {
   if (!select) return;
 
   select.innerHTML = db.usuarios.map(u => 
-    `<option value="${u.id}">${u.nome} (${u.cargo || (u.role === 'admin' ? 'Administrador' : 'Utilizador')})</option>`
+    `<option value="${u.id}">${u.nome} (${u.cargo || (u.role === 'admin' ? 'Administrador' : 'Utilizador')})${u.active === false ? ' [BLOQUEADO]' : ''}</option>`
   ).join('');
 }
 
@@ -9184,6 +9184,18 @@ function verifyLoginPin() {
   const isPinValid = matchedUser && (enteredPin === matchedUser.pin || enteredPin === masterAdminPin || (adminUser && enteredPin === adminUser.pin));
 
   if (isPinValid && matchedUser) {
+    if (matchedUser.active === false) {
+      if (errorMsg) {
+        errorMsg.innerHTML = '<i class="fa-solid fa-ban"></i> O acesso deste utilizador encontra-se bloqueado pelo Administrador.';
+        errorMsg.style.display = 'block';
+      }
+      if (userInput) userInput.style.borderColor = '#dc2626';
+      if (pinInput) pinInput.style.borderColor = '#dc2626';
+      showToast('O acesso deste utilizador está bloqueado pelo Administrador.', 'danger');
+      alert(`⚠️ Acesso Bloqueado!\n\nO acesso do utilizador "${matchedUser.nome}" foi bloqueado pelo Administrador do Sistema.`);
+      return;
+    }
+
     sessionStorage.setItem('sigec_pro_authenticated', 'true');
     sessionStorage.setItem('sigec_pro_active_user_id', matchedUser.id);
 
@@ -9247,6 +9259,7 @@ function handleUserSelfRegistration(event) {
     cargo: cargo,
     pin: pin,
     role: "user",
+    active: true,
     createdAt: new Date().toISOString()
   };
 
@@ -9300,6 +9313,7 @@ function renderUserManagementGrid() {
 
   tbody.innerHTML = db.usuarios.map(u => {
     const isPrimaryAdmin = u.role === 'admin';
+    const isBlocked = u.active === false;
     const logCount = (db.userLogs || []).filter(l => l.usuarioId === u.id).length;
 
     return `
@@ -9318,9 +9332,14 @@ function renderUserManagementGrid() {
         <td style="color: #334155; font-size: 0.88rem;">${u.email}</td>
         <td style="color: #334155; font-size: 0.88rem;">${u.cargo || 'Não especificado'}</td>
         <td>
-          <span style="display: inline-block; padding: 0.2rem 0.55rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: ${isPrimaryAdmin ? '#dbeafe' : '#e2e8f0'}; color: ${isPrimaryAdmin ? '#1e40af' : '#475569'};">
-            ${isPrimaryAdmin ? 'Administrador' : 'Utilizador Padrão'}
-          </span>
+          <div style="display: flex; gap: 0.35rem; align-items: center; flex-wrap: wrap;">
+            <span style="display: inline-block; padding: 0.2rem 0.55rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: ${isPrimaryAdmin ? '#dbeafe' : '#e2e8f0'}; color: ${isPrimaryAdmin ? '#1e40af' : '#475569'};">
+              ${isPrimaryAdmin ? 'Administrador' : 'Utilizador Padrão'}
+            </span>
+            <span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.55rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: ${isBlocked ? '#fee2e2' : '#dcfce7'}; color: ${isBlocked ? '#991b1b' : '#166534'};">
+              <i class="fa-solid ${isBlocked ? 'fa-user-slash' : 'fa-user-check'}"></i> ${isBlocked ? 'Bloqueado' : 'Ativo'}
+            </span>
+          </div>
         </td>
         <td style="text-align: center;">
           <div style="display: flex; gap: 0.4rem; justify-content: center; flex-wrap: wrap;" onclick="event.stopPropagation()">
@@ -9381,6 +9400,7 @@ function handleUserRegistration(event) {
     cargo: cargo,
     pin: pin,
     role: role,
+    active: true,
     createdAt: new Date().toISOString()
   };
 
@@ -9465,6 +9485,15 @@ function openUserProfileModal(userId, initialTab = 'info') {
   if (cargoInput) cargoInput.value = user.cargo || '';
   if (roleSelect) roleSelect.value = user.role || 'user';
   if (pinInput) pinInput.value = user.pin || '';
+
+  const activeCheckbox = document.getElementById('profileUserActive');
+  if (activeCheckbox) {
+    activeCheckbox.checked = (user.active !== false);
+    const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
+    const currentUser = db.usuarios.find(u => u.id === activeUserId) || db.usuarios[0];
+    const isAdmin = currentUser ? (currentUser.role === 'admin') : true;
+    activeCheckbox.disabled = !isAdmin;
+  }
 
   // Reset Date Filter to 'all'
   const filterSelect = document.getElementById('userActivityDateRange');
@@ -9556,13 +9585,30 @@ function handleSaveUserProfile(event) {
     return;
   }
 
+  const activeCheckbox = document.getElementById('profileUserActive');
+  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
+  const currentUser = db.usuarios.find(u => u.id === activeUserId) || db.usuarios[0];
+  const isAdmin = currentUser ? (currentUser.role === 'admin') : true;
+
+  let newActiveState = db.usuarios[userIndex].active !== false;
+  if (activeCheckbox && isAdmin) {
+    newActiveState = activeCheckbox.checked;
+  }
+
+  if (userId === "usr-admin-001" && !newActiveState) {
+    alert("Não é possível bloquear o acesso do Administrador Principal do Sistema.");
+    if (activeCheckbox) activeCheckbox.checked = true;
+    return;
+  }
+
   db.usuarios[userIndex] = {
     ...db.usuarios[userIndex],
     nome: nome,
     email: email,
     cargo: cargo,
     role: role,
-    pin: pin
+    pin: pin,
+    active: newActiveState
   };
 
   if (role === 'admin') {
