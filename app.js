@@ -9446,28 +9446,57 @@ function parseVersionNumber(versionStr) {
 }
 
 async function generateUpdatePackage() {
-  const currentVersion = getInstalledVersion();
-  const currentNum = parseVersionNumber(currentVersion);
-  
-  let maxRegNum = currentNum;
+  // Obter sempre o nome do último ficheiro guardado/registado (formato SIGEC_V1.7.3)
+  let lastSavedVersion = localStorage.getItem('sigec_pro_last_generated_version') ||
+                         localStorage.getItem('sigec_pro_installed_version') ||
+                         'SIGEC_V1.7.3';
+
+  // Verificar nas versões registadas do sistema para obter a versão mais recente
   if (window.SIGEC_AVAILABLE_UPDATES && Array.isArray(window.SIGEC_AVAILABLE_UPDATES)) {
+    let highestWeight = parseVersionNumber(lastSavedVersion);
     window.SIGEC_AVAILABLE_UPDATES.forEach(u => {
-      const vNum = parseVersionNumber(u.version || u.packageName);
-      if (vNum > maxRegNum) maxRegNum = vNum;
+      const vName = u.version || u.packageName || '';
+      const vWeight = parseVersionNumber(vName);
+      if (vWeight >= highestWeight) {
+        highestWeight = vWeight;
+        lastSavedVersion = vName;
+      }
     });
   }
 
-  const nextNum = (maxRegNum + 0.1).toFixed(1);
-  const defaultVersionName = `SIGEC_V${nextNum}`;
+  // Garantir estritamente o formato SIGEC_VX.X.X (ex: SIGEC_V1.7.3)
+  if (!/^SIGEC_V/i.test(lastSavedVersion)) {
+    if (/^SIGEC_/i.test(lastSavedVersion)) {
+      lastSavedVersion = lastSavedVersion.replace(/^SIGEC_/i, 'SIGEC_V');
+    } else if (/^V/i.test(lastSavedVersion)) {
+      lastSavedVersion = `SIGEC_${lastSavedVersion.toUpperCase()}`;
+    } else {
+      lastSavedVersion = `SIGEC_V${lastSavedVersion}`;
+    }
+  }
 
-  const userVer = prompt('Insira a versão para o pacote de atualização de software a ser gerado:', defaultVersionName);
+  const userVer = prompt('Insira o nome da versão para o pacote de atualização de software:', lastSavedVersion);
   if (!userVer || !userVer.trim()) {
     showToast('Geração de pacote de atualização cancelada.', 'warning');
     return;
   }
 
-  const finalVer = userVer.trim().toUpperCase();
-  const formattedVer = finalVer.startsWith('SIGEC_') ? finalVer : `SIGEC_${finalVer}`;
+  let formattedVer = userVer.trim();
+  // Formatar rigorosamente no formato SIGEC_VX.X.X
+  if (!/^SIGEC_V/i.test(formattedVer)) {
+    if (/^SIGEC_/i.test(formattedVer)) {
+      formattedVer = formattedVer.replace(/^SIGEC_/i, 'SIGEC_V');
+    } else if (/^V/i.test(formattedVer)) {
+      formattedVer = `SIGEC_${formattedVer.toUpperCase()}`;
+    } else {
+      formattedVer = `SIGEC_V${formattedVer}`;
+    }
+  } else {
+    formattedVer = formattedVer.replace(/^SIGEC_V/i, 'SIGEC_V');
+  }
+
+  // Guardar esta versão como o último ficheiro guardado
+  localStorage.setItem('sigec_pro_last_generated_version', formattedVer);
 
   // REGRA ESTRITA E PERMANENTE: O pacote gerado contém EXCLUSIVAMENTE software/sistema e ZERO dados de registo das fichas
   const updatePackage = {
