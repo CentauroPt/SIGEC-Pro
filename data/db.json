@@ -3612,9 +3612,10 @@
       "nome": "José Centúrio",
       "email": "jmcenturio@alegria-activity.com",
       "cargo": "Administrador do Sistema",
-      "pin": "1234",
+      "pin": "J*cen*1971",
       "role": "admin",
-      "createdAt": "2026-08-10T09:45:00.000Z"
+      "createdAt": "2026-08-10T09:45:00.000Z",
+      "active": true
     },
     {
       "id": "usr-1786381890691",
@@ -3638,6 +3639,42 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1786716558408-538",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Dados de registo e PIN do utilizador José Centúrio atualizados pelo Administrador.",
+      "timestamp": "2026-08-14T14:09:18.408Z"
+    },
+    {
+      "id": "log-1786716552559-600",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Dados de registo e PIN do utilizador José Centúrio atualizados pelo Administrador.",
+      "timestamp": "2026-08-14T14:09:12.559Z"
+    },
+    {
+      "id": "log-1786716541031-789",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Ficha do utilizador José Centúrio aberta após autenticação de Administrador.",
+      "timestamp": "2026-08-14T14:09:01.031Z"
+    },
+    {
+      "id": "log-1786716528029-208",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "timestamp": "2026-08-14T14:08:48.029Z"
+    },
     {
       "id": "log-1786716512780-611",
       "usuarioId": "usr-admin-001",
