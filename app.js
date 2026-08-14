@@ -10443,57 +10443,141 @@ async function triggerDatabaseRestore() {
   const owner = (cfg.owner || 'centauropt').trim();
   const repo = (cfg.repo || 'SIGEC-Pro').trim();
 
-  showToast('A procurar a cópia de segurança mais recente na pasta Backup do servidor GitHub...', 'info');
+  showToast('A ligar ao servidor GitHub para procurar cópias de segurança...', 'info');
 
-  try {
-    const listApiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/Backup`;
-    const headers = { 'Accept': 'application/vnd.github.v3+json' };
+  const foldersToTry = ['Backup', 'Backups'];
+  let foundFiles = [];
+  let detectedFolder = 'Backup';
+  let lastError = null;
+
+  // 1. Procura na pasta do servidor GitHub (tenta com Token e sem Token como fallback para repositórios públicos)
+  for (const folder of foldersToTry) {
+    const listApiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${folder}`;
+    const authHeadersList = [];
+
     if (token) {
-      headers['Authorization'] = token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`;
+      authHeadersList.push({ 'Authorization': token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`, 'Accept': 'application/vnd.github.v3+json' });
+      authHeadersList.push({ 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' });
+      authHeadersList.push({ 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github.v3+json' });
+    }
+    // Tentativa pública sem auth
+    authHeadersList.push({ 'Accept': 'application/vnd.github.v3+json' });
+
+    for (const hdrs of authHeadersList) {
+      try {
+        const res = await fetch(listApiUrl, { method: 'GET', headers: hdrs, cache: 'no-store' });
+        if (res.ok) {
+          const files = await res.json();
+          if (Array.isArray(files) && files.length > 0) {
+            const jsonFiles = files.filter(f => f.type === 'file' && f.name.toLowerCase().endsWith('.json'));
+            if (jsonFiles.length > 0) {
+              foundFiles = jsonFiles;
+              detectedFolder = folder;
+              break;
+            }
+          }
+        } else {
+          lastError = `Status ${res.status}: ${res.statusText}`;
+        }
+      } catch (err) {
+        lastError = err.message;
+      }
     }
 
-    const res = await fetch(listApiUrl, { method: 'GET', headers: headers, cache: 'no-store' });
+    if (foundFiles.length > 0) break;
+  }
 
-    if (res.ok) {
-      const files = await res.json();
-      if (Array.isArray(files) && files.length > 0) {
-        // Filtra apenas ficheiros .json
-        const jsonFiles = files.filter(f => f.type === 'file' && f.name.toLowerCase().endsWith('.json'));
+  if (foundFiles.length > 0) {
+    // Ordena os ficheiros decrescentemente por nome para obter a versão mais recente
+    foundFiles.sort((a, b) => b.name.localeCompare(a.name));
+    const latestFile = foundFiles[0];
 
-        if (jsonFiles.length > 0) {
-          // Ordena por nome decrescente (o timestamp YYYY-MM-DD ou data no nome garante que o mais recente fique no topo)
-          jsonFiles.sort((a, b) => b.name.localeCompare(a.name));
-          const latestFile = jsonFiles[0];
+    showToast(`Backup mais recente detetado: ${latestFile.name}. A descarregar registos...`, 'info');
 
-          // Descarrega o conteúdo do backup mais recente
-          const rawHeaders = { 'Accept': 'application/vnd.github.v3.raw' };
-          if (token) {
-            rawHeaders['Authorization'] = token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`;
-          }
+    let parsedData = null;
 
-          const rawRes = await fetch(latestFile.download_url || `https://api.github.com/repos/${owner}/${repo}/contents/Backup/${latestFile.name}`, {
+    // Tentativa 1: Descarregar via download_url pública (sem auth headers para não dar CORS error no raw.githubusercontent)
+    if (latestFile.download_url) {
+      try {
+        const rawRes = await fetch(latestFile.download_url, { cache: 'no-store' });
+        if (rawRes.ok) {
+          parsedData = await rawRes.json();
+        }
+      } catch (e) {
+        console.warn('Falha no download via download_url:', e);
+      }
+    }
+
+    // Tentativa 2: Descarregar via Git Blobs API usando o SHA do ficheiro (suporta grandes ficheiros de base de dados)
+    if (!parsedData && latestFile.sha) {
+      const blobUrl = `https://api.github.com/repos/${owner}/${repo}/git/blobs/${latestFile.sha}`;
+      const authHeadersList = [];
+      if (token) {
+        authHeadersList.push({ 'Authorization': token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}` });
+      }
+      authHeadersList.push({});
+
+      for (const bHdrs of authHeadersList) {
+        try {
+          const blobRes = await fetch(blobUrl, {
             method: 'GET',
-            headers: rawHeaders,
+            headers: { ...bHdrs, 'Accept': 'application/vnd.github.v3+json' },
             cache: 'no-store'
           });
-
-          if (rawRes.ok) {
-            const rawContent = await rawRes.text();
-            const parsed = JSON.parse(rawContent);
-
-            openBackupRestoreModalWithData(parsed, latestFile.name, 'github');
-            return;
+          if (blobRes.ok) {
+            const blobObj = await blobRes.json();
+            if (blobObj && blobObj.content) {
+              const cleanBase64 = blobObj.content.replace(/\s+/g, '');
+              const decodedJsonStr = base64ToUtf8(cleanBase64);
+              parsedData = JSON.parse(decodedJsonStr);
+              break;
+            }
           }
+        } catch (e) {
+          console.warn('Falha no download via Git Blobs API:', e);
         }
       }
     }
-  } catch (e) {
-    console.warn('Não foi possível obter backup diretamente do GitHub:', e);
+
+    // Tentativa 3: Contents API raw
+    if (!parsedData) {
+      try {
+        const contentsUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${detectedFolder}/${latestFile.name}`;
+        const rawRes = await fetch(contentsUrl, {
+          method: 'GET',
+          headers: { 'Accept': 'application/vnd.github.v3.raw' },
+          cache: 'no-store'
+        });
+        if (rawRes.ok) {
+          parsedData = await rawRes.json();
+        }
+      } catch (e) {
+        console.warn('Falha no download via Contents Raw API:', e);
+      }
+    }
+
+    if (parsedData) {
+      showToast('Cópia de segurança carregada com sucesso do servidor GitHub!');
+      openBackupRestoreModalWithData(parsedData, latestFile.name, 'github');
+      return;
+    } else {
+      alert(`⚠️ Foi encontrado o ficheiro "${latestFile.name}" na pasta ${detectedFolder} do servidor GitHub, mas não foi possível descarregar o seu conteúdo automaticamente.\n\nPode selecionar o ficheiro de backup a partir do seu computador.`);
+      triggerLocalBackupFileSelect();
+      return;
+    }
   }
 
-  // Se não encontrar no GitHub ou falhar a ligação, oferece a seleção de ficheiro do computador
-  showToast('Nenhum backup encontrado na pasta do servidor GitHub. Selecione um ficheiro do computador.', 'warning');
-  triggerLocalBackupFileSelect();
+  // Se não encontrou nenhum ficheiro no servidor GitHub
+  const confirmLocal = confirm(
+    `🔍 Pesquisa no Servidor GitHub (${owner}/${repo}):\n\n` +
+    `Não foram encontradas cópias de segurança (.json) na pasta "Backup" do repositório GitHub.\n\n` +
+    (token ? `✔️ Token de Acesso PAT configurado.\n\n` : `⚠️ Nota: Nenhum Token PAT configurado nas Definições.\n\n`) +
+    `Deseja procurar e selecionar um ficheiro de cópia de segurança (.json) guardado no seu computador?`
+  );
+
+  if (confirmLocal) {
+    triggerLocalBackupFileSelect();
+  }
 }
 
 function triggerLocalBackupFileSelect() {
