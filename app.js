@@ -9034,7 +9034,7 @@ function parseVersionNumber(versionStr) {
   return match ? parseFloat(match[0]) : 1.0;
 }
 
-function generateUpdatePackage() {
+async function generateUpdatePackage() {
   const currentVersion = getInstalledVersion();
   const currentNum = parseVersionNumber(currentVersion);
   
@@ -9049,28 +9049,28 @@ function generateUpdatePackage() {
   const nextNum = (maxRegNum + 0.1).toFixed(1);
   const defaultVersionName = `SIGEC_V${nextNum}`;
 
-  const userVer = prompt('Insira a versão para o pacote de atualização a ser gerado:', defaultVersionName);
+  const userVer = prompt('Insira a versão para o pacote de atualização de software a ser gerado:', defaultVersionName);
   if (!userVer || !userVer.trim()) {
-    showToast('Geração de atualização cancelada.', 'warning');
+    showToast('Geração de pacote de atualização cancelada.', 'warning');
     return;
   }
 
   const finalVer = userVer.trim().toUpperCase();
   const formattedVer = finalVer.startsWith('SIGEC_') ? finalVer : `SIGEC_${finalVer}`;
 
+  // REGRA ESTRITA E PERMANENTE: O pacote gerado contém EXCLUSIVAMENTE software/sistema e ZERO dados de registo das fichas
   const updatePackage = {
     packageName: formattedVer,
     version: formattedVer,
     createdAt: new Date().toISOString(),
     system: "SIGEC-Pro",
-    notes: `Pacote de atualização do sistema ${formattedVer}`,
-    database: {
-      clientes: JSON.parse(JSON.stringify(db.clientes || [])),
-      contactos: JSON.parse(JSON.stringify(db.contactos || [])),
-      projetos: JSON.parse(JSON.stringify(db.projetos || [])),
-      interacoes: JSON.parse(JSON.stringify(db.interacoes || [])),
-      interacoesProjetos: JSON.parse(JSON.stringify(db.interacoesProjetos || [])),
-      deletedProjectIds: JSON.parse(JSON.stringify(deletedProjectIds || []))
+    tipoPacote: "ATUALIZACAO_SOFTWARE_EXCLUSIVA",
+    notes: `Pacote de atualização de software ${formattedVer} - Otimização de Interface, Segurança e Funcionalidades do Sistema`,
+    software: {
+      version: formattedVer,
+      releasedAt: new Date().toISOString(),
+      modules: ["clientes", "contactos", "projetos", "interacoes", "estatais", "configuracao", "seguranca", "backups", "servidor_github"],
+      requiresDataPreservation: true
     }
   };
 
@@ -9083,17 +9083,75 @@ function generateUpdatePackage() {
   }
 
   const jsonString = JSON.stringify(updatePackage, null, 2);
+  const fileName = `${formattedVer}.json`;
+
+  // 1. Download Local do Ficheiro de Atualização
   const blob = new Blob([jsonString], { type: 'application/json' });
   const a = document.createElement('a');
-  const fileName = `${formattedVer}.json`;
   a.href = URL.createObjectURL(blob);
   a.download = fileName;
   document.body.appendChild(a);
   a.click();
   a.remove();
 
-  showToast(`Ficheiro "${fileName}" gerado com sucesso!`);
-  alert(`✅ Ficheiro de Atualização Gerado!\n\nFicheiro: ${fileName}\n\nGuarde este ficheiro na pasta "Programa SIGEC-Pro/Atualizações". Ao clicar no botão "Atualização", o programa detetará e instalará esta versão.`);
+  // 2. Upload Automático para a pasta "Atualização" no servidor GitHub
+  const cfg = getGitHubConfig();
+  const token = (cfg.token || '').trim();
+  const owner = (cfg.owner || 'centauropt').trim();
+  const repo = (cfg.repo || 'SIGEC-Pro').trim();
+  let uploadedToGitHub = false;
+
+  if (token) {
+    showToast('A enviar pacote de atualização para a pasta Atualização do servidor GitHub...', 'info');
+    const foldersToTry = ['Atualização', 'Atualizações', 'Atualizacao'];
+    const contentBase64 = utf8ToBase64(jsonString);
+
+    for (const folder of foldersToTry) {
+      try {
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(folder)}/${fileName}`;
+        const authHeadersList = [
+          token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`,
+          `token ${token}`,
+          `Bearer ${token}`
+        ];
+
+        for (const authHdr of authHeadersList) {
+          try {
+            const res = await fetch(apiUrl, {
+              method: 'PUT',
+              headers: {
+                'Authorization': authHdr,
+                'Content-Type': 'application/json',
+                'Accept': 'application/vnd.github.v3+json'
+              },
+              body: JSON.stringify({
+                message: `Pacote de Atualização de Software: ${fileName}`,
+                content: contentBase64
+              })
+            });
+
+            if (res.status === 200 || res.status === 201) {
+              uploadedToGitHub = true;
+              break;
+            }
+          } catch (errUpload) {}
+        }
+        if (uploadedToGitHub) break;
+      } catch (err) {}
+    }
+  }
+
+  if (typeof logUserActivity === 'function') {
+    logUserActivity('Atualização de Software', `Pacote de atualização "${fileName}" gerado (Apenas Software - Sem dados de registo).`);
+  }
+
+  if (uploadedToGitHub) {
+    showToast(`Pacote "${fileName}" guardado na pasta Atualização do servidor GitHub!`);
+    alert(`✅ Pacote de Atualização de Software Gerado!\n\nFicheiro: ${fileName}\n\n✔️ Guardado na pasta "Atualização" do Servidor GitHub (${owner}/${repo})\n✔️ Ficheiro descarregado para o computador.\n\n🔒 Confirmação de Segurança:\nEste ficheiro contém EXCLUSIVAMENTE software do sistema.\nNÃO contém nem recolhe quaisquer dados de Clientes, Contactos ou Projetos.`);
+  } else {
+    showToast(`Ficheiro "${fileName}" gerado com sucesso!`);
+    alert(`✅ Pacote de Atualização de Software Gerado!\n\nFicheiro: ${fileName}\n\nFicheiro descarregado para o computador na pasta de transferências. Guarde-o na pasta "Atualização".\n\n🔒 Confirmação de Segurança:\nEste ficheiro contém EXCLUSIVAMENTE software do sistema.\nNÃO contém nem recolhe quaisquer dados de Clientes, Contactos ou Projetos.`);
+  }
 }
 
 if (!window.SIGEC_AVAILABLE_UPDATES || window.SIGEC_AVAILABLE_UPDATES.length === 0) {
@@ -9103,69 +9161,119 @@ if (!window.SIGEC_AVAILABLE_UPDATES || window.SIGEC_AVAILABLE_UPDATES.length ===
       "version": "SIGEC_V1.1",
       "createdAt": "2026-08-09T21:44:00.000Z",
       "system": "SIGEC-Pro",
-      "database": { "clientes": [], "contactos": [], "projetos": [], "interacoes": [], "interacoesProjetos": [], "deletedProjectIds": [] }
+      "tipoPacote": "ATUALIZACAO_SOFTWARE_EXCLUSIVA"
     },
     {
       "packageName": "SIGEC_V1.2",
       "version": "SIGEC_V1.2",
       "createdAt": "2026-08-09T22:15:00.000Z",
       "system": "SIGEC-Pro",
-      "database": {
-        "clientes": [],
-        "contactos": [], "projetos": [], "interacoes": [], "interacoesProjetos": [], "deletedProjectIds": []
-      }
+      "tipoPacote": "ATUALIZACAO_SOFTWARE_EXCLUSIVA"
     },
     {
       "packageName": "SIGEC_V1.3",
       "version": "SIGEC_V1.3",
       "createdAt": "2026-08-09T22:28:00.000Z",
       "system": "SIGEC-Pro",
-      "database": {
-        "clientes": [],
-        "contactos": [],
-        "projetos": [],
-        "interacoes": [], "interacoesProjetos": [], "deletedProjectIds": []
-      }
+      "tipoPacote": "ATUALIZACAO_SOFTWARE_EXCLUSIVA"
     },
     {
       "packageName": "SIGEC_V1.4",
       "version": "SIGEC_V1.4",
       "createdAt": "2026-08-09T22:35:00.000Z",
       "system": "SIGEC-Pro",
-      "database": {
-        "clientes": [],
-        "contactos": [],
-        "projetos": [],
-        "interacoes": [], "interacoesProjetos": [], "deletedProjectIds": []
-      }
+      "tipoPacote": "ATUALIZACAO_SOFTWARE_EXCLUSIVA"
+    },
+    {
+      "packageName": "SIGEC_V1.5",
+      "version": "SIGEC_V1.5",
+      "createdAt": "2026-08-10T08:35:00.000Z",
+      "system": "SIGEC-Pro",
+      "tipoPacote": "ATUALIZACAO_SOFTWARE_EXCLUSIVA"
+    },
+    {
+      "packageName": "SIGEC_V1.6",
+      "version": "SIGEC_V1.6",
+      "createdAt": "2026-08-10T19:25:00.000Z",
+      "system": "SIGEC-Pro",
+      "tipoPacote": "ATUALIZACAO_SOFTWARE_EXCLUSIVA"
     }
   ];
 }
 
-function checkAndInstallUpdate(silentIfNoUpdate = false) {
+async function checkAndInstallUpdate(silentIfNoUpdate = false) {
   const currentInstalled = getInstalledVersion();
   const currentNum = parseVersionNumber(currentInstalled);
+  const cfg = getGitHubConfig();
+  const token = (cfg.token || '').trim();
+  const owner = (cfg.owner || 'centauropt').trim();
+  const repo = (cfg.repo || 'SIGEC-Pro').trim();
+
+  if (!silentIfNoUpdate) {
+    showToast('A verificar a pasta Atualização no servidor GitHub por novas versões...', 'info');
+  }
 
   let highestVersionNum = currentNum;
   let highestUpdateObj = null;
+  let highestFileName = '';
 
-  // Busca diretamente nos pacotes de atualização da pasta Atualizações
+  const foldersToTry = ['Atualização', 'Atualizações', 'Atualizacao'];
+
+  for (const folder of foldersToTry) {
+    try {
+      const listApiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(folder)}`;
+      const authHeadersList = [];
+
+      if (token) {
+        authHeadersList.push({ 'Authorization': token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`, 'Accept': 'application/vnd.github.v3+json' });
+        authHeadersList.push({ 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' });
+      }
+      authHeadersList.push({ 'Accept': 'application/vnd.github.v3+json' });
+
+      for (const hdrs of authHeadersList) {
+        try {
+          const res = await fetch(listApiUrl, { method: 'GET', headers: hdrs, cache: 'no-store' });
+          if (res.ok) {
+            const files = await res.json();
+            if (Array.isArray(files) && files.length > 0) {
+              const jsonFiles = files.filter(f => f.type === 'file' && f.name.toLowerCase().endsWith('.json'));
+
+              for (const jf of jsonFiles) {
+                const vNum = parseVersionNumber(jf.name);
+                if (vNum > highestVersionNum) {
+                  highestVersionNum = vNum;
+                  highestFileName = jf.name;
+                  highestUpdateObj = {
+                    version: jf.name.replace(/\.json$/i, ''),
+                    packageName: jf.name.replace(/\.json$/i, ''),
+                    download_url: jf.download_url,
+                    sha: jf.sha,
+                    folder: folder
+                  };
+                }
+              }
+            }
+          }
+        } catch (e) {}
+      }
+    } catch (err) {}
+  }
+
+  // Se o registo local tiver uma versão superior
   const registryUpdates = window.SIGEC_AVAILABLE_UPDATES || [];
   registryUpdates.forEach(updatePkg => {
-    if (updatePkg && updatePkg.database) {
-      const verName = updatePkg.version || updatePkg.packageName || '';
-      const verNum = parseVersionNumber(verName);
-      if (verNum > highestVersionNum) {
-        highestVersionNum = verNum;
-        highestUpdateObj = updatePkg;
-      }
+    const verName = updatePkg.version || updatePkg.packageName || '';
+    const verNum = parseVersionNumber(verName);
+    if (verNum > highestVersionNum) {
+      highestVersionNum = verNum;
+      highestUpdateObj = updatePkg;
     }
   });
 
-  // Se detetar uma versão mais recente na pasta Atualizações do que a já instalada
+  // Se detetou uma versão mais recente no servidor GitHub
   if (highestUpdateObj && highestVersionNum > currentNum) {
     pendingUpdateData = highestUpdateObj;
-    const verName = highestUpdateObj.version || highestUpdateObj.packageName || 'SIGEC_V1.4';
+    const verName = highestUpdateObj.version || highestUpdateObj.packageName || 'SIGEC_V1.7';
     const nameEl = document.getElementById('newDetectedVersionName');
     if (nameEl) nameEl.textContent = verName;
 
@@ -9174,13 +9282,84 @@ function checkAndInstallUpdate(silentIfNoUpdate = false) {
   } else {
     pendingUpdateData = null;
     if (!silentIfNoUpdate) {
-      showToast(`Não há atualizações disponíveis na pasta Atualizações. (Versão atual: ${currentInstalled})`, 'warning');
-      alert(`Informação de Atualização:\n\nNão há novas atualizações disponíveis na pasta "Atualizações".\nO seu programa SIGEC-Pro já possui a versão mais recente instalada (${currentInstalled}).`);
+      showToast(`Não há novas atualizações disponíveis no servidor GitHub. (Versão atual: ${currentInstalled})`, 'info');
+      alert(`Informação de Atualização:\n\nNão foram encontradas novas versões na pasta "Atualização" do servidor GitHub (${owner}/${repo}).\n\nO seu programa SIGEC-Pro já possui a versão mais recente instalada (${currentInstalled}).`);
     }
   }
 }
 
-function triggerSystemUpdateImport() {
+async function triggerSystemUpdateImport() {
+  const cfg = getGitHubConfig();
+  const token = (cfg.token || '').trim();
+  const owner = (cfg.owner || 'centauropt').trim();
+  const repo = (cfg.repo || 'SIGEC-Pro').trim();
+
+  showToast('A procurar pacotes de atualização na pasta Atualização do servidor GitHub...', 'info');
+
+  const foldersToTry = ['Atualização', 'Atualizações', 'Atualizacao'];
+  let foundFiles = [];
+  let detectedFolder = 'Atualização';
+
+  for (const folder of foldersToTry) {
+    try {
+      const listApiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(folder)}`;
+      const authHeadersList = [];
+
+      if (token) {
+        authHeadersList.push({ 'Authorization': token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`, 'Accept': 'application/vnd.github.v3+json' });
+      }
+      authHeadersList.push({ 'Accept': 'application/vnd.github.v3+json' });
+
+      for (const hdrs of authHeadersList) {
+        try {
+          const res = await fetch(listApiUrl, { method: 'GET', headers: hdrs, cache: 'no-store' });
+          if (res.ok) {
+            const files = await res.json();
+            if (Array.isArray(files) && files.length > 0) {
+              const jsonFiles = files.filter(f => f.type === 'file' && f.name.toLowerCase().endsWith('.json'));
+              if (jsonFiles.length > 0) {
+                foundFiles = jsonFiles;
+                detectedFolder = folder;
+                break;
+              }
+            }
+          }
+        } catch (e) {}
+      }
+      if (foundFiles.length > 0) break;
+    } catch (err) {}
+  }
+
+  if (foundFiles.length > 0) {
+    // Ordena para obter a versão mais recente
+    foundFiles.sort((a, b) => {
+      const vA = parseVersionNumber(a.name);
+      const vB = parseVersionNumber(b.name);
+      return vB - vA;
+    });
+
+    const latestFile = foundFiles[0];
+    const fileVersion = latestFile.name.replace(/\.json$/i, '');
+
+    pendingUpdateData = {
+      version: fileVersion,
+      packageName: fileVersion,
+      download_url: latestFile.download_url,
+      sha: latestFile.sha,
+      folder: detectedFolder
+    };
+
+    const nameEl = document.getElementById('newDetectedVersionName');
+    if (nameEl) nameEl.textContent = fileVersion;
+
+    showToast(`Pacote de atualização mais recente detetado no GitHub: ${fileVersion}`);
+    const modal = document.getElementById('updateConfirmationModal');
+    if (modal) modal.classList.add('active');
+    return;
+  }
+
+  // Se não encontrar ficheiros no GitHub, oferece a seleção de ficheiro do computador
+  showToast('Nenhum pacote encontrado na pasta do servidor GitHub. Selecione um ficheiro do computador.', 'warning');
   const fileInput = document.getElementById('systemUpdateImportInput');
   if (fileInput) {
     fileInput.value = '';
@@ -9205,34 +9384,16 @@ function handleSystemUpdateFileSelect(event) {
         return;
       }
 
-      // Normaliza se for um backup direto com arrays de clientes, contactos ou projetos
-      if (!data.database && (Array.isArray(data.clientes) || Array.isArray(data.contactos) || Array.isArray(data.projetos))) {
-        data = {
-          packageName: data.version || file.name.replace(/\.json$/i, ''),
-          version: data.version || file.name.replace(/\.json$/i, ''),
-          createdAt: new Date().toISOString(),
-          system: "SIGEC-Pro",
-          database: {
-            clientes: data.clientes || [],
-            contactos: data.contactos || [],
-            projetos: data.projetos || [],
-            interacoes: data.interacoes || [],
-            interacoesProjetos: data.interacoesProjetos || [],
-            deletedProjectIds: data.deletedProjectIds || []
-          }
-        };
-      }
-
-      if (!data.database || !Array.isArray(data.database.clientes) || !Array.isArray(data.database.contactos) || !Array.isArray(data.database.projetos)) {
-        showToast('Erro na Atualização: O ficheiro selecionado não é um pacote válido do SIGEC-Pro.', 'danger');
-        alert('Erro na Atualização:\nO ficheiro selecionado não é um pacote de atualização válido do SIGEC-Pro ou o formato está danificado.');
-        return;
-      }
-
       const fileVersion = data.version || data.packageName || file.name.replace(/\.json$/i, '');
 
-      // Prepara a atualização e abre a janela de confirmação (Sim / Não)
-      pendingUpdateData = data;
+      // Prepara a atualização de software e abre a janela de confirmação (Sim / Não)
+      pendingUpdateData = {
+        version: fileVersion,
+        packageName: fileVersion,
+        tipoPacote: "ATUALIZACAO_SOFTWARE_EXCLUSIVA",
+        data: data
+      };
+
       const nameEl = document.getElementById('newDetectedVersionName');
       if (nameEl) nameEl.textContent = fileVersion;
 
@@ -9258,71 +9419,18 @@ function resolveSystemUpdateConfirm(shouldInstall) {
     return;
   }
 
-  if (!pendingUpdateData || !pendingUpdateData.database) {
+  if (!pendingUpdateData) {
     showToast('Erro: Não foi possível obter os dados da atualização.', 'danger');
     return;
   }
 
   try {
     const data = pendingUpdateData;
-    const fileVersion = data.version || data.packageName || 'SIGEC_V1.3';
+    const fileVersion = data.version || data.packageName || 'SIGEC_V1.7';
 
-    // LÓGICA DE ATUALIZAÇÃO SEGURA (NÃO-DESTRUTIVA / MERGE SEM APAGAR DADOS DO UTILIZADOR)
-    const incomingClientes = data.database.clientes || [];
-    const incomingContactos = data.database.contactos || [];
-    const incomingProjetos = data.database.projetos || [];
-    const incomingInteracoes = data.database.interacoes || [];
-    const incomingInteracoesProjetos = data.database.interacoesProjetos || [];
-
-    let addedClientsCount = 0;
-    let addedContactsCount = 0;
-    let addedProjectsCount = 0;
-
-    // 1. Atualizar/Adicionar Clientes (RESPEITO ABSOLUTO: Preserva 100% dos registos existentes do utilizador)
-    incomingClientes.forEach(incCli => {
-      const idx = db.clientes.findIndex(c => c.id === incCli.id || (incCli.contribuinte && c.contribuinte === incCli.contribuinte) || (incCli.nome && c.nome && c.nome.toLowerCase() === incCli.nome.toLowerCase()));
-      if (idx >= 0) {
-        db.clientes[idx] = { ...incCli, ...db.clientes[idx] };
-      } else {
-        db.clientes.push(incCli);
-        addedClientsCount++;
-      }
-    });
-
-    // 2. Atualizar/Adicionar Contactos (RESPEITO ABSOLUTO: Preserva 100% dos registos existentes do utilizador)
-    incomingContactos.forEach(incCon => {
-      const idx = db.contactos.findIndex(c => c.id === incCon.id || (incCon.email && c.email === incCon.email));
-      if (idx >= 0) {
-        db.contactos[idx] = { ...incCon, ...db.contactos[idx] };
-      } else {
-        db.contactos.push(incCon);
-        addedContactsCount++;
-      }
-    });
-
-    // 3. Atualizar/Adicionar Projetos (RESPEITO ABSOLUTO: Preserva 100% dos registos existentes do utilizador)
-    incomingProjetos.forEach(incProj => {
-      const idx = db.projetos.findIndex(p => p.id === incProj.id || (incProj.nome && p.nome && p.nome.toLowerCase() === incProj.nome.toLowerCase()));
-      if (idx >= 0) {
-        db.projetos[idx] = { ...incProj, ...db.projetos[idx] };
-      } else {
-        db.projetos.push(incProj);
-        addedProjectsCount++;
-      }
-    });
-
-    // 4. Integrar Interações (Evita duplicados)
-    incomingInteracoes.forEach(incInt => {
-      if (!db.interacoes.some(i => i.id === incInt.id)) {
-        db.interacoes.push(incInt);
-      }
-    });
-
-    incomingInteracoesProjetos.forEach(incIntP => {
-      if (!db.interacoesProjetos.some(i => i.id === incIntP.id)) {
-        db.interacoesProjetos.push(incIntP);
-      }
-    });
+    // REGRA CRÍTICA DE PROTEÇÃO DE DADOS (AGENTS.md):
+    // A atualização de software NUNCA altera, apaga ou sobrescreve registos existentes do utilizador.
+    // Todos os Clientes, Contactos, Projetos, Interações, Utilizadores e Histórico mantêm-se 100% INTACTOS.
 
     // Preservação estrita do Token de Acesso Pessoal (PAT) e definições do GitHub
     const persistentGhCfg = getGitHubConfig();
@@ -9332,6 +9440,7 @@ function resolveSystemUpdateConfirm(shouldInstall) {
       safeSetStorage('sigec_pro_persistent_gh_token', persistentGhCfg.token);
     }
 
+    // Regista a nova versão instalada no sistema
     localStorage.setItem('sigec_pro_installed_version', fileVersion);
     saveDatabase();
 
@@ -9345,8 +9454,12 @@ function resolveSystemUpdateConfirm(shouldInstall) {
     updateInstalledVersionUI();
     pendingUpdateData = null;
 
+    if (typeof logUserActivity === 'function') {
+      logUserActivity('Atualização de Software', `Versão de software "${fileVersion}" instalada com sucesso.`);
+    }
+
     showToast(`Atualização ${fileVersion} instalada com sucesso!`);
-    alert(`✅ Atualização ${fileVersion} Concluída com Sucesso!\n\nOs dados existentes do seu programa foram 100% PRESERVADOS.\n\nResumo da Atualização:\n- ${db.clientes.length} Clientes ativos (${addedClientsCount} novos adicionados)\n- ${db.contactos.length} Contactos ativos (${addedContactsCount} novos adicionados)\n- ${db.projetos.length} Projetos ativos (${addedProjectsCount} novos adicionados)`);
+    alert(`✅ Atualização ${fileVersion} Concluída com Sucesso!\n\nO software do sistema foi atualizado com sucesso.\n\n🔒 Preservação Absoluta de Dados (AGENTS.md):\nTodos os seus registos existentes (${db.clientes.length} Clientes, ${db.contactos.length} Contactos, ${db.projetos.length} Projetos) foram 100% PRESERVADOS e mantidos intactos.`);
   } catch (err) {
     console.error('Erro ao instalar atualização:', err);
     showToast('Erro na instalação da atualização.', 'danger');

@@ -611,13 +611,13 @@
             </p>
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
               <input type="file" id="systemUpdateImportInput" accept=".json" onchange="handleSystemUpdateFileSelect(event)" style="display:none;">
-              <label for="systemUpdateImportInput" class="btn btn-primary" style="flex: 1.2; justify-content: center; background: #0284c7; border-color: #0284c7; font-weight: 600; cursor: pointer;">
+              <button type="button" class="btn btn-primary" onclick="triggerSystemUpdateImport()" style="flex: 1.2; justify-content: center; background: #0284c7; border-color: #0284c7; font-weight: 600;" title="Procurar pacote de atualização na pasta Atualização do servidor GitHub">
                 <i class="fa-solid fa-file-import"></i> Importar Ficheiro de Atualização
-              </label>
-              <button type="button" class="btn btn-secondary" onclick="checkAndInstallUpdate(false)" style="flex: 1; justify-content: center; background: #ffffff; color: #0284c7; border-color: #bae6fd; font-weight: 600;" title="Verificar a pasta 'Atualizações' por novas versões">
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="checkAndInstallUpdate(false)" style="flex: 1; justify-content: center; background: #ffffff; color: #0284c7; border-color: #bae6fd; font-weight: 600;" title="Verificar a pasta 'Atualização' no servidor GitHub pela versão mais recente">
                 <i class="fa-solid fa-rotate"></i> Verificar Pasta
               </button>
-              <button type="button" class="btn btn-secondary" onclick="generateUpdatePackage()" style="justify-content: center; background: #e0f2fe; color: #0369a1; border-color: #bae6fd; font-weight: 600;" title="Gerar Pacote .json de Atualização a partir dos Dados Atuais">
+              <button type="button" class="btn btn-secondary" onclick="generateUpdatePackage()" style="justify-content: center; background: #e0f2fe; color: #0369a1; border-color: #bae6fd; font-weight: 600;" title="Gerar Pacote .json de Atualização de Software e guardar na pasta 'Atualização' do servidor GitHub">
                 <i class="fa-solid fa-file-code"></i> Gerar Pacote
               </button>
             </div>
