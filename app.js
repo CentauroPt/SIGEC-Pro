@@ -4331,6 +4331,9 @@ function renderContactPageMainGrid() {
           <td style="padding:0.75rem 1rem; color:#475569;">${escapeHtml(con.telemovel || con.telefone || '-')}</td>
           <td style="padding:0.75rem 1rem; color:#475569;">${escapeHtml(con.email || '-')}</td>
           <td style="padding:0.75rem 1rem; text-align:center; white-space:nowrap;" onclick="event.stopPropagation();">
+            <button type="button" class="action-icon-btn" onclick="printContactAddressLabel('${con.id}')" title="Imprimir Etiqueta Postal">
+              <i class="fa-solid fa-envelope"></i>
+            </button>
             <button type="button" class="action-icon-btn" onclick="openTransferContactModal('${con.id}')" title="Mudar de Cliente">
               <i class="fa-solid fa-arrow-right-arrow-left"></i>
             </button>
@@ -4355,8 +4358,13 @@ function renderContactPageMainGrid() {
 
       const card = document.createElement('div');
       card.className = 'contact-card';
+      card.style.cursor = 'pointer';
+      card.onclick = () => openContactModalForEdit(con.id);
       card.innerHTML = `
-        <div class="contact-card-actions">
+        <div class="contact-card-actions" onclick="event.stopPropagation();">
+          <button type="button" class="action-icon-btn" onclick="printContactAddressLabel('${con.id}')" title="Imprimir Etiqueta Postal">
+            <i class="fa-solid fa-envelope"></i>
+          </button>
           <button type="button" class="action-icon-btn" onclick="openTransferContactModal('${con.id}')" title="Mudar de Cliente">
             <i class="fa-solid fa-arrow-right-arrow-left"></i>
           </button>
@@ -4384,19 +4392,22 @@ let currentClientFilterTab = 'all';
 
 function setClientFilterTab(filter) {
   currentClientFilterTab = filter;
-  document.querySelectorAll('.client-filter-tab').forEach(b => {
-    b.classList.remove('active', 'btn-primary');
-    b.classList.add('btn-secondary');
+  document.querySelectorAll('.client-filter-btn').forEach(b => {
+    b.classList.remove('active');
   });
 
-  let activeId = 'tabClientFilterAll';
-  if (filter === 'privado') activeId = 'tabClientFilterPrivado';
-  if (filter === 'estatal') activeId = 'tabClientFilterEstatal';
+  let activeId = 'btnFilterAll';
+  if (filter === 'privado') activeId = 'btnFilterPrivado';
+  if (filter === 'fundacao') activeId = 'btnFilterFundacao';
+  if (filter === 'estatal') activeId = 'btnFilterEstatal';
 
   const activeBtn = document.getElementById(activeId);
   if (activeBtn) {
-    activeBtn.classList.add('active', 'btn-primary');
-    activeBtn.classList.remove('btn-secondary');
+    activeBtn.classList.add('active');
+  }
+
+  if (document.activeElement && typeof document.activeElement.blur === 'function') {
+    document.activeElement.blur();
   }
 
   renderClientPageMainGrid();
@@ -4425,9 +4436,21 @@ function renderClientPageMainGrid() {
   const query = document.getElementById('clientPageSearchQuery')?.value.trim() || '';
   let clientsList = [...(db.clientes || [])];
 
-  // Filtro por Separador: Todos os Clientes, Clientes Privados, Entidades Públicas / Estatal
+  // Filtro por Separador: Todos os Clientes, Clientes Privados, Fundações, Entidades Públicas / Estatal
   if (currentClientFilterTab === 'privado') {
-    clientsList = clientsList.filter(cli => cli && (cli.tipoCliente === 'Privado' || !cli.tipoCliente || cli.tipoCliente === 'Empresa'));
+    clientsList = clientsList.filter(cli => {
+      if (!cli) return false;
+      const isEstatal = cli.tipoCliente === 'Público' || cli.tipoCliente === 'Estatal' || cli.tipoCliente === 'Governamental' || (cli.ministerio && cli.ministerio.trim() !== '');
+      const isFundacao = cli.tipoCliente === 'Fundação' || cli.tipoCliente === 'Fundacao' || (cli.nome && normalizeText(cli.nome).startsWith('fundacao'));
+      return !isEstatal && !isFundacao;
+    });
+  } else if (currentClientFilterTab === 'fundacao') {
+    clientsList = clientsList.filter(cli => {
+      if (!cli) return false;
+      const tipo = normalizeText(cli.tipoCliente || '');
+      const nome = normalizeText(cli.nome || '');
+      return tipo === 'fundacao' || tipo.includes('fundacao') || nome.startsWith('fundacao') || nome.includes('fundacao');
+    });
   } else if (currentClientFilterTab === 'estatal') {
     clientsList = clientsList.filter(cli => cli && (cli.tipoCliente === 'Público' || cli.tipoCliente === 'Estatal' || cli.tipoCliente === 'Governamental' || (cli.ministerio && cli.ministerio.trim() !== '')));
   }
@@ -4439,6 +4462,7 @@ function renderClientPageMainGrid() {
         normalizeText(cli.nome).includes(qNorm) ||
         normalizeText(cli.contribuinte).includes(qNorm) ||
         normalizeText(cli.localidade).includes(qNorm) ||
+        normalizeText(cli.pais).includes(qNorm) ||
         normalizeText(cli.direcao1).includes(qNorm) ||
         normalizeText(cli.email).includes(qNorm) ||
         normalizeText(cli.telefone).includes(qNorm) ||
@@ -4498,7 +4522,7 @@ function renderClientPageMainGrid() {
             ${cli.ministerio ? `<small style="color:var(--text-muted); font-weight:normal; display:block; margin-top:2px;"><i class="fa-solid fa-landmark"></i> ${escapeHtml(cli.ministerio)}</small>` : ''}
           </td>
           <td style="padding:0.75rem 1rem; color:#475569; font-weight:500;">${escapeHtml(cli.contribuinte || '-')}</td>
-          <td style="padding:0.75rem 1rem; color:#475569;">${escapeHtml([cli.localidade, cli.direcao1].filter(Boolean).join(' - ') || '-')}</td>
+          <td style="padding:0.75rem 1rem; color:#475569;">${escapeHtml([[cli.localidade, cli.pais].filter(Boolean).join(' - '), cli.direcao1].filter(Boolean).join(', ') || '-')}</td>
           <td style="padding:0.75rem 1rem; color:#475569; font-weight:500;">
             <span style="display:inline-flex; gap:0.75rem;">
               <span><i class="fa-solid fa-users" style="color:#0284c7;"></i> ${conCount}</span>
@@ -4506,6 +4530,9 @@ function renderClientPageMainGrid() {
             </span>
           </td>
           <td style="padding:0.75rem 1rem; text-align:center; white-space:nowrap;" onclick="event.stopPropagation();">
+            <button type="button" class="action-icon-btn" onclick="printClientAddressLabel('${cli.id}')" title="Imprimir Etiqueta Postal">
+              <i class="fa-solid fa-envelope"></i>
+            </button>
             <button type="button" class="action-icon-btn" onclick="loadClientIntoForm('${cli.id}')" title="Editar Ficha de Cliente">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
@@ -4532,6 +4559,9 @@ function renderClientPageMainGrid() {
       card.onclick = () => loadClientIntoForm(cli.id);
       card.innerHTML = `
         <div class="contact-card-actions" onclick="event.stopPropagation();">
+          <button type="button" class="action-icon-btn" onclick="printClientAddressLabel('${cli.id}')" title="Imprimir Etiqueta Postal">
+            <i class="fa-solid fa-envelope"></i>
+          </button>
           <button type="button" class="action-icon-btn" onclick="loadClientIntoForm('${cli.id}')" title="Editar Ficha do Cliente">
             <i class="fa-solid fa-pen-to-square"></i>
           </button>
@@ -4549,7 +4579,7 @@ function renderClientPageMainGrid() {
         <div class="contact-name" style="font-size: 1rem; color: #1e3a8a;">${escapeHtml(cli.nome)}</div>
         ${cli.ministerio ? `<div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.4rem;"><i class="fa-solid fa-landmark"></i> ${escapeHtml(cli.ministerio)}</div>` : ''}
         ${cli.contribuinte ? `<div class="contact-detail"><i class="fa-solid fa-id-card"></i> NIF: ${escapeHtml(cli.contribuinte)}</div>` : ''}
-        ${cli.localidade || cli.direcao1 ? `<div class="contact-detail"><i class="fa-solid fa-location-dot"></i> ${escapeHtml([cli.direcao1, cli.localidade].filter(Boolean).join(', '))}</div>` : ''}
+        ${cli.localidade || cli.direcao1 || cli.pais ? `<div class="contact-detail"><i class="fa-solid fa-location-dot"></i> ${escapeHtml([cli.direcao1, [cli.localidade, cli.pais].filter(Boolean).join(' - ')].filter(Boolean).join(', '))}</div>` : ''}
         ${cli.telefone || cli.telemovel ? `<div class="contact-detail"><i class="fa-solid fa-phone"></i> ${escapeHtml(cli.telemovel || cli.telefone)}</div>` : ''}
         ${cli.email ? `<div class="contact-detail"><i class="fa-solid fa-envelope"></i> ${escapeHtml(cli.email)}</div>` : ''}
         <div style="margin-top:0.6rem; padding-top:0.4rem; border-top:1px dashed #e2e8f0; font-size:0.8rem; color:var(--primary-blue); font-weight:600; display:flex; gap:0.8rem;">
@@ -5004,24 +5034,32 @@ function renderEstatalSeparadores() {
           <input type="text" class="form-control" value="${escapeHtmlAttr(activeSep.direcao2 || '')}" placeholder="Bloco, Edifício, Referência..." oninput="syncSeparadorField(${activeEstatalSeparadorIndex}, 'direcao2', this.value)">
         </div>
 
-        <div class="form-group col-2">
-          <label>Nº</label>
-          <input type="text" class="form-control" value="${escapeHtmlAttr(activeSep.numero || '')}" placeholder="123" oninput="syncSeparadorField(${activeEstatalSeparadorIndex}, 'numero', this.value)">
-        </div>
+        <!-- Linha de Localização Compacta e Auto-expansível: Nº, Andar, Código Postal, Localidade e País -->
+        <div class="col-12" style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: flex-start; margin: 0; padding: 0;">
+          <div class="form-group" style="flex: 0 0 70px; min-width: 60px;">
+            <label>Nº</label>
+            <input type="text" class="form-control" value="${escapeHtmlAttr(activeSep.numero || '')}" placeholder="123" oninput="syncSeparadorField(${activeEstatalSeparadorIndex}, 'numero', this.value)">
+          </div>
 
-        <div class="form-group col-2">
-          <label>Andar</label>
-          <input type="text" class="form-control" value="${escapeHtmlAttr(activeSep.andar || '')}" placeholder="2º Dto" oninput="syncSeparadorField(${activeEstatalSeparadorIndex}, 'andar', this.value)">
-        </div>
+          <div class="form-group" style="flex: 0 0 85px; min-width: 75px;">
+            <label>Andar</label>
+            <input type="text" class="form-control" value="${escapeHtmlAttr(activeSep.andar || '')}" placeholder="2º Dto" oninput="syncSeparadorField(${activeEstatalSeparadorIndex}, 'andar', this.value)">
+          </div>
 
-        <div class="form-group col-4">
-          <label>Código Postal (Portugal)</label>
-          <input type="text" class="form-control" value="${escapeHtmlAttr(activeSep.codigoPostal || '')}" placeholder="1000-001" maxlength="8" oninput="formatCodigoPostal(this); syncSeparadorField(${activeEstatalSeparadorIndex}, 'codigoPostal', this.value)">
-        </div>
+          <div class="form-group" style="flex: 0 0 135px; min-width: 120px;">
+            <label>Código Postal</label>
+            <input type="text" class="form-control" value="${escapeHtmlAttr(activeSep.codigoPostal || '')}" placeholder="1000-001" maxlength="8" oninput="formatCodigoPostal(this); syncSeparadorField(${activeEstatalSeparadorIndex}, 'codigoPostal', this.value)">
+          </div>
 
-        <div class="form-group col-4">
-          <label>Localidade</label>
-          <input type="text" class="form-control" value="${escapeHtmlAttr(activeSep.localidade || '')}" placeholder="ex: Lisboa, Porto, Tavira" oninput="syncSeparadorField(${activeEstatalSeparadorIndex}, 'localidade', this.value)">
+          <div class="form-group" style="flex: 1 1 170px; min-width: 140px;">
+            <label>Localidade</label>
+            <input type="text" class="form-control auto-expand-input" value="${escapeHtmlAttr(activeSep.localidade || '')}" placeholder="ex: Lisboa, Porto, Tavira" oninput="autoExpandInput(this); syncSeparadorField(${activeEstatalSeparadorIndex}, 'localidade', this.value)">
+          </div>
+
+          <div class="form-group" style="flex: 1 1 170px; min-width: 140px;">
+            <label>País</label>
+            <input type="text" class="form-control auto-expand-input" value="${escapeHtmlAttr(activeSep.pais || '')}" placeholder="ex: Portugal, Espanha..." oninput="autoExpandInput(this); syncSeparadorField(${activeEstatalSeparadorIndex}, 'pais', this.value)">
+          </div>
         </div>
 
         <!-- Contactos da Empresa -->
@@ -5090,6 +5128,19 @@ function syncSeparadorField(index, fieldName, value) {
   markFormDirty();
 }
 
+// Auto-expansão dinâmica de campos de texto à medida que se escreve
+function autoExpandInput(input, minWidth = 140) {
+  if (!input) return;
+  const textLength = (input.value || '').length;
+  if (textLength > 12) {
+    const calc = Math.max(minWidth, Math.min(420, (textLength + 3) * 9.2));
+    input.style.minWidth = calc + 'px';
+  } else {
+    input.style.minWidth = '';
+  }
+}
+window.autoExpandInput = autoExpandInput;
+
 // Máscara e Validação de Código Postal Português (XXXX-XXX)
 function formatCodigoPostal(input) {
   let val = input.value.replace(/\D/g, '');
@@ -5121,6 +5172,10 @@ function resetClientForm(skipConfirm = false) {
 
   localStorage.removeItem('sigec_pro_last_client_id');
   document.getElementById('clientForm').reset();
+  const locEl = document.getElementById('clientLocalidade');
+  if (locEl) { locEl.value = ''; locEl.style.minWidth = ''; }
+  const paisEl = document.getElementById('clientPais');
+  if (paisEl) { paisEl.value = ''; paisEl.style.minWidth = ''; }
   document.getElementById('clientId').value = '';
   document.getElementById('btnDeleteClient').style.display = 'none';
 
@@ -5196,7 +5251,16 @@ function loadClientIntoForm(clientId, skipDirtyCheck = false, skipTabSwitch = fa
     document.getElementById('clientNumero').value = client.numero || '';
     document.getElementById('clientAndar').value = client.andar || '';
     document.getElementById('clientCodigoPostal').value = client.codigoPostal || '';
-    document.getElementById('clientLocalidade').value = client.localidade || '';
+    const locEl = document.getElementById('clientLocalidade');
+    if (locEl) {
+      locEl.value = client.localidade || '';
+      autoExpandInput(locEl);
+    }
+    const paisEl = document.getElementById('clientPais');
+    if (paisEl) {
+      paisEl.value = client.pais || '';
+      autoExpandInput(paisEl);
+    }
     document.getElementById('clientTelefone').value = client.telefone || '';
     document.getElementById('clientTelemovel').value = client.telemovel || '';
     document.getElementById('clientEmail').value = client.email || '';
@@ -5270,6 +5334,8 @@ function renderClientContactsGrid(contacts) {
   contacts.forEach(con => {
     const card = document.createElement('div');
     card.className = 'contact-card';
+    card.style.cursor = 'pointer';
+    card.onclick = () => openContactModalForEdit(con.id);
     
     let subTabBadge = '';
     const cSub = (con.subTabIndex !== undefined && con.subTabIndex !== null && con.subTabIndex !== '') ? Number(con.subTabIndex) : 0;
@@ -5279,7 +5345,7 @@ function renderClientContactsGrid(contacts) {
     }
 
     card.innerHTML = `
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.6rem; flex-wrap: wrap;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.6rem; flex-wrap: wrap;" onclick="event.stopPropagation();">
         <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
           ${isEstatal ? `
             <button type="button" class="btn-subtab-pill" onclick="openMoveSubTabContactModal('${con.id}')" title="Mover contacto para outro separador deste cliente">
@@ -5288,6 +5354,9 @@ function renderClientContactsGrid(contacts) {
           ` : ''}
         </div>
         <div style="display: flex; gap: 0.25rem; align-items: center;">
+          <button type="button" class="action-icon-btn" onclick="printContactAddressLabel('${con.id}')" title="Imprimir Etiqueta Postal">
+            <i class="fa-solid fa-envelope"></i>
+          </button>
           <button type="button" class="action-icon-btn" onclick="openTransferContactModal('${con.id}')" title="Mudar de cliente">
             <i class="fa-solid fa-arrow-right-arrow-left"></i>
           </button>
@@ -5405,6 +5474,7 @@ function saveClient(e) {
     const andar = document.getElementById('clientAndar').value.trim();
     const codigoPostal = document.getElementById('clientCodigoPostal').value.trim();
     const localidade = document.getElementById('clientLocalidade').value.trim();
+    const pais = document.getElementById('clientPais') ? document.getElementById('clientPais').value.trim() : '';
     const telefone = document.getElementById('clientTelefone').value.trim();
     const telemovel = document.getElementById('clientTelemovel').value.trim();
     const email = document.getElementById('clientEmail').value.trim();
@@ -5429,6 +5499,7 @@ function saveClient(e) {
       andar,
       codigoPostal,
       localidade,
+      pais,
       telefone,
       telemovel,
       email,
@@ -5438,7 +5509,7 @@ function saveClient(e) {
 
   const isDup = checkAndHandleDuplicates('cliente', clientObj, id, (finalId) => {
     currentClientId = finalId;
-    localStorage.setItem('sigec_pro_last_project_id', finalId);
+    localStorage.setItem('sigec_pro_last_client_id', finalId);
     refreshClientSubLists(finalId);
     closeClientModal();
     renderClientPageMainGrid();
@@ -5453,7 +5524,7 @@ function saveClient(e) {
   if (existingIndex >= 0) {
     // Detetar campos alterados
     const camposAlterados = [];
-    const camposLabel = { nome: 'Nome', contribuinte: 'NIF/Contribuinte', email: 'Email', telefone: 'Telefone', telemovel: 'Telemovel', direcao1: 'Morada', codigoPostal: 'Código Postal', localidade: 'Localidade', tipoCliente: 'Tipo de Cliente', ministerio: 'Ministério' };
+    const camposLabel = { nome: 'Nome', contribuinte: 'NIF/Contribuinte', email: 'Email', telefone: 'Telefone', telemovel: 'Telemovel', direcao1: 'Morada', codigoPostal: 'Código Postal', localidade: 'Localidade', pais: 'País', tipoCliente: 'Tipo de Cliente', ministerio: 'Ministério' };
     Object.keys(camposLabel).forEach(campo => {
       const valAnterior = (clienteAnterior[campo] || '').toString().trim();
       const valNovo = (clientObj[campo] || '').toString().trim();
@@ -8491,46 +8562,157 @@ function resolveDuplicateAction(action) {
   const { type, newObj, existingMatch, onProceed } = pendingDuplicateData;
 
   if (action === 'keep_existing') {
-    showToast('Registo novo descartado. Mantida a ficha anterior intacta.', 'warning');
-    closeDuplicateResolutionModal();
-  } else if (action === 'replace_existing') {
-    const oldId = newObj.id;
-    newObj.id = existingMatch.id;
+    // Opção: Apagar o Atual (Descartar Novo e Manter Ficha Anterior Intacta)
+    const duplicateId = newObj ? newObj.id : null;
 
     if (type === 'cliente') {
-      const idx = db.clientes.findIndex(c => c.id === existingMatch.id);
-      if (idx >= 0) db.clientes[idx] = newObj;
-      if (oldId && oldId !== existingMatch.id) {
-        db.clientes = db.clientes.filter(c => c.id !== oldId);
-        (db.contactos || []).forEach(con => { if (con.clienteId === oldId) con.clienteId = existingMatch.id; });
-        (db.projetos || []).forEach(proj => { if (proj.clienteId === oldId) proj.clienteId = existingMatch.id; });
+      if (duplicateId && duplicateId !== existingMatch.id) {
+        db.clientes = (db.clientes || []).filter(c => c && c.id !== duplicateId);
       }
+      if (typeof clearFormDirty === 'function') clearFormDirty();
+      if (typeof resetClientForm === 'function') resetClientForm(true);
       if (typeof closeClientModal === 'function') closeClientModal();
-      renderClientPageMainGrid();
+      if (typeof renderClientPageMainGrid === 'function') renderClientPageMainGrid();
+      if (typeof logUserActivity === 'function') {
+        logUserActivity('Eliminação de Duplicado', `Ficha atual do cliente "${newObj.nome || ''}" descartada/apagada. Ficha anterior "${existingMatch.nome}" (NIF: ${existingMatch.contribuinte || '-'}) mantida intacta.`, {
+          acao: 'Eliminação',
+          ficha: 'Cliente',
+          nome: newObj.nome || '',
+          contribuinte: newObj.contribuinte || ''
+        });
+      }
     } else if (type === 'contacto') {
-      const idx = db.contactos.findIndex(c => c.id === existingMatch.id);
-      if (idx >= 0) db.contactos[idx] = newObj;
-      if (oldId && oldId !== existingMatch.id) {
-        db.contactos = db.contactos.filter(c => c.id !== oldId);
+      if (duplicateId && duplicateId !== existingMatch.id) {
+        db.contactos = (db.contactos || []).filter(c => c && c.id !== duplicateId);
       }
       if (typeof closeContactModal === 'function') closeContactModal();
-      renderContactPageMainGrid();
-    } else if (type === 'projeto') {
-      const idx = db.projetos.findIndex(p => p.id === existingMatch.id);
-      if (idx >= 0) db.projetos[idx] = newObj;
-      if (oldId && oldId !== existingMatch.id) {
-        db.projetos = db.projetos.filter(p => p.id !== oldId);
-        (db.interacoesProjetos || []).forEach(inter => { if (inter.projetoId === oldId) inter.projetoId = existingMatch.id; });
+      const contactForm = document.getElementById('contactForm');
+      if (contactForm) contactForm.reset();
+      if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
+      if (typeof logUserActivity === 'function') {
+        logUserActivity('Eliminação de Duplicado', `Contacto atual "${newObj.nome || ''} ${newObj.apelido || ''}" descartado/apagado. Ficha anterior mantida.`);
       }
+    } else if (type === 'projeto') {
+      if (duplicateId && duplicateId !== existingMatch.id) {
+        db.projetos = (db.projetos || []).filter(p => p && p.id !== duplicateId);
+      }
+      if (typeof clearFormDirty === 'function') clearFormDirty();
+      if (typeof resetProjectForm === 'function') resetProjectForm(true);
       if (typeof closeProjectModal === 'function') closeProjectModal();
-      renderProjectPageMainGrid();
+      if (typeof renderProjectPageMainGrid === 'function') renderProjectPageMainGrid();
+      if (typeof logUserActivity === 'function') {
+        logUserActivity('Eliminação de Duplicado', `Projeto atual "${newObj.nome || ''}" descartado/apagado. Ficha anterior mantida.`);
+      }
     }
+
     saveDatabase();
-    renderHomeDashboard();
-    renderDatabaseOverview();
+    if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
+    if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
     closeDuplicateResolutionModal();
-    if (onProceed) onProceed(existingMatch.id);
-    showToast('Registo anterior substituído e atualizado com os novos dados!');
+    showToast('Ficha atual descartada e apagada com sucesso. Ficha anterior mantida intacta.', 'info');
+  } else if (action === 'replace_existing') {
+    // Opção: Apagar o Anterior (Substituir Integralmente pelos Novos Dados)
+    const oldId = newObj.id;
+    const targetId = existingMatch.id;
+
+    if (type === 'cliente') {
+      const idx = db.clientes.findIndex(c => c.id === targetId);
+      const updatedClient = {
+        ...newObj,
+        id: targetId,
+        createdAt: existingMatch.createdAt || newObj.createdAt || new Date().toISOString()
+      };
+      if (idx >= 0) {
+        db.clientes[idx] = updatedClient;
+      } else {
+        db.clientes.push(updatedClient);
+      }
+
+      if (oldId && oldId !== targetId) {
+        db.clientes = db.clientes.filter(c => c && c.id !== oldId);
+        (db.contactos || []).forEach(con => { if (con.clienteId === oldId) con.clienteId = targetId; });
+        (db.projetos || []).forEach(proj => { if (proj.clienteId === oldId) proj.clienteId = targetId; });
+        (db.interacoes || []).forEach(inter => { if (inter.clienteId === oldId) inter.clienteId = targetId; });
+      }
+
+      currentClientId = targetId;
+      localStorage.setItem('sigec_pro_last_client_id', targetId);
+      if (typeof clearFormDirty === 'function') clearFormDirty();
+      if (typeof closeClientModal === 'function') closeClientModal();
+      if (typeof refreshClientSubLists === 'function') refreshClientSubLists(targetId);
+      if (typeof renderClientPageMainGrid === 'function') renderClientPageMainGrid();
+
+      if (typeof logUserActivity === 'function') {
+        logUserActivity('Substituição de Ficha', `Ficha anterior do cliente "${existingMatch.nome}" (NIF: ${existingMatch.contribuinte || '-'}) apagada e substituída integralmente pelos novos dados de "${newObj.nome}".`, {
+          acao: 'Substituição',
+          ficha: 'Cliente',
+          nome: newObj.nome,
+          contribuinte: newObj.contribuinte,
+          tipoCliente: newObj.tipoCliente
+        });
+      }
+    } else if (type === 'contacto') {
+      const idx = db.contactos.findIndex(c => c.id === targetId);
+      const updatedContact = {
+        ...newObj,
+        id: targetId,
+        createdAt: existingMatch.createdAt || newObj.createdAt || new Date().toISOString()
+      };
+      if (idx >= 0) {
+        db.contactos[idx] = updatedContact;
+      } else {
+        db.contactos.push(updatedContact);
+      }
+
+      if (oldId && oldId !== targetId) {
+        db.contactos = db.contactos.filter(c => c && c.id !== oldId);
+      }
+
+      if (typeof closeContactModal === 'function') closeContactModal();
+      if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
+      if (currentClientId && typeof refreshClientSubLists === 'function') refreshClientSubLists(currentClientId);
+
+      if (typeof logUserActivity === 'function') {
+        logUserActivity('Substituição de Ficha', `Ficha anterior de contacto apagada e substituída pelos novos dados de "${newObj.nome} ${newObj.apelido || ''}".`);
+      }
+    } else if (type === 'projeto') {
+      const idx = db.projetos.findIndex(p => p.id === targetId);
+      const updatedProject = {
+        ...newObj,
+        id: targetId,
+        documents: (newObj.documents && newObj.documents.length > 0) ? newObj.documents : (existingMatch.documents || []),
+        media: (newObj.media && newObj.media.length > 0) ? newObj.media : (existingMatch.media || []),
+        createdAt: existingMatch.createdAt || newObj.createdAt || new Date().toISOString()
+      };
+      if (idx >= 0) {
+        db.projetos[idx] = updatedProject;
+      } else {
+        db.projetos.push(updatedProject);
+      }
+
+      if (oldId && oldId !== targetId) {
+        db.projetos = db.projetos.filter(p => p && p.id !== oldId);
+        (db.interacoesProjetos || []).forEach(inter => { if (inter.projetoId === oldId) inter.projetoId = targetId; });
+      }
+
+      currentProjectId = targetId;
+      localStorage.setItem('sigec_pro_last_project_id', targetId);
+      if (typeof clearFormDirty === 'function') clearFormDirty();
+      if (typeof closeProjectModal === 'function') closeProjectModal();
+      if (typeof refreshProjectSubLists === 'function') refreshProjectSubLists(targetId);
+      if (typeof renderProjectPageMainGrid === 'function') renderProjectPageMainGrid();
+
+      if (typeof logUserActivity === 'function') {
+        logUserActivity('Substituição de Ficha', `Ficha anterior de projeto apagada e substituída pelos novos dados de "${newObj.nome}".`);
+      }
+    }
+
+    saveDatabase();
+    if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
+    if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
+    closeDuplicateResolutionModal();
+    if (onProceed) onProceed(targetId);
+    showToast('Ficha anterior apagada e substituída com sucesso pelos novos dados!');
   } else if (action === 'merge') {
     // Fusão Total com Coexistência Integral de Dados através de Separadores
     const duplicateId = newObj.id;
@@ -11217,3 +11399,294 @@ function handleCategoryImport(event) {
   showToast(`Importação para ${categoryName} iniciada com sucesso.`);
   event.target.value = '';
 }
+
+// ==========================================
+// 23. SISTEMA DE IMPRESSÃO DE ETIQUETAS POSTAIS (CORREIO)
+// ==========================================
+
+function formatPostalAddressLines(target, isContact = false) {
+  let linha1 = '';
+  let dir1 = '', dir2 = '', num = '', andar = '', cp = '', loc = '', pais = '';
+
+  if (isContact) {
+    // 1ª linha: A/C Nome * e Apelido
+    const nomeCompleto = `${target.nome || ''} ${target.apelido || ''}`.trim();
+    linha1 = `A/C ${nomeCompleto}`;
+
+    // Buscar informações de direção no cliente associado
+    const client = db.clientes.find(c => c.id === target.clienteId);
+    if (client) {
+      if (client.tipoCliente === 'Estatal' && client.separadores && client.separadores.length > 0) {
+        const subIdx = (target.subTabIndex !== undefined && target.subTabIndex !== null && target.subTabIndex !== '') ? Number(target.subTabIndex) : 0;
+        const sep = client.separadores[subIdx] || client.separadores[0];
+        dir1 = (sep.direcao1 || '').trim();
+        dir2 = (sep.direcao2 || '').trim();
+        num = (sep.numero || '').trim();
+        andar = (sep.andar || '').trim();
+        cp = (sep.codigoPostal || '').trim();
+        loc = (sep.localidade || '').trim();
+        pais = (sep.pais || '').trim();
+      } else {
+        dir1 = (client.direcao1 || '').trim();
+        dir2 = (client.direcao2 || '').trim();
+        num = (client.numero || '').trim();
+        andar = (client.andar || '').trim();
+        cp = (client.codigoPostal || '').trim();
+        loc = (client.localidade || '').trim();
+        pais = (client.pais || '').trim();
+      }
+    }
+  } else {
+    // Cliente
+    if (target.tipoCliente === 'Estatal' && target.separadores && target.separadores.length > 0) {
+      const activeIdx = (typeof activeEstatalSeparadorIndex !== 'undefined') ? activeEstatalSeparadorIndex : 0;
+      const sep = target.separadores[activeIdx] || target.separadores[0];
+      linha1 = (sep.nome || target.nome || '').trim();
+      dir1 = (sep.direcao1 || '').trim();
+      dir2 = (sep.direcao2 || '').trim();
+      num = (sep.numero || '').trim();
+      andar = (sep.andar || '').trim();
+      cp = (sep.codigoPostal || '').trim();
+      loc = (sep.localidade || '').trim();
+      pais = (sep.pais || '').trim();
+    } else {
+      linha1 = (target.nome || '').trim();
+      dir1 = (target.direcao1 || '').trim();
+      dir2 = (target.direcao2 || '').trim();
+      num = (target.numero || '').trim();
+      andar = (target.andar || '').trim();
+      cp = (target.codigoPostal || '').trim();
+      loc = (target.localidade || '').trim();
+      pais = (target.pais || '').trim();
+    }
+  }
+
+  // Linha 2: Direção (linha 1), Direção (linha 2), Nº Andar (GARANTINDO QUE NUNCA CONTÉM CÓDIGO POSTAL)
+  if (cp) {
+    const cpClean = cp.trim();
+    if (cpClean) {
+      const escCp = cpClean.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+      dir1 = dir1.replace(new RegExp('\\b' + escCp + '\\b', 'gi'), '').trim();
+      dir2 = dir2.replace(new RegExp('\\b' + escCp + '\\b', 'gi'), '').trim();
+    }
+  }
+  // Remove qualquer padrão de código postal (ex: 1000-001 ou 1000 001) da linha de morada
+  dir1 = dir1.replace(/\b\d{4}[-\s]\d{3}\b/g, '').replace(/,\s*,/g, ',').replace(/^,\s*/, '').replace(/,\s*$/, '').trim();
+  dir2 = dir2.replace(/\b\d{4}[-\s]\d{3}\b/g, '').replace(/,\s*,/g, ',').replace(/^,\s*/, '').replace(/,\s*$/, '').trim();
+
+  let partsL2 = [];
+  if (dir1) partsL2.push(dir1);
+  if (dir2) partsL2.push(dir2);
+  let numAndar = [num, andar].filter(Boolean).join(' ');
+  if (numAndar) partsL2.push(numAndar);
+  let linha2 = partsL2.join(', ');
+
+  // Linha 3: Código Postal Localidade (ÚNICO local onde o Código Postal deve estar)
+  let linha3 = [cp, loc].filter(Boolean).join(' ');
+
+  // Linha 4: País
+  let linha4 = pais;
+
+  return { linha1, linha2, linha3, linha4 };
+}
+
+function printClientAddressLabel(clientId) {
+  let targetId = clientId || currentClientId;
+  let client = null;
+
+  if (targetId) {
+    client = db.clientes.find(c => c.id === targetId);
+  }
+
+  if (!client && document.getElementById('clientNome')) {
+    client = {
+      tipoCliente: document.getElementById('tipoCliente')?.value || 'Privado',
+      nome: document.getElementById('clientNome')?.value || '',
+      direcao1: document.getElementById('clientDirecao1')?.value || '',
+      direcao2: document.getElementById('clientDirecao2')?.value || '',
+      numero: document.getElementById('clientNumero')?.value || '',
+      andar: document.getElementById('clientAndar')?.value || '',
+      codigoPostal: document.getElementById('clientCodigoPostal')?.value || '',
+      localidade: document.getElementById('clientLocalidade')?.value || '',
+      pais: document.getElementById('clientPais')?.value || '',
+      separadores: currentEstatalSeparadores
+    };
+  }
+
+  if (!client) {
+    showToast('Nenhum cliente selecionado para emitir etiqueta.', 'warning');
+    return;
+  }
+
+  const { linha1, linha2, linha3, linha4 } = formatPostalAddressLines(client, false);
+
+  const titleEl = document.getElementById('addressLabelModalTitle');
+  if (titleEl) titleEl.innerHTML = `<i class="fa-solid fa-envelope"></i> Etiqueta Postal - ${escapeHtml(linha1 || 'Cliente')}`;
+
+  const l1 = document.getElementById('labelLine1');
+  const l2 = document.getElementById('labelLine2');
+  const l3 = document.getElementById('labelLine3');
+  const l4 = document.getElementById('labelLine4');
+
+  if (l1) l1.textContent = linha1;
+  if (l2) l2.textContent = linha2;
+  if (l3) l3.textContent = linha3;
+  if (l4) l4.textContent = linha4;
+
+  document.getElementById('addressLabelModal')?.classList.add('active');
+}
+window.printClientAddressLabel = printClientAddressLabel;
+
+function printContactAddressLabel(contactId) {
+  let targetId = contactId || currentContactIdForModal;
+  let contact = null;
+
+  if (targetId) {
+    contact = db.contactos.find(c => c.id === targetId);
+  }
+
+  if (!contact && document.getElementById('contactNome')) {
+    contact = {
+      clienteId: document.getElementById('contactClienteId')?.value || currentClientId,
+      nome: document.getElementById('contactNome')?.value || '',
+      apelido: document.getElementById('contactApelido')?.value || '',
+      subTabIndex: currentSubTabContactIndex !== null ? currentSubTabContactIndex : activeEstatalSeparadorIndex
+    };
+  }
+
+  if (!contact) {
+    showToast('Nenhum contacto selecionado para emitir etiqueta.', 'warning');
+    return;
+  }
+
+  const { linha1, linha2, linha3, linha4 } = formatPostalAddressLines(contact, true);
+
+  const titleEl = document.getElementById('addressLabelModalTitle');
+  if (titleEl) titleEl.innerHTML = `<i class="fa-solid fa-envelope"></i> Etiqueta Postal - ${escapeHtml(linha1 || 'Contacto')}`;
+
+  const l1 = document.getElementById('labelLine1');
+  const l2 = document.getElementById('labelLine2');
+  const l3 = document.getElementById('labelLine3');
+  const l4 = document.getElementById('labelLine4');
+
+  if (l1) l1.textContent = linha1;
+  if (l2) l2.textContent = linha2;
+  if (l3) l3.textContent = linha3;
+  if (l4) l4.textContent = linha4;
+
+  document.getElementById('addressLabelModal')?.classList.add('active');
+}
+window.printContactAddressLabel = printContactAddressLabel;
+
+function closeAddressLabelModal() {
+  document.getElementById('addressLabelModal')?.classList.remove('active');
+}
+window.closeAddressLabelModal = closeAddressLabelModal;
+
+function copyAddressLabelText() {
+  const line1 = document.getElementById('labelLine1')?.textContent || '';
+  const line2 = document.getElementById('labelLine2')?.textContent || '';
+  const line3 = document.getElementById('labelLine3')?.textContent || '';
+  const line4 = document.getElementById('labelLine4')?.textContent || '';
+
+  const fullText = [line1, line2, line3, line4].filter(Boolean).join('\n');
+  navigator.clipboard.writeText(fullText).then(() => {
+    showToast('Endereço postal copiado para a área de transferência!');
+  }).catch(() => {
+    showToast('Endereço copiado!');
+  });
+}
+window.copyAddressLabelText = copyAddressLabelText;
+
+function printActiveAddressLabel() {
+  const line1 = document.getElementById('labelLine1')?.textContent || '';
+  const line2 = document.getElementById('labelLine2')?.textContent || '';
+  const line3 = document.getElementById('labelLine3')?.textContent || '';
+  const line4 = document.getElementById('labelLine4')?.textContent || '';
+
+  const printWin = window.open('', '_blank', 'width=620,height=480');
+  if (!printWin) {
+    window.print();
+    return;
+  }
+
+  printWin.document.write(`
+    <!DOCTYPE html>
+    <html lang="pt">
+    <head>
+      <meta charset="UTF-8">
+      <title>Etiqueta Postal - ${escapeHtml(line1)}</title>
+      <style>
+        @page {
+          size: auto;
+          margin: 12mm;
+        }
+        body {
+          font-family: Arial, Helvetica, sans-serif;
+          margin: 0;
+          padding: 20px;
+          color: #000000;
+          background: #ffffff;
+        }
+        .label-container {
+          max-width: 95mm;
+          min-height: 40mm;
+          padding: 16px 20px;
+          border: 1px dashed #94a3b8;
+          border-radius: 6px;
+        }
+        @media print {
+          .label-container {
+            border: none;
+            padding: 0;
+          }
+        }
+        .line-1 {
+          font-size: 13pt;
+          font-weight: bold;
+          margin-bottom: 5px;
+          line-height: 1.35;
+          color: #000000;
+        }
+        .line-2 {
+          font-size: 11pt;
+          margin-bottom: 4px;
+          line-height: 1.35;
+          color: #111111;
+        }
+        .line-3 {
+          font-size: 11pt;
+          font-weight: 600;
+          margin-bottom: 4px;
+          line-height: 1.35;
+          color: #000000;
+        }
+        .line-4 {
+          font-size: 11pt;
+          font-weight: bold;
+          text-transform: uppercase;
+          line-height: 1.35;
+          color: #000000;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="label-container">
+        ${line1 ? `<div class="line-1">${escapeHtml(line1)}</div>` : ''}
+        ${line2 ? `<div class="line-2">${escapeHtml(line2)}</div>` : ''}
+        ${line3 ? `<div class="line-3">${escapeHtml(line3)}</div>` : ''}
+        ${line4 ? `<div class="line-4">${escapeHtml(line4)}</div>` : ''}
+      </div>
+      <script>
+        window.onload = function() {
+          window.focus();
+          window.print();
+        };
+      <\/script>
+    </body>
+    </html>
+  `);
+  printWin.document.close();
+}
+window.printActiveAddressLabel = printActiveAddressLabel;
+
