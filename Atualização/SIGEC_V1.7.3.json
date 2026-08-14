@@ -1,0 +1,27 @@
+﻿{
+  "packageName": "SIGEC_V1.7.3",
+  "version": "SIGEC_V1.7.3",
+  "createdAt": "2026-08-14T21:15:00.000Z",
+  "system": "SIGEC-Pro",
+  "tipoPacote": "ATUALIZACAO_SOFTWARE_EXCLUSIVA",
+  "notes": "Pacote de atualização oficial de software SIGEC-Pro V1.7.3 - Campo País na Ficha de Cliente, Otimização de Moradas Compactas e Auto-expansíveis, Sistema de Impressão de Etiquetas Postais e Abertura por Clique em Cartões de Contacto.",
+  "software": {
+    "version": "1.7.3",
+    "releaseDate": "2026-08-14",
+    "changelog": [
+      "Adicionado campo País à Ficha de Cliente imediatamente após o campo Localidade.",
+      "Redução e compactação das dimensões dos campos Nº, Andar e Código Postal.",
+      "Auto-expansão horizontal fluida e dinâmica para os campos Localidade e País.",
+      "Sistema de Impressão e Pré-visualização de Etiquetas para Correio Postal em Clientes e Contactos.",
+      "Abertura automática da Ficha de Contacto por clique direto no respetivo cartão.",
+      "Conformidade e blindagem integral de dados registados no destino (AGENTS.md)."
+    ]
+  },
+  "database": {
+    "clientes": [],
+    "contactos": [],
+    "projetos": [],
+    "interacoes": [],
+    "usuarios": []
+  }
+}
