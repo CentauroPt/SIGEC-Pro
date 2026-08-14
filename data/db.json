@@ -3826,6 +3826,17 @@
   ],
   "userLogs": [
     {
+      "id": "log-1786736982853-396",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-14T19:49:42.853Z"
+    },
+    {
       "id": "log-1786736971130-709",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
