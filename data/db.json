@@ -3530,6 +3530,24 @@
   ],
   "userLogs": [
     {
+      "id": "log-1786720936448-298",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Configuração Servidor",
+      "descricao": "Definições do servidor GitHub e Token PAT guardados pelo Administrador (4 chaves redundantes).",
+      "timestamp": "2026-08-14T15:22:16.448Z"
+    },
+    {
+      "id": "log-1786720924356-636",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "timestamp": "2026-08-14T15:22:04.356Z"
+    },
+    {
       "id": "log-1786720899880-425",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
