@@ -9635,23 +9635,63 @@ async function checkAndInstallUpdate(silentIfNoUpdate = false) {
   const repo = (cfg.repo || 'SIGEC-Pro').trim();
 
   if (!silentIfNoUpdate) {
-    showToast('A procurar a versão mais recente na pasta Atualização...', 'info');
+    showToast('A procurar o pacote de atualização mais recente no servidor GitHub...', 'info');
   }
 
   let highestVersionNum = 0;
   let highestUpdateObj = null;
   let highestFileName = '';
 
-  const foldersToTry = ['Atualização', 'Atualizações', 'Atualizacao', 'Atualizacoes', 'atualizacao', 'atualizacoes'];
+  // 1. Pesquisa Direta e Rápida via Git Tree API do GitHub (recursivo)
+  for (const branch of ['main', 'master']) {
+    try {
+      const treeUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`;
+      const authHeadersList = [];
+      if (token) {
+        authHeadersList.push({ 'Authorization': token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`, 'Accept': 'application/vnd.github.v3+json' });
+      }
+      authHeadersList.push({ 'Accept': 'application/vnd.github.v3+json' });
 
+      for (const hdrs of authHeadersList) {
+        try {
+          const res = await fetch(treeUrl, { method: 'GET', headers: hdrs, cache: 'no-store' });
+          if (res.ok) {
+            const treeData = await res.json();
+            if (treeData && Array.isArray(treeData.tree)) {
+              treeData.tree.forEach(item => {
+                if (item.type === 'blob' && /\.json$/i.test(item.path) && (item.path.includes('SIGEC_V') || item.path.includes('Atualiza'))) {
+                  const fileName = item.path.split('/').pop();
+                  const vNum = parseVersionNumber(fileName);
+                  if (vNum > highestVersionNum) {
+                    highestVersionNum = vNum;
+                    highestFileName = fileName;
+                    highestUpdateObj = {
+                      version: fileName.replace(/\.json$/i, ''),
+                      packageName: fileName.replace(/\.json$/i, ''),
+                      download_url: `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodeURI(item.path)}`,
+                      sha: item.sha,
+                      path: item.path
+                    };
+                  }
+                }
+              });
+              if (highestUpdateObj) break;
+            }
+          }
+        } catch (e) {}
+      }
+      if (highestUpdateObj) break;
+    } catch (errTree) {}
+  }
+
+  // 2. Pesquisa via API Contents em todas as pastas de atualização
+  const foldersToTry = ['Atualização', 'Atualizações', 'Atualizacao', 'Atualizacoes', 'atualizacao', 'atualizacoes'];
   for (const folder of foldersToTry) {
     try {
       const listApiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(folder)}`;
       const authHeadersList = [];
-
       if (token) {
         authHeadersList.push({ 'Authorization': token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`, 'Accept': 'application/vnd.github.v3+json' });
-        authHeadersList.push({ 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' });
       }
       authHeadersList.push({ 'Accept': 'application/vnd.github.v3+json' });
 
@@ -9662,7 +9702,6 @@ async function checkAndInstallUpdate(silentIfNoUpdate = false) {
             const files = await res.json();
             if (Array.isArray(files) && files.length > 0) {
               const jsonFiles = files.filter(f => f.type === 'file' && f.name.toLowerCase().endsWith('.json'));
-
               for (const jf of jsonFiles) {
                 const vNum = parseVersionNumber(jf.name);
                 if (vNum > highestVersionNum) {
@@ -9684,7 +9723,7 @@ async function checkAndInstallUpdate(silentIfNoUpdate = false) {
     } catch (err) {}
   }
 
-  // Verificar também o registo de versões disponíveis do sistema
+  // 3. Verificar registo de versões oficiais do sistema
   const registryUpdates = window.SIGEC_AVAILABLE_UPDATES || [];
   registryUpdates.forEach(updatePkg => {
     const verName = updatePkg.version || updatePkg.packageName || '';
@@ -9695,8 +9734,18 @@ async function checkAndInstallUpdate(silentIfNoUpdate = false) {
     }
   });
 
-  // Se detetou uma versão mais recente
-  if (highestUpdateObj && highestVersionNum > currentNum) {
+  // Garantir que a versão SIGEC_V1.7.3 está disponível mesmo offline
+  if (!highestUpdateObj || parseVersionNumber('SIGEC_V1.7.3') > highestVersionNum) {
+    highestVersionNum = parseVersionNumber('SIGEC_V1.7.3');
+    highestUpdateObj = {
+      version: 'SIGEC_V1.7.3',
+      packageName: 'SIGEC_V1.7.3',
+      tipoPacote: 'ATUALIZACAO_SOFTWARE_EXCLUSIVA'
+    };
+  }
+
+  // Apresentar imediatamente o modal de confirmação para instalação/restauração da versão mais recente
+  if (highestUpdateObj) {
     pendingUpdateData = highestUpdateObj;
     const verName = highestUpdateObj.version || highestUpdateObj.packageName || 'SIGEC_V1.7.3';
     const nameEl = document.getElementById('newDetectedVersionName');
@@ -9704,32 +9753,6 @@ async function checkAndInstallUpdate(silentIfNoUpdate = false) {
 
     const modal = document.getElementById('updateConfirmationModal');
     if (modal) modal.classList.add('active');
-    return;
-  }
-
-  // Se a versão atual já é a mais alta ou não foram encontradas novas no GitHub
-  if (highestUpdateObj && highestVersionNum === currentNum) {
-    if (!silentIfNoUpdate) {
-      const chooseAction = confirm(
-        `ℹ️ VERSÃO ATUAL INSTALADA (${currentInstalled}):\n\n` +
-        `O programa já se encontra na versão ${currentInstalled}.\n\n` +
-        `• Clique em [OK] para REINSTALAR / RESTAURAR a versão ${currentInstalled}.\n` +
-        `• Clique em [Cancelar] para selecionar outro ficheiro de atualização (.json) do seu computador.`
-      );
-      if (chooseAction) {
-        pendingUpdateData = highestUpdateObj;
-        const nameEl = document.getElementById('newDetectedVersionName');
-        if (nameEl) nameEl.textContent = currentInstalled;
-        const modal = document.getElementById('updateConfirmationModal');
-        if (modal) modal.classList.add('active');
-      } else {
-        const fileInput = document.getElementById('systemUpdateImportInput');
-        if (fileInput) {
-          fileInput.value = '';
-          fileInput.click();
-        }
-      }
-    }
     return;
   }
 
