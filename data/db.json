@@ -1,22 +1,22 @@
 {
   "clientes": [
     {
-      "id": "cli-imp-002",
-      "tipoCliente": "Privado",
+      "id": "cli-1786727373519-853",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
-      "nome": "GALP",
-      "contribuinte": "500000051",
-      "direcao1": "Avenida da Índia, 8, 1349-065 Lisboa, Portugal",
-      "direcao2": "",
+      "nome": "Fundação Galp",
+      "contribuinte": "000000000",
+      "direcao1": "Rua Tomás da Fonseca",
+      "direcao2": "Torre C",
       "numero": "",
       "andar": "",
-      "codigoPostal": "1349-065",
+      "codigoPostal": "1600-209",
       "localidade": "Lisboa",
       "telefone": "+351 217 242 500",
       "telemovel": "",
-      "email": "diogo.sousa@galp.com",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "email": "fundacao@galp.com",
+      "createdAt": "2026-08-14T17:09:33.519Z"
     },
     {
       "id": "cli-imp-003",
@@ -151,9 +151,9 @@
       "secretariaEstado": "",
       "nome": "Fundação Calouste Gulbenkian",
       "contribuinte": "500000204",
-      "direcao1": "AV. de Berna, 45A, 1067-001 Lisboa",
+      "direcao1": "AV. de Berna",
       "direcao2": "",
-      "numero": "",
+      "numero": "45A",
       "andar": "",
       "codigoPostal": "1067-001",
       "localidade": "Lisboa",
@@ -181,57 +181,21 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "cli-imp-013",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "Fundação Galp",
-      "contribuinte": "500000238",
-      "direcao1": "Rua Tomás da Fonseca, Torre C\n1600-209 Lisboa\nPortugal",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1600-209",
-      "localidade": "Lisboa",
-      "telefone": "+351 217 242 500",
-      "telemovel": "",
-      "email": "fundacao@galp.com",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
       "id": "cli-imp-014",
       "tipoCliente": "Privado",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação António Cupertino da Miranda",
       "contribuinte": "500000255",
-      "direcao1": "Avenida da Boavista, 4245 4100–140\nOporto, Portugal",
+      "direcao1": "Avenida da Boavista",
       "direcao2": "",
-      "numero": "",
+      "numero": "4245",
       "andar": "",
-      "codigoPostal": "4245-001",
+      "codigoPostal": "4100-140",
       "localidade": "Porto",
       "telefone": "351226101189",
       "telemovel": "",
       "email": "geral@facm.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "cli-imp-015",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "Fundação Millenium BCP",
-      "contribuinte": "500000272",
-      "direcao1": "Rua Augusta nº 84 – 2º Piso, 1100-053 Lisboa – Portugal",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1100-053",
-      "localidade": "Lisboa",
-      "telefone": "+ 351 211 131 682",
-      "telemovel": "",
-      "email": "fundacao@millenniumbcp.pt",
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
@@ -241,8 +205,8 @@
       "secretariaEstado": "",
       "nome": "Fundação EDP",
       "contribuinte": "500000289",
-      "direcao1": "Av. Brasília, Central Tejo1300-598 Lisboa",
-      "direcao2": "",
+      "direcao1": "Av. Brasília,",
+      "direcao2": "Central Tejo",
       "numero": "",
       "andar": "",
       "codigoPostal": "1300-598",
@@ -259,9 +223,9 @@
       "secretariaEstado": "",
       "nome": "Fundação Ageas",
       "contribuinte": "500000306",
-      "direcao1": "Edifício Ageas Tejo\nPraça Príncipe Perfeito, 2\n1990-278 Lisboa\nPortugal",
-      "direcao2": "",
-      "numero": "",
+      "direcao1": "Edifício Ageas Tejo",
+      "direcao2": "Praça Príncipe Perfeito",
+      "numero": "2",
       "andar": "",
       "codigoPostal": "1990-278",
       "localidade": "Lisboa",
@@ -277,10 +241,10 @@
       "secretariaEstado": "",
       "nome": "Fundação Ilídio Pinho",
       "contribuinte": "500000323",
-      "direcao1": "Edifício Península\nPraça do Bom Sucesso 127/137, 7.º – 702\n4150-146 Porto",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
+      "direcao1": "Edifício Península",
+      "direcao2": "Praça do Bom Sucesso",
+      "numero": "127/137",
+      "andar": "7º-702",
       "codigoPostal": "4150-146",
       "localidade": "Porto",
       "telefone": "+351 226 075 560",
@@ -295,8 +259,8 @@
       "secretariaEstado": "",
       "nome": "Fundação Eugénio de Almeida",
       "contribuinte": "500000340",
-      "direcao1": "Páteo de São Miguel\nApartado 2001\n7001-901 Évora\nPortugal",
-      "direcao2": "",
+      "direcao1": "Páteo de São Miguel",
+      "direcao2": "Apartado 2001",
       "numero": "",
       "andar": "",
       "codigoPostal": "7001-901",
@@ -313,10 +277,10 @@
       "secretariaEstado": "",
       "nome": "Fundação Altice Portugal",
       "contribuinte": "500000357",
-      "direcao1": "Avenida Fontes Pereira de Melo, nº40, 6ºpiso\n1069-300 Lisboa - Portugal",
+      "direcao1": "Avenida Fontes Pereira de Melo",
       "direcao2": "",
-      "numero": "",
-      "andar": "",
+      "numero": "40",
+      "andar": "6º",
       "codigoPostal": "1069-300",
       "localidade": "Lisboa",
       "telefone": "+351 215 003 500",
@@ -331,9 +295,9 @@
       "secretariaEstado": "",
       "nome": "Fundação Belmiro de Azevedo",
       "contribuinte": "500000374",
-      "direcao1": "Praça de Liège, 146\n4150-455 Porto",
+      "direcao1": "Praça de Liège",
       "direcao2": "",
-      "numero": "",
+      "numero": "146",
       "andar": "",
       "codigoPostal": "4150-455",
       "localidade": "Porto",
@@ -383,15 +347,15 @@
       "tipoCliente": "Privado",
       "ministerio": "",
       "secretariaEstado": "",
-      "nome": "Fundação Serralves",
-      "contribuinte": "500000425",
-      "direcao1": "Rua D. João de Castro, 210\n\n4150-417 Porto Portugal",
+      "nome": "Fundação de Serralves",
+      "contribuinte": "500001173",
+      "direcao1": "Rua Dom João de Castro, 210, 4150-417 Porto",
       "direcao2": "",
-      "numero": "",
+      "numero": "210",
       "andar": "",
       "codigoPostal": "4150-417",
       "localidade": "Porto",
-      "telefone": "+351 226 156 500",
+      "telefone": "226156500",
       "telemovel": "",
       "email": "serralves@serralves.pt",
       "createdAt": "2026-07-31T16:30:00.000Z"
@@ -421,9 +385,9 @@
       "secretariaEstado": "",
       "nome": "Fundação Aga Khan Portugal",
       "contribuinte": "500000459",
-      "direcao1": "Av. Lusíada 10,\n1600-150 Lisboa\nPortugal",
+      "direcao1": "Av. Lusíada",
       "direcao2": "",
-      "numero": "",
+      "numero": "10",
       "andar": "",
       "codigoPostal": "1600-150",
       "localidade": "Lisboa",
@@ -1229,31 +1193,13 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "cli-imp-068",
-      "tipoCliente": "Fundação",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "Fundação de Serralves",
-      "contribuinte": "500001173",
-      "direcao1": "Rua Dom João de Castro, 210, 4150-417 Porto",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "4150-417",
-      "localidade": "Porto",
-      "telefone": "226156500",
-      "telemovel": "",
-      "email": "serralves@serralves.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
       "id": "cli-imp-069",
       "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Champalimaud",
       "contribuinte": "500001190",
-      "direcao1": "Avenida de Brasília, 1400-038 Lisboa",
+      "direcao1": "Avenida de Brasília",
       "direcao2": "",
       "numero": "",
       "andar": "",
@@ -1266,18 +1212,18 @@
     },
     {
       "id": "cli-imp-070",
-      "tipoCliente": "Fundação",
+      "tipoCliente": "Privado",
       "ministerio": "",
       "secretariaEstado": "",
-      "nome": "Fundação Millennium bcp",
-      "contribuinte": "500001207",
-      "direcao1": "Rua Augusta, nº 84 – 2º Piso, 1100-053 Lisboa",
+      "nome": "Fundação Millenium BCP",
+      "contribuinte": "500000272",
+      "direcao1": "Rua Augusta nº 84 – 2º Piso, 1100-053 Lisboa – Portugal",
       "direcao2": "",
-      "numero": "",
+      "numero": "84",
       "andar": "",
       "codigoPostal": "1100-053",
       "localidade": "Lisboa",
-      "telefone": "211131682",
+      "telefone": "+ 351 211 131 682",
       "telemovel": "",
       "email": "fundacao@millenniumbcp.pt",
       "createdAt": "2026-07-31T16:30:00.000Z"
@@ -1289,10 +1235,10 @@
       "secretariaEstado": "",
       "nome": "Fundação Francisco Manuel dos Santos",
       "contribuinte": "500001224",
-      "direcao1": "Largo Monterroio Mascarenhas, nº 1, 7º piso, 1099-081 Lisboa",
+      "direcao1": "Largo Monterroio Mascarenhas",
       "direcao2": "",
-      "numero": "",
-      "andar": "",
+      "numero": "1",
+      "andar": "7º",
       "codigoPostal": "1099-081",
       "localidade": "Lisboa",
       "telefone": "210015800",
@@ -1307,9 +1253,9 @@
       "secretariaEstado": "",
       "nome": "EDP - ENERGIAS DE PORTUGAL, S.A.",
       "contribuinte": "500001241",
-      "direcao1": "Avenida 24 de Julho, 12, 1249-300 Lisboa",
+      "direcao1": "Avenida 24 de Julho",
       "direcao2": "",
-      "numero": "",
+      "numero": "12",
       "andar": "",
       "codigoPostal": "1249-300",
       "localidade": "Lisboa",
@@ -1325,9 +1271,9 @@
       "secretariaEstado": "",
       "nome": "Galp Energia, SGPS, S.A.",
       "contribuinte": "500001258",
-      "direcao1": "Avenida da Índia, 8, 1349-065 Lisboa",
+      "direcao1": "Avenida da Índia",
       "direcao2": "",
-      "numero": "",
+      "numero": "8",
       "andar": "",
       "codigoPostal": "1349-065",
       "localidade": "Lisboa",
@@ -1361,9 +1307,9 @@
       "secretariaEstado": "",
       "nome": "Altice Portugal",
       "contribuinte": "500001309",
-      "direcao1": "Avenida Fontes Pereira de Melo, n.º 40, 1069-300 Lisboa",
+      "direcao1": "Avenida Fontes Pereira de Melo",
       "direcao2": "",
-      "numero": "",
+      "numero": "40",
       "andar": "",
       "codigoPostal": "1069-300",
       "localidade": "Lisboa",
@@ -1397,10 +1343,10 @@
       "secretariaEstado": "",
       "nome": "CTT - Correios de Portugal, S.A.",
       "contribuinte": "500001343",
-      "direcao1": "Avenida dos Combatentes, n.º 43, 14.º piso, 1643-001 Lisboa",
+      "direcao1": "Avenida dos Combatentes",
       "direcao2": "",
-      "numero": "",
-      "andar": "",
+      "numero": "43",
+      "andar": "14º",
       "codigoPostal": "1643-001",
       "localidade": "Lisboa",
       "telefone": "210471616",
@@ -1415,9 +1361,9 @@
       "secretariaEstado": "",
       "nome": "Fidelidade - Companhia de Seguros, S.A.",
       "contribuinte": "500001360",
-      "direcao1": "Largo do Calhariz, 30, 1249-001 Lisboa",
+      "direcao1": "Largo do Calhariz",
       "direcao2": "",
-      "numero": "",
+      "numero": "30",
       "andar": "",
       "codigoPostal": "1249-001",
       "localidade": "Lisboa",
@@ -1433,11 +1379,11 @@
       "secretariaEstado": "",
       "nome": "Altice Portugal (Altice Labs)",
       "contribuinte": "500001377",
-      "direcao1": "Rua Eng. José Ferreira Pinto Basto, 3810–106 Aveiro",
+      "direcao1": "Rua Eng. José Ferreira Pinto Basto",
       "direcao2": "",
       "numero": "",
       "andar": "",
-      "codigoPostal": "3810-001",
+      "codigoPostal": "3810-106",
       "localidade": "Aveiro",
       "telefone": "234403200",
       "telemovel": "",
@@ -1664,7 +1610,7 @@
     },
     {
       "id": "con-imp-004",
-      "clienteId": "cli-imp-002",
+      "clienteId": "cli-imp-073",
       "nome": "Diogo",
       "apelido": "Sousa",
       "cargo": "Comunicación Corporativa",
@@ -1672,11 +1618,12 @@
       "telemovel": "",
       "email": "diogo.sousa@galp.com",
       "notas": "Temas: energía, petróleo, gas natural, electricidad, biocombustibles, transición energética, descarbonización",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-imp-005",
-      "clienteId": "cli-imp-002",
+      "clienteId": "cli-imp-073",
       "nome": "Pedro",
       "apelido": "Marques Pereira",
       "cargo": "Comunicación Corporativa",
@@ -1684,11 +1631,12 @@
       "telemovel": "",
       "email": "pedromp@galp.com",
       "notas": "Temas: energía, petróleo, gas natural, electricidad, biocombustibles, transición energética, descarbonización",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-imp-006",
-      "clienteId": "cli-imp-002",
+      "clienteId": "cli-imp-073",
       "nome": "Gonçalo",
       "apelido": "Venâncio",
       "cargo": "Comunicación Corporativa",
@@ -1696,11 +1644,12 @@
       "telemovel": "",
       "email": "goncalo.venancio@galp.com",
       "notas": "Temas: energía, petróleo, gas natural, electricidad, biocombustibles, transición energética, descarbonización",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-imp-007",
-      "clienteId": "cli-imp-002",
+      "clienteId": "cli-imp-073",
       "nome": "Carlos",
       "apelido": "Relancio",
       "cargo": "Renewable Energy Director",
@@ -1708,11 +1657,12 @@
       "telemovel": "",
       "email": "carlos.relancio@galp.com",
       "notas": "Temas: energía, petróleo, gas natural, electricidad, biocombustibles, transición energética, descarbonización",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-imp-008",
-      "clienteId": "cli-imp-002",
+      "clienteId": "cli-imp-073",
       "nome": "Gustavo",
       "apelido": "Sa",
       "cargo": "Events Planner & Business Partner",
@@ -1720,7 +1670,8 @@
       "telemovel": "",
       "email": "gustavo.sa@galp.com",
       "notas": "Temas: energía, petróleo, gas natural, electricidad, biocombustibles, transición energética, descarbonización",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-imp-009",
@@ -2072,7 +2023,7 @@
     },
     {
       "id": "con-imp-039",
-      "clienteId": "cli-imp-013",
+      "clienteId": "cli-1786727373519-853",
       "nome": "Paula",
       "apelido": "Amorim",
       "cargo": "Presidente",
@@ -2080,7 +2031,8 @@
       "telemovel": "",
       "email": "fundacao@galp.com",
       "notas": "Temas: Transición energética, acción climática, sostenibilidad, educación, innovación social, biodiversidad y apoyo a comunidades vulnerables",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-imp-040",
@@ -2096,7 +2048,7 @@
     },
     {
       "id": "con-imp-041",
-      "clienteId": "cli-imp-015",
+      "clienteId": "cli-imp-070",
       "nome": "António",
       "apelido": "Vítor Martins Monteiro",
       "cargo": "Presidente",
@@ -2104,7 +2056,8 @@
       "telemovel": "",
       "email": "fundacao@millenniumbcp.pt",
       "notas": "Temas: apoyo a iniciativas de interés cultural, científico y social",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-imp-042",
@@ -2954,7 +2907,7 @@
     },
     {
       "id": "con-imp-113",
-      "clienteId": "cli-imp-068",
+      "clienteId": "cli-imp-024",
       "nome": "Carina",
       "apelido": "Bastos",
       "cargo": "Diretora de Comunicação, Marketing e Mecenato",
@@ -2962,7 +2915,8 @@
       "telemovel": "",
       "email": "serralves@serralves.pt",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-imp-114",
@@ -2990,7 +2944,7 @@
     },
     {
       "id": "con-imp-116",
-      "clienteId": "cli-imp-013",
+      "clienteId": "cli-1786727373519-853",
       "nome": "Sandra",
       "apelido": "Aparício",
       "cargo": "Diretora Executiva",
@@ -2998,7 +2952,8 @@
       "telemovel": "",
       "email": "fundacaogalp@galp.com",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-imp-117",
@@ -3529,6 +3484,766 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1786728654178-813",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Ilídio Pinho\" (NIF: 500000323) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Ilídio Pinho",
+        "contribuinte": "500000323",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Edifício Península\nPraça do Bom Sucesso 127/137, 7.º – 702\n4150-146 Porto",
+            "novo": "Edifício Península"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T17:30:54.178Z"
+    },
+    {
+      "id": "log-1786728467122-140",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Galp\" (NIF: 000000000) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Galp",
+        "contribuinte": "000000000",
+        "tipoCliente": "Privado"
+      },
+      "timestamp": "2026-08-14T17:27:47.123Z"
+    },
+    {
+      "id": "log-1786728112306-430",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Galp Energia, SGPS, S.A.\" (NIF: 500001258) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Galp Energia, SGPS, S.A.",
+        "contribuinte": "500001258",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Avenida da Índia, 8, 1349-065 Lisboa",
+            "novo": "Avenida da Índia"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T17:21:52.306Z"
+    },
+    {
+      "id": "log-1786728071632-680",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Galp\" (NIF: 000000000) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Galp",
+        "contribuinte": "000000000",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T17:21:11.632Z"
+    },
+    {
+      "id": "log-1786727982602-437",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Galp\" (NIF: 000000000) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Galp",
+        "contribuinte": "000000000",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T17:19:42.602Z"
+    },
+    {
+      "id": "log-1786727852354-952",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Galp\" (NIF: 000000000) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Galp",
+        "contribuinte": "000000000",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Nome",
+            "anterior": "Fundação Galp",
+            "novo": "Galp"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T17:17:32.354Z"
+    },
+    {
+      "id": "log-1786727158728-325",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Francisco Manuel dos Santos\" (NIF: 500001224) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Francisco Manuel dos Santos",
+        "contribuinte": "500001224",
+        "tipoCliente": "Fundação",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Largo Monterroio Mascarenhas, nº 1, 7º piso, 1099-081 Lisboa",
+            "novo": "Largo Monterroio Mascarenhas"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T17:05:58.728Z"
+    },
+    {
+      "id": "log-1786727108149-567",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Eugénio de Almeida\" (NIF: 500000340) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Eugénio de Almeida",
+        "contribuinte": "500000340",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T17:05:08.149Z"
+    },
+    {
+      "id": "log-1786727099069-552",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação EDP\" (NIF: 500000289) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação EDP",
+        "contribuinte": "500000289",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T17:04:59.069Z"
+    },
+    {
+      "id": "log-1786725338272-393",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Eugénio de Almeida\" (NIF: 500000340) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Eugénio de Almeida",
+        "contribuinte": "500000340",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Páteo de São Miguel\nApartado 2001\n7001-901 Évora\nPortugal",
+            "novo": "Páteo de São Miguel"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T16:35:38.272Z"
+    },
+    {
+      "id": "log-1786725259902-785",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação EDP\" (NIF: 500000289) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação EDP",
+        "contribuinte": "500000289",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Av. Brasília, Central Tejo1300-598 Lisboa",
+            "novo": "Av. Brasília,"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T16:34:19.902Z"
+    },
+    {
+      "id": "log-1786725149458-200",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Millenium BCP\" (NIF: 500000272) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Millenium BCP",
+        "contribuinte": "500000272",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Nome",
+            "anterior": "Fundação Millennium bcp",
+            "novo": "Fundação Millenium BCP"
+          },
+          {
+            "campo": "NIF/Contribuinte",
+            "anterior": "500001207",
+            "novo": "500000272"
+          },
+          {
+            "campo": "Telefone",
+            "anterior": "211131682",
+            "novo": "+ 351 211 131 682"
+          },
+          {
+            "campo": "Morada",
+            "anterior": "Rua Augusta, nº 84 – 2º Piso, 1100-053 Lisboa",
+            "novo": "Rua Augusta nº 84 – 2º Piso, 1100-053 Lisboa – Portugal"
+          },
+          {
+            "campo": "Tipo de Cliente",
+            "anterior": "Estatal",
+            "novo": "Privado"
+          },
+          {
+            "campo": "Ministério",
+            "anterior": "Fundação Millennium bcp",
+            "novo": "(vazio)"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T16:32:29.458Z"
+    },
+    {
+      "id": "log-1786724667227-857",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação de Serralves\" (NIF: 500001173) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação de Serralves",
+        "contribuinte": "500001173",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Nome",
+            "anterior": "Fundação Serralves",
+            "novo": "Fundação de Serralves"
+          },
+          {
+            "campo": "NIF/Contribuinte",
+            "anterior": "500000425",
+            "novo": "500001173"
+          },
+          {
+            "campo": "Telefone",
+            "anterior": "+351 226 156 500",
+            "novo": "226156500"
+          },
+          {
+            "campo": "Morada",
+            "anterior": "Rua D. João de Castro, 210\n\n4150-417 Porto Portugal",
+            "novo": "Rua Dom João de Castro, 210, 4150-417 Porto"
+          },
+          {
+            "campo": "Tipo de Cliente",
+            "anterior": "Estatal",
+            "novo": "Privado"
+          },
+          {
+            "campo": "Ministério",
+            "anterior": "Fundação Serralves",
+            "novo": "(vazio)"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T16:24:27.227Z"
+    },
+    {
+      "id": "log-1786724282375-543",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Champalimaud\" (NIF: 500001190) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Champalimaud",
+        "contribuinte": "500001190",
+        "tipoCliente": "Fundação",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Avenida de Brasília, 1400-038 Lisboa",
+            "novo": "Avenida de Brasília"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T16:18:02.375Z"
+    },
+    {
+      "id": "log-1786724267515-509",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Calouste Gulbenkian\" (NIF: 500000204) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Calouste Gulbenkian",
+        "contribuinte": "500000204",
+        "tipoCliente": "Fundação",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "AV. de Berna, 45A, 1067-001 Lisboa",
+            "novo": "AV. de Berna"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T16:17:47.516Z"
+    },
+    {
+      "id": "log-1786724247680-623",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Belmiro de Azevedo\" (NIF: 500000374) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Belmiro de Azevedo",
+        "contribuinte": "500000374",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T16:17:27.680Z"
+    },
+    {
+      "id": "log-1786724237901-945",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação António Cupertino da Miranda\" (NIF: 500000255) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação António Cupertino da Miranda",
+        "contribuinte": "500000255",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Avenida da Boavista, 4245 4100–140Oporto, Portugal",
+            "novo": "Avenida da Boavista"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T16:17:17.901Z"
+    },
+    {
+      "id": "log-1786724215532-437",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Belmiro de Azevedo\" (NIF: 500000374) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Belmiro de Azevedo",
+        "contribuinte": "500000374",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Praça de Liège, 146\n4150-455 Porto",
+            "novo": "Praça de Liège"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T16:16:55.532Z"
+    },
+    {
+      "id": "log-1786724185428-382",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação António Cupertino da Miranda\" (NIF: 500000255) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação António Cupertino da Miranda",
+        "contribuinte": "500000255",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Avenida da Boavista, 4245 4100–140\nOporto, Portugal",
+            "novo": "Avenida da Boavista, 4245 4100–140Oporto, Portugal"
+          },
+          {
+            "campo": "Código Postal",
+            "anterior": "4245-001",
+            "novo": "4100-140"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T16:16:25.428Z"
+    },
+    {
+      "id": "log-1786724158500-3",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Altice Portugal\" (NIF: 500000357) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Altice Portugal",
+        "contribuinte": "500000357",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Avenida Fontes Pereira de Melo, nº40, 6ºpiso\n1069-300 Lisboa - Portugal",
+            "novo": "Avenida Fontes Pereira de Melo"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T16:15:58.500Z"
+    },
+    {
+      "id": "log-1786724124928-414",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Ageas\" (NIF: 500000306) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Ageas",
+        "contribuinte": "500000306",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Edifício Ageas Tejo\nPraça Príncipe Perfeito, 2\n1990-278 Lisboa\nPortugal",
+            "novo": "Edifício Ageas Tejo"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T16:15:24.928Z"
+    },
+    {
+      "id": "log-1786724052628-121",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Aga Khan Portugal\" (NIF: 500000459) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Aga Khan Portugal",
+        "contribuinte": "500000459",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Av. Lusíada 10,\n1600-150 Lisboa\nPortugal",
+            "novo": "Av. Lusíada"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T16:14:12.628Z"
+    },
+    {
+      "id": "log-1786724029535-770",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fidelidade - Companhia de Seguros, S.A.\" (NIF: 500001360) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fidelidade - Companhia de Seguros, S.A.",
+        "contribuinte": "500001360",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T16:13:49.535Z"
+    },
+    {
+      "id": "log-1786724018491-190",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"EDP - ENERGIAS DE PORTUGAL, S.A.\" (NIF: 500001241) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "EDP - ENERGIAS DE PORTUGAL, S.A.",
+        "contribuinte": "500001241",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T16:13:38.491Z"
+    },
+    {
+      "id": "log-1786724009516-998",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fidelidade - Companhia de Seguros, S.A.\" (NIF: 500001360) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fidelidade - Companhia de Seguros, S.A.",
+        "contribuinte": "500001360",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Largo do Calhariz, 30, 1249-001 Lisboa",
+            "novo": "Largo do Calhariz"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T16:13:29.516Z"
+    },
+    {
+      "id": "log-1786723979468-461",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"EDP - ENERGIAS DE PORTUGAL, S.A.\" (NIF: 500001241) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "EDP - ENERGIAS DE PORTUGAL, S.A.",
+        "contribuinte": "500001241",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Avenida 24 de Julho, 12, 1249-300 Lisboa",
+            "novo": "Avenida 24 de Julho"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T16:12:59.468Z"
+    },
+    {
+      "id": "log-1786723941447-239",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"CTT - Correios de Portugal, S.A.\" (NIF: 500001343) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "CTT - Correios de Portugal, S.A.",
+        "contribuinte": "500001343",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Avenida dos Combatentes, n.º 43, 14.º piso, 1643-001 Lisboa",
+            "novo": "Avenida dos Combatentes"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T16:12:21.447Z"
+    },
+    {
+      "id": "log-1786723893259-426",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Altice Portugal (Altice Labs)\" (NIF: 500001377) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Altice Portugal (Altice Labs)",
+        "contribuinte": "500001377",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Rua Eng. José Ferreira Pinto Basto, 3810–106 Aveiro",
+            "novo": "Rua Eng. José Ferreira Pinto Basto"
+          },
+          {
+            "campo": "Código Postal",
+            "anterior": "3810-001",
+            "novo": "3810-106"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T16:11:33.259Z"
+    },
+    {
+      "id": "log-1786723854546-974",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Altice Portugal\" (NIF: 500001309) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Altice Portugal",
+        "contribuinte": "500001309",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Avenida Fontes Pereira de Melo, n.º 40, 1069-300 Lisboa",
+            "novo": "Avenida Fontes Pereira de Melo"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T16:10:54.546Z"
+    },
+    {
+      "id": "log-1786723610298-751",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-14T16:06:50.298Z"
+    },
     {
       "id": "log-1786723602389-411",
       "usuarioId": "usr-admin-001",
