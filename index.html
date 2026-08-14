@@ -79,6 +79,99 @@
       object-fit: contain !important;
     }
   </style>
+
+  <style>
+    /* ====================================================
+       MENU DE NAVEGAÇÃO DROPDOWN (hover slide-down)
+       ==================================================== */
+
+    .nav-dropdown-wrapper {
+      position: relative;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    /* Botão principal - sempre visível */
+    .nav-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      position: relative;
+      z-index: 1002;
+    }
+
+    .nav-chevron {
+      font-size: 0.65rem;
+      transition: transform 0.3s ease;
+      margin-left: 0.15rem;
+      color: inherit;
+      opacity: 0.75;
+    }
+
+    .nav-dropdown-wrapper:hover .nav-chevron {
+      transform: rotate(180deg);
+    }
+
+    /* Painel com os outros botões - oculto por defeito */
+    .nav-dropdown-panel {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 1001;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      pointer-events: none;
+      /* Estado inicial: comprimido e invisível */
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition:
+        max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.25s ease,
+        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Ao fazer hover no wrapper, expande o painel */
+    .nav-dropdown-wrapper:hover .nav-dropdown-panel,
+    .nav-dropdown-wrapper:focus-within .nav-dropdown-panel {
+      max-height: 280px;
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    /* Cada botão dentro do painel */
+    .nav-dropdown-panel .nav-btn {
+      width: 100%;
+      min-width: 160px;
+      border-radius: 0;
+      border-top: none;
+      margin: 0;
+      padding: 0.6rem 1.1rem;
+      background: var(--header-bg, #0f172a);
+      justify-content: flex-start;
+    }
+
+    /* Arredondamento só no último */
+    .nav-dropdown-panel .nav-btn:last-child {
+      border-radius: 0 0 8px 8px;
+    }
+
+    /* Sombra no painel */
+    .nav-dropdown-panel::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      border-radius: 0 0 8px 8px;
+      pointer-events: none;
+      z-index: -1;
+    }
+  </style>
 </head>
 <body>
 
@@ -180,23 +273,29 @@
     </div>
 
     <div class="header-actions">
-      <nav class="nav-tabs">
-        <button class="nav-btn active" data-tab="tab-home" onclick="switchTab('tab-home')">
+      <!-- MENU DE NAVEGAÇÃO DROPDOWN (hover para expandir) -->
+      <div class="nav-dropdown-wrapper" id="navDropdownWrapper">
+        <!-- Botão principal sempre visível -->
+        <button class="nav-btn active nav-trigger" data-tab="tab-home" onclick="switchTab('tab-home')" id="navBtnHome">
           <i class="fa-solid fa-house"></i> Menu Geral
+          <i class="fa-solid fa-chevron-down nav-chevron" id="navChevron"></i>
         </button>
-        <button class="nav-btn" data-tab="tab-clientes" onclick="switchTab('tab-clientes')">
-          <i class="fa-solid fa-building-user"></i> Clientes
-        </button>
-        <button class="nav-btn" data-tab="tab-contactos" onclick="switchTab('tab-contactos')">
-          <i class="fa-solid fa-address-book"></i> Contactos
-        </button>
-        <button class="nav-btn" data-tab="tab-projetos" onclick="switchTab('tab-projetos')">
-          <i class="fa-solid fa-diagram-project"></i> Projetos
-        </button>
-        <button id="navBtnConfiguracao" class="nav-btn" data-tab="tab-database" onclick="switchTab('tab-database')">
-          <i class="fa-solid fa-gear"></i> Configuração
-        </button>
-      </nav>
+        <!-- Painel dos botões que deslizam para baixo -->
+        <div class="nav-dropdown-panel" id="navDropdownPanel">
+          <button class="nav-btn" data-tab="tab-clientes" onclick="switchTab('tab-clientes')">
+            <i class="fa-solid fa-building-user"></i> Clientes
+          </button>
+          <button class="nav-btn" data-tab="tab-contactos" onclick="switchTab('tab-contactos')">
+            <i class="fa-solid fa-address-book"></i> Contactos
+          </button>
+          <button class="nav-btn" data-tab="tab-projetos" onclick="switchTab('tab-projetos')">
+            <i class="fa-solid fa-diagram-project"></i> Projetos
+          </button>
+          <button id="navBtnConfiguracao" class="nav-btn" data-tab="tab-database" onclick="switchTab('tab-database')">
+            <i class="fa-solid fa-gear"></i> Configuração
+          </button>
+        </div>
+      </div>
 
       <div style="display: flex; gap: 0.5rem; align-items: center;">
         <button type="button" class="btn btn-success" onclick="saveProgramChangesInternal()" title="Guardar todas as alterações na base de dados interna do programa" style="font-weight: 600; background: #16a34a; color: #ffffff; border: none; box-shadow: 0 2px 6px rgba(22, 163, 74, 0.25);" id="btnSaveProgramChanges">
@@ -1748,6 +1847,41 @@
 
     if (targetTab) targetTab.classList.add('active');
     if (targetBtn) targetBtn.classList.add('active');
+
+    // Atualizar o label do botão "Menu Geral" com a página ativa
+    var pageLabels = {
+      'tab-home':      { icon: 'fa-house',            label: 'Menu Geral' },
+      'tab-clientes':  { icon: 'fa-building-user',    label: 'Clientes' },
+      'tab-contactos': { icon: 'fa-address-book',     label: 'Contactos' },
+      'tab-projetos':  { icon: 'fa-diagram-project',  label: 'Projetos' },
+      'tab-database':  { icon: 'fa-gear',             label: 'Configura\u00e7\u00e3o' }
+    };
+    var triggerBtn = document.getElementById('navBtnHome');
+    if (triggerBtn && pageLabels[tabId]) {
+      var pl = pageLabels[tabId];
+      triggerBtn.innerHTML = '<i class="fa-solid ' + pl.icon + '"></i> ' + pl.label +
+        ' <i class="fa-solid fa-chevron-down nav-chevron" id="navChevron"></i>';
+    }
+
+    // Fechar o dropdown removendo o hover programaticamente (blur no wrapper)
+    var wrapper = document.getElementById('navDropdownWrapper');
+    if (wrapper) {
+      wrapper.blur();
+      // Forçar fecho escondendo brevemente o painel
+      var panel = document.getElementById('navDropdownPanel');
+      if (panel) {
+        panel.style.opacity = '0';
+        panel.style.maxHeight = '0';
+        panel.style.transform = 'translateY(-8px)';
+        panel.style.pointerEvents = 'none';
+        setTimeout(function() {
+          panel.style.opacity = '';
+          panel.style.maxHeight = '';
+          panel.style.transform = '';
+          panel.style.pointerEvents = '';
+        }, 300);
+      }
+    }
 
     if (tabId === 'tab-database') {
       if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
