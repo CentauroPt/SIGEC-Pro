@@ -25,9 +25,9 @@
       "secretariaEstado": "",
       "nome": "Jerónimo Martins, SGPS, S.A.",
       "contribuinte": "500000068",
-      "direcao1": "Rua Actor António Silva, n.º 7, 1649-033 Lisboa, Portugal",
+      "direcao1": "Rua Actor António Silva",
       "direcao2": "",
-      "numero": "",
+      "numero": "7",
       "andar": "",
       "codigoPostal": "1649-033",
       "localidade": "Lisboa",
@@ -43,9 +43,9 @@
       "secretariaEstado": "",
       "nome": "Fundação Jerónimo Martins",
       "contribuinte": "500000085",
-      "direcao1": "Rua Actor António Silva, n.º 7, 1649-033 Lisboa, Portugal",
+      "direcao1": "Rua Actor António Silva",
       "direcao2": "",
-      "numero": "",
+      "numero": "7",
       "andar": "",
       "codigoPostal": "1649-033",
       "localidade": "Lisboa",
@@ -61,9 +61,9 @@
       "secretariaEstado": "",
       "nome": "MEO",
       "contribuinte": "500000102",
-      "direcao1": "Avenida Fontes Pereira de Melo, n.º 40, 1069-300 Lisboa, Portugal",
+      "direcao1": "Avenida Fontes Pereira de Melo",
       "direcao2": "",
-      "numero": "",
+      "numero": "40",
       "andar": "",
       "codigoPostal": "1069-300",
       "localidade": "Lisboa",
@@ -97,15 +97,15 @@
       "secretariaEstado": "",
       "nome": "REN",
       "contribuinte": "500000136",
-      "direcao1": "Avenida dos Estados Unidos da América, 55, 1749-061 Lisboa, Portugal",
+      "direcao1": "Avenida dos Estados Unidos da América",
       "direcao2": "",
-      "numero": "",
+      "numero": "55",
       "andar": "",
       "codigoPostal": "1749-061",
       "localidade": "Lisboa",
       "telefone": "+351 210 013 500",
       "telemovel": "",
-      "email": "bruno.silva@ren.pt",
+      "email": "comunicacao@ren.pt",
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
@@ -115,33 +115,15 @@
       "secretariaEstado": "",
       "nome": "Mota Eengil",
       "contribuinte": "500000153",
-      "direcao1": "Rua do Rego Lameiro, nº 38, 4300-454 Porto, Portugal",
+      "direcao1": "Rua do Rego Lameiro",
       "direcao2": "",
-      "numero": "",
+      "numero": "38",
       "andar": "",
       "codigoPostal": "4300-454",
       "localidade": "Porto",
       "telefone": "+351 225 190 300",
       "telemovel": "",
       "email": "mota-engil@mota-engil.com",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "cli-imp-009",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "NOS",
-      "contribuinte": "500000170",
-      "direcao1": "Rua Actor António Silva, n.º 9, Campo Grande, 1600-404 Lisboa, Portugal",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1600-404",
-      "localidade": "Lisboa",
-      "telefone": "+351 21 782 47 00",
-      "telemovel": "",
-      "email": "ines.s.pina@nos.pt",
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
@@ -164,15 +146,15 @@
     },
     {
       "id": "cli-imp-012",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Vodafone Portugal",
       "contribuinte": "500000221",
-      "direcao1": "Parque das Nações, Avenida D. João II 36, 8.º Piso, 1998-017 Lisboa",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
+      "direcao1": "Avenida D. João II",
+      "direcao2": "Parque das Nações",
+      "numero": "36",
+      "andar": "8º",
       "codigoPostal": "1998-017",
       "localidade": "Lisboa",
       "telefone": "+351 210 915 000",
@@ -308,15 +290,15 @@
     },
     {
       "id": "cli-imp-022",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Manuel António da Mota",
       "contribuinte": "500000391",
-      "direcao1": "Praça do Bom Sucesso,74-90, piso 1, 4150-146 Porto",
+      "direcao1": "Praça do Bom Sucesso",
       "direcao2": "",
-      "numero": "",
-      "andar": "",
+      "numero": "74-90",
+      "andar": "1º",
       "codigoPostal": "4150-146",
       "localidade": "Porto",
       "telefone": "+351 226 079 100",
@@ -331,9 +313,9 @@
       "secretariaEstado": "",
       "nome": "Fundação José Neves",
       "contribuinte": "500000408",
-      "direcao1": "Largo de Nevogilde, 9\n4150-527 Porto\nPortugal",
+      "direcao1": "Largo de Nevogilde",
       "direcao2": "",
-      "numero": "",
+      "numero": "9",
       "andar": "",
       "codigoPostal": "4150-527",
       "localidade": "Porto",
@@ -362,13 +344,13 @@
     },
     {
       "id": "cli-imp-025",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Luso",
       "contribuinte": "500000442",
-      "direcao1": "Rua Emídio Navarro, Alameda do Casino, 3050-224 Luso",
-      "direcao2": "",
+      "direcao1": "Rua Emídio Navarro",
+      "direcao2": "Alameda do Casino",
       "numero": "",
       "andar": "",
       "codigoPostal": "3050-224",
@@ -398,14 +380,14 @@
     },
     {
       "id": "cli-imp-027",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Montepio",
       "contribuinte": "500000476",
-      "direcao1": "Rua Áurea, 219 a 241\n1100-062 Lisboa",
+      "direcao1": "Rua Áurea",
       "direcao2": "",
-      "numero": "",
+      "numero": "219-241",
       "andar": "",
       "codigoPostal": "1100-062",
       "localidade": "Lisboa",
@@ -416,13 +398,13 @@
     },
     {
       "id": "cli-imp-028",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Oriente",
       "contribuinte": "500000493",
-      "direcao1": "Edificio Pedro Álvares Cabral, Muelle de Alcântara (Norte) 1350-352 Lisboa",
-      "direcao2": "",
+      "direcao1": "Avenida de Brasilia",
+      "direcao2": "Edificio Pedro Álvares Cabral, Docade Alcântara (Norte)",
       "numero": "",
       "andar": "",
       "codigoPostal": "1350-352",
@@ -434,14 +416,14 @@
     },
     {
       "id": "cli-imp-029",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Mestre Casais",
       "contribuinte": "500000510",
-      "direcao1": "Rua do Anjo, n.º 27, Mire de Tibães\nApartado 2702\n4700-565 Braga, Portugal",
-      "direcao2": "",
-      "numero": "",
+      "direcao1": "Rua do Anjo",
+      "direcao2": "Mire de Tibães-Apartado 2702",
+      "numero": "27",
       "andar": "",
       "codigoPostal": "4700-565",
       "localidade": "Braga",
@@ -1212,15 +1194,15 @@
     },
     {
       "id": "cli-imp-070",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Millenium BCP",
       "contribuinte": "500000272",
-      "direcao1": "Rua Augusta nº 84 – 2º Piso, 1100-053 Lisboa – Portugal",
+      "direcao1": "Rua Augusta",
       "direcao2": "",
       "numero": "84",
-      "andar": "",
+      "andar": "2º",
       "codigoPostal": "1100-053",
       "localidade": "Lisboa",
       "telefone": "+ 351 211 131 682",
@@ -1283,24 +1265,6 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "cli-imp-074",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "Sonae, SGPS, S.A.",
-      "contribuinte": "500001275",
-      "direcao1": "Lugar do Espido, Via Norte, 4471-909 Maia",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "4471-909",
-      "localidade": "Maia",
-      "telefone": "220104000",
-      "telemovel": "",
-      "email": "comunicacao@sonae.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
       "id": "cli-imp-076",
       "tipoCliente": "Privado",
       "ministerio": "",
@@ -1324,16 +1288,16 @@
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "NOS, SGPS, S.A.",
-      "contribuinte": "500001326",
-      "direcao1": "Rua Actor António Silva, n.º 9, Campo Grande, 1600-404 Lisboa",
-      "direcao2": "",
-      "numero": "",
+      "contribuinte": "500000170",
+      "direcao1": "Rua Actor António Silva",
+      "direcao2": "Campo Grande",
+      "numero": "9",
       "andar": "",
       "codigoPostal": "1600-404",
       "localidade": "Lisboa",
-      "telefone": "217824700",
+      "telefone": "+351 21 782 47 00",
       "telemovel": "",
-      "email": "secretaria.geral@nos.pt",
+      "email": "ines.s.pina@nos.pt",
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
@@ -1397,12 +1361,12 @@
       "secretariaEstado": "",
       "nome": "Omexom Portugal (Sotécnica, S.A.)",
       "contribuinte": "500001394",
-      "direcao1": "Estrada Nacional 115, Km 78.67 – Edifício D, 2664-502 São Julião do Tojal, Loures",
-      "direcao2": "",
+      "direcao1": "Estrada Nacional 115, Km 78.67",
+      "direcao2": "Edifício D",
       "numero": "",
       "andar": "",
       "codigoPostal": "2664-502",
-      "localidade": "Loures",
+      "localidade": "São Julião do Tojal-Loures",
       "telefone": "219737000",
       "telemovel": "",
       "email": "geral.pt@omexom.com",
@@ -1413,17 +1377,17 @@
       "tipoCliente": "Privado",
       "ministerio": "",
       "secretariaEstado": "",
-      "nome": "Sonae, SGPS, S.A. (Sonae MC)",
-      "contribuinte": "500001411",
-      "direcao1": "Lugar do Espido, Via Norte, 4471-909 Maia",
-      "direcao2": "",
-      "numero": "",
+      "nome": "NOS, SGPS, S.A.",
+      "contribuinte": "500000170",
+      "direcao1": "Rua Actor António Silva",
+      "direcao2": "Campo Grande",
+      "numero": "9",
       "andar": "",
-      "codigoPostal": "4471-909",
-      "localidade": "Maia",
-      "telefone": "+351 220 104 000",
+      "codigoPostal": "1600-404",
+      "localidade": "Lisboa",
+      "telefone": "+351 21 782 47 00",
       "telemovel": "",
-      "email": "comunicacao@sonae.pt",
+      "email": "ines.s.pina@nos.pt",
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
@@ -1878,30 +1842,6 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "con-imp-026",
-      "clienteId": "cli-imp-008",
-      "nome": "mail",
-      "apelido": "general",
-      "cargo": "mail general",
-      "telefone": "+351 225 190 300",
-      "telemovel": "",
-      "email": "mota-engil@mota-engil.com",
-      "notas": "Temas: construcción, infraestructuras, ingeniería, gestión de residuos, concesiones de transporte",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "con-imp-027",
-      "clienteId": "cli-imp-008",
-      "nome": "mail",
-      "apelido": "general",
-      "cargo": "mail general",
-      "telefone": "+351 225 190 300",
-      "telemovel": "",
-      "email": "geral@mota-engil.pt",
-      "notas": "Temas: construcción, infraestructuras, ingeniería, gestión de residuos, concesiones de transporte",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
       "id": "con-imp-028",
       "clienteId": "cli-imp-008",
       "nome": "Luís",
@@ -1951,7 +1891,7 @@
     },
     {
       "id": "con-imp-032",
-      "clienteId": "cli-imp-009",
+      "clienteId": "cli-imp-077",
       "nome": "Ines",
       "apelido": "Pina",
       "cargo": "Communication & Experience",
@@ -1959,11 +1899,12 @@
       "telemovel": "",
       "email": "ines.s.pina@nos.pt",
       "notas": "Temas: telecomunicaciones, televisión, internet, telefonía móvil, entretenimiento",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 1
     },
     {
       "id": "con-imp-033",
-      "clienteId": "cli-imp-009",
+      "clienteId": "cli-imp-077",
       "nome": "Joao",
       "apelido": "Ceriz",
       "cargo": "Head of Product Marketing",
@@ -1971,11 +1912,12 @@
       "telemovel": "",
       "email": "joao.ceriz@nos.pt",
       "notas": "Temas: telecomunicaciones, televisión, internet, telefonía móvil, entretenimiento",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 1
     },
     {
       "id": "con-imp-034",
-      "clienteId": "cli-imp-009",
+      "clienteId": "cli-imp-077",
       "nome": "Goncalo",
       "apelido": "Oliveira",
       "cargo": "Brand & Communication Strategy",
@@ -1983,11 +1925,12 @@
       "telemovel": "",
       "email": "goncalo.soliveira@nos.pt",
       "notas": "Temas: telecomunicaciones, televisión, internet, telefonía móvil, entretenimiento",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 1
     },
     {
       "id": "con-imp-035",
-      "clienteId": "cli-imp-009",
+      "clienteId": "cli-imp-077",
       "nome": "Luis",
       "apelido": "Costa",
       "cargo": "Head of Product Marketing",
@@ -1995,7 +1938,8 @@
       "telemovel": "",
       "email": "joao.ceriz@nos.pt",
       "notas": "Temas: telecomunicaciones, televisión, internet, telefonía móvil, entretenimiento",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 1
     },
     {
       "id": "con-imp-037",
@@ -2981,7 +2925,7 @@
     },
     {
       "id": "con-imp-120",
-      "clienteId": "cli-imp-074",
+      "clienteId": "cli-imp-082",
       "nome": "Daniel",
       "apelido": "Fonseca",
       "cargo": "Diretor de Marca e Comunicação",
@@ -2989,7 +2933,8 @@
       "telemovel": "",
       "email": "comunicacao@sonae.pt",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-imp-122",
@@ -3013,7 +2958,8 @@
       "telemovel": "",
       "email": "secretaria.geral@nos.pt",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 1
     },
     {
       "id": "con-imp-124",
@@ -3109,7 +3055,8 @@
       "telemovel": "",
       "email": "comunicacao@sonae.pt",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-imp-132",
@@ -3484,6 +3431,626 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1786731233287-394",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Sonae, SGPS, S.A. (Sonae MC)\" (NIF: 500001411) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Sonae, SGPS, S.A. (Sonae MC)",
+        "contribuinte": "500001411",
+        "tipoCliente": "Estatal",
+        "camposAlterados": [
+          {
+            "campo": "Ministério",
+            "anterior": "Sonae, SGPS, S.A. (Sonae MC)",
+            "novo": "Sonae, SGPS, S.A."
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T18:13:53.287Z"
+    },
+    {
+      "id": "log-1786731135577-296",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Sonae, SGPS, S.A. (Sonae MC)\" (NIF: 500001411) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Sonae, SGPS, S.A. (Sonae MC)",
+        "contribuinte": "500001411",
+        "tipoCliente": "Estatal",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T18:12:15.577Z"
+    },
+    {
+      "id": "log-1786731121802-356",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Sonae, SGPS, S.A. (Sonae MC)\" (NIF: 500001411) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Sonae, SGPS, S.A. (Sonae MC)",
+        "contribuinte": "500001411",
+        "tipoCliente": "Estatal",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T18:12:01.802Z"
+    },
+    {
+      "id": "log-1786730885770-724",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"REN\" (NIF: 500000136) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "REN",
+        "contribuinte": "500000136",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Email",
+            "anterior": "bruno.silva@ren.pt",
+            "novo": "comunicacao@ren.pt"
+          },
+          {
+            "campo": "Morada",
+            "anterior": "Avenida dos Estados Unidos da América, 55, 1749-061 Lisboa, Portugal",
+            "novo": "Avenida dos Estados Unidos da América"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T18:08:05.770Z"
+    },
+    {
+      "id": "log-1786730821603-210",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Omexom Portugal (Sotécnica, S.A.)\" (NIF: 500001394) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Omexom Portugal (Sotécnica, S.A.)",
+        "contribuinte": "500001394",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Estrada Nacional 115, Km 78.67 – Edifício D, 2664-502 São Julião do Tojal, Loures",
+            "novo": "Estrada Nacional 115, Km 78.67"
+          },
+          {
+            "campo": "Localidade",
+            "anterior": "Loures",
+            "novo": "São Julião do Tojal-Loures"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T18:07:01.603Z"
+    },
+    {
+      "id": "log-1786730720716-704",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"NOS, SGPS, S.A.\" (NIF: 500000170) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "NOS, SGPS, S.A.",
+        "contribuinte": "500000170",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "NIF/Contribuinte",
+            "anterior": "500001326",
+            "novo": "500000170"
+          },
+          {
+            "campo": "Email",
+            "anterior": "secretaria.geral@nos.pt",
+            "novo": "ines.s.pina@nos.pt"
+          },
+          {
+            "campo": "Telefone",
+            "anterior": "217824700",
+            "novo": "+351 21 782 47 00"
+          },
+          {
+            "campo": "Morada",
+            "anterior": "Rua Actor António Silva, n.º 9, Campo Grande, 1600-404 Lisboa",
+            "novo": "Rua Actor António Silva"
+          },
+          {
+            "campo": "Tipo de Cliente",
+            "anterior": "Estatal",
+            "novo": "Privado"
+          },
+          {
+            "campo": "Ministério",
+            "anterior": "NOS, SGPS, S.A.",
+            "novo": "(vazio)"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T18:05:20.716Z"
+    },
+    {
+      "id": "log-1786730622097-973",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"NOS, SGPS, S.A.\" (NIF: 500001326) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "NOS, SGPS, S.A.",
+        "contribuinte": "500001326",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T18:03:42.097Z"
+    },
+    {
+      "id": "log-1786730581579-230",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"NOS\" (NIF: 500000170) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "NOS",
+        "contribuinte": "500000170",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Rua Actor António Silva, n.º 9, Campo Grande, 1600-404 Lisboa, Portugal",
+            "novo": "Rua Actor António Silva"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T18:03:01.579Z"
+    },
+    {
+      "id": "log-1786730550748-893",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Mota Eengil\" (NIF: 500000153) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Mota Eengil",
+        "contribuinte": "500000153",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Rua do Rego Lameiro, nº 38, 4300-454 Porto, Portugal",
+            "novo": "Rua do Rego Lameiro"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T18:02:30.748Z"
+    },
+    {
+      "id": "log-1786730469186-68",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"MEO\" (NIF: 500000102) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "MEO",
+        "contribuinte": "500000102",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Avenida Fontes Pereira de Melo, n.º 40, 1069-300 Lisboa, Portugal",
+            "novo": "Avenida Fontes Pereira de Melo"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T18:01:09.186Z"
+    },
+    {
+      "id": "log-1786730285724-532",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Jerónimo Martins, SGPS, S.A.\" (NIF: 500000068) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Jerónimo Martins, SGPS, S.A.",
+        "contribuinte": "500000068",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Rua Actor António Silva, n.º 7, 1649-033 Lisboa, Portugal",
+            "novo": "Rua Actor António Silva"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T17:58:05.724Z"
+    },
+    {
+      "id": "log-1786730248062-97",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Galp Energia, SGPS, S.A.\" (NIF: 500001258) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Galp Energia, SGPS, S.A.",
+        "contribuinte": "500001258",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T17:57:28.062Z"
+    },
+    {
+      "id": "log-1786730225256-496",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Vodafone Portugal\" (NIF: 500000221) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Vodafone Portugal",
+        "contribuinte": "500000221",
+        "tipoCliente": "Fundação",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T17:57:05.256Z"
+    },
+    {
+      "id": "log-1786730193342-465",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Vodafone Portugal\" (NIF: 500000221) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Vodafone Portugal",
+        "contribuinte": "500000221",
+        "tipoCliente": "Fundação",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Parque das Nações, Avenida D. João II 36, 8.º Piso, 1998-017 Lisboa",
+            "novo": "Avenida D. João II"
+          },
+          {
+            "campo": "Tipo de Cliente",
+            "anterior": "Privado",
+            "novo": "Fundação"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T17:56:33.342Z"
+    },
+    {
+      "id": "log-1786730127883-71",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Oriente\" (NIF: 500000493) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Oriente",
+        "contribuinte": "500000493",
+        "tipoCliente": "Fundação",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Edificio Pedro Álvares Cabral, Muelle de Alcântara (Norte) 1350-352 Lisboa",
+            "novo": "Avenida de Brasilia"
+          },
+          {
+            "campo": "Tipo de Cliente",
+            "anterior": "Privado",
+            "novo": "Fundação"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T17:55:27.883Z"
+    },
+    {
+      "id": "log-1786729870614-996",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Montepio\" (NIF: 500000476) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Montepio",
+        "contribuinte": "500000476",
+        "tipoCliente": "Fundação",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Rua Áurea, 219 a 241\n1100-062 Lisboa",
+            "novo": "Rua Áurea"
+          },
+          {
+            "campo": "Tipo de Cliente",
+            "anterior": "Privado",
+            "novo": "Fundação"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T17:51:10.614Z"
+    },
+    {
+      "id": "log-1786729812351-286",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Millenium BCP\" (NIF: 500000272) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Millenium BCP",
+        "contribuinte": "500000272",
+        "tipoCliente": "Fundação",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Rua Augusta nº 84 – 2º Piso, 1100-053 Lisboa – Portugal",
+            "novo": "Rua Augusta"
+          },
+          {
+            "campo": "Tipo de Cliente",
+            "anterior": "Privado",
+            "novo": "Fundação"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T17:50:12.351Z"
+    },
+    {
+      "id": "log-1786729782146-182",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Mestre Casais\" (NIF: 500000510) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Mestre Casais",
+        "contribuinte": "500000510",
+        "tipoCliente": "Fundação",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Rua do Anjo, n.º 27, Mire de Tibães\nApartado 2702\n4700-565 Braga, Portugal",
+            "novo": "Rua do Anjo"
+          },
+          {
+            "campo": "Tipo de Cliente",
+            "anterior": "Privado",
+            "novo": "Fundação"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T17:49:42.146Z"
+    },
+    {
+      "id": "log-1786729569481-604",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Manuel António da Mota\" (NIF: 500000391) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Manuel António da Mota",
+        "contribuinte": "500000391",
+        "tipoCliente": "Fundação",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Praça do Bom Sucesso,74-90, piso 1, 4150-146 Porto",
+            "novo": "Praça do Bom Sucesso"
+          },
+          {
+            "campo": "Tipo de Cliente",
+            "anterior": "Privado",
+            "novo": "Fundação"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T17:46:09.481Z"
+    },
+    {
+      "id": "log-1786729515151-564",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Luso\" (NIF: 500000442) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Luso",
+        "contribuinte": "500000442",
+        "tipoCliente": "Fundação",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Rua Emídio Navarro, Alameda do Casino, 3050-224 Luso",
+            "novo": "Rua Emídio Navarro"
+          },
+          {
+            "campo": "Tipo de Cliente",
+            "anterior": "Privado",
+            "novo": "Fundação"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T17:45:15.151Z"
+    },
+    {
+      "id": "log-1786729457500-778",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação José Neves\" (NIF: 500000408) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação José Neves",
+        "contribuinte": "500000408",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Largo de Nevogilde, 9\n4150-527 Porto\nPortugal",
+            "novo": "Largo de Nevogilde"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T17:44:17.500Z"
+    },
+    {
+      "id": "log-1786729404536-394",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Jerónimo Martins\" (NIF: 500000085) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Jerónimo Martins",
+        "contribuinte": "500000085",
+        "tipoCliente": "Fundação",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Rua Actor António Silva, n.º 7, 1649-033 Lisboa, Portugal",
+            "novo": "Rua Actor António Silva"
+          }
+        ]
+      },
+      "timestamp": "2026-08-14T17:43:24.536Z"
+    },
+    {
+      "id": "log-1786729269233-398",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Cópia de Segurança",
+      "descricao": "Backup de registos \"Backup_SIGEC-Pro_14-08-2026_19-41-06.json\" gerado (75 Clientes, 140 Contactos, 4 Projetos).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-14T17:41:09.233Z"
+    },
+    {
+      "id": "log-1786729254048-731",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-14T17:40:54.048Z"
+    },
     {
       "id": "log-1786728654178-813",
       "usuarioId": "usr-admin-001",
