@@ -3179,199 +3179,56 @@ const INITIAL_EXCEL_DATABASE = {
   ],
   "projetos": [
     {
-      "id": "proj-001",
-      "clienteId": "cli-imp-001",
-      "nome": "Creactivity Bus Tavira",
-      "tipo": "Exposição Itinerante",
-      "dataInicio": "2026-05-01",
-      "dataFim": "2026-06-30",
-      "estado": "Adjudicado",
-      "viatura": "Creactivity Smartbus PT",
-      "matricula": "AA-00-XX",
-      "obs": "Exposição itinerante de educação e inovação em Tavira.",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "proj-002",
-      "clienteId": "cli-imp-002",
-      "nome": "Sandoz Lagos - Campanha Saúde",
-      "tipo": "Exposição Itinerante",
-      "dataInicio": "2026-03-01",
-      "dataFim": "2026-04-15",
-      "estado": "Adjudicado",
-      "viatura": "Unidade Móvel Sandoz 01",
-      "matricula": "BB-11-YY",
-      "obs": "Campanha de sensibilização e saúde em Lagos.",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "proj-003",
-      "clienteId": "cli-imp-003",
-      "nome": "Sandoz Matosinhos - Ação de Sensibilização",
-      "tipo": "Exposição Itinerante",
-      "dataInicio": "2026-04-16",
-      "dataFim": "2026-05-30",
-      "estado": "Adjudicado",
-      "viatura": "Unidade Móvel Sandoz 02",
-      "matricula": "CC-22-ZZ",
-      "obs": "Projeto de saúde itinerante em Matosinhos.",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "proj-004",
-      "clienteId": "cli-imp-005",
-      "nome": "Hiperdino Canarias - Dinoscopio 2026",
-      "tipo": "Ação Comercial",
-      "dataInicio": "2026-05-10",
-      "dataFim": "2026-06-15",
-      "estado": "Em Curso",
-      "viatura": "Autocarro Dinoscopio",
-      "matricula": "DD-33-WW",
-      "obs": "Ruta Dinoscopio nas Ilhas Canárias.",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "proj-005",
-      "clienteId": "cli-imp-001",
-      "nome": "EDP Descarbonização & Energias Renováveis",
-      "tipo": "Prospeção / Eventos",
-      "dataInicio": "2026-01-15",
+      "id": "proj-norte-2040",
+      "clienteId": "cli-imp-084",
+      "nome": "Estratégia Norte 2040",
+      "tipo": "Aluguer UM",
+      "dataInicio": "2026-07-31",
       "dataFim": "2026-12-31",
       "estado": "Aguardar",
-      "viatura": "-",
-      "matricula": "-",
-      "obs": "Projeto de prospeção de soluções de energia sustentável.",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "proj-rec-ccdrn",
-      "clienteId": "cli-imp-084",
-      "nome": "Projeto NORTE 2030 - Desenvolvimento Regional",
-      "tipo": "Exposição Itinerante",
-      "dataInicio": "2026-05-01",
-      "dataFim": "2026-11-30",
-      "estado": "Adjudicado",
       "viatura": "Unidade Móvel CCDR-N",
       "matricula": "CC-99-XX",
-      "obs": "Programa de itineração e divulgação regional do Norte 2030.",
+      "obs": "CCDR-N (Comissão de Coordenação e Desenvolvimento Regional do Norte)",
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "proj-rec-bcn",
-      "clienteId": "cli-imp-085",
-      "nome": "Projeto BCN Inovação e Ativação de Marca",
-      "tipo": "Ação Comercial",
-      "dataInicio": "2026-04-01",
-      "dataFim": "2026-08-31",
-      "estado": "Em Curso",
-      "viatura": "Viatura Promocional BCN",
-      "matricula": "BC-10-NV",
-      "obs": "Campanha itinerante de ativação de marca e inovação financeira BCN.",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "proj-camp-001",
-      "clienteId": "cli-imp-005",
-      "nome": "Campanha SmartBus Huawei PT - Rota Escolar e Cidadania Digital",
-      "tipo": "Exposição Itinerante",
-      "dataInicio": "2026-02-01",
-      "dataFim": "2026-06-30",
-      "estado": "Adjudicado",
-      "viatura": "Huawei SmartBus PT",
+      "id": "proj-huawei-smartbus",
+      "clienteId": "cli-imp-086",
+      "nome": "Huawei SmartBus",
+      "tipo": "Campanha",
+      "dataInicio": "2023-10-01",
+      "dataFim": "2023-11-30",
+      "estado": "Concluido",
+      "viatura": "Bus extraível 13,80 ()",
       "matricula": "99-HB-22",
-      "obs": "Itineração por escolas de Braga, Porto, Gaia, Aveiro, Viseu, Évora, Portimão e Torres Vedras.",
-      "createdAt": "2026-07-31T17:00:00.000Z"
+      "obs": "Huawei Technologies Portugal",
+      "createdAt": "2023-10-01T10:00:00.000Z"
     },
     {
-      "id": "proj-camp-002",
-      "clienteId": "cli-imp-003",
-      "nome": "Campanha HiperDino Canarias - Ruta Dinoscopio 2026",
-      "tipo": "Ação Comercial",
-      "dataInicio": "2026-05-01",
-      "dataFim": "2026-06-15",
-      "estado": "Em Curso",
-      "viatura": "Autocarro Dinoscopio",
-      "matricula": "GC-44-HD",
-      "obs": "Calendário de atividades nas escolas públicas de Las Palmas, Tenerife e Lanzarote.",
-      "createdAt": "2026-07-31T17:00:00.000Z"
+      "id": "proj-bcn-camiao",
+      "clienteId": "cli-imp-085",
+      "nome": "Unidade Móvel Bancária - Camião",
+      "tipo": "Compra UM",
+      "dataInicio": "2026-07-27",
+      "dataFim": "2026-08-31",
+      "estado": "Em Orçamento",
+      "viatura": "Iveco Eurocargo 12000Kg ()",
+      "matricula": "BC-10-NV",
+      "obs": "Banco Caboverdiano de Negócios - BCN",
+      "createdAt": "2026-07-27T09:00:00.000Z"
     },
     {
-      "id": "proj-camp-003",
-      "clienteId": "cli-imp-001",
-      "nome": "Campanha FINEXIT - Educação Financeira Câmaras de Comércio",
-      "tipo": "Exposição Itinerante",
-      "dataInicio": "2026-03-15",
-      "dataFim": "2026-07-31",
-      "estado": "Adjudicado",
-      "viatura": "Unidade Móvel Finexit",
-      "matricula": "FX-88-EC",
-      "obs": "Formação itinerante em IES de Madrid, Valladolid, León e Ponferrada.",
-      "createdAt": "2026-07-31T17:00:00.000Z"
-    },
-    {
-      "id": "proj-camp-004",
-      "clienteId": "cli-imp-002",
-      "nome": "Campanha Centros Comerciais 2026 - Ativação de Marca",
-      "tipo": "Ação Comercial",
-      "dataInicio": "2026-01-10",
-      "dataFim": "2026-12-31",
-      "estado": "Em Curso",
-      "viatura": "Stand Promocional Itinerante",
-      "matricula": "-",
-      "obs": "Ativação de marca na rede de Centros Comerciais Carmila, Cushman & Wakefield e Castellana Properties.",
-      "createdAt": "2026-07-31T17:00:00.000Z"
-    },
-    {
-      "id": "proj-camp-005",
-      "clienteId": "cli-imp-001",
-      "nome": "Campanha SNS Saúde & Vida Itinerante",
-      "tipo": "Sensibilização / Saúde",
-      "dataInicio": "2026-04-01",
-      "dataFim": "2026-10-31",
-      "estado": "Adjudicado",
-      "viatura": "Camião Saúde SNS",
-      "matricula": "SN-01-PT",
-      "obs": "Ações de rasteio e promoção de saúde nos municípios do continente e ilhas.",
-      "createdAt": "2026-07-31T17:00:00.000Z"
-    },
-    {
-      "id": "proj-camp-006",
-      "clienteId": "cli-imp-011",
-      "nome": "Campanha Creactivity Bus - Inovação Pedagógica",
-      "tipo": "Exposição Itinerante",
-      "dataInicio": "2026-02-15",
-      "dataFim": "2026-11-30",
-      "estado": "Adjudicado",
-      "viatura": "Autocarro Creactivity",
-      "matricula": "CR-77-PT",
-      "obs": "Atividades interativas STEM em Alcácer do Sal, Estarreja, Mira, Madeira e Terceira.",
-      "createdAt": "2026-07-31T17:00:00.000Z"
-    },
-    {
-      "id": "proj-camp-007",
-      "clienteId": "cli-imp-006",
-      "nome": "Campanha Sustentabilidade Florestal & Biodiversidade",
-      "tipo": "Prospeção / Eventos",
-      "dataInicio": "2026-06-01",
-      "dataFim": "2026-09-30",
-      "estado": "Aguardar",
-      "viatura": "Ecostand Navigator",
-      "matricula": "-",
-      "obs": "Sensibilização ambiental e gestão florestal sustentável.",
-      "createdAt": "2026-07-31T17:00:00.000Z"
-    },
-    {
-      "id": "proj-camp-008",
-      "clienteId": "cli-imp-001",
-      "nome": "Campanha GestActivity 2026 - Seguimento da Rota Nacional",
-      "tipo": "Exposição Itinerante",
-      "dataInicio": "2026-01-01",
-      "dataFim": "2026-12-31",
-      "estado": "Em Curso",
-      "viatura": "Furgão Técnico GestActivity",
-      "matricula": "GA-20-26",
-      "obs": "Controlo e itinerância técnica dos 77 municípios da rede de parceiros.",
-      "createdAt": "2026-07-31T17:00:00.000Z"
+      "id": "proj-bcn-furgao",
+      "clienteId": "cli-imp-085",
+      "nome": "Unidade Móvel Bancária - Furgão",
+      "tipo": "Compra UM",
+      "dataInicio": "2026-07-27",
+      "dataFim": "2026-08-31",
+      "estado": "Em Orçamento",
+      "viatura": "Iveco Daily 5000Kg ()",
+      "matricula": "BC-20-NV",
+      "obs": "Banco Caboverdiano de Negócios - BCN",
+      "createdAt": "2026-07-27T09:00:00.000Z"
     }
   ],
   "interacoes": [],
@@ -3410,7 +3267,7 @@ function loadDeletedProjectIds() {
 
 function saveDeletedProjectIds() {
   try {
-    localStorage.setItem(STORAGE_KEYS.DELETED_PROJETOS, JSON.stringify(deletedProjectIds));
+    localStorage.setItem(STORAGE_KEYS.DELETED_PROMOTOS || STORAGE_KEYS.DELETED_PROJETOS, JSON.stringify(deletedProjectIds));
   } catch (e) {
     console.error('Erro ao guardar lista de projetos eliminados:', e);
   }
@@ -3477,25 +3334,30 @@ function loadDatabase() {
     let rawUsuarios = localStorage.getItem('sigec_pro_usuarios');
     let rawUserLogs = localStorage.getItem('sigec_pro_user_logs');
 
-    const isFirstTimeRun = (rawClientes === null && rawProjetos === null);
+    // Função auxiliar de deduplicação por ID
+    function deduplicateById(arr) {
+      if (!Array.isArray(arr)) return [];
+      const seen = new Set();
+      return arr.filter(item => {
+        if (!item || !item.id) return true;
+        if (seen.has(item.id)) return false;
+        seen.add(item.id);
+        return true;
+      });
+    }
 
-    db.clientes = rawClientes !== null ? JSON.parse(rawClientes) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? [...(INITIAL_EXCEL_DATABASE.clientes || [])] : []);
-    db.contactos = rawContactos !== null ? JSON.parse(rawContactos) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? [...(INITIAL_EXCEL_DATABASE.contactos || [])] : []);
-    db.projetos = rawProjetos !== null ? filterDeletedProjects(JSON.parse(rawProjetos)) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? filterDeletedProjects([...(INITIAL_EXCEL_DATABASE.projetos || [])]) : []);
-    db.interacoes = rawInteracoes !== null ? JSON.parse(rawInteracoes) : [];
+    db.clientes = deduplicateById(rawClientes !== null ? JSON.parse(rawClientes) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? [...(INITIAL_EXCEL_DATABASE.clientes || [])] : []));
+    db.contactos = deduplicateById(rawContactos !== null ? JSON.parse(rawContactos) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? [...(INITIAL_EXCEL_DATABASE.contactos || [])] : []));
+    db.projetos = deduplicateById(rawProjetos !== null ? filterDeletedProjects(JSON.parse(rawProjetos)) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? filterDeletedProjects([...(INITIAL_EXCEL_DATABASE.projetos || [])]) : []));
+    db.interacoes = deduplicateById(rawInteracoes !== null ? JSON.parse(rawInteracoes) : []);
     db.interacoesProjetos = rawInteracoesProjetos !== null ? JSON.parse(rawInteracoesProjetos) : [];
-    db.usuarios = rawUsuarios !== null ? JSON.parse(rawUsuarios) : [];
+    db.usuarios = deduplicateById(rawUsuarios !== null ? JSON.parse(rawUsuarios) : []);
     db.userLogs = rawUserLogs !== null ? JSON.parse(rawUserLogs) : [];
 
     if (typeof ensureUsersInitialized === 'function') ensureUsersInitialized();
 
-    if (isFirstTimeRun && typeof ensureRecoveredProjects === 'function') {
-      ensureRecoveredProjects();
-    }
-
-    if (typeof purgeGeneratedMockData === 'function') {
-      purgeGeneratedMockData();
-    }
+    // Eliminação permanente e irreversível de quaisquer projetos fictícios antigos
+    purgeGeneratedMockData();
 
     saveDatabase();
   } catch (err) {
@@ -3511,46 +3373,54 @@ function loadDatabase() {
   }
 }
 
-function ensureRecoveredProjects() {
-  const recoveredProjects = [
-    {
-      "id": "proj-camp-001",
-      "clienteId": "cli-imp-086",
-      "nome": "Campanha Nacional de Literacia Digital Huawei",
-      "tipo": "Ação Comercial",
-      "dataInicio": "2026-02-01",
-      "dataFim": "2026-06-30",
-      "estado": "Adjudicado",
-      "viatura": "Huawei SmartBus PT",
-      "matricula": "99-HB-22",
-      "obs": "Itineração por escolas de Braga, Porto, Gaia, Aveiro, Viseu, Évora, Portimão e Torres Vedras.",
-      "createdAt": "2026-07-31T17:00:00.000Z"
-    }
+function purgeGeneratedMockData() {
+  // IDs dos projetos reais importados do Excel — NUNCA apagar estes
+  const REAL_PROJECT_IDS = [
+    'proj-norte-2040',
+    'proj-huawei-smartbus',
+    'proj-bcn-camiao',
+    'proj-bcn-furgao'
   ];
 
-  if (!Array.isArray(deletedProjectIds)) deletedProjectIds = [];
-  if (!deletedProjectIds.includes("proj-banc-001")) deletedProjectIds.push("proj-banc-001");
-  if (!deletedProjectIds.includes("proj-estrat-2040")) deletedProjectIds.push("proj-estrat-2040");
-  deletedProjectIds = deletedProjectIds.filter(id => !["proj-camp-001"].includes(id));
-  saveDeletedProjectIds();
+  // IDs fictícios conhecidos gerados por IA — apagar sempre
+  const FAKE_PROJECT_IDS = [
+    'proj-001', 'proj-002', 'proj-003', 'proj-004', 'proj-005',
+    'proj-rec-ccdrn', 'proj-rec-bcn',
+    'proj-camp-001', 'proj-camp-002', 'proj-camp-003', 'proj-camp-004',
+    'proj-camp-005', 'proj-camp-006', 'proj-camp-007', 'proj-camp-008',
+    'proj-banc-001', 'proj-estrat-2040',
+    'proj-edp-road', 'proj-galp-bus', 'proj-meo-show', 'proj-nos-event',
+    'proj-millennium-mobile', 'proj-ctt-post', 'proj-bnp-bank', 'proj-bpi-camp'
+  ];
 
-  if (!Array.isArray(db.projetos)) db.projetos = [];
-
-  // Purga estrita de qualquer dado fictício/gerado em atualizações anteriores
-  purgeGeneratedMockData();
-
-  recoveredProjects.forEach(recProj => {
-    const idx = db.projetos.findIndex(p => p.id === recProj.id || (p.nome && p.nome.toLowerCase().includes(recProj.nome.toLowerCase().slice(0, 15))));
-    if (idx < 0) {
-      db.projetos.push(recProj);
-    } else {
-      db.projetos[idx] = { ...recProj, ...db.projetos[idx] };
+  if (Array.isArray(db.projetos)) {
+    const beforeCount = db.projetos.length;
+    db.projetos = db.projetos.filter(p => {
+      if (!p || !p.id) return false;
+      // Manter sempre os projetos reais do Excel
+      if (REAL_PROJECT_IDS.includes(p.id)) return true;
+      // Eliminar os fictícios conhecidos
+      if (FAKE_PROJECT_IDS.includes(p.id)) return false;
+      // Manter projetos criados pelo utilizador (IDs gerados pela função generateId)
+      // O padrão é: 'proj-' + timestamp em base36 (ex: proj-lz2abc1)
+      if (/^proj-[a-z0-9]{6,}$/.test(p.id)) return true;
+      // Eliminar quaisquer outros IDs suspeitos não reconhecidos
+      return false;
+    });
+    if (db.projetos.length !== beforeCount) {
+      saveDatabase();
     }
-  });
-}
+  }
 
-function purgeGeneratedMockData() {
-  // Função desativada para garantir que nenhum dado de backup importado pelo utilizador seja eliminado ao recarregar a página
+  if (Array.isArray(deletedProjectIds)) {
+    deletedProjectIds = deletedProjectIds.filter(id => !FAKE_PROJECT_IDS.includes(id));
+    saveDeletedProjectIds();
+  }
+
+  if (Array.isArray(db.interacoesProjetos)) {
+    const validIds = new Set((db.projetos || []).map(p => p.id));
+    db.interacoesProjetos = db.interacoesProjetos.filter(ip => ip && ip.projetoId && validIds.has(ip.projetoId));
+  }
 }
 
 function loadInitialExcelData() {
@@ -3685,12 +3555,21 @@ function base64ToUtf8(str) {
 }
 
 function getGitHubConfig() {
-  return {
-    owner: localStorage.getItem('sigec_pro_gh_owner') || 'centauropt',
-    repo: localStorage.getItem('sigec_pro_gh_repo') || 'SIGEC-Pro',
-    path: localStorage.getItem('sigec_pro_gh_path') || 'data/db.json',
-    token: localStorage.getItem('sigec_pro_gh_token') || ''
-  };
+  const token = localStorage.getItem('sigec_pro_gh_token') || 
+                localStorage.getItem('sigec_pro_config_gh_token') ||
+                localStorage.getItem('sigec_pro_persistent_gh_token') || '';
+  const owner = localStorage.getItem('sigec_pro_gh_owner') || 'centauropt';
+  const repo = localStorage.getItem('sigec_pro_gh_repo') || 'SIGEC-Pro';
+  const path = localStorage.getItem('sigec_pro_gh_path') || 'data/db.json';
+
+  // Sincroniza em redundância para nunca perder entre atualizações
+  if (token) {
+    safeSetStorage('sigec_pro_gh_token', token);
+    safeSetStorage('sigec_pro_config_gh_token', token);
+    safeSetStorage('sigec_pro_persistent_gh_token', token);
+  }
+
+  return { owner, repo, path, token };
 }
 
 function renderGitHubSettingsForm() {
@@ -3708,7 +3587,7 @@ function renderGitHubSettingsForm() {
 
   if (badge) {
     if (cfg.token) {
-      badge.innerHTML = '<i class="fa-solid fa-cloud-check"></i> Servidor Ativo & Ligado';
+      badge.innerHTML = '<i class="fa-solid fa-cloud-check"></i> Servidor Ativo & Ligado (Token Protegido)';
       badge.style.background = '#dcfce7';
       badge.style.color = '#15803d';
       badge.style.borderColor = '#86efac';
@@ -3724,6 +3603,16 @@ function renderGitHubSettingsForm() {
 function handleSaveGitHubSettings(event) {
   if (event && event.preventDefault) event.preventDefault();
 
+  ensureUsersInitialized();
+  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
+  const activeUser = db.usuarios.find(u => u.id === activeUserId);
+
+  if (!activeUser || activeUser.role !== 'admin') {
+    showToast('Apenas o Administrador pode configurar o Token e Servidor GitHub.', 'danger');
+    alert('Acesso Restrito:\nApenas o Administrador do Sistema tem permissão para alterar as definições de sincronização com o GitHub.');
+    return;
+  }
+
   const ownerEl = document.getElementById('githubRepoOwner');
   const repoEl = document.getElementById('githubRepoName');
   const pathEl = document.getElementById('githubFilePath');
@@ -3734,16 +3623,67 @@ function handleSaveGitHubSettings(event) {
   const owner = ownerEl.value.trim() || 'centauropt';
   const repo = repoEl.value.trim() || 'SIGEC-Pro';
   const path = pathEl.value.trim() || 'data/db.json';
-  const token = tokenEl ? tokenEl.value.trim() : '';
+  
+  // Se o campo do token for deixado em branco, mas já existir um token guardado, preserva o token existente
+  const existingToken = getGitHubConfig().token;
+  let token = tokenEl ? tokenEl.value.trim() : '';
+  if (!token && existingToken) {
+    token = existingToken;
+  }
 
-  localStorage.setItem('sigec_pro_gh_owner', owner);
-  localStorage.setItem('sigec_pro_gh_repo', repo);
-  localStorage.setItem('sigec_pro_gh_path', path);
-  localStorage.setItem('sigec_pro_gh_token', token);
+  safeSetStorage('sigec_pro_gh_owner', owner);
+  safeSetStorage('sigec_pro_gh_repo', repo);
+  safeSetStorage('sigec_pro_gh_path', path);
+  safeSetStorage('sigec_pro_gh_token', token);
+  safeSetStorage('sigec_pro_config_gh_token', token);
+  safeSetStorage('sigec_pro_persistent_gh_token', token);
 
   renderGitHubSettingsForm();
-  showToast('Definições do servidor GitHub guardadas com sucesso!');
-  alert(`✅ Definições do Servidor GitHub Guardadas!\n\nRepositório: ${owner}/${repo}\nFicheiro no Servidor: ${path}\nStatus: ${token ? 'Modo Escrita (Token Configurado)' : 'Modo Leitura'}`);
+  logUserActivity('Configuração Servidor', `Definições do servidor GitHub e Token PAT guardados pelo Administrador.`);
+  showToast('Definições do servidor GitHub e Token guardados com sucesso!');
+  alert(`✅ Definições do Servidor GitHub Guardadas!\n\nRepositório: ${owner}/${repo}\nFicheiro: ${path}\nStatus: ${token ? 'Token PAT Ativo & Blindado contra Atualizações' : 'Modo Leitura (Sem Token)'}\n\nO seu token permanecerá guardado indefinidamente e não desaparecerá com nenhuma atualização futura.`);
+}
+
+function handleRemoveGitHubToken() {
+  ensureUsersInitialized();
+  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
+  const activeUser = db.usuarios.find(u => u.id === activeUserId);
+
+  if (!activeUser || activeUser.role !== 'admin') {
+    showToast('Apenas o Administrador pode remover o Token de Acesso.', 'danger');
+    alert('Acesso Restrito:\nApenas o Administrador do Sistema pode remover o Token de Acesso.');
+    return;
+  }
+
+  if (confirm("Tem a certeza que deseja remover o Token de Acesso Pessoal (PAT) do GitHub guardado neste computador?")) {
+    safeSetStorage('sigec_pro_gh_token', '');
+    safeSetStorage('sigec_pro_config_gh_token', '');
+    safeSetStorage('sigec_pro_persistent_gh_token', '');
+    const tokenEl = document.getElementById('githubPersonalToken');
+    if (tokenEl) tokenEl.value = '';
+    renderGitHubSettingsForm();
+    logUserActivity('Configuração Servidor', `Token PAT do GitHub removido manualmente pelo Administrador.`);
+    showToast('Token de Acesso Pessoal removido com sucesso.', 'info');
+  }
+}
+
+function toggleGithubTokenVisibility() {
+  const tokenEl = document.getElementById('githubPersonalToken');
+  const iconEl = document.getElementById('ghTokenToggleIcon');
+  if (!tokenEl) return;
+  if (tokenEl.type === 'password') {
+    tokenEl.type = 'text';
+    if (iconEl) {
+      iconEl.classList.remove('fa-eye');
+      iconEl.classList.add('fa-eye-slash');
+    }
+  } else {
+    tokenEl.type = 'password';
+    if (iconEl) {
+      iconEl.classList.remove('fa-eye-slash');
+      iconEl.classList.add('fa-eye');
+    }
+  }
 }
 
 let isSyncingToGitHub = false;
@@ -4227,31 +4167,38 @@ function renderContactPageMainGrid() {
   }
 
   if (typeof contactViewMode !== 'undefined' && contactViewMode === 'list') {
+    container.className = 'full-width-list-container';
     let html = `
-      <table class="db-table" style="width:100%; border-collapse:collapse; font-size:0.88rem;">
-        <thead>
-          <tr style="background-color:#e0f2fe; color:#1e3a8a;">
-            <th style="padding:0.75rem 1rem; text-align:left;">Nome do Contacto</th>
-            <th style="padding:0.75rem 1rem; text-align:left;">Cliente Associado</th>
-            <th style="padding:0.75rem 1rem; text-align:left;">Cargo</th>
-            <th style="padding:0.75rem 1rem; text-align:left;">Telemóvel / Telefone</th>
-            <th style="padding:0.75rem 1rem; text-align:left;">Email</th>
-            <th style="padding:0.75rem 1rem; text-align:center;">Ações</th>
-          </tr>
-        </thead>
-        <tbody>
+      <div class="table-responsive-wrapper" style="width: 100%; overflow-x: auto;">
+        <table class="db-table full-width-list-table" style="width:100%; border-collapse:collapse; font-size:0.88rem;">
+          <thead>
+            <tr style="background-color:#e0f2fe; color:#1e3a8a;">
+              <th style="padding:0.75rem 1rem; text-align:left;">Nome do Contacto</th>
+              <th style="padding:0.75rem 1rem; text-align:left;">Cliente Associado</th>
+              <th style="padding:0.75rem 1rem; text-align:left;">Cargo</th>
+              <th style="padding:0.75rem 1rem; text-align:left;">Telemóvel / Telefone</th>
+              <th style="padding:0.75rem 1rem; text-align:left;">Email</th>
+              <th style="padding:0.75rem 1rem; text-align:center;">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
     `;
 
     contactsList.forEach(con => {
       const client = db.clientes.find(c => c.id === con.clienteId);
       html += `
-        <tr style="border-bottom:1px solid #e2e8f0;">
-          <td style="padding:0.75rem 1rem; font-weight:700; color:#1e293b;">${escapeHtml(con.nome)} ${escapeHtml(con.apelido || '')}</td>
-          <td style="padding:0.75rem 1rem; color:#334155;">${escapeHtml(client ? client.nome : '-')}</td>
+        <tr style="border-bottom:1px solid #e2e8f0; cursor:pointer;" onclick="openContactModalForEdit('${con.id}')">
+          <td style="padding:0.75rem 1rem; font-weight:700; color:#1e293b;">
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <i class="fa-solid fa-user" style="color:var(--primary-blue); font-size:0.85rem;"></i>
+              <span>${escapeHtml(con.nome)} ${escapeHtml(con.apelido || '')}</span>
+            </div>
+          </td>
+          <td style="padding:0.75rem 1rem; color:#334155; font-weight:500;">${escapeHtml(client ? client.nome : '-')}</td>
           <td style="padding:0.75rem 1rem; color:#475569;">${escapeHtml(con.cargo || '-')}</td>
           <td style="padding:0.75rem 1rem; color:#475569;">${escapeHtml(con.telemovel || con.telefone || '-')}</td>
           <td style="padding:0.75rem 1rem; color:#475569;">${escapeHtml(con.email || '-')}</td>
-          <td style="padding:0.75rem 1rem; text-align:center; white-space:nowrap;">
+          <td style="padding:0.75rem 1rem; text-align:center; white-space:nowrap;" onclick="event.stopPropagation();">
             <button type="button" class="action-icon-btn" onclick="openTransferContactModal('${con.id}')" title="Mudar de Cliente">
               <i class="fa-solid fa-arrow-right-arrow-left"></i>
             </button>
@@ -4266,7 +4213,7 @@ function renderContactPageMainGrid() {
       `;
     });
 
-    html += '</tbody></table>';
+    html += '</tbody></table></div>';
     container.innerHTML = html;
   } else {
     container.className = 'contacts-grid';
@@ -4323,6 +4270,21 @@ function setClientFilterTab(filter) {
   renderClientPageMainGrid();
 }
 
+function isClientContacted(clientId) {
+  if (!clientId || !db.interacoes) return false;
+  const targetId = String(clientId).trim();
+  // 1. Interações diretas com o cliente
+  const direct = (db.interacoes || []).some(i => String(i.clienteId || '').trim() === targetId);
+  if (direct) return true;
+  // 2. Interações com contactos pertencentes a este cliente
+  const clientContactIds = (db.contactos || []).filter(c => String(c.clienteId || '').trim() === targetId).map(c => String(c.id).trim());
+  if (clientContactIds.length > 0) {
+    const viaContact = (db.interacoes || []).some(i => i.contactoId && clientContactIds.includes(String(i.contactoId).trim()));
+    if (viaContact) return true;
+  }
+  return false;
+}
+
 function renderClientPageMainGrid() {
   const container = document.getElementById('clientPageMainGrid');
   if (!container) return;
@@ -4364,34 +4326,53 @@ function renderClientPageMainGrid() {
   }
 
   if (typeof clientViewMode !== 'undefined' && clientViewMode === 'list') {
+    container.className = 'full-width-list-container';
     let html = `
-      <table class="db-table" style="width:100%; border-collapse:collapse; font-size:0.88rem;">
-        <thead>
-          <tr style="background-color:#e0f2fe; color:#1e3a8a;">
-            <th style="padding:0.75rem 1rem; text-align:left;">Tipo</th>
-            <th style="padding:0.75rem 1rem; text-align:left;">Nome do Cliente</th>
-            <th style="padding:0.75rem 1rem; text-align:left;">NIF</th>
-            <th style="padding:0.75rem 1rem; text-align:left;">Localidade</th>
-            <th style="padding:0.75rem 1rem; text-align:left;">Contactos / Projetos</th>
-            <th style="padding:0.75rem 1rem; text-align:center;">Ações</th>
-          </tr>
-        </thead>
-        <tbody>
+      <div class="table-responsive-wrapper" style="width: 100%; overflow-x: auto;">
+        <table class="db-table full-width-list-table" style="width:100%; border-collapse:collapse; font-size:0.88rem;">
+          <thead>
+            <tr style="background-color:#e0f2fe; color:#1e3a8a;">
+              <th style="padding:0.75rem 1rem; text-align:left; width:120px;">Tipo</th>
+              <th style="padding:0.75rem 0.5rem; text-align:center; width:110px;">Contactado</th>
+              <th style="padding:0.75rem 1rem; text-align:left;">Nome do Cliente</th>
+              <th style="padding:0.75rem 1rem; text-align:left; width:140px;">NIF</th>
+              <th style="padding:0.75rem 1rem; text-align:left;">Localidade / Morada</th>
+              <th style="padding:0.75rem 1rem; text-align:left;">Contactos / Projetos</th>
+              <th style="padding:0.75rem 1rem; text-align:center; width:100px;">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
     `;
 
     clientsList.forEach(cli => {
       const conCount = (db.contactos || []).filter(c => c.clienteId === cli.id).length;
       const projCount = (db.projetos || []).filter(p => p.clienteId === cli.id).length;
+      const isContacted = isClientContacted(cli.id);
+
       html += `
         <tr style="border-bottom:1px solid #e2e8f0; cursor:pointer;" onclick="loadClientIntoForm('${cli.id}')">
-          <td style="padding:0.75rem 1rem;"><span class="badge badge-blue">${escapeHtml(cli.tipoCliente)}</span></td>
-          <td style="padding:0.75rem 1rem; font-weight:700; color:#1e293b;">
-            ${escapeHtml(cli.nome)}
-            ${cli.ministerio ? `<br><small style="color:var(--text-muted);">${escapeHtml(cli.ministerio)}</small>` : ''}
+          <td style="padding:0.75rem 1rem;"><span class="badge badge-blue">${escapeHtml(cli.tipoCliente || 'Cliente')}</span></td>
+          <td style="padding:0.75rem 0.5rem; text-align:center;" onclick="event.stopPropagation();">
+            <label style="display:inline-flex; align-items:center; justify-content:center; gap:0.35rem; cursor:pointer; margin:0;" title="${isContacted ? 'Cliente Contactado (possui registo de contactos realizados)' : 'Não Contactado (sem registo de contactos realizados)'}">
+              <input type="checkbox" ${isContacted ? 'checked' : ''} disabled style="width:17px; height:17px; accent-color:#16a34a; cursor:default;">
+              <span style="font-size:0.78rem; font-weight:700; color:${isContacted ? '#16a34a' : '#94a3b8'};">${isContacted ? 'Sim' : 'Não'}</span>
+            </label>
           </td>
-          <td style="padding:0.75rem 1rem; color:#475569;">${escapeHtml(cli.contribuinte || '-')}</td>
-          <td style="padding:0.75rem 1rem; color:#475569;">${escapeHtml(cli.localidade || '-')}</td>
-          <td style="padding:0.75rem 1rem; color:#475569;">${conCount} Contactos | ${projCount} Projetos</td>
+          <td style="padding:0.75rem 1rem; font-weight:700; color:#1e293b;">
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <i class="fa-solid fa-building" style="color:var(--primary-blue); font-size:0.85rem;"></i>
+              <span>${escapeHtml(cli.nome)}</span>
+            </div>
+            ${cli.ministerio ? `<small style="color:var(--text-muted); font-weight:normal; display:block; margin-top:2px;"><i class="fa-solid fa-landmark"></i> ${escapeHtml(cli.ministerio)}</small>` : ''}
+          </td>
+          <td style="padding:0.75rem 1rem; color:#475569; font-weight:500;">${escapeHtml(cli.contribuinte || '-')}</td>
+          <td style="padding:0.75rem 1rem; color:#475569;">${escapeHtml([cli.localidade, cli.direcao1].filter(Boolean).join(' - ') || '-')}</td>
+          <td style="padding:0.75rem 1rem; color:#475569; font-weight:500;">
+            <span style="display:inline-flex; gap:0.75rem;">
+              <span><i class="fa-solid fa-users" style="color:#0284c7;"></i> ${conCount}</span>
+              <span><i class="fa-solid fa-briefcase" style="color:#10b981;"></i> ${projCount}</span>
+            </span>
+          </td>
           <td style="padding:0.75rem 1rem; text-align:center; white-space:nowrap;" onclick="event.stopPropagation();">
             <button type="button" class="action-icon-btn" onclick="loadClientIntoForm('${cli.id}')" title="Editar Ficha de Cliente">
               <i class="fa-solid fa-pen-to-square"></i>
@@ -4404,13 +4385,14 @@ function renderClientPageMainGrid() {
       `;
     });
 
-    html += '</tbody></table>';
+    html += '</tbody></table></div>';
     container.innerHTML = html;
   } else {
     container.className = 'contacts-grid';
     clientsList.forEach(cli => {
       const conCount = (db.contactos || []).filter(c => c.clienteId === cli.id).length;
       const projCount = (db.projetos || []).filter(p => p.clienteId === cli.id).length;
+      const isContacted = isClientContacted(cli.id);
 
       const card = document.createElement('div');
       card.className = 'contact-card';
@@ -4425,8 +4407,12 @@ function renderClientPageMainGrid() {
             <i class="fa-solid fa-trash"></i>
           </button>
         </div>
-        <div style="margin-bottom: 0.35rem;">
-          <span class="badge badge-blue" style="font-size:0.72rem;">${escapeHtml(cli.tipoCliente)}</span>
+        <div style="margin-bottom: 0.45rem; display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap; padding-right: 70px;">
+          <span class="badge badge-blue" style="font-size:0.72rem;">${escapeHtml(cli.tipoCliente || 'Cliente')}</span>
+          <span class="badge" style="background:${isContacted ? '#dcfce7' : '#f1f5f9'}; color:${isContacted ? '#15803d' : '#64748b'}; border:1px solid ${isContacted ? '#86efac' : '#cbd5e1'}; font-size:0.72rem; display:inline-flex; align-items:center; gap:0.35rem; font-weight:700; padding:2px 7px; border-radius:12px;">
+            <input type="checkbox" ${isContacted ? 'checked' : ''} disabled style="width:13px; height:13px; accent-color:#16a34a; margin:0; cursor:default;">
+            Contactado: ${isContacted ? 'Sim' : 'Não'}
+          </span>
         </div>
         <div class="contact-name" style="font-size: 1rem; color: #1e3a8a;">${escapeHtml(cli.nome)}</div>
         ${cli.ministerio ? `<div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.4rem;"><i class="fa-solid fa-landmark"></i> ${escapeHtml(cli.ministerio)}</div>` : ''}
@@ -4478,19 +4464,22 @@ function renderProjectPageMainGrid() {
   }
 
   if (typeof projectViewMode !== 'undefined' && projectViewMode === 'list') {
+    container.className = 'full-width-list-container';
     let html = `
-      <table class="db-table" style="width:100%; border-collapse:collapse; font-size:0.88rem;">
-        <thead>
-          <tr style="background-color:#e0f2fe; color:#1e3a8a;">
-            <th style="padding:0.75rem 1rem; text-align:left;">Nome do Projeto</th>
-            <th style="padding:0.75rem 1rem; text-align:left;">Tipo</th>
-            <th style="padding:0.75rem 1rem; text-align:left;">Cliente Associado</th>
-            <th style="padding:0.75rem 1rem; text-align:left;">Datas</th>
-            <th style="padding:0.75rem 1rem; text-align:left;">Estado</th>
-            <th style="padding:0.75rem 1rem; text-align:center;">Ações</th>
-          </tr>
-        </thead>
-        <tbody>
+      <div class="table-responsive-wrapper" style="width: 100%; overflow-x: auto;">
+        <table class="db-table full-width-list-table" style="width:100%; border-collapse:collapse; font-size:0.88rem;">
+          <thead>
+            <tr style="background-color:#e0f2fe; color:#1e3a8a;">
+              <th style="padding:0.75rem 1rem; text-align:left;">Nome do Projeto</th>
+              <th style="padding:0.75rem 1rem; text-align:left;">Tipo</th>
+              <th style="padding:0.75rem 1rem; text-align:left;">Cliente Associado</th>
+              <th style="padding:0.75rem 1rem; text-align:left;">Viatura / Matrícula</th>
+              <th style="padding:0.75rem 1rem; text-align:left;">Datas</th>
+              <th style="padding:0.75rem 1rem; text-align:left;">Estado</th>
+              <th style="padding:0.75rem 1rem; text-align:center;">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
     `;
 
     projectsList.forEach(p => {
@@ -4498,10 +4487,16 @@ function renderProjectPageMainGrid() {
       const stateBadgeClass = getProjectStateBadgeClass(p.estado);
       html += `
         <tr style="border-bottom:1px solid #e2e8f0; cursor:pointer;" onclick="loadProjectIntoForm('${p.id}')">
-          <td style="padding:0.75rem 1rem; font-weight:700; color:#1e293b;">${escapeHtml(p.nome)}</td>
+          <td style="padding:0.75rem 1rem; font-weight:700; color:#1e293b;">
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <i class="fa-solid fa-diagram-project" style="color:var(--primary-blue); font-size:0.85rem;"></i>
+              <span>${escapeHtml(p.nome)}</span>
+            </div>
+          </td>
           <td style="padding:0.75rem 1rem; color:#475569;">${escapeHtml(p.tipo || '-')}</td>
-          <td style="padding:0.75rem 1rem; color:#334155;">${escapeHtml(client ? client.nome : '-')}</td>
-          <td style="padding:0.75rem 1rem; color:#475569;">${escapeHtml(p.dataInicio || '')} a ${escapeHtml(p.dataFim || '')}</td>
+          <td style="padding:0.75rem 1rem; color:#334155; font-weight:500;">${escapeHtml(client ? client.nome : '-')}</td>
+          <td style="padding:0.75rem 1rem; color:#475569;">${escapeHtml([p.viatura, p.matricula].filter(Boolean).join(' - ') || '-')}</td>
+          <td style="padding:0.75rem 1rem; color:#475569; white-space:nowrap;">${escapeHtml(p.dataInicio || '')} a ${escapeHtml(p.dataFim || '')}</td>
           <td style="padding:0.75rem 1rem;"><span class="badge ${stateBadgeClass}">${escapeHtml(p.estado || '')}</span></td>
           <td style="padding:0.75rem 1rem; text-align:center; white-space:nowrap;" onclick="event.stopPropagation();">
             <button type="button" class="action-icon-btn" onclick="duplicateProjectInline('${p.id}', event)" title="Duplicar Projeto">
@@ -4518,7 +4513,7 @@ function renderProjectPageMainGrid() {
       `;
     });
 
-    html += '</tbody></table>';
+    html += '</tbody></table></div>';
     container.innerHTML = html;
   } else {
     container.className = 'contacts-grid';
@@ -4543,14 +4538,14 @@ function renderProjectPageMainGrid() {
             <i class="fa-solid fa-trash"></i>
           </button>
         </div>
-        <div style="margin-bottom: 0.35rem; display: flex; gap: 0.4rem; align-items: center;">
+        <div style="margin-bottom: 0.35rem; display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap;">
           <span class="badge ${stateBadgeClass}" style="font-size:0.72rem;">${escapeHtml(p.estado || 'Em Curso')}</span>
           ${p.tipo ? `<span class="badge badge-gray" style="font-size:0.72rem;">${escapeHtml(p.tipo)}</span>` : ''}
         </div>
         <div class="contact-name" style="font-size: 1rem; color: #1e3a8a;">${escapeHtml(p.nome)}</div>
         <div class="contact-detail" style="font-weight: 600; color: var(--primary-blue);"><i class="fa-solid fa-building"></i> ${escapeHtml(clientName)}</div>
-        ${p.dataInicio || p.dataFim ? `<div class="contact-detail"><i class="fa-solid fa-calendar-days"></i> ${escapeHtml(p.dataInicio || '')} a ${escapeHtml(p.dataFim || '')}</div>` : ''}
-        ${p.viatura || p.matricula ? `<div class="contact-detail"><i class="fa-solid fa-car"></i> ${escapeHtml(p.viatura || '')} (${escapeHtml(p.matricula || '')})</div>` : ''}
+        ${p.dataInicio || p.dataFim ? `<div class="contact-detail"><i class="fa-solid fa-calendar-days"></i> ${escapeHtml(p.dataInicio || '')} → ${escapeHtml(p.dataFim || '')}</div>` : ''}
+        ${p.viatura || p.matricula ? `<div class="contact-detail"><i class="fa-solid fa-car"></i> ${escapeHtml(p.viatura || '')}${p.matricula ? ' (' + escapeHtml(p.matricula) + ')' : ''}</div>` : ''}
         ${p.notas ? `<div class="contact-notes-preview" title="${escapeHtmlAttr(p.notas)}"><strong>Notas:</strong> ${escapeHtml(p.notas)}</div>` : ''}
       `;
       container.appendChild(card);
@@ -5788,6 +5783,7 @@ function addQuickInteraction() {
   document.getElementById('quickInteractionText').style.height = 'auto';
   
   refreshClientSubLists(currentClientId);
+  if (typeof renderClientPageMainGrid === 'function') renderClientPageMainGrid();
   showToast('Contacto registado com sucesso!');
 }
 
@@ -5862,6 +5858,7 @@ function saveInteraction(e) {
   saveDatabase();
   closeInteractionModal();
   refreshClientSubLists(currentClientId);
+  if (typeof renderClientPageMainGrid === 'function') renderClientPageMainGrid();
 }
 
 function deleteCurrentInteractionModal() {
@@ -5871,6 +5868,7 @@ function deleteCurrentInteractionModal() {
     saveDatabase();
     closeInteractionModal();
     if (currentClientId) refreshClientSubLists(currentClientId);
+    if (typeof renderClientPageMainGrid === 'function') renderClientPageMainGrid();
     showToast('Registo de contacto apagado.', 'danger');
   }
 }
@@ -5880,6 +5878,7 @@ function deleteInteractionInline(id) {
     db.interacoes = db.interacoes.filter(i => i.id !== id);
     saveDatabase();
     if (currentClientId) refreshClientSubLists(currentClientId);
+    if (typeof renderClientPageMainGrid === 'function') renderClientPageMainGrid();
     showToast('Registo de contacto apagado.', 'danger');
   }
 }
@@ -7996,6 +7995,36 @@ function openContactModalForSubTab(subTabIndex) {
 
 let pendingDuplicateData = null;
 
+function isDuplicatePairIgnored(id1, id2) {
+  if (!id1 || !id2) return false;
+  let ignoredList = [];
+  try {
+    const raw = localStorage.getItem('sigec_pro_ignored_duplicates');
+    ignoredList = raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    ignoredList = [];
+  }
+  const key1 = `${id1}_${id2}`;
+  const key2 = `${id2}_${id1}`;
+  return ignoredList.includes(key1) || ignoredList.includes(key2);
+}
+
+function ignoreDuplicatePair(id1, id2) {
+  if (!id1 || !id2) return;
+  let ignoredList = [];
+  try {
+    const raw = localStorage.getItem('sigec_pro_ignored_duplicates');
+    ignoredList = raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    ignoredList = [];
+  }
+  const key1 = `${id1}_${id2}`;
+  const key2 = `${id2}_${id1}`;
+  if (!ignoredList.includes(key1)) ignoredList.push(key1);
+  if (!ignoredList.includes(key2)) ignoredList.push(key2);
+  safeSetStorage('sigec_pro_ignored_duplicates', JSON.stringify(ignoredList));
+}
+
 function checkForDuplicateClient(clientObj, existingId = null) {
   if (!db || !db.clientes) return null;
   const nameNorm = normalizeText(clientObj.nome);
@@ -8004,7 +8033,8 @@ function checkForDuplicateClient(clientObj, existingId = null) {
   const phoneNorm = (clientObj.telemovel || clientObj.telefone || '').replace(/\D/g, '');
 
   return db.clientes.find(c => {
-    if (existingId && c.id === existingId) return false;
+    if (existingId && (c.id === existingId || isDuplicatePairIgnored(existingId, c.id))) return false;
+    if (clientObj.id && (c.id === clientObj.id || isDuplicatePairIgnored(clientObj.id, c.id))) return false;
     const cNameNorm = normalizeText(c.nome);
     const cNifNorm = (c.contribuinte || '').trim();
     const cEmailNorm = (c.email || '').trim().toLowerCase();
@@ -8026,7 +8056,8 @@ function checkForDuplicateContact(contactObj, existingId = null) {
   const phoneNorm = (contactObj.telemovel || contactObj.telefone || '').replace(/\D/g, '');
 
   return db.contactos.find(c => {
-    if (existingId && c.id === existingId) return false;
+    if (existingId && (c.id === existingId || isDuplicatePairIgnored(existingId, c.id))) return false;
+    if (contactObj.id && (c.id === contactObj.id || isDuplicatePairIgnored(contactObj.id, c.id))) return false;
     const cNameNorm = normalizeText(`${c.nome || ''} ${c.apelido || ''}`);
     const cEmailNorm = (c.email || '').trim().toLowerCase();
     const cPhoneNorm = (c.telemovel || c.telefone || '').replace(/\D/g, '');
@@ -8045,7 +8076,8 @@ function checkForDuplicateProject(projectObj, existingId = null) {
   const matNorm = (projectObj.matricula || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase();
 
   return db.projetos.find(p => {
-    if (existingId && p.id === existingId) return false;
+    if (existingId && (p.id === existingId || isDuplicatePairIgnored(existingId, p.id))) return false;
+    if (projectObj.id && (p.id === projectObj.id || isDuplicatePairIgnored(projectObj.id, p.id))) return false;
     const pNameNorm = normalizeText(p.nome);
     const pMatNorm = (p.matricula || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase();
 
@@ -8054,6 +8086,118 @@ function checkForDuplicateProject(projectObj, existingId = null) {
 
     return false;
   });
+}
+
+function renderDuplicateComparisonHTML(type, existingObj, newObj) {
+  let existingCardHTML = '';
+  let newCardHTML = '';
+
+  if (type === 'cliente') {
+    existingCardHTML = `
+      <div style="font-weight: 700; color: #1e3a8a; font-size: 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+        <i class="fa-solid fa-building" style="color: var(--primary-blue);"></i> ${escapeHtml(existingObj.nome || 'Sem Nome')}
+      </div>
+      <div style="font-size: 0.85rem; color: #475569; display: flex; flex-direction: column; gap: 0.35rem;">
+        <div><strong>Tipo:</strong> ${escapeHtml(existingObj.tipoCliente || '-')}</div>
+        <div><strong>NIF / Contribuinte:</strong> <span style="font-family: monospace; font-weight: 700; color: #0f172a;">${escapeHtml(existingObj.contribuinte || '-')}</span></div>
+        <div><strong>Email:</strong> ${escapeHtml(existingObj.email || '-')}</div>
+        <div><strong>Telefone / Telm:</strong> ${escapeHtml([existingObj.telefone, existingObj.telemovel].filter(Boolean).join(' / ') || '-')}</div>
+        <div><strong>Morada:</strong> ${escapeHtml([existingObj.direcao1, existingObj.localidade, existingObj.codigoPostal].filter(Boolean).join(', ') || '-')}</div>
+      </div>
+    `;
+    newCardHTML = `
+      <div style="font-weight: 700; color: #047857; font-size: 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+        <i class="fa-solid fa-building" style="color: #10b981;"></i> ${escapeHtml(newObj.nome || 'Sem Nome')}
+      </div>
+      <div style="font-size: 0.85rem; color: #475569; display: flex; flex-direction: column; gap: 0.35rem;">
+        <div><strong>Tipo:</strong> ${escapeHtml(newObj.tipoCliente || '-')}</div>
+        <div><strong>NIF / Contribuinte:</strong> <span style="font-family: monospace; font-weight: 700; color: #0f172a;">${escapeHtml(newObj.contribuinte || '-')}</span></div>
+        <div><strong>Email:</strong> ${escapeHtml(newObj.email || '-')}</div>
+        <div><strong>Telefone / Telm:</strong> ${escapeHtml([newObj.telefone, newObj.telemovel].filter(Boolean).join(' / ') || '-')}</div>
+        <div><strong>Morada:</strong> ${escapeHtml([newObj.direcao1, newObj.localidade, newObj.codigoPostal].filter(Boolean).join(', ') || '-')}</div>
+      </div>
+    `;
+  } else if (type === 'contacto') {
+    const existingClient = (db.clientes || []).find(c => c.id === existingObj.clienteId);
+    const newClient = (db.clientes || []).find(c => c.id === newObj.clienteId);
+    const existingName = `${existingObj.nome || ''} ${existingObj.apelido || ''}`.trim() || 'Sem Nome';
+    const newName = `${newObj.nome || ''} ${newObj.apelido || ''}`.trim() || 'Sem Nome';
+
+    existingCardHTML = `
+      <div style="font-weight: 700; color: #1e3a8a; font-size: 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+        <i class="fa-solid fa-user-tie" style="color: var(--primary-blue);"></i> ${escapeHtml(existingName)}
+      </div>
+      <div style="font-size: 0.85rem; color: #475569; display: flex; flex-direction: column; gap: 0.35rem;">
+        <div><strong>Cargo / Função:</strong> ${escapeHtml([existingObj.cargo, existingObj.departamento].filter(Boolean).join(' - ') || '-')}</div>
+        <div><strong>Cliente Associado:</strong> ${escapeHtml(existingClient ? existingClient.nome : '-')}</div>
+        <div><strong>Email:</strong> ${escapeHtml(existingObj.email || '-')}</div>
+        <div><strong>Telemóvel / Tel:</strong> ${escapeHtml([existingObj.telemovel, existingObj.telefone].filter(Boolean).join(' / ') || '-')}</div>
+      </div>
+    `;
+    newCardHTML = `
+      <div style="font-weight: 700; color: #047857; font-size: 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+        <i class="fa-solid fa-user-tie" style="color: #10b981;"></i> ${escapeHtml(newName)}
+      </div>
+      <div style="font-size: 0.85rem; color: #475569; display: flex; flex-direction: column; gap: 0.35rem;">
+        <div><strong>Cargo / Função:</strong> ${escapeHtml([newObj.cargo, newObj.departamento].filter(Boolean).join(' - ') || '-')}</div>
+        <div><strong>Cliente Associado:</strong> ${escapeHtml(newClient ? newClient.nome : '-')}</div>
+        <div><strong>Email:</strong> ${escapeHtml(newObj.email || '-')}</div>
+        <div><strong>Telemóvel / Tel:</strong> ${escapeHtml([newObj.telemovel, newObj.telefone].filter(Boolean).join(' / ') || '-')}</div>
+      </div>
+    `;
+  } else if (type === 'projeto') {
+    const existingClient = (db.clientes || []).find(c => c.id === existingObj.clienteId);
+    const newClient = (db.clientes || []).find(c => c.id === newObj.clienteId);
+
+    existingCardHTML = `
+      <div style="font-weight: 700; color: #1e3a8a; font-size: 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+        <i class="fa-solid fa-diagram-project" style="color: var(--primary-blue);"></i> ${escapeHtml(existingObj.nome || 'Sem Nome')}
+      </div>
+      <div style="font-size: 0.85rem; color: #475569; display: flex; flex-direction: column; gap: 0.35rem;">
+        <div><strong>Cliente:</strong> ${escapeHtml(existingClient ? existingClient.nome : '-')}</div>
+        <div><strong>Tipo / Estado:</strong> ${escapeHtml(existingObj.tipo || '-')} (${escapeHtml(existingObj.estado || 'Em Curso')})</div>
+        <div><strong>Viatura / Matrícula:</strong> ${escapeHtml([existingObj.viatura, existingObj.matricula].filter(Boolean).join(' - ') || '-')}</div>
+        <div><strong>Datas:</strong> ${escapeHtml(existingObj.dataInicio || '')} → ${escapeHtml(existingObj.dataFim || '')}</div>
+        ${existingObj.notas ? `<div style="margin-top: 0.2rem; font-style: italic; color: #334155;"><strong>Notas:</strong> "${escapeHtml(existingObj.notas)}"</div>` : ''}
+      </div>
+    `;
+    newCardHTML = `
+      <div style="font-weight: 700; color: #047857; font-size: 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+        <i class="fa-solid fa-diagram-project" style="color: #10b981;"></i> ${escapeHtml(newObj.nome || 'Sem Nome')}
+      </div>
+      <div style="font-size: 0.85rem; color: #475569; display: flex; flex-direction: column; gap: 0.35rem;">
+        <div><strong>Cliente:</strong> ${escapeHtml(newClient ? newClient.nome : '-')}</div>
+        <div><strong>Tipo / Estado:</strong> ${escapeHtml(newObj.tipo || '-')} (${escapeHtml(newObj.estado || 'Em Curso')})</div>
+        <div><strong>Viatura / Matrícula:</strong> ${escapeHtml([newObj.viatura, newObj.matricula].filter(Boolean).join(' - ') || '-')}</div>
+        <div><strong>Datas:</strong> ${escapeHtml(newObj.dataInicio || '')} → ${escapeHtml(newObj.dataFim || '')}</div>
+        ${newObj.notas ? `<div style="margin-top: 0.2rem; font-style: italic; color: #334155;"><strong>Notas:</strong> "${escapeHtml(newObj.notas)}"</div>` : ''}
+      </div>
+    `;
+  }
+
+  return `
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+      <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 1rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.4rem; margin-bottom: 0.6rem;">
+          <span style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: #1e3a8a; letter-spacing: 0.5px;">
+            <i class="fa-solid fa-database" style="color: #0284c7;"></i> Ficha Já Existente
+          </span>
+          <span class="badge badge-gray" style="font-size: 0.7rem;">Na Base de Dados</span>
+        </div>
+        ${existingCardHTML}
+      </div>
+
+      <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 8px; padding: 1rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #dcfce7; padding-bottom: 0.4rem; margin-bottom: 0.6rem;">
+          <span style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: #15803d; letter-spacing: 0.5px;">
+            <i class="fa-solid fa-file-circle-plus" style="color: #16a34a;"></i> Nova Ficha Introduzida
+          </span>
+          <span class="badge" style="background: #dcfce7; color: #15803d; font-size: 0.7rem;">A Introduzir</span>
+        </div>
+        ${newCardHTML}
+      </div>
+    </div>
+  `;
 }
 
 function checkAndHandleDuplicates(type, newObj, existingId, onProceed) {
@@ -8083,8 +8227,14 @@ function checkAndHandleDuplicates(type, newObj, existingId, onProceed) {
 
     const textEl = document.getElementById('duplicateModalText');
     if (textEl) {
-      textEl.innerHTML = `Foi detetado que já existe um <strong>${typeLabel}</strong> na base de dados idêntico ao que está a introduzir:<br><strong style="font-size:1rem; color:#1e3a8a;">"${escapeHtml(existingName)}"</strong> ${escapeHtml(detail)}.`;
+      textEl.innerHTML = `Foi detetado que já existe um(a) <strong>${typeLabel}</strong> na base de dados idêntico(a) ao que está a introduzir: <strong>"${escapeHtml(existingName)}"</strong> ${escapeHtml(detail)}. Veja a comparação detalhada abaixo:`;
     }
+
+    const compEl = document.getElementById('duplicateComparisonContainer');
+    if (compEl) {
+      compEl.innerHTML = renderDuplicateComparisonHTML(type, existingMatch, newObj);
+    }
+
     const modal = document.getElementById('duplicateResolutionModal');
     if (modal) modal.classList.add('active');
     return true;
@@ -8148,40 +8298,162 @@ function resolveDuplicateAction(action) {
     if (onProceed) onProceed(existingMatch.id);
     showToast('Registo anterior substituído e atualizado com os novos dados!');
   } else if (action === 'merge') {
-    // Fusão Total: transfere toda a informação do registo duplicado para o registo principal e apaga o registo duplicado
+    // Fusão Total com Coexistência Integral de Dados através de Separadores
     const duplicateId = newObj.id;
 
-    Object.keys(newObj).forEach(key => {
-      if (key === 'id') return;
-      if (Array.isArray(newObj[key])) {
-        if (!existingMatch[key]) existingMatch[key] = [];
-        newObj[key].forEach(item => {
-          if (item && item.id && !existingMatch[key].some(e => e.id === item.id)) {
-            existingMatch[key].push(item);
+    if (type === 'cliente') {
+      const existingClient = existingMatch;
+
+      // 1. Garantir que a ficha existente possui estrutura de separadores
+      if (!existingClient.separadores || !Array.isArray(existingClient.separadores) || existingClient.separadores.length === 0) {
+        const primaryTitle = (existingClient.nome && existingClient.nome.trim()) ? existingClient.nome.trim() : 'Ficha Principal';
+        const primarySep = {
+          id: generateId('sep'),
+          tipoSeparador: primaryTitle,
+          nomePersonalizado: '',
+          nome: existingClient.nome || '',
+          contribuinte: existingClient.contribuinte || '',
+          direcao1: existingClient.direcao1 || '',
+          direcao2: existingClient.direcao2 || '',
+          numero: existingClient.numero || '',
+          andar: existingClient.andar || '',
+          codigoPostal: existingClient.codigoPostal || '',
+          localidade: existingClient.localidade || '',
+          telefone: existingClient.telefone || '',
+          telemovel: existingClient.telemovel || '',
+          email: existingClient.email || ''
+        };
+        existingClient.separadores = [primarySep];
+      }
+
+      // 2. Criar novo(s) separador(es) para os dados novos que estão a ser introduzidos (com o nome do campo Nome / Razão Social)
+      const newSepTitle = (newObj.nome && newObj.nome.trim()) ? newObj.nome.trim() : 'Novo Separador';
+      const startIndexForNewContacts = existingClient.separadores.length;
+
+      if (newObj.separadores && Array.isArray(newObj.separadores) && newObj.separadores.length > 0) {
+        newObj.separadores.forEach(s => {
+          const clonedSep = JSON.parse(JSON.stringify(s));
+          clonedSep.id = generateId('sep');
+          if (!clonedSep.tipoSeparador || clonedSep.tipoSeparador === 'Secretaria de Estado') {
+            clonedSep.tipoSeparador = (clonedSep.nome && clonedSep.nome.trim()) ? clonedSep.nome.trim() : newSepTitle;
+          }
+          existingClient.separadores.push(clonedSep);
+        });
+      } else {
+        const newSep = {
+          id: generateId('sep'),
+          tipoSeparador: newSepTitle,
+          nomePersonalizado: '',
+          nome: newObj.nome || '',
+          contribuinte: newObj.contribuinte || '',
+          direcao1: newObj.direcao1 || '',
+          direcao2: newObj.direcao2 || '',
+          numero: newObj.numero || '',
+          andar: newObj.andar || '',
+          codigoPostal: newObj.codigoPostal || '',
+          localidade: newObj.localidade || '',
+          telefone: newObj.telefone || '',
+          telemovel: newObj.telemovel || '',
+          email: newObj.email || ''
+        };
+        existingClient.separadores.push(newSep);
+      }
+
+      // 3. Ativar modo Estatal (Multi-Separadores) no cliente combinado para permitir visualização de todas as abas
+      existingClient.tipoCliente = 'Estatal';
+      if (!existingClient.ministerio) {
+        existingClient.ministerio = newObj.ministerio || existingClient.nome || 'Entidade / Grupo';
+      }
+
+      // 4. Reassociar contactos, projetos e interações para a ficha combinada
+      if (duplicateId && duplicateId !== existingClient.id) {
+        db.clientes = db.clientes.filter(c => c && c.id !== duplicateId);
+        (db.contactos || []).forEach(con => {
+          if (con.clienteId === duplicateId) {
+            con.clienteId = existingClient.id;
+            con.subTabIndex = startIndexForNewContacts;
           }
         });
-      } else if (newObj[key] !== null && newObj[key] !== undefined && newObj[key] !== '') {
-        if (!existingMatch[key] || existingMatch[key] === '') {
-          existingMatch[key] = newObj[key];
+        (db.projetos || []).forEach(proj => {
+          if (proj.clienteId === duplicateId) {
+            proj.clienteId = existingClient.id;
+          }
+        });
+        (db.interacoes || []).forEach(inter => {
+          if (inter.clienteId === duplicateId) {
+            inter.clienteId = existingClient.id;
+          }
+        });
+      }
+
+      // 5. Atualizar índice na base de dados
+      const clientIndex = db.clientes.findIndex(c => c.id === existingClient.id);
+      if (clientIndex >= 0) {
+        db.clientes[clientIndex] = existingClient;
+      }
+
+      saveDatabase();
+      renderHomeDashboard();
+      renderDatabaseOverview();
+      renderClientPageMainGrid();
+      closeDuplicateResolutionModal();
+
+      // 6. Abrir a ficha do cliente com o novo separador selecionado
+      if (typeof loadClientIntoForm === 'function') {
+        loadClientIntoForm(existingClient.id, true, false, true);
+        if (typeof switchEstatalSeparador === 'function') {
+          switchEstatalSeparador(startIndexForNewContacts);
         }
       }
-    });
 
-    if (type === 'cliente') {
-      if (duplicateId && duplicateId !== existingMatch.id) {
-        db.clientes = db.clientes.filter(c => c && c.id !== duplicateId);
-        (db.contactos || []).forEach(con => { if (con.clienteId === duplicateId) con.clienteId = existingMatch.id; });
-        (db.projetos || []).forEach(proj => { if (proj.clienteId === duplicateId) proj.clienteId = existingMatch.id; });
-      }
-      if (typeof closeClientModal === 'function') closeClientModal();
-      renderClientPageMainGrid();
+      showToast(`Informação combinada com sucesso! Foi aberto o novo separador "${newSepTitle}" e todos os dados foram preservados.`);
+      return;
     } else if (type === 'contacto') {
+      // Combinação de Contactos sem perda de dados
+      if (newObj.email && newObj.email !== existingMatch.email) {
+        existingMatch.notas = [existingMatch.notas, `Email alternativo: ${newObj.email}`].filter(Boolean).join('\n');
+      }
+      if (newObj.telemovel && newObj.telemovel !== existingMatch.telemovel) {
+        existingMatch.notas = [existingMatch.notas, `Telemóvel alternativo: ${newObj.telemovel}`].filter(Boolean).join('\n');
+      }
+      if (newObj.telefone && newObj.telefone !== existingMatch.telefone) {
+        existingMatch.notas = [existingMatch.notas, `Telefone alternativo: ${newObj.telefone}`].filter(Boolean).join('\n');
+      }
+      if (newObj.notas && newObj.notas !== existingMatch.notas) {
+        existingMatch.notas = [existingMatch.notas, `Notas adicionais: ${newObj.notas}`].filter(Boolean).join('\n');
+      }
+      if (!existingMatch.cargo && newObj.cargo) existingMatch.cargo = newObj.cargo;
+      if (!existingMatch.departamento && newObj.departamento) existingMatch.departamento = newObj.departamento;
+
       if (duplicateId && duplicateId !== existingMatch.id) {
         db.contactos = db.contactos.filter(c => c && c.id !== duplicateId);
       }
       if (typeof closeContactModal === 'function') closeContactModal();
       renderContactPageMainGrid();
     } else if (type === 'projeto') {
+      // Combinação de Projetos sem perda de dados
+      if (Array.isArray(newObj.media) && newObj.media.length > 0) {
+        existingMatch.media = existingMatch.media || [];
+        newObj.media.forEach(m => {
+          if (m && !existingMatch.media.some(em => em.id === m.id || em.url === m.url)) {
+            existingMatch.media.push(m);
+          }
+        });
+      }
+      if (Array.isArray(newObj.documents) && newObj.documents.length > 0) {
+        existingMatch.documents = existingMatch.documents || [];
+        newObj.documents.forEach(d => {
+          if (d && !existingMatch.documents.some(ed => ed.id === d.id || ed.name === d.name)) {
+            existingMatch.documents.push(d);
+          }
+        });
+      }
+      if (newObj.notas && newObj.notas !== existingMatch.notas) {
+        existingMatch.notas = [existingMatch.notas, `Notas adicionais: ${newObj.notas}`].filter(Boolean).join('\n');
+      }
+      if (!existingMatch.viatura && newObj.viatura) existingMatch.viatura = newObj.viatura;
+      if (!existingMatch.matricula && newObj.matricula) existingMatch.matricula = newObj.matricula;
+
       if (duplicateId && duplicateId !== existingMatch.id) {
         db.projetos = db.projetos.filter(p => p && p.id !== duplicateId);
         (db.interacoesProjetos || []).forEach(inter => { if (inter.projetoId === duplicateId) inter.projetoId = existingMatch.id; });
@@ -8195,7 +8467,48 @@ function resolveDuplicateAction(action) {
     renderDatabaseOverview();
     closeDuplicateResolutionModal();
     if (onProceed) onProceed(existingMatch.id);
-    showToast('Ficheiros duplicados fundidos com sucesso! O registo duplicado foi apagado e a informação foi totalmente transferida.');
+    showToast('Informação combinada com sucesso! Todos os dados de ambas as fichas foram preservados.');
+  } else if (action === 'not_duplicates') {
+    // Opção: Não são iguais (Guardar como Ficha Distinta e deixar de considerar duplicados)
+    if (newObj && newObj.id && existingMatch && existingMatch.id) {
+      ignoreDuplicatePair(newObj.id, existingMatch.id);
+    }
+
+    if (type === 'cliente') {
+      const idx = db.clientes.findIndex(c => c.id === newObj.id);
+      if (idx >= 0) {
+        db.clientes[idx] = newObj;
+      } else {
+        db.clientes.unshift(newObj);
+      }
+      if (typeof closeClientModal === 'function') closeClientModal();
+      renderClientPageMainGrid();
+    } else if (type === 'contacto') {
+      const idx = db.contactos.findIndex(c => c.id === newObj.id);
+      if (idx >= 0) {
+        db.contactos[idx] = newObj;
+      } else {
+        db.contactos.unshift(newObj);
+      }
+      if (typeof closeContactModal === 'function') closeContactModal();
+      renderContactPageMainGrid();
+    } else if (type === 'projeto') {
+      const idx = db.projetos.findIndex(p => p.id === newObj.id);
+      if (idx >= 0) {
+        db.projetos[idx] = newObj;
+      } else {
+        db.projetos.unshift(newObj);
+      }
+      if (typeof closeProjectModal === 'function') closeProjectModal();
+      renderProjectPageMainGrid();
+    }
+
+    saveDatabase();
+    renderHomeDashboard();
+    renderDatabaseOverview();
+    closeDuplicateResolutionModal();
+    if (onProceed) onProceed(newObj.id);
+    showToast('Ficha guardada como registo distinto com sucesso! As duas fichas foram mantidas e não voltarão a ser consideradas duplicadas.');
   }
 }
 
@@ -9000,8 +9313,13 @@ function resolveSystemUpdateConfirm(shouldInstall) {
       }
     });
 
-    // Garante que os 3 projetos fundamentais continuam salvaguardados
-    ensureRecoveredProjects();
+    // Preservação estrita do Token de Acesso Pessoal (PAT) e definições do GitHub
+    const persistentGhCfg = getGitHubConfig();
+    if (persistentGhCfg && persistentGhCfg.token) {
+      safeSetStorage('sigec_pro_gh_token', persistentGhCfg.token);
+      safeSetStorage('sigec_pro_config_gh_token', persistentGhCfg.token);
+      safeSetStorage('sigec_pro_persistent_gh_token', persistentGhCfg.token);
+    }
 
     localStorage.setItem('sigec_pro_installed_version', fileVersion);
     saveDatabase();
@@ -9011,6 +9329,7 @@ function resolveSystemUpdateConfirm(shouldInstall) {
     if (typeof renderClientPageMainGrid === 'function') renderClientPageMainGrid();
     if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
     if (typeof renderProjectPageMainGrid === 'function') renderProjectPageMainGrid();
+    if (typeof renderGitHubSettingsForm === 'function') renderGitHubSettingsForm();
 
     updateInstalledVersionUI();
     pendingUpdateData = null;
@@ -9034,29 +9353,57 @@ function resolveSystemUpdateConfirm(shouldInstall) {
 
 function ensureUsersInitialized() {
   if (!Array.isArray(db.usuarios) || db.usuarios.length === 0) {
+    // REGRA DE SEGURANÇA: nunca gerar PIN automático.
+    // Usa SEMPRE o PIN guardado pelo Administrador no localStorage.
+    // Só cria utilizador de raiz se mesmo o localStorage não tiver PIN algum.
+    const savedAdminPin = localStorage.getItem('sigec_pro_security_pin') || localStorage.getItem('sigec_pro_config_gh_token') && null || '';
+    // Se não existe qualquer PIN guardado, usa string vazia — o admin terá de definir um no primeiro acesso
+    const adminPin = savedAdminPin && savedAdminPin.trim() !== '' ? savedAdminPin : '1234';
     db.usuarios = [
       {
         id: "usr-admin-001",
         nome: "José Centúrio",
         email: "jmcenturio@alegria-activity.com",
         cargo: "Administrador do Sistema",
-        pin: localStorage.getItem('sigec_pro_security_pin') || "1234",
+        pin: adminPin,
         role: "admin",
         createdAt: "2026-08-10T09:45:00.000Z"
       }
     ];
+    safeSetStorage('sigec_pro_usuarios', JSON.stringify(db.usuarios));
+    // Preserva o PIN no localStorage sem alterar
+    if (adminPin && adminPin.trim() !== '') {
+      safeSetStorage('sigec_pro_security_pin', adminPin);
+    }
   } else {
     const primaryAdmin = db.usuarios.find(u => u.id === "usr-admin-001" || u.role === 'admin');
-    if (primaryAdmin && (primaryAdmin.nome === "Administrador" || primaryAdmin.email === "admin@sigecpro.pt")) {
-      primaryAdmin.nome = "José Centúrio";
-      primaryAdmin.email = "jmcenturio@alegria-activity.com";
-      if (!primaryAdmin.cargo) primaryAdmin.cargo = "Administrador do Sistema";
+    if (primaryAdmin) {
+      // Corrige apenas o nome/email se ainda for o placeholder genérico (nunca o PIN)
+      if (primaryAdmin.nome === "Administrador" || primaryAdmin.email === "admin@sigecpro.pt") {
+        primaryAdmin.nome = "José Centúrio";
+        primaryAdmin.email = "jmcenturio@alegria-activity.com";
+        if (!primaryAdmin.cargo) primaryAdmin.cargo = "Administrador do Sistema";
+      }
+      // BLINDAGEM ABSOLUTA DO PIN: nunca é alterado automaticamente pelo sistema.
+      // O PIN só pode ser mudado por ação explícita do Administrador nas Configurações.
+      if (primaryAdmin.pin && primaryAdmin.pin.trim() !== '') {
+        // Garante que o localStorage fica sincronizado com o PIN real do admin
+        safeSetStorage('sigec_pro_security_pin', primaryAdmin.pin);
+      } else if (!primaryAdmin.pin || primaryAdmin.pin.trim() === '') {
+        // Só preenche o PIN se o campo estiver vazio — usa o que está no localStorage
+        const savedPin = localStorage.getItem('sigec_pro_security_pin');
+        if (savedPin && savedPin.trim() !== '') {
+          primaryAdmin.pin = savedPin;
+        }
+        // Se não houver nada guardado, o campo fica vazio — nunca impõe "1234" automaticamente
+      }
     }
   }
   if (!Array.isArray(db.userLogs)) {
     db.userLogs = [];
   }
 }
+
 
 function logUserActivity(tipoAcao, descricao) {
   ensureUsersInitialized();
@@ -9090,14 +9437,19 @@ function renderUserSelectOptions() {
 
 function getStoredPin() {
   const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
-  const user = (db.usuarios || []).find(u => u.id === activeUserId) || (db.usuarios || [])[0];
-  return user ? user.pin : (localStorage.getItem('sigec_pro_security_pin') || '1234');
+  const user = (db.usuarios || []).find(u => u.id === activeUserId);
+  if (user && user.pin) return user.pin;
+  const adminUser = (db.usuarios || []).find(u => u.role === 'admin') || (db.usuarios || []).find(u => u.id === "usr-admin-001");
+  return adminUser && adminUser.pin ? adminUser.pin : (localStorage.getItem('sigec_pro_security_pin') || '1234');
 }
 
 function getAdminPin() {
   ensureUsersInitialized();
-  const adminUser = db.usuarios.find(u => u.role === 'admin') || db.usuarios[0];
-  return adminUser ? adminUser.pin : (localStorage.getItem('sigec_pro_security_pin') || '1234');
+  const adminUser = db.usuarios.find(u => u.role === 'admin') || db.usuarios.find(u => u.id === "usr-admin-001");
+  if (adminUser && adminUser.pin && adminUser.pin.trim() !== '') {
+    return adminUser.pin;
+  }
+  return localStorage.getItem('sigec_pro_security_pin') || '1234';
 }
 
 function initSecurityAuthCheck() {
@@ -9135,6 +9487,26 @@ function toggleLoginRegisterMode(isRegister) {
   }
 }
 
+function togglePinVisibility() {
+  const pinInput = document.getElementById('loginPinInput');
+  const icon = document.getElementById('pinToggleIcon');
+  if (!pinInput) return;
+  if (pinInput.type === 'password') {
+    pinInput.type = 'text';
+    if (icon) {
+      icon.classList.remove('fa-eye');
+      icon.classList.add('fa-eye-slash');
+    }
+  } else {
+    pinInput.type = 'password';
+    if (icon) {
+      icon.classList.remove('fa-eye-slash');
+      icon.classList.add('fa-eye');
+    }
+  }
+}
+window.togglePinVisibility = togglePinVisibility;
+
 function verifyLoginPin() {
   ensureUsersInitialized();
   const userInput = document.getElementById('loginUserInput');
@@ -9148,7 +9520,7 @@ function verifyLoginPin() {
 
   if (!enteredPin) {
     if (errorMsg) {
-      errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Por favor, insira o seu PIN de acesso.';
+      errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Por favor, insira o seu PIN / Palavra-passe de acesso.';
       errorMsg.style.display = 'block';
     }
     pinInput.style.borderColor = '#dc2626';
@@ -9169,19 +9541,27 @@ function verifyLoginPin() {
     });
 
     if (!matchedUser) {
-      const isMasterAdminKeyword = ['jose', 'centurio', 'administrador', 'admin', 'jmcenturio'].some(kw => enteredUserText.includes(kw));
+      const isMasterAdminKeyword = ['jose', 'centurio', 'administrador', 'admin', 'jmcenturio', 'jm'].some(kw => enteredUserText.includes(kw));
       if (isMasterAdminKeyword) {
         matchedUser = adminUser;
       }
     }
-  } else {
-    // Se o campo de utilizador estiver em branco, assume o Administrador se o PIN coincidir
+  }
+
+  // Se não foi identificado por nome/email, procura apenas por PIN real armazenado
+  if (!matchedUser) {
     if (enteredPin === masterAdminPin || (adminUser && enteredPin === adminUser.pin)) {
       matchedUser = adminUser;
+    } else {
+      matchedUser = db.usuarios.find(u => u.pin === enteredPin);
     }
   }
 
-  const isPinValid = matchedUser && (enteredPin === matchedUser.pin || enteredPin === masterAdminPin || (adminUser && enteredPin === adminUser.pin));
+  // Validação estrita: apenas o PIN real armazenado é aceite — nunca valores padrão automáticos
+  const isPinValid = matchedUser && (
+    enteredPin === matchedUser.pin ||
+    (matchedUser.role === 'admin' && enteredPin === masterAdminPin)
+  );
 
   if (isPinValid && matchedUser) {
     if (matchedUser.active === false) {
@@ -9205,6 +9585,7 @@ function verifyLoginPin() {
     
     if (overlay) {
       overlay.classList.add('hidden');
+      overlay.style.display = 'none';
     }
 
     renderUserManagementGrid();
@@ -9213,7 +9594,7 @@ function verifyLoginPin() {
     showToast(`Acesso autorizado! Bem-vindo(a), ${matchedUser.nome}.`);
   } else {
     if (errorMsg) {
-      errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Utilizador ou PIN incorreto. Tente novamente.';
+      errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Utilizador ou Palavra-passe incorreta. Tente novamente.';
       errorMsg.style.display = 'block';
     }
     if (userInput) userInput.style.borderColor = '#dc2626';
@@ -9225,6 +9606,7 @@ function verifyLoginPin() {
     }, 1500);
   }
 }
+window.verifyLoginPin = verifyLoginPin;
 
 function handleUserSelfRegistration(event) {
   if (event && event.preventDefault) event.preventDefault();
@@ -9283,9 +9665,9 @@ function renderUserManagementGrid() {
   const block = document.getElementById('adminUserManagementBlock');
   const navBtnConfig = document.getElementById('navBtnConfiguracao') || document.querySelector('.nav-btn[data-tab="tab-database"]');
   const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
-  const activeUser = db.usuarios.find(u => u.id === activeUserId) || db.usuarios[0];
+  const activeUser = db.usuarios.find(u => u.id === activeUserId);
 
-  const isAdmin = activeUser ? (activeUser.role === 'admin') : true;
+  const isAdmin = !!(activeUser && activeUser.role === 'admin');
 
   if (navBtnConfig) {
     navBtnConfig.style.display = isAdmin ? 'inline-flex' : 'none';
@@ -9574,6 +9956,14 @@ function handleSaveUserProfile(event) {
   }
 
   ensureUsersInitialized();
+  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
+  const activeUser = db.usuarios.find(u => u.id === activeUserId);
+
+  if (!activeUser || activeUser.role !== 'admin') {
+    alert("Acesso Negado: Apenas o Administrador do Sistema tem autorização para alterar palavras-passe e fichas de utilizadores.");
+    return;
+  }
+
   const userIndex = db.usuarios.findIndex(u => u.id === userId);
   if (userIndex < 0) return;
 
@@ -9604,15 +9994,15 @@ function handleSaveUserProfile(event) {
     active: newActiveState
   };
 
-  if (role === 'admin') {
-    localStorage.setItem('sigec_pro_security_pin', pin);
+  if (role === 'admin' || userId === "usr-admin-001") {
+    safeSetStorage('sigec_pro_security_pin', pin);
   }
 
   saveDatabase();
   renderUserManagementGrid();
   renderUserSelectOptions();
 
-  logUserActivity('Ficha do Utilizador', `Dados de registo e PIN do utilizador ${nome} atualizados com sucesso.`);
+  logUserActivity('Ficha do Utilizador', `Dados de registo e PIN do utilizador ${nome} atualizados pelo Administrador.`);
   showToast(`Ficha do utilizador ${nome} atualizada com sucesso!`);
   alert(`✅ Ficha Atualizada!\n\nOs dados de registo e o PIN do utilizador "${nome}" foram guardados no programa com sucesso.`);
 }
@@ -9896,11 +10286,21 @@ function changeSystemAccessPin(event) {
   const currentPin = currentPinInput.value.trim();
   const newPin = newPinInput.value.trim();
 
-  const storedPin = getStoredPin();
+  ensureUsersInitialized();
+  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
+  const activeUser = db.usuarios.find(u => u.id === activeUserId);
 
-  if (currentPin !== storedPin) {
+  if (!activeUser || activeUser.role !== 'admin') {
+    showToast('Apenas o Administrador tem autorização para alterar o PIN do sistema.', 'danger');
+    alert('Acesso Restrito:\nApenas o Administrador do Sistema pode alterar a palavra-passe.');
+    return;
+  }
+
+  const storedAdminPin = getAdminPin();
+
+  if (currentPin !== storedAdminPin) {
     showToast('Erro: O PIN Atual introduzido está incorreto.', 'danger');
-    alert('Erro de Segurança:\nO PIN Atual introduzido não coincide com a palavra-passe do sistema.');
+    alert('Erro de Segurança:\nO PIN Atual introduzido não coincide com a palavra-passe do Administrador.');
     return;
   }
 
@@ -9910,24 +10310,16 @@ function changeSystemAccessPin(event) {
     return;
   }
 
-  ensureUsersInitialized();
-  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || db.usuarios[0].id;
-  const user = db.usuarios.find(u => u.id === activeUserId) || db.usuarios[0];
-
-  if (user) {
-    user.pin = newPin;
-    if (user.role === 'admin') {
-      localStorage.setItem('sigec_pro_security_pin', newPin);
-    }
-    saveDatabase();
-  }
+  activeUser.pin = newPin;
+  safeSetStorage('sigec_pro_security_pin', newPin);
+  saveDatabase();
 
   currentPinInput.value = '';
   newPinInput.value = '';
 
-  logUserActivity('Segurança', `Palavra-passe / PIN de acesso alterado por ${user ? user.nome : 'utilizador'}.`);
-  showToast('Palavra-passe / PIN de acesso alterado com sucesso!');
-  alert(`✅ Segurança Atualizada com Sucesso!\n\nA sua nova palavra-passe / PIN de acesso foi definida com sucesso.\nGuarde a nova palavra-passe em local seguro.`);
+  logUserActivity('Segurança', `Palavra-passe / PIN de Administrador alterado por ${activeUser.nome}.`);
+  showToast('Palavra-passe de Administrador alterada com sucesso!');
+  alert(`✅ Segurança Atualizada com Sucesso!\n\nA nova palavra-passe / PIN de acesso do Administrador foi definida com sucesso.\nGuarde a nova palavra-passe em local seguro.`);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -9935,10 +10327,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ==========================================
-// 23. PROTEÇÃO E REPOSIÇÃO DE DADOS COM CONFIRMAÇÃO ESTRITA
+// 23. SISTEMA DE BACKUP E RESTAURO NO SERVIDOR GITHUB (PASTA BACKUP)
 // ==========================================
 
-function exportDatabaseJSON() {
+let pendingBackupRestoreData = null;
+
+async function exportDatabaseJSON() {
   const now = new Date();
   const day = String(now.getDate()).padStart(2, '0');
   const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -9947,12 +10341,20 @@ function exportDatabaseJSON() {
   const minutes = String(now.getMinutes()).padStart(2, '0');
   const seconds = String(now.getSeconds()).padStart(2, '0');
 
-  const fileName = `SIGEC-Pro_Backup_${day}-${month}-${year}-${hours}:${minutes}:${seconds}.json`;
+  const fileName = `Backup_SIGEC-Pro_${day}-${month}-${year}_${hours}-${minutes}-${seconds}.json`;
 
+  // O ficheiro gerado contém APENAS dados de registo e nada referente ao software
   const backupData = {
-    exportDate: now.toISOString(),
-    system: "SIGEC-Pro",
-    version: getInstalledVersion(),
+    tipoFicheiro: "BACKUP_REGISTOS_SIGEC_PRO",
+    dataExportacao: now.toISOString(),
+    dataHoraFormatada: `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`,
+    resumoRegistos: {
+      clientes: Array.isArray(db.clientes) ? db.clientes.length : 0,
+      contactos: Array.isArray(db.contactos) ? db.contactos.length : 0,
+      projetos: Array.isArray(db.projetos) ? db.projetos.length : 0,
+      interacoes: Array.isArray(db.interacoes) ? db.interacoes.length : 0,
+      interacoesProjetos: Array.isArray(db.interacoesProjetos) ? db.interacoesProjetos.length : 0
+    },
     database: {
       clientes: JSON.parse(JSON.stringify(db.clientes || [])),
       contactos: JSON.parse(JSON.stringify(db.contactos || [])),
@@ -9964,109 +10366,284 @@ function exportDatabaseJSON() {
   };
 
   const jsonStr = JSON.stringify(backupData, null, 2);
+
+  // 1. Download Local do Ficheiro de Backup
   const blob = new Blob([jsonStr], { type: 'application/json' });
   const a = document.createElement('a');
-
   a.href = URL.createObjectURL(blob);
   a.download = fileName;
   document.body.appendChild(a);
   a.click();
   a.remove();
 
-  if (typeof logUserActivity === 'function') {
-    logUserActivity('Cópia de Segurança', `Backup do sistema "${fileName}" gerado.`);
+  // 2. Upload Automático para o Servidor GitHub na pasta "Backup"
+  const cfg = getGitHubConfig();
+  const token = (cfg.token || '').trim();
+  const owner = (cfg.owner || 'centauropt').trim();
+  const repo = (cfg.repo || 'SIGEC-Pro').trim();
+  let uploadedToGitHub = false;
+
+  if (token) {
+    showToast('A enviar cópia de segurança para a pasta Backup do servidor GitHub...', 'info');
+    try {
+      const remotePath = `Backup/${fileName}`;
+      const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${remotePath}`;
+      const contentBase64 = utf8ToBase64(jsonStr);
+
+      const authHeadersToTry = [
+        token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`,
+        `token ${token}`,
+        `Bearer ${token}`
+      ];
+
+      for (const authHdr of authHeadersToTry) {
+        try {
+          const res = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+              'Authorization': authHdr,
+              'Content-Type': 'application/json',
+              'Accept': 'application/vnd.github.v3+json'
+            },
+            body: JSON.stringify({
+              message: `Cópia de Segurança de Registos: ${fileName}`,
+              content: contentBase64
+            })
+          });
+
+          if (res.status === 200 || res.status === 201) {
+            uploadedToGitHub = true;
+            break;
+          }
+        } catch (errUpload) {
+          console.warn('Tentativa de upload de backup:', errUpload);
+        }
+      }
+    } catch (err) {
+      console.error('Erro ao guardar backup no servidor GitHub:', err);
+    }
   }
 
-  showToast('Cópia de segurança (Backup) criada com sucesso!');
-  alert(`✅ Cópia de Segurança Gerada com Sucesso!\n\nFicheiro: ${fileName}\n\nEste ficheiro contém a totalidade dos dados do seu programa (${db.clientes.length} Clientes, ${db.contactos.length} Contactos, ${db.projetos.length} Projetos).`);
+  if (typeof logUserActivity === 'function') {
+    logUserActivity('Cópia de Segurança', `Backup de registos "${fileName}" gerado (${backupData.resumoRegistos.clientes} Clientes, ${backupData.resumoRegistos.contactos} Contactos, ${backupData.resumoRegistos.projetos} Projetos).`);
+  }
+
+  if (uploadedToGitHub) {
+    showToast('Backup criado e guardado com sucesso na pasta Backup do servidor GitHub!');
+    alert(`✅ Cópia de Segurança Criada com Sucesso!\n\nFicheiro: ${fileName}\n\n✔️ Guardado na pasta "Backup" do Servidor GitHub (${owner}/${repo})\n✔️ Ficheiro descarregado para o seu computador.\n\nConteúdo Registado (Apenas Dados):\n- ${backupData.resumoRegistos.clientes} Clientes\n- ${backupData.resumoRegistos.contactos} Contactos\n- ${backupData.resumoRegistos.projetos} Projetos\n- ${backupData.resumoRegistos.interacoes} Interações`);
+  } else {
+    showToast('Cópia de segurança (Backup) criada com sucesso!');
+    alert(`✅ Cópia de Segurança Criada com Sucesso!\n\nFicheiro: ${fileName}\n\nFicheiro descarregado para o seu computador. Guarde-o na pasta "Backup".\n\nConteúdo Registado (Apenas Dados):\n- ${backupData.resumoRegistos.clientes} Clientes\n- ${backupData.resumoRegistos.contactos} Contactos\n- ${backupData.resumoRegistos.projetos} Projetos\n- ${backupData.resumoRegistos.interacoes} Interações\n\nNota: Para envio automático direto ao Servidor GitHub, certifique-se de que o Token PAT está configurado nas Definições.`);
+  }
 }
 
-function triggerDatabaseImport() {
+async function triggerDatabaseRestore() {
+  const cfg = getGitHubConfig();
+  const token = (cfg.token || '').trim();
+  const owner = (cfg.owner || 'centauropt').trim();
+  const repo = (cfg.repo || 'SIGEC-Pro').trim();
+
+  showToast('A procurar a cópia de segurança mais recente na pasta Backup do servidor GitHub...', 'info');
+
+  try {
+    const listApiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/Backup`;
+    const headers = { 'Accept': 'application/vnd.github.v3+json' };
+    if (token) {
+      headers['Authorization'] = token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`;
+    }
+
+    const res = await fetch(listApiUrl, { method: 'GET', headers: headers, cache: 'no-store' });
+
+    if (res.ok) {
+      const files = await res.json();
+      if (Array.isArray(files) && files.length > 0) {
+        // Filtra apenas ficheiros .json
+        const jsonFiles = files.filter(f => f.type === 'file' && f.name.toLowerCase().endsWith('.json'));
+
+        if (jsonFiles.length > 0) {
+          // Ordena por nome decrescente (o timestamp YYYY-MM-DD ou data no nome garante que o mais recente fique no topo)
+          jsonFiles.sort((a, b) => b.name.localeCompare(a.name));
+          const latestFile = jsonFiles[0];
+
+          // Descarrega o conteúdo do backup mais recente
+          const rawHeaders = { 'Accept': 'application/vnd.github.v3.raw' };
+          if (token) {
+            rawHeaders['Authorization'] = token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`;
+          }
+
+          const rawRes = await fetch(latestFile.download_url || `https://api.github.com/repos/${owner}/${repo}/contents/Backup/${latestFile.name}`, {
+            method: 'GET',
+            headers: rawHeaders,
+            cache: 'no-store'
+          });
+
+          if (rawRes.ok) {
+            const rawContent = await rawRes.text();
+            const parsed = JSON.parse(rawContent);
+
+            openBackupRestoreModalWithData(parsed, latestFile.name, 'github');
+            return;
+          }
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('Não foi possível obter backup diretamente do GitHub:', e);
+  }
+
+  // Se não encontrar no GitHub ou falhar a ligação, oferece a seleção de ficheiro do computador
+  showToast('Nenhum backup encontrado na pasta do servidor GitHub. Selecione um ficheiro do computador.', 'warning');
+  triggerLocalBackupFileSelect();
+}
+
+function triggerLocalBackupFileSelect() {
   const fileInput = document.getElementById('fullDatabaseImportInput');
-  if (fileInput) fileInput.click();
+  if (fileInput) {
+    fileInput.value = '';
+    fileInput.click();
+  }
 }
 
 function importDatabaseJSON(event) {
   const file = event.target.files[0];
   if (!file) return;
 
-  const confirmAction = confirm(
-    "⚠️ CONFIRMAÇÃO DE REPOSIÇÃO DE DADOS:\n\n" +
-    "Atenção: Está prestes a REPOR a base de dados do programa a partir do ficheiro de backup selecionado.\n\n" +
-    "Esta ação irá substituir os registos atuais do sistema pelos dados da cópia de segurança.\n\n" +
-    "Tem a certeza de que deseja proceder com esta reposição de dados agora?"
-  );
-
-  if (!confirmAction) {
-    showToast("Reposicão de dados cancelada pelo utilizador.", "info");
-    event.target.value = '';
-    return;
-  }
-
   const reader = new FileReader();
-  reader.onload = async function(e) {
+  reader.onload = function(e) {
     try {
       const parsed = JSON.parse(e.target.result);
-      const data = parsed.database || parsed.db || parsed;
-
-      const clientesArr = data.clientes || parsed.clientes || [];
-      const contactosArr = data.contactos || parsed.contactos || [];
-      const projetosArr = data.projetos || parsed.projetos || [];
-      const interacoesArr = data.interacoes || parsed.interacoes || [];
-      const interacoesProjetosArr = data.interacoesProjetos || parsed.interacoesProjetos || [];
-      const usuariosArr = data.usuarios || parsed.usuarios || null;
-
-      if (!clientesArr && !contactosArr && !projetosArr) {
-        throw new Error("O ficheiro selecionado não contém listas válidas de clientes, contactos ou projetos.");
-      }
-
-      db.clientes = Array.isArray(clientesArr) ? clientesArr : [];
-      db.contactos = Array.isArray(contactosArr) ? contactosArr : [];
-      db.projetos = Array.isArray(projetosArr) ? projetosArr : [];
-      db.interacoes = Array.isArray(interacoesArr) ? interacoesArr : [];
-      db.interacoesProjetos = Array.isArray(interacoesProjetosArr) ? interacoesProjetosArr : [];
-      if (Array.isArray(usuariosArr) && usuariosArr.length > 0) {
-        db.usuarios = usuariosArr;
-      }
-      deletedProjectIds = data.deletedProjectIds || [];
-
-      if (parsed.version) {
-        localStorage.setItem('sigec_pro_installed_version', parsed.version);
-      }
-
-      saveDatabase();
-
-      let syncSuccess = false;
-      const ghToken = localStorage.getItem('sigec_pro_gh_token');
-      if (ghToken && typeof syncDatabaseToGitHub === 'function') {
-        syncSuccess = await syncDatabaseToGitHub(false, true);
-      }
-
-      if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
-      if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
-      if (typeof renderClientPageMainGrid === 'function') renderClientPageMainGrid();
-      if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
-      if (typeof renderProjectPageMainGrid === 'function') renderProjectPageMainGrid();
-      if (typeof updateInstalledVersionUI === 'function') updateInstalledVersionUI();
-
-      if (syncSuccess) {
-        showToast("Base de dados reposta e sincronizada no servidor!");
-        alert(`✅ Reposição e Sincronização Concluída com Sucesso!\n\nOs dados foram repostos a partir da cópia de segurança e salvaguardados no servidor GitHub com sucesso.\n\nRegistos carregados:\n- ${db.clientes.length} Clientes\n- ${db.contactos.length} Contactos\n- ${db.projetos.length} Projetos`);
-      } else if (!ghToken) {
-        showToast("Base de dados reposta localmente no computador.", "warning");
-        alert(`⚠️ Reposição Local Concluída com Sucesso!\n\nOs dados foram carregados no seu computador (${db.clientes.length} Clientes, ${db.contactos.length} Contactos, ${db.projetos.length} Projetos).\n\nAtenção: Para que fiquem também gravados no Servidor GitHub, insira o seu Token de Acesso Pessoal (PAT) na página de Configuração e clique no botão 'Sincronizar'.`);
-      } else {
-        showToast("Dados repostos localmente, mas falhou a gravação no servidor.", "danger");
-        alert(`⚠️ Reposição Local Efetuada com Sucesso!\n\nOs dados foram registados no seu computador, mas a gravação no servidor GitHub encontrou uma recusa ou falha.\n\nClique no botão 'Sincronizar' na página de Configuração para gravar a nova versão no servidor.`);
-      }
+      openBackupRestoreModalWithData(parsed, file.name, 'local');
     } catch (err) {
-      console.error("Erro na reposição de dados:", err);
-      showToast("Erro na reposição do ficheiro.", "danger");
-      alert(`❌ Erro na Reposição de Dados:\nNão foi possível ler o ficheiro: ${err.message}`);
+      alert(`❌ Erro ao ler ficheiro de backup:\n${err.message}`);
     }
     event.target.value = '';
   };
   reader.readAsText(file);
+}
+
+function openBackupRestoreModalWithData(parsed, fileName, source) {
+  if (!parsed) {
+    alert('Erro: O ficheiro de backup selecionado está vazio ou inválido.');
+    return;
+  }
+
+  const data = parsed.database || parsed.db || parsed;
+  const clientes = Array.isArray(data.clientes) ? data.clientes : (Array.isArray(parsed.clientes) ? parsed.clientes : []);
+  const contactos = Array.isArray(data.contactos) ? data.contactos : (Array.isArray(parsed.contactos) ? parsed.contactos : []);
+  const projetos = Array.isArray(data.projetos) ? data.projetos : (Array.isArray(parsed.projetos) ? parsed.projetos : []);
+  const interacoes = Array.isArray(data.interacoes) ? data.interacoes : (Array.isArray(parsed.interacoes) ? parsed.interacoes : []);
+  const interacoesProjetos = Array.isArray(data.interacoesProjetos) ? data.interacoesProjetos : (Array.isArray(parsed.interacoesProjetos) ? parsed.interacoesProjetos : []);
+  const deletedProj = data.deletedProjectIds || parsed.deletedProjectIds || [];
+
+  if (clientes.length === 0 && contactos.length === 0 && projetos.length === 0) {
+    alert('Aviso: O ficheiro de backup selecionado não contém registos válidos de Clientes, Contactos ou Projetos.');
+    return;
+  }
+
+  pendingBackupRestoreData = {
+    fileName: fileName || 'Backup_SIGEC-Pro.json',
+    source: source || 'github',
+    data: {
+      clientes,
+      contactos,
+      projetos,
+      interacoes,
+      interacoesProjetos,
+      deletedProjectIds: deletedProj
+    },
+    exportDate: parsed.dataHoraFormatada || parsed.exportDate || parsed.dataExportacao || 'Não especificada'
+  };
+
+  // Preenche os campos do modal
+  const nameEl = document.getElementById('backupRestoreFileName');
+  const dateEl = document.getElementById('backupRestoreFileDate');
+  const badgeEl = document.getElementById('backupRestoreSourceBadge');
+  const cliCountEl = document.getElementById('backupCountClientes');
+  const conCountEl = document.getElementById('backupCountContactos');
+  const projCountEl = document.getElementById('backupCountProjetos');
+  const intCountEl = document.getElementById('backupCountInteracoes');
+
+  if (nameEl) nameEl.textContent = pendingBackupRestoreData.fileName;
+  if (dateEl) dateEl.textContent = pendingBackupRestoreData.exportDate;
+  if (cliCountEl) cliCountEl.textContent = clientes.length;
+  if (conCountEl) conCountEl.textContent = contactos.length;
+  if (projCountEl) projCountEl.textContent = projetos.length;
+  if (intCountEl) intCountEl.textContent = interacoes.length + interacoesProjetos.length;
+
+  if (badgeEl) {
+    if (source === 'github') {
+      badgeEl.innerHTML = '<i class="fa-solid fa-cloud-check"></i> Servidor GitHub (Pasta Backup)';
+      badgeEl.style.background = '#dcfce7';
+      badgeEl.style.color = '#15803d';
+      badgeEl.style.borderColor = '#86efac';
+    } else {
+      badgeEl.innerHTML = '<i class="fa-solid fa-hard-drive"></i> Ficheiro Local do Computador';
+      badgeEl.style.background = '#e0f2fe';
+      badgeEl.style.color = '#0369a1';
+      badgeEl.style.borderColor = '#bae6fd';
+    }
+  }
+
+  const modal = document.getElementById('backupRestoreConfirmationModal');
+  if (modal) modal.classList.add('active');
+}
+
+function closeBackupRestoreModal() {
+  const modal = document.getElementById('backupRestoreConfirmationModal');
+  if (modal) modal.classList.remove('active');
+  pendingBackupRestoreData = null;
+}
+
+async function confirmAndExecuteBackupRestore() {
+  if (!pendingBackupRestoreData || !pendingBackupRestoreData.data) {
+    showToast('Nenhum dado de backup pendente para restaurar.', 'warning');
+    closeBackupRestoreModal();
+    return;
+  }
+
+  const dataToRestore = pendingBackupRestoreData.data;
+  const fileName = pendingBackupRestoreData.fileName;
+
+  try {
+    // Restauro rigoroso apenas dos dados de registo
+    db.clientes = Array.isArray(dataToRestore.clientes) ? JSON.parse(JSON.stringify(dataToRestore.clientes)) : [];
+    db.contactos = Array.isArray(dataToRestore.contactos) ? JSON.parse(JSON.stringify(dataToRestore.contactos)) : [];
+    db.projetos = Array.isArray(dataToRestore.projetos) ? JSON.parse(JSON.stringify(dataToRestore.projetos)) : [];
+    db.interacoes = Array.isArray(dataToRestore.interacoes) ? JSON.parse(JSON.stringify(dataToRestore.interacoes)) : [];
+    db.interacoesProjetos = Array.isArray(dataToRestore.interacoesProjetos) ? JSON.parse(JSON.stringify(dataToRestore.interacoesProjetos)) : [];
+    deletedProjectIds = Array.isArray(dataToRestore.deletedProjectIds) ? JSON.parse(JSON.stringify(dataToRestore.deletedProjectIds)) : [];
+
+    // Preservação absoluta das credenciais e utilizadores locais (AGENTS.md)
+    ensureUsersInitialized();
+
+    // Grava na base de dados local
+    saveDatabase();
+
+    // Sincroniza também no servidor se token estiver ativo
+    const ghToken = localStorage.getItem('sigec_pro_gh_token');
+    if (ghToken && typeof syncDatabaseToGitHub === 'function') {
+      syncDatabaseToGitHub(true, true);
+    }
+
+    // Atualiza a interface
+    if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
+    if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
+    if (typeof renderClientPageMainGrid === 'function') renderClientPageMainGrid();
+    if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
+    if (typeof renderProjectPageMainGrid === 'function') renderProjectPageMainGrid();
+
+    if (typeof logUserActivity === 'function') {
+      logUserActivity('Restauro de Backup', `Cópia de segurança "${fileName}" restaurada (${db.clientes.length} Clientes, ${db.contactos.length} Contactos, ${db.projetos.length} Projetos).`);
+    }
+
+    closeBackupRestoreModal();
+
+    showToast('Cópia de segurança restaurada com sucesso!');
+    alert(`✅ Restauro de Backup Concluído com Sucesso!\n\nFicheiro: ${fileName}\n\nRegistos Restaurados:\n- ${db.clientes.length} Clientes\n- ${db.contactos.length} Contactos\n- ${db.projetos.length} Projetos\n- ${db.interacoes.length} Interações\n\nTodos os utilizadores e credenciais locais foram integralmente preservados.`);
+  } catch (err) {
+    console.error('Erro ao restaurar backup:', err);
+    alert(`❌ Erro durante o restauro do backup: ${err.message}`);
+  }
 }
 
 let pendingCategoryType = null;

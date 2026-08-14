@@ -1911,6 +1911,67 @@ textarea.form-control {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Contentores de Lista Completa com 100% de Largura */
+.full-width-list-container {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  margin-top: 0.75rem;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.full-width-list-container .table-responsive-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.full-width-list-container .full-width-list-table {
+  width: 100% !important;
+  min-width: 780px;
+  border-collapse: collapse;
+  margin: 0 !important;
+}
+
+.full-width-list-container .full-width-list-table thead tr {
+  background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%) !important;
+  color: #1e3a8a !important;
+  border-bottom: 2px solid #bfdbfe;
+}
+
+.full-width-list-container .full-width-list-table th {
+  padding: 0.85rem 1rem !important;
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.full-width-list-container .full-width-list-table tbody tr {
+  transition: background-color 0.15s ease-in-out;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.full-width-list-container .full-width-list-table tbody tr:nth-child(even) {
+  background-color: #fafbfc;
+}
+
+.full-width-list-container .full-width-list-table tbody tr:hover {
+  background-color: #f0f9ff !important;
+}
+
+.full-width-list-container .full-width-list-table td {
+  padding: 0.85rem 1rem !important;
+  vertical-align: middle;
+}
+
 /* Suporte a Arrastar e Soltar (Drag & Drop) e Edição Inline nos Separadores Estatais */
 .estatal-tab-btn {
   display: inline-flex;

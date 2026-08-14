@@ -94,37 +94,39 @@
       </div>
 
       <div style="margin-top: 1.25rem;">
-        <div id="loginFormMode">
-          <label for="loginUserInput" style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.4rem; text-align: left;">
-            <i class="fa-solid fa-user-circle" style="color: #0284c7; margin-right: 4px;"></i> Nome ou Email do Utilizador:
-          </label>
-          <input type="text" id="loginUserInput" placeholder="Insira o seu Nome ou Email" onkeypress="if(event.key==='Enter') verifyLoginPin()" style="width: 100%; margin-bottom: 1rem; padding: 0.85rem 1rem; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 0.95rem; font-weight: 600; color: #0f172a; outline: none;" autofocus>
+        <form id="loginForm" onsubmit="event.preventDefault(); verifyLoginPin(); return false;">
+          <div id="loginFormMode">
+            <label for="loginUserInput" style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.4rem; text-align: left;">
+              <i class="fa-solid fa-user-circle" style="color: #0284c7; margin-right: 4px;"></i> Nome ou Email do Utilizador:
+            </label>
+            <input type="text" id="loginUserInput" placeholder="Insira o seu Nome ou Email" onkeydown="if(event.key==='Enter'||event.keyCode===13){event.preventDefault();verifyLoginPin();}" style="width: 100%; margin-bottom: 1rem; padding: 0.85rem 1rem; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 0.95rem; font-weight: 600; color: #0f172a; outline: none;" autofocus>
 
-          <label for="loginPinInput" style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.4rem; text-align: left;">
-            <i class="fa-solid fa-key" style="color: #0284c7; margin-right: 4px;"></i> Palavra-passe / PIN de Acesso:
-          </label>
-          
-          <div style="position: relative;">
-            <input type="password" id="loginPinInput" placeholder="Insira o PIN / Palavra-passe" onkeypress="if(event.key==='Enter') verifyLoginPin()" style="width: 100%; padding: 0.85rem 2.75rem 0.85rem 1rem; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 1.05rem; letter-spacing: 2px; text-align: center; font-weight: 700; color: #0f172a; outline: none;" autofocus>
-            <button type="button" onclick="togglePinVisibility()" title="Mostrar/Ocultar PIN" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; font-size: 1.1rem; padding: 5px;">
-              <i id="pinToggleIcon" class="fa-solid fa-eye"></i>
+            <label for="loginPinInput" style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.4rem; text-align: left;">
+              <i class="fa-solid fa-key" style="color: #0284c7; margin-right: 4px;"></i> Palavra-passe / PIN de Acesso:
+            </label>
+            
+            <div style="position: relative;">
+              <input type="password" id="loginPinInput" placeholder="Insira o PIN / Palavra-passe" onkeydown="if(event.key==='Enter'||event.keyCode===13){event.preventDefault();verifyLoginPin();}" style="width: 100%; padding: 0.85rem 2.75rem 0.85rem 1rem; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 1.05rem; letter-spacing: 2px; text-align: center; font-weight: 700; color: #0f172a; outline: none;">
+              <button type="button" onclick="togglePinVisibility()" title="Mostrar/Ocultar Palavra-passe" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; font-size: 1.1rem; padding: 5px; z-index: 10;">
+                <i id="pinToggleIcon" class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+
+            <div id="loginErrorMessage" style="display: none; color: #dc2626; font-size: 0.82rem; margin-top: 0.5rem; font-weight: 600; text-align: center;">
+              <i class="fa-solid fa-circle-exclamation"></i> PIN incorreto. Tente novamente.
+            </div>
+
+            <button type="submit" class="btn" style="width: 100%; margin-top: 1.25rem; padding: 0.85rem; background: #0284c7; color: #ffffff; font-weight: 700; font-size: 1rem; justify-content: center; border-radius: 8px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); cursor: pointer; border: none;">
+              <i class="fa-solid fa-right-to-bracket"></i> Entrar no Sistema
             </button>
-          </div>
 
-          <div id="loginErrorMessage" style="display: none; color: #dc2626; font-size: 0.82rem; margin-top: 0.5rem; font-weight: 600; text-align: center;">
-            <i class="fa-solid fa-circle-exclamation"></i> PIN incorreto. Tente novamente.
+            <div style="margin-top: 1rem; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 0.85rem;">
+              <button type="button" onclick="toggleLoginRegisterMode(true)" style="background: none; border: none; color: #0284c7; font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: underline;">
+                <i class="fa-solid fa-user-plus"></i> Registrar Novo Utilizador
+              </button>
+            </div>
           </div>
-
-          <button type="button" class="btn" onclick="verifyLoginPin()" style="width: 100%; margin-top: 1.25rem; padding: 0.85rem; background: #0284c7; color: #ffffff; font-weight: 700; font-size: 1rem; justify-content: center; border-radius: 8px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);">
-            <i class="fa-solid fa-right-to-bracket"></i> Entrar no Sistema
-          </button>
-
-          <div style="margin-top: 1rem; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 0.85rem;">
-            <button type="button" onclick="toggleLoginRegisterMode(true)" style="background: none; border: none; color: #0284c7; font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: underline;">
-              <i class="fa-solid fa-user-plus"></i> Registrar Novo Utilizador
-            </button>
-          </div>
-        </div>
+        </form>
 
         <div id="registerFormMode" style="display: none; text-align: left;">
           <h3 style="font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 0.85rem; text-align: center;">
@@ -552,10 +554,10 @@
               Exporte todos os registos do programa (Clientes, Contactos, Projetos e Interações) para um ficheiro de cópia de segurança.
             </p>
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-              <button type="button" class="btn btn-primary" onclick="exportDatabaseJSON()" style="flex: 1.2; justify-content: center;">
+              <button type="button" class="btn btn-primary" onclick="exportDatabaseJSON()" style="flex: 1.2; justify-content: center;" title="Criar backup contendo apenas dados de registo e guardar na pasta Backup do servidor GitHub">
                 <i class="fa-solid fa-download"></i> Criar Backup
               </button>
-              <button type="button" class="btn btn-secondary" onclick="triggerDatabaseImport()" style="flex: 1; justify-content: center;">
+              <button type="button" class="btn btn-secondary" onclick="triggerDatabaseRestore()" style="flex: 1; justify-content: center;" title="Procurar o backup mais recente na pasta Backup do servidor GitHub">
                 <i class="fa-solid fa-upload"></i> Restaurar Backup
               </button>
               <button type="button" class="btn btn-secondary" onclick="openDriveModal()" title="Sincronização Google Drive (jjota26@gmail.com)" style="flex: 1; justify-content: center; background: #e0f2fe; color: #0369a1; border-color: #bae6fd;">
@@ -656,8 +658,16 @@
                 <input type="text" id="githubFilePath" class="form-control" placeholder="data/db.json" style="padding: 0.6rem; border-radius: 6px; font-size: 0.88rem;" required>
               </div>
               <div>
-                <label style="font-size: 0.8rem; font-weight: 600; color: #475569; display: block; margin-bottom: 0.3rem;">Token de Acesso Pessoal (PAT):</label>
-                <input type="password" id="githubPersonalToken" class="form-control" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="padding: 0.6rem; border-radius: 6px; font-size: 0.88rem;">
+                <label style="font-size: 0.8rem; font-weight: 600; color: #475569; display: block; margin-bottom: 0.3rem;">
+                  Token de Acesso Pessoal (PAT): 
+                  <span style="font-size: 0.72rem; color: #16a34a; font-weight: 600; margin-left: 6px;"><i class="fa-solid fa-shield-halved"></i> Permanente & Blindado</span>
+                </label>
+                <div style="position: relative; display: flex; gap: 4px; align-items: center;">
+                  <input type="password" id="githubPersonalToken" class="form-control" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="padding: 0.6rem 2.2rem 0.6rem 0.6rem; border-radius: 6px; font-size: 0.88rem; flex: 1;">
+                  <button type="button" onclick="toggleGithubTokenVisibility()" title="Mostrar/Ocultar Token" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; font-size: 0.95rem; padding: 4px;">
+                    <i id="ghTokenToggleIcon" class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
               </div>
               <div style="grid-column: 1 / -1; display: flex; gap: 0.65rem; flex-wrap: wrap; margin-top: 0.25rem;">
                 <button type="submit" class="btn btn-primary" style="background: #0969da; font-weight: 600; padding: 0.65rem 1.25rem;">
@@ -665,6 +675,9 @@
                 </button>
                 <button type="button" class="btn btn-secondary" onclick="handleFullServerSync(false)" style="background: #16a34a; color: #ffffff; border: none; font-weight: 700; padding: 0.65rem 1.4rem; box-shadow: 0 3px 8px rgba(22, 163, 74, 0.3);">
                   <i class="fa-solid fa-rotate"></i> Sincronizar
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="handleRemoveGitHubToken()" title="Eliminar o Token guardado neste computador" style="background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; font-weight: 600; padding: 0.65rem 1rem; margin-left: auto;">
+                  <i class="fa-solid fa-key"></i> Remover Token
                 </button>
               </div>
             </form>
@@ -1432,7 +1445,7 @@
 
   <!-- MODAL DE RESOLUÇÃO DE DADOS DUPLICADOS -->
   <div id="duplicateResolutionModal" class="modal-overlay" style="z-index: 9999;">
-    <div class="modal-window" style="max-width: 620px; padding: 1.75rem;">
+    <div class="modal-window" style="max-width: 800px; padding: 1.75rem; max-height: 90vh; overflow-y: auto;">
       <div class="modal-header" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
         <h3 class="modal-title" style="color: #ffffff; font-size: 1.15rem;">
           <i class="fa-solid fa-triangle-exclamation"></i> Duplicação Detetada
@@ -1442,13 +1455,18 @@
         </button>
       </div>
 
-      <div class="modal-body" style="padding: 1.5rem 0;">
-        <div style="background-color: #fef3c7; border: 1px solid #fde68a; border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.25rem; color: #92400e; font-size: 0.92rem; line-height: 1.5;">
+      <div class="modal-body" style="padding: 1.25rem 0;">
+        <div style="background-color: #fef3c7; border: 1px solid #fde68a; border-radius: var(--radius-md); padding: 0.85rem 1rem; margin-bottom: 1rem; color: #92400e; font-size: 0.92rem; line-height: 1.5;">
           <i class="fa-solid fa-circle-info" style="font-size: 1.1rem; color: #d97706; margin-right: 0.4rem;"></i>
           <span id="duplicateModalText">Foi detetado um registo duplicado na base de dados.</span>
         </div>
 
-        <p style="font-weight: 600; color: var(--navy-dark); font-size: 0.95rem; margin-bottom: 1rem;">
+        <!-- Content Container with Comparison between Existing and New -->
+        <div id="duplicateComparisonContainer" style="margin-bottom: 1.25rem;">
+          <!-- Rendered dynamically with existing and new records -->
+        </div>
+
+        <p style="font-weight: 700; color: var(--navy-dark); font-size: 0.95rem; margin-bottom: 0.75rem;">
           Como pretende proceder com este registo duplicado?
         </p>
 
@@ -1484,6 +1502,17 @@
               <span style="font-size: 0.82rem; color: #1d4ed8;">Funde os dados, preenchendo as informações em falta na ficha anterior com os novos dados introduzidos.</span>
             </div>
             <i class="fa-solid fa-chevron-right" style="color: #60a5fa; font-size: 1.1rem;"></i>
+          </button>
+
+          <!-- Opção 4: Não são iguais (Guardar como Ficha Distinta) -->
+          <button type="button" class="btn" onclick="resolveDuplicateAction('not_duplicates')" style="background: #f0fdf4; color: #166534; border: 1px solid #86efac; text-align: left; padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between; border-radius: var(--radius-md); cursor: pointer;">
+            <div>
+              <strong style="color: #15803d; display: block; font-size: 0.95rem; margin-bottom: 0.2rem;">
+                <i class="fa-solid fa-check-double" style="color: #16a34a; margin-right: 0.4rem;"></i> Não são iguais (Guardar como Ficha Distinta)
+              </strong>
+              <span style="font-size: 0.82rem; color: #166534;">Guarda esta ficha mantendo a anterior intacta e regista que são entidades distintas, não voltando a alertar sobre esta correspondência.</span>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="color: #4ade80; font-size: 1.1rem;"></i>
           </button>
         </div>
       </div>
@@ -1819,6 +1848,83 @@
   };
   </script>
 
+  <!-- MODAL DE INSPEÇÃO E CONFIRMAÇÃO DE RESTAURO DE BACKUP (GITHUB / LOCAL) -->
+  <div id="backupRestoreConfirmationModal" class="modal-overlay" style="z-index: 99999;">
+    <div class="modal-window" style="max-width: 560px; padding: 1.75rem; border-radius: 16px;">
+      <div style="text-align: center; margin-bottom: 1.25rem;">
+        <div style="width: 64px; height: 64px; border-radius: 50%; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 0.75rem auto; border: 2px solid #bae6fd; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15);">
+          <i class="fa-solid fa-cloud-arrow-down"></i>
+        </div>
+        <h3 style="color: #0f172a; font-size: 1.3rem; margin: 0 0 0.35rem 0; font-weight: 700;">Restauro de Cópia de Segurança</h3>
+        <span id="backupRestoreSourceBadge" style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 999px; background: #dcfce7; color: #15803d; font-size: 0.78rem; font-weight: 600; border: 1px solid #86efac;">
+          <i class="fa-solid fa-cloud-check"></i> Servidor GitHub (Pasta Backup)
+        </span>
+      </div>
+
+      <!-- Detalhes do Ficheiro Detetado -->
+      <div style="background: #f8fafc; border: 1px solid var(--soft-blue-border); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-size: 0.85rem;">
+          <span style="color: var(--text-muted);"><i class="fa-solid fa-file-code" style="color: #0284c7; margin-right: 4px;"></i> Ficheiro:</span>
+          <strong id="backupRestoreFileName" style="color: #0f172a; font-family: monospace; font-size: 0.88rem; word-break: break-all;">Backup_SIGEC-Pro.json</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;">
+          <span style="color: var(--text-muted);"><i class="fa-solid fa-calendar-clock" style="color: #0284c7; margin-right: 4px;"></i> Data / Hora do Backup:</span>
+          <strong id="backupRestoreFileDate" style="color: #334155;">--</strong>
+        </div>
+      </div>
+
+      <!-- Grelha de Registos a Restaurar -->
+      <div style="margin-bottom: 1.25rem;">
+        <div style="font-size: 0.82rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">
+          <i class="fa-solid fa-database" style="color: #0284c7;"></i> Conteúdo do Backup (Apenas Dados de Registo):
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem;">
+          <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.6rem 0.8rem; display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.82rem; color: #475569;"><i class="fa-solid fa-building" style="color: var(--primary-blue); width: 16px;"></i> Clientes:</span>
+            <strong id="backupCountClientes" style="font-size: 1rem; color: #1e3a8a;">0</strong>
+          </div>
+          <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.6rem 0.8rem; display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.82rem; color: #475569;"><i class="fa-solid fa-address-book" style="color: var(--primary-blue); width: 16px;"></i> Contactos:</span>
+            <strong id="backupCountContactos" style="font-size: 1rem; color: #1e3a8a;">0</strong>
+          </div>
+          <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.6rem 0.8rem; display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.82rem; color: #475569;"><i class="fa-solid fa-folder-open" style="color: var(--primary-blue); width: 16px;"></i> Projetos:</span>
+            <strong id="backupCountProjetos" style="font-size: 1rem; color: #1e3a8a;">0</strong>
+          </div>
+          <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.6rem 0.8rem; display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.82rem; color: #475569;"><i class="fa-solid fa-comments" style="color: var(--primary-blue); width: 16px;"></i> Interações:</span>
+            <strong id="backupCountInteracoes" style="font-size: 1rem; color: #1e3a8a;">0</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alerta de Segurança e Proteção de Utilizadores -->
+      <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1.25rem; display: flex; align-items: flex-start; gap: 0.6rem;">
+        <i class="fa-solid fa-shield-check" style="color: #15803d; font-size: 1.1rem; margin-top: 2px;"></i>
+        <div style="font-size: 0.8rem; color: #166534; line-height: 1.4;">
+          <strong>Preservação Integral de Credenciais:</strong> Os utilizadores, PINs e palavras-passe configurados neste computador são 100% mantidos e protegidos contra qualquer alteração.
+        </div>
+      </div>
+
+      <p style="font-size: 0.92rem; color: #1e293b; font-weight: 600; text-align: center; margin-bottom: 1.25rem;">
+        Deseja proceder com o restauro desta cópia de segurança agora?
+      </p>
+
+      <!-- Botões de Ação -->
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center;">
+        <button type="button" class="btn" onclick="closeBackupRestoreModal()" style="flex: 1; padding: 0.65rem 1rem; background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; font-weight: 600; justify-content: center;">
+          <i class="fa-solid fa-xmark"></i> Cancelar
+        </button>
+        <button type="button" class="btn" onclick="triggerLocalBackupFileSelect()" style="padding: 0.65rem 1rem; background: #ffffff; color: #0284c7; border: 1px solid #bae6fd; font-weight: 600; justify-content: center;" title="Escolher outro ficheiro .json do computador">
+          <i class="fa-solid fa-folder-open"></i> Do Computador...
+        </button>
+        <button type="button" class="btn btn-primary" onclick="confirmAndExecuteBackupRestore()" style="flex: 1.3; padding: 0.65rem 1.25rem; background: #0284c7; color: #ffffff; border: none; font-weight: 600; justify-content: center; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);">
+          <i class="fa-solid fa-check"></i> Sim, Restaurar Dados
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL DE CONFIRMAÇÃO DE NOVA ATUALIZAÇÃO DETETADA -->
   <div id="updateConfirmationModal" class="modal-overlay" style="z-index: 9999;">
     <div class="modal-window" style="max-width: 520px; padding: 1.75rem; text-align: center;">
@@ -2091,5 +2197,7 @@
     </div>
   </div>
 
+  <!-- Script Principal SIGEC-Pro -->
+  <script src="app.js"></script>
 </body>
 </html>
