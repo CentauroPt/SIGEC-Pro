@@ -3530,6 +3530,51 @@
   ],
   "userLogs": [
     {
+      "id": "log-1786721022714-772",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Ficha do utilizador José Centúrio aberta após autenticação de Administrador.",
+      "timestamp": "2026-08-14T15:23:42.714Z"
+    },
+    {
+      "id": "log-1786721000094-581",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Atualização de Software",
+      "descricao": "Pacote de atualização \"SIGEC_V1.7.1.json\" gerado (Apenas Software - Sem dados de registo).",
+      "timestamp": "2026-08-14T15:23:20.094Z"
+    },
+    {
+      "id": "log-1786720979137-80",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Cópia de Segurança",
+      "descricao": "Backup de registos \"Backup_SIGEC-Pro_14-08-2026_17-22-56.json\" gerado (78 Clientes, 140 Contactos, 4 Projetos).",
+      "timestamp": "2026-08-14T15:22:59.137Z"
+    },
+    {
+      "id": "log-1786720962511-906",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Ficha do utilizador José Centúrio aberta após autenticação de Administrador.",
+      "timestamp": "2026-08-14T15:22:42.511Z"
+    },
+    {
+      "id": "log-1786720946676-905",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "timestamp": "2026-08-14T15:22:26.676Z"
+    },
+    {
       "id": "log-1786720936448-298",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
