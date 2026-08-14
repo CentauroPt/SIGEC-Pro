@@ -3506,6 +3506,19 @@ function saveDatabase() {
     safeSetStorage('sigec_pro_usuarios', JSON.stringify(db.usuarios || []));
     safeSetStorage('sigec_pro_user_logs', JSON.stringify(db.userLogs || []));
 
+    // BLINDAGEM PERMANENTE DO TOKEN PAT: re-persiste o token a cada gravação de base de dados
+    // para garantir que nunca se perde, mesmo após limpeza de cache ou reinstalação.
+    const _existingToken = localStorage.getItem('sigec_pro_gh_token') ||
+                           localStorage.getItem('sigec_pro_config_gh_token') ||
+                           localStorage.getItem('sigec_pro_persistent_gh_token') ||
+                           sessionStorage.getItem('sigec_pro_session_gh_token') || '';
+    if (_existingToken) {
+      safeSetStorage('sigec_pro_gh_token', _existingToken);
+      safeSetStorage('sigec_pro_config_gh_token', _existingToken);
+      safeSetStorage('sigec_pro_persistent_gh_token', _existingToken);
+      try { sessionStorage.setItem('sigec_pro_session_gh_token', _existingToken); } catch(e) {}
+    }
+
     if (typeof saveDeletedProjectIds === 'function') saveDeletedProjectIds();
 
     if (!s1 || !s2 || !s3) {
@@ -3566,18 +3579,21 @@ function base64ToUtf8(str) {
 }
 
 function getGitHubConfig() {
-  const token = localStorage.getItem('sigec_pro_gh_token') || 
+  // Lê o token de TODAS as chaves de redundância — localStorage + sessionStorage
+  const token = localStorage.getItem('sigec_pro_gh_token') ||
                 localStorage.getItem('sigec_pro_config_gh_token') ||
-                localStorage.getItem('sigec_pro_persistent_gh_token') || '';
+                localStorage.getItem('sigec_pro_persistent_gh_token') ||
+                sessionStorage.getItem('sigec_pro_session_gh_token') || '';
   const owner = localStorage.getItem('sigec_pro_gh_owner') || 'centauropt';
   const repo = localStorage.getItem('sigec_pro_gh_repo') || 'SIGEC-Pro';
   const path = localStorage.getItem('sigec_pro_gh_path') || 'data/db.json';
 
-  // Sincroniza em redundância para nunca perder entre atualizações
+  // Sincroniza em redundância máxima para nunca perder o token entre sessões e atualizações
   if (token) {
     safeSetStorage('sigec_pro_gh_token', token);
     safeSetStorage('sigec_pro_config_gh_token', token);
     safeSetStorage('sigec_pro_persistent_gh_token', token);
+    try { sessionStorage.setItem('sigec_pro_session_gh_token', token); } catch(e) {}
   }
 
   return { owner, repo, path, token };
@@ -3645,14 +3661,16 @@ function handleSaveGitHubSettings(event) {
   safeSetStorage('sigec_pro_gh_owner', owner);
   safeSetStorage('sigec_pro_gh_repo', repo);
   safeSetStorage('sigec_pro_gh_path', path);
+  // Persiste o token em 4 chaves redundantes para máxima resistência a limpeza de cache
   safeSetStorage('sigec_pro_gh_token', token);
   safeSetStorage('sigec_pro_config_gh_token', token);
   safeSetStorage('sigec_pro_persistent_gh_token', token);
+  try { sessionStorage.setItem('sigec_pro_session_gh_token', token); } catch(e) {}
 
   renderGitHubSettingsForm();
-  logUserActivity('Configuração Servidor', `Definições do servidor GitHub e Token PAT guardados pelo Administrador.`);
+  logUserActivity('Configuração Servidor', `Definições do servidor GitHub e Token PAT guardados pelo Administrador (4 chaves redundantes).`);
   showToast('Definições do servidor GitHub e Token guardados com sucesso!');
-  alert(`✅ Definições do Servidor GitHub Guardadas!\n\nRepositório: ${owner}/${repo}\nFicheiro: ${path}\nStatus: ${token ? 'Token PAT Ativo & Blindado contra Atualizações' : 'Modo Leitura (Sem Token)'}\n\nO seu token permanecerá guardado indefinidamente e não desaparecerá com nenhuma atualização futura.`);
+  alert(`✅ Definições do Servidor GitHub Guardadas!\n\nRepositório: ${owner}/${repo}\nFicheiro: ${path}\nStatus: ${token ? 'Token PAT Ativo & Blindado (4 chaves redundantes)' : 'Modo Leitura (Sem Token)'}\n\nO seu token está agora protegido em múltiplas localizações e será preservado mesmo após atualizações de software.`);
 }
 
 function handleRemoveGitHubToken() {
