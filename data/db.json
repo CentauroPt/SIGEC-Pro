@@ -3530,6 +3530,42 @@
   ],
   "userLogs": [
     {
+      "id": "log-1786719491112-883",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Atualização de Software",
+      "descricao": "Versão de software \"SIGEC_V1.7\" instalada com sucesso.",
+      "timestamp": "2026-08-14T14:58:11.112Z"
+    },
+    {
+      "id": "log-1786719469342-717",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Atualização de Software",
+      "descricao": "Pacote de atualização \"SIGEC_V1.7.json\" gerado (Apenas Software - Sem dados de registo).",
+      "timestamp": "2026-08-14T14:57:49.342Z"
+    },
+    {
+      "id": "log-1786719458611-713",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Cópia de Segurança",
+      "descricao": "Backup de registos \"Backup_SIGEC-Pro_14-08-2026_16-57-36.json\" gerado (78 Clientes, 140 Contactos, 4 Projetos).",
+      "timestamp": "2026-08-14T14:57:38.611Z"
+    },
+    {
+      "id": "log-1786719440583-767",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "timestamp": "2026-08-14T14:57:20.583Z"
+    },
+    {
       "id": "log-1786719427819-156",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
