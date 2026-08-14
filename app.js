@@ -5345,12 +5345,42 @@ function saveClient(e) {
   if (isDup) return;
 
   const existingIndex = db.clientes.findIndex(c => c.id === id);
+  const clienteAnterior = existingIndex >= 0 ? { ...db.clientes[existingIndex] } : null;
+
   if (existingIndex >= 0) {
+    // Detetar campos alterados
+    const camposAlterados = [];
+    const camposLabel = { nome: 'Nome', contribuinte: 'NIF/Contribuinte', email: 'Email', telefone: 'Telefone', telemovel: 'Telemovel', direcao1: 'Morada', codigoPostal: 'Código Postal', localidade: 'Localidade', tipoCliente: 'Tipo de Cliente', ministerio: 'Ministério' };
+    Object.keys(camposLabel).forEach(campo => {
+      const valAnterior = (clienteAnterior[campo] || '').toString().trim();
+      const valNovo = (clientObj[campo] || '').toString().trim();
+      if (valAnterior !== valNovo) {
+        camposAlterados.push({ campo: camposLabel[campo], anterior: valAnterior || '(vazio)', novo: valNovo || '(vazio)' });
+      }
+    });
+
     db.clientes[existingIndex] = clientObj;
     showToast('Ficha de Cliente atualizada com sucesso!');
+    logUserActivity('Edição de Cliente', `Ficha do cliente "${clientObj.nome}" (NIF: ${clientObj.contribuinte}) atualizada.`, {
+      acao: 'Edição',
+      ficha: 'Cliente',
+      nome: clientObj.nome,
+      contribuinte: clientObj.contribuinte,
+      tipoCliente: clientObj.tipoCliente,
+      camposAlterados: camposAlterados.length > 0 ? camposAlterados : [{ campo: 'Ficheiro guardado', anterior: '', novo: 'Sem alterações detetadas nos campos principais' }]
+    });
   } else {
     db.clientes.push(clientObj);
     showToast('Novo Cliente registado com sucesso!');
+    logUserActivity('Criação de Cliente', `Novo cliente "${clientObj.nome}" (NIF: ${clientObj.contribuinte}) registado na base de dados.`, {
+      acao: 'Criação',
+      ficha: 'Cliente',
+      nome: clientObj.nome,
+      contribuinte: clientObj.contribuinte,
+      tipoCliente: clientObj.tipoCliente,
+      email: clientObj.email || '',
+      telefone: clientObj.telefone || ''
+    });
   }
 
   currentClientId = id;
@@ -5378,6 +5408,13 @@ function deleteCurrentClient() {
     db.projetos = db.projetos.filter(p => p.clienteId !== currentClientId);
     db.interacoes = (db.interacoes || []).filter(i => i.clienteId !== currentClientId);
     localStorage.removeItem('sigec_pro_last_client_id');
+    logUserActivity('Eliminação de Cliente', `Cliente "${client.nome}" (NIF: ${client.contribuinte || ''}) eliminado da base de dados.`, {
+      acao: 'Eliminação',
+      ficha: 'Cliente',
+      nome: client.nome,
+      contribuinte: client.contribuinte || '',
+      tipoCliente: client.tipoCliente || ''
+    });
     saveDatabase();
     resetClientForm(true);
     closeClientModal();
@@ -5520,12 +5557,42 @@ function saveContact(e) {
   });
   if (isDup) return;
 
-  if (existingIndex >= 0) {
-    db.contactos[existingIndex] = contactObj;
+  const existingContactIndex = db.contactos.findIndex(c => c.id === id);
+  const contactoAnterior = existingContactIndex >= 0 ? { ...db.contactos[existingContactIndex] } : null;
+
+  if (existingContactIndex >= 0) {
+    const camposAlterados = [];
+    const camposLabel = { nome: 'Nome', apelido: 'Apelido', cargo: 'Cargo', email: 'Email', telefone: 'Telefone', telemovel: 'Telemóvel', notas: 'Notas' };
+    Object.keys(camposLabel).forEach(campo => {
+      const valAnterior = (contactoAnterior[campo] || '').toString().trim();
+      const valNovo = (contactObj[campo] || '').toString().trim();
+      if (valAnterior !== valNovo) {
+        camposAlterados.push({ campo: camposLabel[campo], anterior: valAnterior || '(vazio)', novo: valNovo || '(vazio)' });
+      }
+    });
+
+    db.contactos[existingContactIndex] = contactObj;
     showToast('Contacto atualizado com sucesso!');
+    logUserActivity('Edição de Contacto', `Ficha do contacto "${contactObj.nome} ${contactObj.apelido || ''}" atualizada.`, {
+      acao: 'Edição',
+      ficha: 'Contacto',
+      nome: `${contactObj.nome} ${contactObj.apelido || ''}`.trim(),
+      email: contactObj.email || '',
+      cargo: contactObj.cargo || '',
+      camposAlterados: camposAlterados.length > 0 ? camposAlterados : [{ campo: 'Ficheiro guardado', anterior: '', novo: 'Sem alterações detetadas' }]
+    });
   } else {
     db.contactos.push(contactObj);
     showToast('Novo contacto adicionado ao cliente!');
+    const clienteAssoc = db.clientes.find(c => c.id === selectedClienteId);
+    logUserActivity('Criação de Contacto', `Novo contacto "${contactObj.nome} ${contactObj.apelido || ''}" adicionado ao cliente "${clienteAssoc ? clienteAssoc.nome : selectedClienteId}".`, {
+      acao: 'Criação',
+      ficha: 'Contacto',
+      nome: `${contactObj.nome} ${contactObj.apelido || ''}`.trim(),
+      cargo: contactObj.cargo || '',
+      email: contactObj.email || '',
+      clienteAssociado: clienteAssoc ? clienteAssoc.nome : selectedClienteId
+    });
   }
 
   saveDatabase();
@@ -6148,12 +6215,47 @@ function saveProject(e) {
   });
   if (isDup) return;
 
-  if (existingIndex >= 0) {
-    db.projetos[existingIndex] = projObj;
+  const projetoExistIdx = db.projetos.findIndex(p => p.id === id);
+  const projetoAnterior = projetoExistIdx >= 0 ? { ...db.projetos[projetoExistIdx] } : null;
+  const clienteAssoc = db.clientes.find(c => c.id === clienteId);
+
+  if (projetoExistIdx >= 0) {
+    const camposAlterados = [];
+    const camposLabel = { nome: 'Nome do Projeto', tipo: 'Tipo', estado: 'Estado', dataInicio: 'Data de Início', dataFim: 'Data de Fim', viatura: 'Viatura', matricula: 'Matrícula' };
+    Object.keys(camposLabel).forEach(campo => {
+      const valAnterior = (projetoAnterior[campo] || '').toString().trim();
+      const valNovo = (projObj[campo] || '').toString().trim();
+      if (valAnterior !== valNovo) {
+        camposAlterados.push({ campo: camposLabel[campo], anterior: valAnterior || '(vazio)', novo: valNovo || '(vazio)' });
+      }
+    });
+
+    db.projetos[projetoExistIdx] = projObj;
     showToast('Ficha de Projeto atualizada com sucesso!');
+    logUserActivity('Edição de Projeto', `Ficha do projeto "${projObj.nome}" atualizada.`, {
+      acao: 'Edição',
+      ficha: 'Projeto',
+      nome: projObj.nome,
+      tipo: projObj.tipo,
+      estado: projObj.estado,
+      cliente: clienteAssoc ? clienteAssoc.nome : clienteId,
+      camposAlterados: camposAlterados.length > 0 ? camposAlterados : [{ campo: 'Ficheiro guardado', anterior: '', novo: 'Sem alterações detetadas' }]
+    });
   } else {
     db.projetos.push(projObj);
     showToast('Novo Projeto adicionado com sucesso!');
+    logUserActivity('Criação de Projeto', `Novo projeto "${projObj.nome}" (${projObj.tipo}) criado para o cliente "${clienteAssoc ? clienteAssoc.nome : clienteId}".`, {
+      acao: 'Criação',
+      ficha: 'Projeto',
+      nome: projObj.nome,
+      tipo: projObj.tipo,
+      estado: projObj.estado,
+      dataInicio: projObj.dataInicio,
+      dataFim: projObj.dataFim,
+      viatura: projObj.viatura || '',
+      matricula: projObj.matricula || '',
+      cliente: clienteAssoc ? clienteAssoc.nome : clienteId
+    });
   }
 
   currentProjectId = id;
@@ -9535,10 +9637,24 @@ function ensureUsersInitialized() {
 }
 
 
-function logUserActivity(tipoAcao, descricao) {
+function logUserActivity(tipoAcao, descricao, detalhes) {
   ensureUsersInitialized();
   const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || (db.usuarios[0] ? db.usuarios[0].id : "usr-admin-001");
   const user = db.usuarios.find(u => u.id === activeUserId) || db.usuarios[0] || { id: "usr-admin-001", nome: "Administrador", email: "admin@sigecpro.pt" };
+
+  // Regista a pÃ¡gina/secÃ§Ã£o ativa no momento do registo
+  const paginasNomes = {
+    'tab-home': 'Dashboard / Início',
+    'tab-clientes': 'Clientes',
+    'tab-contactos': 'Contactos',
+    'tab-projetos': 'Projetos',
+    'tab-database': 'Base de Dados',
+    'tab-config': 'Configuração',
+    'tab-historico': 'Histórico de Atividade'
+  };
+  const activeTabEl = document.querySelector('.tab-content.active');
+  const activeTabId = activeTabEl ? activeTabEl.id : '';
+  const paginaAtiva = paginasNomes[activeTabId] || activeTabId || 'Sistema';
 
   const logEntry = {
     id: "log-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
@@ -9547,6 +9663,8 @@ function logUserActivity(tipoAcao, descricao) {
     usuarioEmail: user.email || "",
     tipoAcao: tipoAcao,
     descricao: descricao,
+    pagina: paginaAtiva,
+    detalhes: detalhes || null,
     timestamp: new Date().toISOString()
   };
 
@@ -9720,7 +9838,14 @@ function verifyLoginPin() {
 
     renderUserManagementGrid();
 
-    logUserActivity('Início de Sessão', `Acesso autorizado ao programa efetuado por ${matchedUser.nome}.`);
+    const userAgent = navigator.userAgent || '';
+    const deviceInfo = /Mobile|Android|iPhone/i.test(userAgent) ? 'Dispositivo Móvel' : 'Computador';
+    logUserActivity('Início de Sessão', `Acesso autorizado efetuado por ${matchedUser.nome}.`, {
+      utilizador: matchedUser.nome,
+      email: matchedUser.email || '',
+      cargo: matchedUser.cargo || (matchedUser.role === 'admin' ? 'Administrador' : 'Utilizador'),
+      dispositivo: deviceInfo
+    });
     showToast(`Acesso autorizado! Bem-vindo(a), ${matchedUser.nome}.`);
   } else {
     if (errorMsg) {
@@ -10345,17 +10470,92 @@ function renderUserProfileActivityTimeline() {
     const dateObj = new Date(log.timestamp);
     const formattedDate = `${String(dateObj.getDate()).padStart(2, '0')}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${dateObj.getFullYear()} ${String(dateObj.getHours()).padStart(2, '0')}:${String(dateObj.getMinutes()).padStart(2, '0')}:${String(dateObj.getSeconds()).padStart(2, '0')}`;
 
+    // Ícone e cor por tipo de ação
+    const iconMap = {
+      'Início de Sessão': { icon: 'fa-right-to-bracket', color: '#16a34a', bg: '#dcfce7' },
+      'Encerramento de Sessão': { icon: 'fa-right-from-bracket', color: '#dc2626', bg: '#fee2e2' },
+      'Criação de Cliente': { icon: 'fa-building-circle-check', color: '#0284c7', bg: '#e0f2fe' },
+      'Edição de Cliente': { icon: 'fa-building-user', color: '#0369a1', bg: '#e0f2fe' },
+      'Eliminação de Cliente': { icon: 'fa-building-circle-xmark', color: '#dc2626', bg: '#fee2e2' },
+      'Criação de Contacto': { icon: 'fa-user-plus', color: '#7c3aed', bg: '#f3e8ff' },
+      'Edição de Contacto': { icon: 'fa-user-pen', color: '#6d28d9', bg: '#f3e8ff' },
+      'Criação de Projeto': { icon: 'fa-folder-plus', color: '#d97706', bg: '#fef3c7' },
+      'Edição de Projeto': { icon: 'fa-folder-open', color: '#b45309', bg: '#fef3c7' },
+      'Eliminação de Projeto': { icon: 'fa-folder-minus', color: '#dc2626', bg: '#fee2e2' },
+      'Cópia de Segurança': { icon: 'fa-cloud-arrow-up', color: '#0891b2', bg: '#cffafe' },
+      'Restauro de Backup': { icon: 'fa-cloud-arrow-down', color: '#0e7490', bg: '#cffafe' },
+      'Atualização de Software': { icon: 'fa-gear', color: '#64748b', bg: '#f1f5f9' },
+      'Configuração Servidor': { icon: 'fa-server', color: '#0284c7', bg: '#e0f2fe' },
+      'Servidor GitHub': { icon: 'fa-brands fa-github', color: '#1e293b', bg: '#f1f5f9' },
+      'Segurança': { icon: 'fa-shield-halved', color: '#dc2626', bg: '#fee2e2' },
+      'Gestão de Utilizadores': { icon: 'fa-users-gear', color: '#7c3aed', bg: '#f3e8ff' },
+      'Registo de Utilizador': { icon: 'fa-user-check', color: '#16a34a', bg: '#dcfce7' },
+      'Ficha do Utilizador': { icon: 'fa-id-card', color: '#0284c7', bg: '#e0f2fe' },
+      'Navegação': { icon: 'fa-compass', color: '#475569', bg: '#f8fafc' }
+    };
+    const iconStyle = iconMap[log.tipoAcao] || { icon: 'fa-list-check', color: '#0284c7', bg: '#e0f2fe' };
+
+    // Renderizar detalhes das alterações
+    let detalhesHTML = '';
+    if (log.detalhes) {
+      const d = log.detalhes;
+      const detalheItems = [];
+
+      if (d.utilizador) detalheItems.push(`<span style="color:#475569;"><strong>Utilizador:</strong> ${d.utilizador}</span>`);
+      if (d.email) detalheItems.push(`<span style="color:#475569;"><strong>Email:</strong> ${d.email}</span>`);
+      if (d.cargo && d.cargo !== d.utilizador) detalheItems.push(`<span style="color:#475569;"><strong>Cargo:</strong> ${d.cargo}</span>`);
+      if (d.dispositivo) detalheItems.push(`<span style="color:#475569;"><strong>Dispositivo:</strong> ${d.dispositivo}</span>`);
+      if (d.ficha && d.nome) detalheItems.push(`<span style="color:#475569;"><strong>${d.ficha}:</strong> ${d.nome}</span>`);
+      if (d.contribuinte) detalheItems.push(`<span style="color:#475569;"><strong>NIF:</strong> ${d.contribuinte}</span>`);
+      if (d.tipoCliente) detalheItems.push(`<span style="color:#475569;"><strong>Tipo:</strong> ${d.tipoCliente}</span>`);
+      if (d.tipo) detalheItems.push(`<span style="color:#475569;"><strong>Tipo:</strong> ${d.tipo}</span>`);
+      if (d.estado) detalheItems.push(`<span style="color:#475569;"><strong>Estado:</strong> ${d.estado}</span>`);
+      if (d.cliente) detalheItems.push(`<span style="color:#475569;"><strong>Cliente:</strong> ${d.cliente}</span>`);
+      if (d.clienteAssociado) detalheItems.push(`<span style="color:#475569;"><strong>Cliente:</strong> ${d.clienteAssociado}</span>`);
+      if (d.viatura) detalheItems.push(`<span style="color:#475569;"><strong>Viatura:</strong> ${d.viatura}</span>`);
+      if (d.matricula) detalheItems.push(`<span style="color:#475569;"><strong>Matrícula:</strong> ${d.matricula}</span>`);
+
+      if (d.camposAlterados && Array.isArray(d.camposAlterados) && d.camposAlterados.length > 0) {
+        const alteracoesHTML = d.camposAlterados
+          .filter(c => c.campo && c.anterior !== undefined && c.novo !== undefined)
+          .map(c => {
+            if (!c.anterior && !c.novo) return '';
+            if (c.anterior === '' && c.novo === '') return '';
+            if (c.anterior === c.novo) return '';
+            return `<div style="display:flex;gap:0.4rem;align-items:center;flex-wrap:wrap;padding:0.2rem 0;">
+              <span style="font-weight:600;color:#334155;min-width:100px;">${c.campo}:</span>
+              ${ c.anterior ? `<span style="background:#fee2e2;color:#991b1b;padding:0.1rem 0.4rem;border-radius:3px;font-size:0.75rem;text-decoration:line-through;">${c.anterior}</span><i class="fa-solid fa-arrow-right" style="color:#94a3b8;font-size:0.65rem;"></i>` : '' }
+              <span style="background:#dcfce7;color:#166534;padding:0.1rem 0.4rem;border-radius:3px;font-size:0.75rem;">${c.novo || '(vazio)'}</span>
+            </div>`;
+          }).filter(Boolean).join('');
+
+        if (alteracoesHTML) {
+          detalheItems.push(`<div style="margin-top:0.4rem;padding:0.5rem;background:#f8fafc;border-radius:6px;border:1px solid #e2e8f0;"><div style="font-weight:700;color:#334155;font-size:0.75rem;margin-bottom:0.3rem;"><i class="fa-solid fa-pen-to-square"></i> Campos Alterados:</div>${alteracoesHTML}</div>`);
+        }
+      }
+
+      if (detalheItems.length > 0) {
+        detalhesHTML = `<div style="margin-top:0.45rem;display:flex;flex-direction:column;gap:0.2rem;font-size:0.8rem;">${detalheItems.join('')}</div>`;
+      }
+    }
+
+    const paginaBadge = log.pagina ? `<span style="font-size:0.7rem;background:#f1f5f9;color:#64748b;padding:0.1rem 0.4rem;border-radius:3px;border:1px solid #e2e8f0;"><i class="fa-solid fa-location-dot" style="margin-right:0.2rem;"></i>${log.pagina}</span>` : '';
+
     return `
-      <div style="display: flex; gap: 0.85rem; padding: 0.85rem; border-bottom: 1px solid #e2e8f0; align-items: flex-start;">
-        <div style="width: 34px; height: 34px; border-radius: 50%; background: #0284c7; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; margin-top: 2px;">
-          <i class="fa-solid fa-list-check"></i>
+      <div style="display:flex;gap:0.85rem;padding:0.9rem;border-bottom:1px solid #e2e8f0;align-items:flex-start;transition:background 0.15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
+        <div style="width:36px;height:36px;border-radius:50%;background:${iconStyle.bg};color:${iconStyle.color};display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;margin-top:2px;">
+          <i class="fa-solid ${iconStyle.icon}"></i>
         </div>
-        <div style="flex: 1;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-            <span style="font-weight: 700; color: #0369a1; font-size: 0.88rem;">${log.tipoAcao}</span>
-            <span style="font-size: 0.76rem; color: #64748b; background: #f1f5f9; padding: 0.15rem 0.55rem; border-radius: 4px; font-weight: 600;">${formattedDate}</span>
+        <div style="flex:1;">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.3rem;margin-bottom:0.2rem;">
+            <div style="display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;">
+              <span style="font-weight:700;color:${iconStyle.color};font-size:0.88rem;">${log.tipoAcao}</span>
+              ${paginaBadge}
+            </div>
+            <span style="font-size:0.75rem;color:#64748b;background:#f1f5f9;padding:0.15rem 0.55rem;border-radius:4px;font-weight:600;white-space:nowrap;">${formattedDate}</span>
           </div>
-          <p style="margin: 0; font-size: 0.85rem; color: #334155; line-height: 1.4;">${log.descricao}</p>
+          <p style="margin:0;font-size:0.84rem;color:#334155;line-height:1.45;">${log.descricao}</p>
+          ${detalhesHTML}
         </div>
       </div>
     `;
