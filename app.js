@@ -9434,9 +9434,15 @@ function updateInstalledVersionUI() {
 }
 
 function parseVersionNumber(versionStr) {
-  if (!versionStr) return 1.0;
-  const match = versionStr.match(/\d+(\.\d+)?/);
-  return match ? parseFloat(match[0]) : 1.0;
+  if (!versionStr) return 0;
+  const clean = String(versionStr).replace(/^SIGEC_V?/i, '').replace(/[^0-9.]/g, '');
+  if (!clean) return 0;
+  const parts = clean.split('.').map(p => parseInt(p, 10) || 0);
+  let weight = 0;
+  for (let i = 0; i < 4; i++) {
+    weight = weight * 1000 + (parts[i] || 0);
+  }
+  return weight;
 }
 
 async function generateUpdatePackage() {
@@ -9602,6 +9608,20 @@ if (!window.SIGEC_AVAILABLE_UPDATES || window.SIGEC_AVAILABLE_UPDATES.length ===
       "createdAt": "2026-08-10T19:25:00.000Z",
       "system": "SIGEC-Pro",
       "tipoPacote": "ATUALIZACAO_SOFTWARE_EXCLUSIVA"
+    },
+    {
+      "packageName": "SIGEC_V1.7",
+      "version": "SIGEC_V1.7",
+      "createdAt": "2026-08-14T18:00:00.000Z",
+      "system": "SIGEC-Pro",
+      "tipoPacote": "ATUALIZACAO_SOFTWARE_EXCLUSIVA"
+    },
+    {
+      "packageName": "SIGEC_V1.7.3",
+      "version": "SIGEC_V1.7.3",
+      "createdAt": "2026-08-14T21:15:00.000Z",
+      "system": "SIGEC-Pro",
+      "tipoPacote": "ATUALIZACAO_SOFTWARE_EXCLUSIVA"
     }
   ];
 }
@@ -9615,14 +9635,14 @@ async function checkAndInstallUpdate(silentIfNoUpdate = false) {
   const repo = (cfg.repo || 'SIGEC-Pro').trim();
 
   if (!silentIfNoUpdate) {
-    showToast('A verificar a pasta Atualização no servidor GitHub por novas versões...', 'info');
+    showToast('A procurar a versão mais recente na pasta Atualização...', 'info');
   }
 
-  let highestVersionNum = currentNum;
+  let highestVersionNum = 0;
   let highestUpdateObj = null;
   let highestFileName = '';
 
-  const foldersToTry = ['Atualização', 'Atualizações', 'Atualizacao'];
+  const foldersToTry = ['Atualização', 'Atualizações', 'Atualizacao', 'Atualizacoes', 'atualizacao', 'atualizacoes'];
 
   for (const folder of foldersToTry) {
     try {
@@ -9664,7 +9684,7 @@ async function checkAndInstallUpdate(silentIfNoUpdate = false) {
     } catch (err) {}
   }
 
-  // Se o registo local tiver uma versão superior
+  // Verificar também o registo de versões disponíveis do sistema
   const registryUpdates = window.SIGEC_AVAILABLE_UPDATES || [];
   registryUpdates.forEach(updatePkg => {
     const verName = updatePkg.version || updatePkg.packageName || '';
@@ -9675,20 +9695,51 @@ async function checkAndInstallUpdate(silentIfNoUpdate = false) {
     }
   });
 
-  // Se detetou uma versão mais recente no servidor GitHub
+  // Se detetou uma versão mais recente
   if (highestUpdateObj && highestVersionNum > currentNum) {
     pendingUpdateData = highestUpdateObj;
-    const verName = highestUpdateObj.version || highestUpdateObj.packageName || 'SIGEC_V1.7';
+    const verName = highestUpdateObj.version || highestUpdateObj.packageName || 'SIGEC_V1.7.3';
     const nameEl = document.getElementById('newDetectedVersionName');
     if (nameEl) nameEl.textContent = verName;
 
     const modal = document.getElementById('updateConfirmationModal');
     if (modal) modal.classList.add('active');
-  } else {
-    pendingUpdateData = null;
+    return;
+  }
+
+  // Se a versão atual já é a mais alta ou não foram encontradas novas no GitHub
+  if (highestUpdateObj && highestVersionNum === currentNum) {
     if (!silentIfNoUpdate) {
-      showToast(`Não há novas atualizações disponíveis no servidor GitHub. (Versão atual: ${currentInstalled})`, 'info');
-      alert(`Informação de Atualização:\n\nNão foram encontradas novas versões na pasta "Atualização" do servidor GitHub (${owner}/${repo}).\n\nO seu programa SIGEC-Pro já possui a versão mais recente instalada (${currentInstalled}).`);
+      const chooseAction = confirm(
+        `ℹ️ VERSÃO ATUAL INSTALADA (${currentInstalled}):\n\n` +
+        `O programa já se encontra na versão ${currentInstalled}.\n\n` +
+        `• Clique em [OK] para REINSTALAR / RESTAURAR a versão ${currentInstalled}.\n` +
+        `• Clique em [Cancelar] para selecionar outro ficheiro de atualização (.json) do seu computador.`
+      );
+      if (chooseAction) {
+        pendingUpdateData = highestUpdateObj;
+        const nameEl = document.getElementById('newDetectedVersionName');
+        if (nameEl) nameEl.textContent = currentInstalled;
+        const modal = document.getElementById('updateConfirmationModal');
+        if (modal) modal.classList.add('active');
+      } else {
+        const fileInput = document.getElementById('systemUpdateImportInput');
+        if (fileInput) {
+          fileInput.value = '';
+          fileInput.click();
+        }
+      }
+    }
+    return;
+  }
+
+  // Se não foi possível ligar ao GitHub ou não há versões no servidor
+  if (!silentIfNoUpdate) {
+    showToast('A abrir seletor para carregar ficheiro de atualização do computador...', 'info');
+    const fileInput = document.getElementById('systemUpdateImportInput');
+    if (fileInput) {
+      fileInput.value = '';
+      fileInput.click();
     }
   }
 }
