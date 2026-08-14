@@ -3246,6 +3246,28 @@
   ],
   "userLogs": [
     {
+      "id": "log-1786748127782-107",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Cópia de Segurança",
+      "descricao": "Backup de registos \"Backup_SIGEC-Pro_15-08-2026_00-55-26.json\" gerado (85 Clientes, 137 Contactos, 4 Projetos).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-14T22:55:27.782Z"
+    },
+    {
+      "id": "log-1786748121128-438",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-14T22:55:21.128Z"
+    },
+    {
       "id": "log-1786738690790-528",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
