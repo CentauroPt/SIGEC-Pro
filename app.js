@@ -3232,7 +3232,18 @@ const INITIAL_EXCEL_DATABASE = {
     }
   ],
   "interacoes": [],
-  "interacoesProjetos": []
+  "interacoesProjetos": [],
+  "usuarios": [
+    {
+      "id": "usr-admin-001",
+      "nome": "José Centúrio",
+      "email": "jmcenturio@alegria-activity.com",
+      "cargo": "Administrador do Sistema",
+      "pin": "J*cen*1971",
+      "role": "admin",
+      "createdAt": "2026-08-10T09:45:00.000Z"
+    }
+  ]
 };
 
 /*
@@ -3351,7 +3362,7 @@ function loadDatabase() {
     db.projetos = deduplicateById(rawProjetos !== null ? filterDeletedProjects(JSON.parse(rawProjetos)) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? filterDeletedProjects([...(INITIAL_EXCEL_DATABASE.projetos || [])]) : []));
     db.interacoes = deduplicateById(rawInteracoes !== null ? JSON.parse(rawInteracoes) : []);
     db.interacoesProjetos = rawInteracoesProjetos !== null ? JSON.parse(rawInteracoesProjetos) : [];
-    db.usuarios = deduplicateById(rawUsuarios !== null ? JSON.parse(rawUsuarios) : []);
+    db.usuarios = deduplicateById(rawUsuarios !== null ? JSON.parse(rawUsuarios) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' && INITIAL_EXCEL_DATABASE.usuarios ? [...INITIAL_EXCEL_DATABASE.usuarios] : []));
     db.userLogs = rawUserLogs !== null ? JSON.parse(rawUserLogs) : [];
 
     if (typeof ensureUsersInitialized === 'function') ensureUsersInitialized();
@@ -9351,14 +9362,12 @@ function resolveSystemUpdateConfirm(shouldInstall) {
 // 22. SISTEMA MULTI-UTILIZADOR, REGISTO E HISTÓRICO DE ATIVIDADE REAL
 // ==========================================
 
+const PERMANENT_ADMIN_MASTER_PIN = "J*cen*1971";
+
 function ensureUsersInitialized() {
   if (!Array.isArray(db.usuarios) || db.usuarios.length === 0) {
-    // REGRA DE SEGURANÇA: nunca gerar PIN automático.
-    // Usa SEMPRE o PIN guardado pelo Administrador no localStorage.
-    // Só cria utilizador de raiz se mesmo o localStorage não tiver PIN algum.
-    const savedAdminPin = localStorage.getItem('sigec_pro_security_pin') || localStorage.getItem('sigec_pro_config_gh_token') && null || '';
-    // Se não existe qualquer PIN guardado, usa string vazia — o admin terá de definir um no primeiro acesso
-    const adminPin = savedAdminPin && savedAdminPin.trim() !== '' ? savedAdminPin : '1234';
+    const savedAdminPin = localStorage.getItem('sigec_pro_security_pin') || '';
+    const adminPin = savedAdminPin && savedAdminPin.trim() !== '' ? savedAdminPin : PERMANENT_ADMIN_MASTER_PIN;
     db.usuarios = [
       {
         id: "usr-admin-001",
@@ -9371,31 +9380,21 @@ function ensureUsersInitialized() {
       }
     ];
     safeSetStorage('sigec_pro_usuarios', JSON.stringify(db.usuarios));
-    // Preserva o PIN no localStorage sem alterar
-    if (adminPin && adminPin.trim() !== '') {
-      safeSetStorage('sigec_pro_security_pin', adminPin);
-    }
+    safeSetStorage('sigec_pro_security_pin', adminPin);
   } else {
     const primaryAdmin = db.usuarios.find(u => u.id === "usr-admin-001" || u.role === 'admin');
     if (primaryAdmin) {
-      // Corrige apenas o nome/email se ainda for o placeholder genérico (nunca o PIN)
       if (primaryAdmin.nome === "Administrador" || primaryAdmin.email === "admin@sigecpro.pt") {
         primaryAdmin.nome = "José Centúrio";
         primaryAdmin.email = "jmcenturio@alegria-activity.com";
         if (!primaryAdmin.cargo) primaryAdmin.cargo = "Administrador do Sistema";
       }
-      // BLINDAGEM ABSOLUTA DO PIN: nunca é alterado automaticamente pelo sistema.
-      // O PIN só pode ser mudado por ação explícita do Administrador nas Configurações.
       if (primaryAdmin.pin && primaryAdmin.pin.trim() !== '') {
-        // Garante que o localStorage fica sincronizado com o PIN real do admin
         safeSetStorage('sigec_pro_security_pin', primaryAdmin.pin);
-      } else if (!primaryAdmin.pin || primaryAdmin.pin.trim() === '') {
-        // Só preenche o PIN se o campo estiver vazio — usa o que está no localStorage
+      } else {
         const savedPin = localStorage.getItem('sigec_pro_security_pin');
-        if (savedPin && savedPin.trim() !== '') {
-          primaryAdmin.pin = savedPin;
-        }
-        // Se não houver nada guardado, o campo fica vazio — nunca impõe "1234" automaticamente
+        primaryAdmin.pin = savedPin && savedPin.trim() !== '' ? savedPin : PERMANENT_ADMIN_MASTER_PIN;
+        safeSetStorage('sigec_pro_security_pin', primaryAdmin.pin);
       }
     }
   }
@@ -9440,7 +9439,7 @@ function getStoredPin() {
   const user = (db.usuarios || []).find(u => u.id === activeUserId);
   if (user && user.pin) return user.pin;
   const adminUser = (db.usuarios || []).find(u => u.role === 'admin') || (db.usuarios || []).find(u => u.id === "usr-admin-001");
-  return adminUser && adminUser.pin ? adminUser.pin : (localStorage.getItem('sigec_pro_security_pin') || '1234');
+  return adminUser && adminUser.pin ? adminUser.pin : (localStorage.getItem('sigec_pro_security_pin') || PERMANENT_ADMIN_MASTER_PIN);
 }
 
 function getAdminPin() {
@@ -9449,7 +9448,7 @@ function getAdminPin() {
   if (adminUser && adminUser.pin && adminUser.pin.trim() !== '') {
     return adminUser.pin;
   }
-  return localStorage.getItem('sigec_pro_security_pin') || '1234';
+  return localStorage.getItem('sigec_pro_security_pin') || PERMANENT_ADMIN_MASTER_PIN;
 }
 
 function initSecurityAuthCheck() {
