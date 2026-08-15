@@ -3246,95 +3246,18 @@
   ],
   "userLogs": [
     {
-      "id": "log-1786748127782-107",
+      "id": "log-1786756166067-446",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Cópia de Segurança",
-      "descricao": "Backup de registos \"Backup_SIGEC-Pro_15-08-2026_00-55-26.json\" gerado (85 Clientes, 137 Contactos, 4 Projetos).",
+      "tipoAcao": "Restauro de Backup",
+      "descricao": "Cópia de segurança \"Backup_SIGEC-Pro_15-08-2026_00-55-26.json\" restaurada (85 Clientes, 137 Contactos, 4 Projetos).",
       "pagina": "Base de Dados",
       "detalhes": null,
-      "timestamp": "2026-08-14T22:55:27.782Z"
+      "timestamp": "2026-08-15T01:09:26.067Z"
     },
     {
-      "id": "log-1786748121128-438",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-14T22:55:21.128Z"
-    },
-    {
-      "id": "log-1786738690790-528",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-14T20:18:10.790Z"
-    },
-    {
-      "id": "log-1786738366076-130",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Atualização de Software",
-      "descricao": "Pacote de atualização \"SIGEC_V1.7.5.json\" gerado (Apenas Software - Sem dados de registo).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-14T20:12:46.076Z"
-    },
-    {
-      "id": "log-1786738341713-867",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-14T20:12:21.714Z"
-    },
-    {
-      "id": "log-1786738195196-414",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Atualização de Software",
-      "descricao": "Versão de software \"SIGEC_V1.7.4\" instalada com sucesso.",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-14T20:09:55.196Z"
-    },
-    {
-      "id": "log-1786738170435-700",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-14T20:09:30.435Z"
-    },
-    {
-      "id": "log-1786738164692-781",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Configuração Servidor",
-      "descricao": "Definições do servidor GitHub e Token PAT guardados pelo Administrador (4 chaves redundantes).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-14T20:09:24.692Z"
-    },
-    {
-      "id": "log-1786737972654-543",
+      "id": "log-1786756141029-703",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
@@ -3347,7 +3270,59 @@
         "cargo": "Administrador do Sistema",
         "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-14T20:06:12.654Z"
+      "timestamp": "2026-08-15T01:09:01.029Z"
+    },
+    {
+      "id": "log-1786752570508-260",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Atualização de Software",
+      "descricao": "Versão de software \"SIGEC_V1.7.5\" instalada com sucesso.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-15T00:09:30.508Z"
+    },
+    {
+      "id": "log-1786752507121-11",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Projeto",
+      "descricao": "Ficha do projeto \"Unidade Móvel Bancária - Camião\" atualizada.",
+      "pagina": "Projetos",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Projeto",
+        "nome": "Unidade Móvel Bancária - Camião",
+        "tipo": "Compra UM",
+        "estado": "Em Orçamento",
+        "cliente": "BCN (Banco Cabo-Verdiano de Negócios)",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas"
+          }
+        ]
+      },
+      "timestamp": "2026-08-15T00:08:27.121Z"
+    },
+    {
+      "id": "log-1786752475176-573",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Início de Sessão",
+      "descricao": "Acesso autorizado efetuado por José Centúrio.",
+      "pagina": "Dashboard / Início",
+      "detalhes": {
+        "utilizador": "José Centúrio",
+        "email": "jmcenturio@alegria-activity.com",
+        "cargo": "Administrador do Sistema",
+        "dispositivo": "Computador"
+      },
+      "timestamp": "2026-08-15T00:07:55.176Z"
     }
   ],
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg=="
