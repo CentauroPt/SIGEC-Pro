@@ -837,13 +837,26 @@ textarea.form-control {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: all 0.25s ease;
 }
 
 .modal-overlay.active {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  display: flex !important;
+}
+
+/* Hierarquia de Sobreposição de Janelas Modais */
+#clientModal { z-index: 1000; }
+#projectModal { z-index: 1100; }
+#contactModal { z-index: 1120; }
+#interactionModal { z-index: 1150; }
+#projectBudgetModal { z-index: 99999; }
+#projectBudgetModal.active {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  display: flex !important;
 }
 
 .modal-window {
@@ -2169,4 +2182,99 @@ textarea.form-control {
   color: #334155;
   letter-spacing: 0.5px;
 }
+
+/* ==========================================
+   MÓDULO DE GESTÃO DE ORÇAMENTOS
+   ========================================== */
+.budget-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.15rem 1.25rem;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-top: 3.5px solid #c8102e;
+}
+
+.budget-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  border-color: #c8102e;
+}
+
+.budget-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.budget-card-title {
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.35rem;
+  line-height: 1.35;
+}
+
+.budget-card-client {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #2563eb;
+  font-weight: 600;
+  font-size: 0.92rem;
+  margin-bottom: 0.6rem;
+}
+
+.budget-card-meta {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: #475569;
+  margin-bottom: 0.85rem;
+  padding: 0.5rem 0.75rem;
+  background: #f8fafc;
+  border-radius: var(--radius-sm);
+  border: 1px solid #f1f5f9;
+}
+
+.budget-card-price-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fef2f2;
+  border: 1.5px solid #fecaca;
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.85rem;
+  margin-bottom: 0.85rem;
+}
+
+.budget-card-price-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #991b1b;
+  text-transform: uppercase;
+}
+
+.budget-card-price-value {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #c8102e;
+}
+
+.budget-card-actions {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: flex-end;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  border-top: 1px solid #f1f5f9;
+}
+
 
