@@ -3283,43 +3283,85 @@
       "pin": "J*cen*1971",
       "role": "admin",
       "createdAt": "2026-08-10T09:45:00.000Z"
-    },
-    {
-      "id": "usr-1786830129122",
-      "nome": "antonio",
-      "email": "antonio@antonio.es",
-      "cargo": "Teste",
-      "pin": "1234",
-      "role": "user",
-      "active": false,
-      "createdAt": "2026-08-15T21:42:09.122Z"
     }
   ],
   "userLogs": [
     {
-      "id": "log-1786830520421-498",
+      "id": "log-1786830547926-995",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Cópia de Segurança",
-      "descricao": "Backup de registos \"Backup_SIGEC-Pro_15-08-2026_23-48-38.json\" gerado (85 Clientes, 137 Contactos, 4 Projetos).",
+      "tipoAcao": "Restauro de Backup",
+      "descricao": "Cópia de segurança \"Backup_SIGEC-Pro_15-08-2026_23-48-38.json\" restaurada (85 Clientes, 137 Contactos, 4 Projetos).",
       "pagina": "Base de Dados",
       "detalhes": null,
-      "timestamp": "2026-08-15T21:48:40.421Z"
+      "timestamp": "2026-08-15T21:49:07.926Z"
     },
     {
-      "id": "log-1786830461779-332",
+      "id": "log-1786830496050-12",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
       "tipoAcao": "Atualização de Software",
-      "descricao": "Pacote de atualização \"SIGEC_V1.8.0.json\" gerado (Apenas Software - Sem dados de registo).",
+      "descricao": "Versão de software \"SIGEC_V1.8.0\" instalada com sucesso.",
       "pagina": "Base de Dados",
       "detalhes": null,
-      "timestamp": "2026-08-15T21:47:41.780Z"
+      "timestamp": "2026-08-15T21:48:16.050Z"
     },
     {
-      "id": "log-1786830133391-658",
+      "id": "log-1786827883707-683",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Início de Sessão",
+      "descricao": "Acesso autorizado efetuado por José Centúrio.",
+      "pagina": "Dashboard / Início",
+      "detalhes": {
+        "utilizador": "José Centúrio",
+        "email": "jmcenturio@alegria-activity.com",
+        "cargo": "Administrador do Sistema",
+        "dispositivo": "Computador"
+      },
+      "timestamp": "2026-08-15T21:04:43.707Z"
+    },
+    {
+      "id": "log-1786756357427-892",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Projeto",
+      "descricao": "Ficha do projeto \"Unidade Móvel Bancária - Camião\" atualizada.",
+      "pagina": "Projetos",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Projeto",
+        "nome": "Unidade Móvel Bancária - Camião",
+        "tipo": "Compra UM",
+        "estado": "Em Orçamento",
+        "cliente": "BCN (Banco Cabo-Verdiano de Negócios)",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas"
+          }
+        ]
+      },
+      "timestamp": "2026-08-15T01:12:37.428Z"
+    },
+    {
+      "id": "log-1786756328399-589",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Atualização de Software",
+      "descricao": "Versão de software \"SIGEC_V1.7.5\" instalada com sucesso.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-15T01:12:08.399Z"
+    },
+    {
+      "id": "log-1786756169157-322",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
@@ -3327,371 +3369,48 @@
       "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
       "pagina": "Base de Dados",
       "detalhes": null,
-      "timestamp": "2026-08-15T21:42:13.391Z"
+      "timestamp": "2026-08-15T01:09:29.157Z"
     },
     {
-      "id": "log-1786830129192-913",
+      "id": "log-1786756166067-446",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Gestão de Utilizadores",
-      "descricao": "Utilizador antonio (antonio@antonio.es) adicionado à administração do sistema.",
+      "tipoAcao": "Restauro de Backup",
+      "descricao": "Cópia de segurança \"Backup_SIGEC-Pro_15-08-2026_00-55-26.json\" restaurada (85 Clientes, 137 Contactos, 4 Projetos).",
       "pagina": "Base de Dados",
       "detalhes": null,
-      "timestamp": "2026-08-15T21:42:09.192Z"
+      "timestamp": "2026-08-15T01:09:26.067Z"
     },
     {
-      "id": "log-1786790768243-185",
+      "id": "log-1786756141029-703",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Jeronimo Martins\" (NIF: 500000187) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Jeronimo Martins",
-        "contribuinte": "500000187",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Nome",
-            "anterior": "FUNDAÇÃO JERÓNIMO MARTINS",
-            "novo": "Fundação Jeronimo Martins"
-          },
-          {
-            "campo": "NIF/Contribuinte",
-            "anterior": "500000085",
-            "novo": "500000187"
-          },
-          {
-            "campo": "Email",
-            "anterior": "miguel.herdade@fundacao-jeronimomartins.com",
-            "novo": "fundacao@jeronimo-martins.com"
-          },
-          {
-            "campo": "Morada",
-            "anterior": "Rua Actor António Silva, n.º 7, 1649-033 Lisboa, Portugal",
-            "novo": "Rua Actor António Silva n.º71649-033 Lisboa"
-          },
-          {
-            "campo": "Tipo de Cliente",
-            "anterior": "Estatal",
-            "novo": "Fundação"
-          },
-          {
-            "campo": "Ministério",
-            "anterior": "FUNDAÇÃO JERÓNIMO MARTINS",
-            "novo": "(vazio)"
-          }
-        ]
-      },
-      "timestamp": "2026-08-15T10:46:08.243Z"
-    },
-    {
-      "id": "log-1786790651134-800",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Eugénio de Almeida\" (NIF: 500000340) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Eugénio de Almeida",
-        "contribuinte": "500000340",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Morada",
-            "anterior": "Páteo de São Miguel\nApartado 2001\n7001-901 Évora\nPortugal",
-            "novo": "Páteo de São MiguelApartado 20017001-901 ÉvoraPortugal"
-          },
-          {
-            "campo": "Tipo de Cliente",
-            "anterior": "Privado",
-            "novo": "Fundação"
-          }
-        ]
-      },
-      "timestamp": "2026-08-15T10:44:11.134Z"
-    },
-    {
-      "id": "log-1786790644922-869",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação EDP\" (NIF: 500000289) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação EDP",
-        "contribuinte": "500000289",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Morada",
-            "anterior": "Av. Brasília, Central Tejo\n1300-598 Lisboa",
-            "novo": "Av. Brasília, Central Tejo1300-598 Lisboa"
-          },
-          {
-            "campo": "Tipo de Cliente",
-            "anterior": "Privado",
-            "novo": "Fundação"
-          }
-        ]
-      },
-      "timestamp": "2026-08-15T10:44:04.922Z"
-    },
-    {
-      "id": "log-1786790635837-799",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Calouste Gulbenkian\" (NIF: 500000204) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Calouste Gulbenkian",
-        "contribuinte": "500000204",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Tipo de Cliente",
-            "anterior": "Privado",
-            "novo": "Fundação"
-          }
-        ]
-      },
-      "timestamp": "2026-08-15T10:43:55.837Z"
-    },
-    {
-      "id": "log-1786790628226-682",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Belmiro de Azevedo\" (NIF: 500000374) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Belmiro de Azevedo",
-        "contribuinte": "500000374",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Morada",
-            "anterior": "Praça de Liège, 146\n4150-455 Porto",
-            "novo": "Praça de Liège, 1464150-455 Porto"
-          },
-          {
-            "campo": "Tipo de Cliente",
-            "anterior": "Privado",
-            "novo": "Fundação"
-          }
-        ]
-      },
-      "timestamp": "2026-08-15T10:43:48.226Z"
-    },
-    {
-      "id": "log-1786790619322-984",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação António Cupertino da Miranda\" (NIF: 500000255) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação António Cupertino da Miranda",
-        "contribuinte": "500000255",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Morada",
-            "anterior": "Avenida da Boavista, 4245 4100–140\nOporto, Portugal",
-            "novo": "Avenida da Boavista, 4245 4100–140Oporto, Portugal"
-          },
-          {
-            "campo": "Tipo de Cliente",
-            "anterior": "Privado",
-            "novo": "Fundação"
-          }
-        ]
-      },
-      "timestamp": "2026-08-15T10:43:39.322Z"
-    },
-    {
-      "id": "log-1786790611264-72",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Altice Portugal\" (NIF: 500000357) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Altice Portugal",
-        "contribuinte": "500000357",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas nos campos principais"
-          }
-        ]
-      },
-      "timestamp": "2026-08-15T10:43:31.264Z"
-    },
-    {
-      "id": "log-1786790605175-508",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Altice Portugal\" (NIF: 500000357) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Altice Portugal",
-        "contribuinte": "500000357",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Morada",
-            "anterior": "Avenida Fontes Pereira de Melo, nº40, 6ºpiso\n1069-300 Lisboa - Portugal",
-            "novo": "Avenida Fontes Pereira de Melo, nº40, 6ºpiso1069-300 Lisboa - Portugal"
-          },
-          {
-            "campo": "Tipo de Cliente",
-            "anterior": "Privado",
-            "novo": "Fundação"
-          }
-        ]
-      },
-      "timestamp": "2026-08-15T10:43:25.175Z"
-    },
-    {
-      "id": "log-1786790600153-685",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Ageas\" (NIF: 500000306) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Ageas",
-        "contribuinte": "500000306",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Morada",
-            "anterior": "Edifício Ageas Tejo\nPraça Príncipe Perfeito, 2\n1990-278 Lisboa\nPortugal",
-            "novo": "Edifício Ageas TejoPraça Príncipe Perfeito, 21990-278 LisboaPortugal"
-          },
-          {
-            "campo": "Tipo de Cliente",
-            "anterior": "Privado",
-            "novo": "Fundação"
-          }
-        ]
-      },
-      "timestamp": "2026-08-15T10:43:20.153Z"
-    },
-    {
-      "id": "log-1786790594391-122",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Aga Khan Portugal\" (NIF: 500000459) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Aga Khan Portugal",
-        "contribuinte": "500000459",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Morada",
-            "anterior": "Av. Lusíada 10,\n1600-150 Lisboa\nPortugal",
-            "novo": "Av. Lusíada 10,1600-150 LisboaPortugal"
-          },
-          {
-            "campo": "Tipo de Cliente",
-            "anterior": "Privado",
-            "novo": "Fundação"
-          }
-        ]
-      },
-      "timestamp": "2026-08-15T10:43:14.391Z"
-    },
-    {
-      "id": "log-1786751871734-995",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Projeto",
-      "descricao": "Ficha do projeto \"Estratégia Norte 2040\" atualizada.",
+      "tipoAcao": "Início de Sessão",
+      "descricao": "Acesso autorizado efetuado por José Centúrio.",
       "pagina": "Dashboard / Início",
       "detalhes": {
-        "acao": "Edição",
-        "ficha": "Projeto",
-        "nome": "Estratégia Norte 2040",
-        "tipo": "Aluguer UM",
-        "estado": "Aguarda Proposta",
-        "cliente": "CCDR-N (Comissão de Coordenação e Desenvolvimento Regional do Norte)",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas"
-          }
-        ]
+        "utilizador": "José Centúrio",
+        "email": "jmcenturio@alegria-activity.com",
+        "cargo": "Administrador do Sistema",
+        "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-14T23:57:51.734Z"
+      "timestamp": "2026-08-15T01:09:01.029Z"
     },
     {
-      "id": "log-1786751866810-100",
+      "id": "log-1786752570508-260",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Projeto",
-      "descricao": "Ficha do projeto \"Unidade Móvel Bancária - Furgão\" atualizada.",
-      "pagina": "Dashboard / Início",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Projeto",
-        "nome": "Unidade Móvel Bancária - Furgão",
-        "tipo": "Compra UM",
-        "estado": "Orçamentado",
-        "cliente": "BCN (Banco Cabo-Verdiano de Negócios)",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas"
-          }
-        ]
-      },
-      "timestamp": "2026-08-14T23:57:46.810Z"
+      "tipoAcao": "Atualização de Software",
+      "descricao": "Versão de software \"SIGEC_V1.7.5\" instalada com sucesso.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-15T00:09:30.508Z"
     },
     {
-      "id": "log-1786751854294-340",
+      "id": "log-1786752507121-11",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
@@ -3703,7 +3422,7 @@
         "ficha": "Projeto",
         "nome": "Unidade Móvel Bancária - Camião",
         "tipo": "Compra UM",
-        "estado": "Orçamentado",
+        "estado": "Em Orçamento",
         "cliente": "BCN (Banco Cabo-Verdiano de Negócios)",
         "camposAlterados": [
           {
@@ -3713,133 +3432,10 @@
           }
         ]
       },
-      "timestamp": "2026-08-14T23:57:34.294Z"
+      "timestamp": "2026-08-15T00:08:27.121Z"
     },
     {
-      "id": "log-1786751834996-523",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Projeto",
-      "descricao": "Ficha do projeto \"Unidade Móvel Bancária - Camião\" atualizada.",
-      "pagina": "Projetos",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Projeto",
-        "nome": "Unidade Móvel Bancária - Camião",
-        "tipo": "Compra UM",
-        "estado": "Orçamentado",
-        "cliente": "BCN (Banco Cabo-Verdiano de Negócios)",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas"
-          }
-        ]
-      },
-      "timestamp": "2026-08-14T23:57:14.996Z"
-    },
-    {
-      "id": "log-1786751804056-468",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"BCN (Banco Cabo-Verdiano de Negócios)\" (NIF: 500001462) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "BCN (Banco Cabo-Verdiano de Negócios)",
-        "contribuinte": "500001462",
-        "tipoCliente": "Privado",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas nos campos principais"
-          }
-        ]
-      },
-      "timestamp": "2026-08-14T23:56:44.056Z"
-    },
-    {
-      "id": "log-1786751779370-188",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"CCDR-N (Comissão de Coordenação e Desenvolvimento Regional do Norte)\" (NIF: 501227181) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "CCDR-N (Comissão de Coordenação e Desenvolvimento Regional do Norte)",
-        "contribuinte": "501227181",
-        "tipoCliente": "Estatal",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas nos campos principais"
-          }
-        ]
-      },
-      "timestamp": "2026-08-14T23:56:19.370Z"
-    },
-    {
-      "id": "log-1786751772600-3",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Projeto",
-      "descricao": "Ficha do projeto \"Estratégia Norte 2040\" atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Projeto",
-        "nome": "Estratégia Norte 2040",
-        "tipo": "Aluguer UM",
-        "estado": "Aguarda Proposta",
-        "cliente": "CCDR-N (Comissão de Coordenação e Desenvolvimento Regional do Norte)",
-        "camposAlterados": [
-          {
-            "campo": "Estado",
-            "anterior": "Orçamentado",
-            "novo": "Aguarda Proposta"
-          }
-        ]
-      },
-      "timestamp": "2026-08-14T23:56:12.600Z"
-    },
-    {
-      "id": "log-1786751748373-742",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Projeto",
-      "descricao": "Ficha do projeto \"Unidade Móvel Bancária - Furgão\" atualizada.",
-      "pagina": "Dashboard / Início",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Projeto",
-        "nome": "Unidade Móvel Bancária - Furgão",
-        "tipo": "Compra UM",
-        "estado": "Orçamentado",
-        "cliente": "BCN (Banco Cabo-Verdiano de Negócios)",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas"
-          }
-        ]
-      },
-      "timestamp": "2026-08-14T23:55:48.373Z"
-    },
-    {
-      "id": "log-1786751505402-428",
+      "id": "log-1786752475176-573",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
@@ -3852,39 +3448,7 @@
         "cargo": "Administrador do Sistema",
         "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-14T23:51:45.402Z"
-    },
-    {
-      "id": "log-1786749723083-876",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Início de Sessão",
-      "descricao": "Acesso autorizado efetuado por José Centúrio.",
-      "pagina": "Dashboard / Início",
-      "detalhes": {
-        "utilizador": "José Centúrio",
-        "email": "jmcenturio@alegria-activity.com",
-        "cargo": "Administrador do Sistema",
-        "dispositivo": "Computador"
-      },
-      "timestamp": "2026-08-14T23:22:03.083Z"
-    },
-    {
-      "id": "log-1786748169474-691",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Início de Sessão",
-      "descricao": "Acesso autorizado efetuado por José Centúrio.",
-      "pagina": "Dashboard / Início",
-      "detalhes": {
-        "utilizador": "José Centúrio",
-        "email": "jmcenturio@alegria-activity.com",
-        "cargo": "Administrador do Sistema",
-        "dispositivo": "Computador"
-      },
-      "timestamp": "2026-08-14T22:56:09.474Z"
+      "timestamp": "2026-08-15T00:07:55.176Z"
     }
   ],
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg=="
