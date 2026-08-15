@@ -28,81 +28,7 @@
   <script src="Atualizações/updates_registry.js"></script>
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=20260815_v50">
-
-  <!-- Immediate Login Handler (Guarantees instant login responsiveness even before full scripts parse) -->
-  <script>
-  window.verifyLoginPin = function() {
-    try {
-      var userInput = document.getElementById('loginUserInput');
-      var pinInput = document.getElementById('loginPinInput');
-      var errorMsg = document.getElementById('loginErrorMessage');
-      var overlay = document.getElementById('loginOverlay');
-      
-      var enteredUser = userInput ? (userInput.value || '').trim() : '';
-      var enteredPin = pinInput ? (pinInput.value || '').trim() : '';
-
-      if (!enteredPin) {
-        if (errorMsg) {
-          errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Por favor, insira o seu PIN / Palavra-passe de acesso.';
-          errorMsg.style.display = 'block';
-        }
-        if (pinInput) pinInput.style.borderColor = '#dc2626';
-        return;
-      }
-
-      var isMasterPin = (enteredPin === 'J*cen*1971' || enteredPin === '1971' || enteredPin.toLowerCase() === 'admin' || enteredPin === 'admin123');
-      var isUserMatch = false;
-
-      if (typeof db !== 'undefined' && db && db.usuarios && Array.isArray(db.usuarios)) {
-        var found = db.usuarios.find(function(u) {
-          return (u.pin === enteredPin) || (isMasterPin && u.role === 'admin');
-        });
-        if (found) {
-          isUserMatch = true;
-          sessionStorage.setItem('sigec_pro_active_user_id', found.id);
-        }
-      }
-
-      if (isMasterPin || isUserMatch || enteredPin.length >= 3) {
-        sessionStorage.setItem('sigec_pro_authenticated', 'true');
-        if (errorMsg) errorMsg.style.display = 'none';
-        if (userInput) userInput.value = '';
-        if (pinInput) pinInput.value = '';
-        
-        if (overlay) {
-          overlay.classList.add('hidden');
-          overlay.style.display = 'none';
-          overlay.style.visibility = 'hidden';
-          overlay.style.pointerEvents = 'none';
-        }
-        
-        if (typeof loadDatabase === 'function') loadDatabase();
-        if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
-        if (typeof renderClientPageMainGrid === 'function') renderClientPageMainGrid();
-        if (typeof renderProjectPageMainGrid === 'function') renderProjectPageMainGrid();
-        if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
-        if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
-        if (typeof renderUserManagementGrid === 'function') renderUserManagementGrid();
-        if (typeof switchTab === 'function') switchTab('tab-home');
-        if (typeof showToast === 'function') showToast('Acesso autorizado! Bem-vindo(a) ao SIGEC-Pro.');
-      } else {
-        if (errorMsg) {
-          errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Utilizador ou Palavra-passe incorreta. Tente novamente.';
-          errorMsg.style.display = 'block';
-        }
-        if (userInput) userInput.style.borderColor = '#dc2626';
-        if (pinInput) pinInput.style.borderColor = '#dc2626';
-        if (typeof showToast === 'function') showToast('Utilizador ou PIN incorreto!', 'danger');
-      }
-    } catch (err) {
-      console.error('Erro em verifyLoginPin:', err);
-      var ov = document.getElementById('loginOverlay');
-      if (ov) { ov.classList.add('hidden'); ov.style.display = 'none'; }
-      sessionStorage.setItem('sigec_pro_authenticated', 'true');
-    }
-  };
-  </script>
+  <link rel="stylesheet" href="styles.css">
   
   <!-- Critical Login Screen Styles (Guarantees perfect rendering even before external CSS loads) -->
   <style>
@@ -366,7 +292,7 @@
               <i class="fa-solid fa-circle-exclamation"></i> PIN incorreto. Tente novamente.
             </div>
 
-            <button type="button" onclick="verifyLoginPin()" class="btn" style="width: 100%; margin-top: 1.25rem; padding: 0.85rem; background: #0284c7; color: #ffffff; font-weight: 700; font-size: 1rem; justify-content: center; border-radius: 8px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); cursor: pointer; border: none;">
+            <button type="submit" class="btn" style="width: 100%; margin-top: 1.25rem; padding: 0.85rem; background: #0284c7; color: #ffffff; font-weight: 700; font-size: 1rem; justify-content: center; border-radius: 8px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); cursor: pointer; border: none;">
               <i class="fa-solid fa-right-to-bracket"></i> Entrar no Sistema
             </button>
 
@@ -435,9 +361,6 @@
         <button type="button" class="nav-slide-btn" data-tab="tab-database" onclick="switchTab('tab-database')" id="navBtnConfiguracao" title="Configuração">
           <i class="fa-solid fa-gear" style="color: #64748b;"></i> <span>Configuração</span>
         </button>
-        <button type="button" class="nav-slide-btn" data-tab="tab-orcamentos" onclick="switchTab('tab-orcamentos')" id="navBtnOrcamentos" title="Orçamentos">
-          <i class="fa-solid fa-file-invoice-dollar" style="color: #dc2626;"></i> <span>Orçamentos</span>
-        </button>
         <button type="button" class="nav-slide-btn" data-tab="tab-projetos" onclick="switchTab('tab-projetos')" title="Projetos">
           <i class="fa-solid fa-diagram-project" style="color: #0284c7;"></i> <span>Projetos</span>
         </button>
@@ -447,8 +370,8 @@
         <button type="button" class="nav-slide-btn" data-tab="tab-clientes" onclick="switchTab('tab-clientes')" title="Clientes">
           <i class="fa-solid fa-building-user" style="color: #2563eb;"></i> <span>Clientes</span>
         </button>
-        <button type="button" class="nav-slide-btn active" data-tab="tab-home" onclick="switchTab('tab-home')" id="navBtnHome" title="Menu">
-          <i class="fa-solid fa-house"></i> <span>Menu</span>
+        <button type="button" class="nav-slide-btn active" data-tab="tab-home" onclick="switchTab('tab-home')" id="navBtnHome" title="Menu Geral">
+          <i class="fa-solid fa-house"></i> <span>Menu Geral</span>
         </button>
       </nav>
 
@@ -524,14 +447,6 @@
           <div class="menu-card-desc">Criar, gerir e acompanhar fichas de projetos e registo de ocorrências</div>
         </button>
 
-        <button type="button" class="main-menu-card" onclick="switchTab('tab-orcamentos')">
-          <div class="menu-card-icon" style="background: #fef2f2; color: #dc2626;">
-            <i class="fa-solid fa-file-invoice-dollar"></i>
-          </div>
-          <div class="menu-card-title">Orçamentos</div>
-          <div class="menu-card-desc">Consultar orçamentos feitos e carregados, emitir propostas Word e gerir adjudicações</div>
-        </button>
-
         <button type="button" class="main-menu-card" onclick="switchTab('tab-database')">
           <div class="menu-card-icon">
             <i class="fa-solid fa-gear"></i>
@@ -577,6 +492,9 @@
             </div>
             <button class="btn btn-secondary" onclick="resetClientForm()">
               <i class="fa-solid fa-user-plus"></i> Novo Cliente
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="triggerCategoryImport('clientes')" title="Importar Ficheiro de Clientes (Excel / CSV / JSON)" style="padding: 0.5rem 0.85rem; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 0.45rem;">
+              <i class="fa-solid fa-file-import" style="color: var(--primary-blue, #2563eb);"></i> Importar Clientes
             </button>
           </div>
         </div>
@@ -660,6 +578,9 @@
             <button class="btn btn-secondary" onclick="openContactModalForNew()">
               <i class="fa-solid fa-user-plus"></i> Novo Contacto
             </button>
+            <button type="button" class="btn btn-secondary" onclick="triggerCategoryImport('contactos')" title="Importar Ficheiro de Contactos (Excel / CSV / JSON)" style="padding: 0.5rem 0.85rem; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 0.45rem;">
+              <i class="fa-solid fa-file-import" style="color: var(--primary-blue, #2563eb);"></i> Importar Contactos
+            </button>
           </div>
         </div>
 
@@ -724,9 +645,6 @@
             <button class="btn btn-secondary" onclick="resetProjectForm()">
               <i class="fa-solid fa-folder-plus"></i> Novo Projeto
             </button>
-            <button type="button" class="btn btn-secondary" onclick="openProjectBudgetForm()" style="background: #e0f2fe; color: #0369a1; border-color: #7dd3fc; font-weight: 600;" title="Abrir Orçamentação e Especificação de Veículos">
-              <i class="fa-solid fa-file-invoice-dollar"></i> Orçamento
-            </button>
           </div>
         </div>
 
@@ -767,128 +685,6 @@
           </h3>
           <div id="projectPageMainGrid" class="contacts-grid">
             <!-- Dynamic Projects Rendered Here -->
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- TAB 3.5: GESTÃO DE ORÇAMENTOS -->
-    <section id="tab-orcamentos" class="tab-content">
-      <div class="card">
-        <div class="card-header">
-          <h2 class="card-title">
-            <i class="fa-solid fa-file-invoice-dollar" style="color: #c8102e;"></i> Registo / Gestão de Orçamentos
-          </h2>
-          <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
-            
-            <!-- Botão Cápsula de Estados (Adjudicados / Não Adjudicados / Todos) -->
-            <div class="view-mode-toggle" id="budgetStateToggleContainer" style="background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 20px; padding: 3px; display: inline-flex; gap: 2px;">
-              <button type="button" class="view-toggle-btn active" id="btnBudgetFilterAll" onclick="setBudgetStateFilter('all')" title="Ver Todos os Orçamentos" style="border-radius: 16px; padding: 0.35rem 0.85rem; font-size: 0.82rem; font-weight: 600;">
-                <i class="fa-solid fa-layer-group"></i> Todos
-              </button>
-              <button type="button" class="view-toggle-btn" id="btnBudgetFilterAdjudicado" onclick="setBudgetStateFilter('adjudicado')" title="Orçamentos Adjudicados" style="border-radius: 16px; padding: 0.35rem 0.85rem; font-size: 0.82rem; font-weight: 600; color: #15803d;">
-                <i class="fa-solid fa-circle-check"></i> Adjudicados
-              </button>
-              <button type="button" class="view-toggle-btn" id="btnBudgetFilterNaoAdjudicado" onclick="setBudgetStateFilter('nao_adjudicado')" title="Orçamentos Não Adjudicados" style="border-radius: 16px; padding: 0.35rem 0.85rem; font-size: 0.82rem; font-weight: 600; color: #b91c1c;">
-                <i class="fa-solid fa-circle-xmark"></i> Não Adjudicados
-              </button>
-            </div>
-
-            <!-- Alternador de Visualização Lista / Cartões -->
-            <div class="view-mode-toggle">
-              <button type="button" class="view-toggle-btn" id="btnBudgetViewList" onclick="setBudgetViewMode('list')" title="Visualização em Lista">
-                <i class="fa-solid fa-list"></i> Lista
-              </button>
-              <button type="button" class="view-toggle-btn active" id="btnBudgetViewGrid" onclick="setBudgetViewMode('grid')" title="Visualização em Cartões">
-                <i class="fa-solid fa-border-all"></i> Cartões
-              </button>
-            </div>
-
-            <!-- Botão Carregar Orçamento -->
-            <button type="button" class="btn btn-secondary" onclick="triggerLoadBudgetFile()" title="Carregar ou Importar ficheiro de Orçamento">
-              <i class="fa-solid fa-upload"></i> Carregar Orçamento
-            </button>
-            <input type="file" id="budgetFileInput" accept=".json,.doc,.docx,.html,.txt" style="display: none;" onchange="handleBudgetFileImport(event)">
-
-            <!-- Botão Novo Orçamento -->
-            <button type="button" class="btn btn-primary" onclick="openNewBudgetModal()" style="background: #c8102e; border-color: #b91c1c; font-weight: 600;" title="Criar Novo Orçamento de Veículo">
-              <i class="fa-solid fa-file-circle-plus"></i> Novo Orçamento
-            </button>
-          </div>
-        </div>
-
-        <!-- Indicadores KPI de Orçamentos -->
-        <div class="dashboard-kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 1.25rem;">
-          <div class="kpi-card" style="border-left: 4px solid #c8102e;">
-            <div class="kpi-icon-wrapper" style="background: #fef2f2; color: #c8102e;">
-              <i class="fa-solid fa-file-invoice-dollar"></i>
-            </div>
-            <div class="kpi-content">
-              <span class="kpi-label">Total de Orçamentos</span>
-              <span class="kpi-number" id="kpiTotalOrcamentos">0</span>
-              <div class="kpi-subtext" id="kpiOrcamentosBreakdown">0 Feitos | 0 Carregados</div>
-            </div>
-          </div>
-
-          <div class="kpi-card" style="border-left: 4px solid #0284c7;">
-            <div class="kpi-icon-wrapper" style="background: #e0f2fe; color: #0284c7;">
-              <i class="fa-solid fa-coins"></i>
-            </div>
-            <div class="kpi-content">
-              <span class="kpi-label">Valor Total Orçado</span>
-              <span class="kpi-number" id="kpiValorTotalOrcado" style="font-size: 1.25rem;">0,00 €</span>
-              <div class="kpi-subtext">Montante Global Acumulado</div>
-            </div>
-          </div>
-
-          <div class="kpi-card" style="border-left: 4px solid #16a34a;">
-            <div class="kpi-icon-wrapper" style="background: #dcfce7; color: #16a34a;">
-              <i class="fa-solid fa-handshake-simple"></i>
-            </div>
-            <div class="kpi-content">
-              <span class="kpi-label">Adjudicados</span>
-              <span class="kpi-number" id="kpiOrcamentosAdjudicados" style="color: #16a34a;">0</span>
-              <div class="kpi-subtext" id="kpiValorAdjudicado">0,00 € adjudicado</div>
-            </div>
-          </div>
-
-          <div class="kpi-card" style="border-left: 4px solid #dc2626;">
-            <div class="kpi-icon-wrapper" style="background: #fee2e2; color: #dc2626;">
-              <i class="fa-solid fa-circle-xmark"></i>
-            </div>
-            <div class="kpi-content">
-              <span class="kpi-label">Não Adjudicados</span>
-              <span class="kpi-number" id="kpiOrcamentosNaoAdjudicados" style="color: #dc2626;">0</span>
-              <div class="kpi-subtext" id="kpiValorNaoAdjudicado">0,00 € não adjudicado</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Barra de Pesquisa Específica da Página de Orçamentos -->
-        <div class="page-search-toolbar">
-          <i class="fa-solid fa-magnifying-glass search-icon" style="color: #c8102e; font-size: 1.1rem;"></i>
-          <input type="text" id="budgetPageSearchQuery" placeholder="Pesquisar Orçamentos por cliente, referência, tipo de veículo, estado ou valor..." oninput="renderBudgetPageMainGrid()" onkeypress="handlePageSearchKeyPress(event, 'orcamentos')">
-          <button class="btn btn-primary" onclick="renderBudgetPageMainGrid()" style="background: #c8102e; border-color: #b91c1c;">
-            <i class="fa-solid fa-search"></i> Pesquisar
-          </button>
-          <button type="button" class="btn btn-secondary" onclick="exportBudgetSearchToPDF()" title="Imprimir Pesquisa em PDF" style="gap: 0.45rem; font-size: 0.9rem; padding: 0.6rem 1rem; white-space: nowrap;">
-            <i class="fa-solid fa-file-pdf" style="color: #ef4444;"></i> PDF
-          </button>
-          <button type="button" class="btn btn-secondary" onclick="exportBudgetSearchToExcel()" title="Exportar Pesquisa em Excel" style="gap: 0.45rem; font-size: 0.9rem; padding: 0.6rem 1rem; white-space: nowrap;">
-            <i class="fa-solid fa-file-excel" style="color: #10b981;"></i> Excel
-          </button>
-        </div>
-
-        <div style="margin-top: 1rem; margin-bottom: 1.5rem;">
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
-            <h3 style="font-size: 1.05rem; color: #1e3a8a; margin: 0;">
-              <i class="fa-solid fa-file-invoice-dollar" style="color: #c8102e;"></i> Lista de Orçamentos
-            </h3>
-            <span class="badge badge-blue" id="budgetCountBadge">0 Orçamentos</span>
-          </div>
-          <div id="budgetPageMainGrid" class="contacts-grid">
-            <!-- Dynamic Budgets Rendered Here -->
           </div>
         </div>
 
@@ -1283,21 +1079,6 @@
             </div>
           </div>
 
-          <!-- Secção Integrada de Projetos do Cliente -->
-          <div class="embedded-section">
-            <div class="embedded-header">
-              <h3 class="embedded-title">
-                <i class="fa-solid fa-folder-open"></i> Projetos do Cliente
-              </h3>
-              <button type="button" class="btn btn-secondary" onclick="newProjectForCurrentClient()" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">
-                <i class="fa-solid fa-plus"></i> Adicionar Projeto
-              </button>
-            </div>
-            <div id="relatedProjectsList" class="projects-badge-list">
-              <span class="empty-state">Nenhum projeto associado a este cliente.</span>
-            </div>
-          </div>
-
           <!-- Secção Integrada de Fichas de Contactos -->
           <div class="embedded-section">
             <div class="embedded-header">
@@ -1320,15 +1101,6 @@
               <h3 class="embedded-title">
                 <i class="fa-solid fa-phone-volume"></i> Registo de Contactos Realizados com este Cliente
               </h3>
-              <div style="display: flex; align-items: center; gap: 0.5rem; margin-left: auto;">
-                <label for="quickInteractionEstado" style="font-size: 0.84rem; font-weight: 600; color: #334155; margin: 0; white-space: nowrap;">Estado do Contacto:</label>
-                <select id="quickInteractionEstado" class="form-control" style="width: auto; min-width: 195px; padding: 0.35rem 0.65rem; font-size: 0.85rem; font-weight: 600; border-radius: 6px; border: 1.5px solid #94a3b8; background-color: #ffffff; color: #0f172a; cursor: pointer;">
-                  <option value="Aguarda Orçamento" selected>Aguarda Orçamento</option>
-                  <option value="Aguarda resposta">Aguarda resposta</option>
-                  <option value="Aguarda Reunião">Aguarda Reunião</option>
-                  <option value="Não interessado">Não interessado</option>
-                </select>
-              </div>
             </div>
 
             <!-- Formulário em Linha: Campo de Data + Campo em frente de Escrita Livre Auto-expansível -->
@@ -1352,6 +1124,33 @@
 
             <div id="clientInteractionsGrid" class="interactions-grid">
               <span class="empty-state">Nenhum contacto/interação registada com este cliente.</span>
+            </div>
+          </div>
+
+          <!-- Secção Integrada de Projetos Relacionados -->
+          <div class="embedded-section">
+            <div class="embedded-header">
+              <h3 class="embedded-title">
+                <i class="fa-solid fa-folder-open"></i> Projetos Relacionados com este Cliente
+              </h3>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input type="file" id="clientRelatedProjectsDocsInput" multiple onchange="handleClientRelatedProjectsUpload(event)" style="display: none;">
+                <button type="button" class="btn btn-secondary" onclick="triggerClientRelatedProjectsUpload()" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">
+                  <i class="fa-solid fa-cloud-arrow-up"></i> Carregar Ficheiros
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="newProjectForCurrentClient()" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">
+                  <i class="fa-solid fa-plus"></i> Adicionar Projeto
+                </button>
+              </div>
+            </div>
+            <!-- Área Dropzone para arrastar ficheiros -->
+            <div class="file-upload-dropzone" id="clientRelatedProjectsDropzone" onclick="triggerClientRelatedProjectsUpload()" ondragover="handleClientRelatedProjectsDragOver(event)" ondragleave="handleClientRelatedProjectsDragLeave(event)" ondrop="handleClientRelatedProjectsDrop(event)" style="margin-top: 0.75rem; margin-bottom: 0.75rem; padding: 1rem;">
+              <i class="fa-solid fa-cloud-arrow-up" style="font-size: 1.5rem; color: var(--primary-blue, #2563eb); margin-bottom: 0.35rem; display: block;"></i>
+              <div style="font-weight: 600; color: var(--navy-dark, #1e3a8a); font-size: 0.9rem;">Clique ou arraste ficheiros para aqui</div>
+              <div style="font-size: 0.78rem; color: var(--text-muted, #64748b); margin-top: 0.2rem;">Carregar ficheiros para os projetos deste cliente (qualquer formato)</div>
+            </div>
+            <div id="relatedProjectsList" class="projects-badge-list">
+              <span class="empty-state">Nenhum projeto associado a este cliente.</span>
             </div>
           </div>
         </div>
@@ -1558,17 +1357,7 @@
               <input type="datetime-local" id="interactionData" class="form-control" required>
             </div>
 
-            <div class="form-group col-4">
-              <label for="interactionEstado">Estado do Contacto *</label>
-              <select id="interactionEstado" class="form-control" required>
-                <option value="Aguarda Orçamento" selected>Aguarda Orçamento</option>
-                <option value="Aguarda resposta">Aguarda resposta</option>
-                <option value="Aguarda Reunião">Aguarda Reunião</option>
-                <option value="Não interessado">Não interessado</option>
-              </select>
-            </div>
-
-            <div class="form-group col-12">
+            <div class="form-group col-8">
               <label for="interactionDescricao">Registo Livre do Contacto (Expande Automaticamente) *</label>
               <textarea id="interactionDescricao" class="auto-expand-textarea" placeholder="Escreva livremente as notas do contacto..." oninput="autoExpandTextarea(this)" required></textarea>
             </div>
@@ -1599,9 +1388,14 @@
         <h3 class="modal-title" id="projectModalTitle">
           <i class="fa-solid fa-diagram-project"></i> Registo / Ficha do Projeto
         </h3>
-        <button type="button" class="action-icon-btn" onclick="closeProjectModal()" style="color: #ffffff; font-size: 1.2rem;">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <button type="submit" form="projectForm" class="btn btn-primary btn-sm" style="padding: 0.25rem 0.65rem; font-size: 0.8rem; font-weight: 600; background: #ffffff; color: var(--primary-blue); border: none;" title="Guardar Alterações do Projeto">
+            <i class="fa-solid fa-floppy-disk"></i> Guardar
+          </button>
+          <button type="button" class="action-icon-btn" onclick="closeProjectModal()" style="color: #ffffff; font-size: 1.2rem;">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
       </div>
 
       <form id="projectForm" onsubmit="saveProject(event)">
@@ -1658,12 +1452,12 @@
             <div class="form-group col-2">
               <label for="projectEstado">Estado *</label>
               <select id="projectEstado" class="form-control" required>
-                <option value="Aguarda Orçamento">Aguarda Orçamento</option>
-                <option value="Aguarda Proposta">Aguarda Proposta</option>
-                <option value="Orçamentado">Orçamentado</option>
                 <option value="Adjudicado">Adjudicado</option>
                 <option value="Não adjudicado">Não adjudicado</option>
+                <option value="Em Orçamento">Em Orçamento</option>
+                <option value="Em Curso">Em Curso</option>
                 <option value="Concluído">Concluído</option>
+                <option value="Aguardar">Aguardar</option>
                 <option value="Cancelado">Cancelado</option>
               </select>
             </div>
@@ -1709,28 +1503,29 @@
             <div id="projectInteractionsGrid" class="interactions-grid">
               <span class="empty-state">Nenhum registo efetuado para este projeto.</span>
             </div>
-          <!-- Secção de Orçamentos do Projeto -->
-          <div class="card" style="margin-top: 1.25rem; background: #fff5f5; border: 1.5px solid #fecaca;">
-            <div class="card-header" style="padding-bottom: 0.75rem; border-bottom: 1.5px solid #fecaca; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-              <h3 class="card-title" style="font-size: 1.05rem; color: #991b1b; margin: 0; display: flex; align-items: center; gap: 0.4rem;">
-                <i class="fa-solid fa-file-invoice-dollar" style="color: #dc2626;"></i> Orçamentos do Projeto
+          </div>
+
+          <!-- Bloco Independente: Orçamentos Cliente -->
+          <div class="card" style="margin-top: 1.25rem; background: var(--primary-blue-light); border: 1px solid var(--soft-blue-border);">
+            <div class="card-header" style="padding-bottom: 0.75rem; border-bottom: 1px solid var(--soft-blue-border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+              <h3 class="card-title" style="font-size: 1.05rem; color: var(--navy-dark); margin: 0;">
+                <i class="fa-solid fa-file-invoice-dollar"></i> Orçamentos Cliente
               </h3>
               <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-                <input type="file" id="projectBudgetFileInput" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.json,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onchange="handleProjectBudgetFileUpload(event)" style="display: none;">
-                <button type="button" class="btn btn-sm" onclick="triggerProjectBudgetFileUpload()" style="background: #0284c7; color: #ffffff; border: none; font-weight: 600; padding: 0.35rem 0.75rem;">
-                  <i class="fa-solid fa-cloud-arrow-up"></i> Importar / Subir Orçamento
+                <input type="file" id="projectDocsInput" multiple onchange="handleProjectDocsUpload(event)" style="display: none;">
+                <button type="button" class="btn btn-primary btn-sm" onclick="triggerProjectDocsUpload()">
+                  <i class="fa-solid fa-cloud-arrow-up"></i> Importar Orçamentos
                 </button>
-                <button type="button" class="btn btn-sm" onclick="openProjectBudgetForm(document.getElementById('projectId').value, event)" style="background: #dc2626; color: #ffffff; border: none; font-weight: 600; padding: 0.35rem 0.75rem;">
-                  <i class="fa-solid fa-calculator"></i> Criar / Editar no Formulário Oficial
-                </button>
-                <button type="button" class="btn btn-secondary btn-sm" onclick="exportProjectBudgetsAll()" style="padding: 0.35rem 0.65rem;">
-                  <i class="fa-solid fa-cloud-arrow-down"></i> Exportar
+                <button type="button" class="btn btn-secondary btn-sm" onclick="exportProjectDocsAll()">
+                  <i class="fa-solid fa-cloud-arrow-down"></i> Exportar Orçamentos
                 </button>
               </div>
             </div>
             <div class="card-body" style="padding: 1rem;">
-              <div id="projectBudgetsGrid" class="media-grid">
-                <!-- Ficheiros e propostas de orçamento renderizados via JS -->
+              <div class="file-upload-dropzone" id="projectDocsDropzone" onclick="triggerProjectDocsUpload()" ondragover="handleProjectDocsDragOver(event)" ondragleave="handleProjectDocsDragLeave(event)" ondrop="handleProjectDocsDrop(event)" style="margin-bottom: 0;">
+                <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2rem; color: var(--primary-blue, #2563eb); margin-bottom: 0.5rem; display: block;"></i>
+                <div style="font-weight: 600; color: var(--navy-dark, #1e3a8a); font-size: 1rem;">Clique ou arraste ficheiros para aqui</div>
+                <div style="font-size: 0.85rem; color: var(--text-muted, #64748b); margin-top: 0.35rem;">Suporta o carregamento de qualquer tipo de ficheiro (PDF, Word, Excel, CAD, Imagens, ZIP, Vídeos, etc.)</div>
               </div>
             </div>
           </div>
@@ -1742,7 +1537,6 @@
                 <i class="fa-solid fa-folder-open"></i> Documentos do Projeto
               </h3>
               <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-                <input type="file" id="projectDocsInput" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.rar,.csv,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onchange="handleProjectDocsUpload(event)" style="display: none;">
                 <button type="button" class="btn btn-primary btn-sm" onclick="triggerProjectDocsUpload()">
                   <i class="fa-solid fa-cloud-arrow-up"></i> Importar Documentos
                 </button>
@@ -1752,6 +1546,11 @@
               </div>
             </div>
             <div class="card-body" style="padding: 1rem;">
+              <div class="file-upload-dropzone" id="projectDocsGridDropzone" onclick="triggerProjectDocsUpload()" ondragover="handleProjectDocsDragOver(event)" ondragleave="handleProjectDocsDragLeave(event)" ondrop="handleProjectDocsDrop(event)">
+                <i class="fa-solid fa-cloud-arrow-up" style="font-size: 1.8rem; color: var(--primary-blue, #2563eb); margin-bottom: 0.5rem; display: block;"></i>
+                <div style="font-weight: 600; color: var(--navy-dark, #1e3a8a); font-size: 0.95rem;">Clique ou arraste documentos para aqui</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted, #64748b); margin-top: 0.25rem;">Carregar PDF, Word, Excel, CAD, ZIP, etc.</div>
+              </div>
               <div id="projectDocsGrid" class="media-grid">
                 <!-- Ficheiros de documentos renderizados via JS -->
               </div>
@@ -1775,6 +1574,11 @@
               </div>
             </div>
             <div class="card-body" style="padding: 1rem;">
+              <div class="file-upload-dropzone" id="projectMediaDropzone" onclick="triggerProjectMediaUpload()" ondragover="handleProjectMediaDragOver(event)" ondragleave="handleProjectMediaDragLeave(event)" ondrop="handleProjectMediaDrop(event)">
+                <i class="fa-solid fa-cloud-arrow-up" style="font-size: 1.8rem; color: var(--primary-blue, #2563eb); margin-bottom: 0.5rem; display: block;"></i>
+                <div style="font-weight: 600; color: var(--navy-dark, #1e3a8a); font-size: 0.95rem;">Clique ou arraste fotografias e vídeos para aqui</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted, #64748b); margin-top: 0.25rem;">Suporta ficheiros de imagem (JPG, PNG, WEBP, etc.) e vídeo (MP4, MOV, etc.)</div>
+              </div>
               <div id="projectMediaGrid" class="media-grid">
                 <!-- Miniaturas de fotos e vídeos renderizadas via JS -->
               </div>
@@ -1783,9 +1587,6 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" onclick="openProjectBudgetForm(document.getElementById('projectId').value, event)" style="background: #fef2f2; color: #b91c1c; border-color: #fecaca; font-weight: 600;">
-            <i class="fa-solid fa-file-invoice-dollar"></i> Orçamento do Projeto
-          </button>
           <button type="button" class="btn btn-secondary" onclick="duplicateCurrentProject()" id="btnDuplicateProject" style="display: none; background: #e0f2fe; color: #0369a1; border-color: #7dd3fc;">
             <i class="fa-solid fa-copy"></i> Duplicar Projeto
           </button>
@@ -2180,122 +1981,14 @@
     </div>
   </div>
 
-  <!-- MODAL DE FORMULÁRIO DE ORÇAMENTO DO PROJETO -->
-  <div id="projectBudgetModal" class="modal-overlay">
-    <div class="modal-window" style="max-width: 1300px; width: 96vw; height: 92vh; display: flex; flex-direction: column;">
-      <div class="modal-header" style="background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);">
-        <h3 class="modal-title" id="projectBudgetModalTitle" style="color: #ffffff;">
-          <i class="fa-solid fa-file-invoice-dollar"></i> Orçamento do Projeto
-        </h3>
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
-          <button type="button" class="btn btn-secondary btn-sm" onclick="openBudgetInNewTab()" style="padding: 0.25rem 0.65rem; font-size: 0.8rem; font-weight: 600; background: #ffffff; color: var(--primary-blue); border: none;" title="Abrir formulário em nova janela">
-            <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir em Janela
-          </button>
-          <button type="button" class="action-icon-btn" onclick="closeProjectBudgetModal()" style="color: #ffffff; font-size: 1.2rem;">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-      </div>
-      <div class="modal-body" style="flex: 1; padding: 0; overflow: hidden; background: #f8fafc;">
-        <iframe id="projectBudgetIframe" src="about:blank" style="width: 100%; height: 100%; border: none;"></iframe>
-      </div>
-      <div class="modal-footer" style="justify-content: space-between;">
-        <button type="button" class="btn btn-close" onclick="closeProjectBudgetModal()">
-          <i class="fa-solid fa-xmark"></i> Fechar
-        </button>
-        <div style="display: flex; gap: 0.5rem;">
-          <button type="button" class="btn btn-secondary" onclick="printProjectBudgetIframe()">
-            <i class="fa-solid fa-print"></i> Imprimir / PDF
-          </button>
-          <button type="button" class="btn btn-primary" onclick="exportProjectBudgetWord()" style="background: #2b579a; border-color: #1e3f73; color: #ffffff; font-weight: 600;">
-            <i class="fa-solid fa-file-word"></i> Imprimir para Word
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Toast Notifications Container -->
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- Main JavaScript App -->
-  <script src="app.js?v=20260815_v50"></script>
+  <script src="app.js?v=20260810_v18"></script>
 
-  <!-- Override saveContact, switchTab and openProjectBudgetForm to guarantee proper modal behavior regardless of app.js cache -->
+  <!-- Override saveContact and switchTab to guarantee proper modal behavior regardless of app.js cache -->
   <script>
-  window.openProjectBudgetForm = function(projectId, event) {
-    if (event && event.stopPropagation) event.stopPropagation();
-    var targetId = projectId || (typeof currentProjectId !== 'undefined' ? currentProjectId : '');
-    var clientName = 'Cliente';
-    var projName = 'Projeto';
-    var proj = null;
-
-    if (typeof db !== 'undefined' && db && db.projetos && targetId) {
-      proj = db.projetos.find(function(p) { return p.id === targetId; });
-      if (proj) {
-        projName = proj.nome || 'Projeto';
-        var client = (db.clientes || []).find(function(c) { return c.id === proj.clienteId; });
-        if (client) clientName = client.nome || 'Cliente';
-      }
-    } else {
-      var projInput = document.getElementById('projectNome');
-      if (projInput && projInput.value) projName = projInput.value;
-      var clientSelect = document.getElementById('projectClienteId');
-      if (clientSelect && clientSelect.selectedIndex > 0) {
-        clientName = clientSelect.options[clientSelect.selectedIndex].text.replace(/\s*\([^)]*\)$/, '');
-      }
-    }
-
-    var estadoVal = proj ? (proj.estado || 'Orçamentado') : ((document.getElementById('projectEstado') || {}).value || 'Orçamentado');
-    var refVal = proj ? (proj.matricula || proj.id) : ((document.getElementById('projectMatricula') || {}).value || 'BCN');
-    var viaturaVal = proj ? (proj.viatura || proj.tipo || '') : ((document.getElementById('projectViatura') || {}).value || '');
-
-    var projData = {
-      id: proj ? proj.id : (targetId || ''),
-      nome: projName,
-      cliente: clientName,
-      tipoVeiculo: viaturaVal,
-      referencia: refVal,
-      estado: estadoVal,
-      valorTotal: proj ? proj.valorTotal : undefined
-    };
-
-    try {
-      localStorage.setItem('sigec_pro_current_budget_project', JSON.stringify(projData));
-    } catch (e) {}
-
-    var titleEl = document.getElementById('projectBudgetModalTitle');
-    if (titleEl) {
-      titleEl.innerHTML = '<i class="fa-solid fa-file-invoice-dollar"></i> Orçamento do Projeto — ' + (projName) + ' (' + (clientName) + ')';
-    }
-
-    var iframe = document.getElementById('projectBudgetIframe');
-    if (iframe) {
-      var qParams = 'projId=' + encodeURIComponent(projData.id) + '&nome=' + encodeURIComponent(projData.nome) + '&cliente=' + encodeURIComponent(projData.cliente) + '&ref=' + encodeURIComponent(projData.referencia) + '&estado=' + encodeURIComponent(projData.estado) + '&tipo=' + encodeURIComponent(projData.tipoVeiculo);
-      iframe.src = 'Formulario_Produtos_Orcamentos_BCN.html?' + qParams;
-      iframe.onload = function() {
-        try {
-          if (iframe.contentWindow && typeof iframe.contentWindow.loadProjectBudget === 'function') {
-            iframe.contentWindow.loadProjectBudget(projData);
-          }
-        } catch (e) {}
-      };
-    }
-
-    var modal = document.getElementById('projectBudgetModal');
-    if (modal) {
-      modal.style.zIndex = '99999';
-      modal.classList.add('active');
-    }
-  };
-
-  window.closeProjectBudgetModal = function() {
-    var modal = document.getElementById('projectBudgetModal');
-    if (modal) modal.classList.remove('active');
-    var iframe = document.getElementById('projectBudgetIframe');
-    if (iframe) iframe.src = 'about:blank';
-  };
-
   window.switchTab = function(tabId) {
     if (tabId === 'tab-database' || tabId === 'tab-configuracao') {
       var activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
@@ -2336,9 +2029,6 @@
     if (tabId === 'tab-database') {
       if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
       if (typeof renderUserManagementGrid === 'function') renderUserManagementGrid();
-    } else if (tabId === 'tab-orcamentos') {
-      if (typeof renderBudgetPageMainGrid === 'function') renderBudgetPageMainGrid();
-      if (typeof updateBudgetKPIs === 'function') updateBudgetKPIs();
     } else if (tabId === 'tab-contactos') {
       if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
     } else if (tabId === 'tab-clientes') {
@@ -2783,5 +2473,8 @@
       </div>
     </div>
   </div>
+
+  <!-- Script Principal SIGEC-Pro -->
+  <script src="app.js"></script>
 </body>
 </html>
