@@ -4513,9 +4513,6 @@ function renderContactPageMainGrid() {
           <td style="padding:0.75rem 1rem; color:#475569;">${escapeHtml(con.telemovel || con.telefone || '-')}</td>
           <td style="padding:0.75rem 1rem; color:#475569;">${escapeHtml(con.email || '-')}</td>
           <td style="padding:0.75rem 1rem; text-align:center; white-space:nowrap;" onclick="event.stopPropagation();">
-            <button type="button" class="action-icon-btn" onclick="printContactAddressLabel('${con.id}')" title="Imprimir Etiqueta Postal">
-              <i class="fa-solid fa-envelope"></i>
-            </button>
             <button type="button" class="action-icon-btn" onclick="openTransferContactModal('${con.id}')" title="Mudar de Cliente">
               <i class="fa-solid fa-arrow-right-arrow-left"></i>
             </button>
@@ -4544,9 +4541,6 @@ function renderContactPageMainGrid() {
       card.onclick = () => openContactModalForEdit(con.id);
       card.innerHTML = `
         <div class="contact-card-actions" onclick="event.stopPropagation();">
-          <button type="button" class="action-icon-btn" onclick="printContactAddressLabel('${con.id}')" title="Imprimir Etiqueta Postal">
-            <i class="fa-solid fa-envelope"></i>
-          </button>
           <button type="button" class="action-icon-btn" onclick="openTransferContactModal('${con.id}')" title="Mudar de Cliente">
             <i class="fa-solid fa-arrow-right-arrow-left"></i>
           </button>
@@ -4712,9 +4706,6 @@ function renderClientPageMainGrid() {
             </span>
           </td>
           <td style="padding:0.75rem 1rem; text-align:center; white-space:nowrap;" onclick="event.stopPropagation();">
-            <button type="button" class="action-icon-btn" onclick="printClientAddressLabel('${cli.id}')" title="Imprimir Etiqueta Postal">
-              <i class="fa-solid fa-envelope"></i>
-            </button>
             <button type="button" class="action-icon-btn" onclick="loadClientIntoForm('${cli.id}')" title="Editar Ficha de Cliente">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
@@ -4741,9 +4732,6 @@ function renderClientPageMainGrid() {
       card.onclick = () => loadClientIntoForm(cli.id);
       card.innerHTML = `
         <div class="contact-card-actions" onclick="event.stopPropagation();">
-          <button type="button" class="action-icon-btn" onclick="printClientAddressLabel('${cli.id}')" title="Imprimir Etiqueta Postal">
-            <i class="fa-solid fa-envelope"></i>
-          </button>
           <button type="button" class="action-icon-btn" onclick="loadClientIntoForm('${cli.id}')" title="Editar Ficha do Cliente">
             <i class="fa-solid fa-pen-to-square"></i>
           </button>
@@ -5659,9 +5647,6 @@ function renderClientContactsGrid(contacts) {
           ` : ''}
         </div>
         <div style="display: flex; gap: 0.25rem; align-items: center;">
-          <button type="button" class="action-icon-btn" onclick="printContactAddressLabel('${con.id}')" title="Imprimir Etiqueta Postal">
-            <i class="fa-solid fa-envelope"></i>
-          </button>
           <button type="button" class="action-icon-btn" onclick="openTransferContactModal('${con.id}')" title="Mudar de cliente">
             <i class="fa-solid fa-arrow-right-arrow-left"></i>
           </button>
@@ -12159,4 +12144,297 @@ function printActiveAddressLabel() {
   printWin.document.close();
 }
 window.printActiveAddressLabel = printActiveAddressLabel;
+
+// ==========================================
+// SISTEMA DE SELEÇÃO MÚLTIPLA DE ETIQUETAS POSTAIS
+// ==========================================
+
+let currentBulkLabelType = 'clientes';
+let bulkLabelSelectedIds = new Set();
+let currentBulkLabelItemsCache = [];
+
+function openBulkAddressLabelsModal(type) {
+  currentBulkLabelType = type || 'clientes';
+  const modal = document.getElementById('bulkAddressLabelModal');
+  const title = document.getElementById('bulkAddressLabelModalTitle');
+  const searchInput = document.getElementById('bulkAddressLabelSearch');
+  
+  if (searchInput) searchInput.value = '';
+
+  if (title) {
+    title.innerHTML = currentBulkLabelType === 'clientes'
+      ? '<i class="fa-solid fa-envelope"></i> Seleção de Etiquetas Postais - Clientes'
+      : '<i class="fa-solid fa-envelope"></i> Seleção de Etiquetas Postais - Contactos';
+  }
+
+  // Obter itens base
+  let list = [];
+  if (currentBulkLabelType === 'clientes') {
+    list = (db.clientes || []).filter(cli => {
+      if (typeof activeClientFilterTab !== 'undefined') {
+        if (activeClientFilterTab === 'estatal' && cli.tipoCliente !== 'Estatal') return false;
+        if (activeClientFilterTab === 'fundacao' && cli.tipoCliente !== 'Fundação') return false;
+        if (activeClientFilterTab === 'privado' && cli.tipoCliente !== 'Privado') return false;
+      }
+      return true;
+    });
+  } else {
+    list = [...(db.contactos || [])];
+  }
+
+  currentBulkLabelItemsCache = list;
+  // Pré-selecionar todos por defeito
+  bulkLabelSelectedIds = new Set(list.map(item => item.id));
+
+  renderBulkAddressLabelsList();
+
+  if (modal) {
+    modal.classList.add('active');
+  }
+}
+window.openBulkAddressLabelsModal = openBulkAddressLabelsModal;
+
+function closeBulkAddressLabelsModal() {
+  const modal = document.getElementById('bulkAddressLabelModal');
+  if (modal) {
+    modal.classList.remove('active');
+  }
+}
+window.closeBulkAddressLabelsModal = closeBulkAddressLabelsModal;
+
+function renderBulkAddressLabelsList() {
+  const container = document.getElementById('bulkAddressLabelItemsList');
+  const searchVal = (document.getElementById('bulkAddressLabelSearch')?.value || '').trim().toLowerCase();
+  const selectedCountEl = document.getElementById('bulkLabelSelectedCount');
+  const totalCountEl = document.getElementById('bulkLabelTotalCount');
+  const btnCountEl = document.getElementById('bulkLabelBtnCount');
+
+  if (!container) return;
+
+  const isContact = currentBulkLabelType === 'contactos';
+
+  // Filtrar pela pesquisa
+  const filteredList = (currentBulkLabelItemsCache || []).filter(item => {
+    if (!searchVal) return true;
+    if (isContact) {
+      const client = db.clientes.find(c => c.id === item.clienteId);
+      const clientName = client ? client.nome.toLowerCase() : '';
+      return (item.nome && item.nome.toLowerCase().includes(searchVal)) ||
+             (item.apelido && item.apelido.toLowerCase().includes(searchVal)) ||
+             (item.cargo && item.cargo.toLowerCase().includes(searchVal)) ||
+             (item.email && item.email.toLowerCase().includes(searchVal)) ||
+             clientName.includes(searchVal);
+    } else {
+      return (item.nome && item.nome.toLowerCase().includes(searchVal)) ||
+             (item.contribuinte && item.contribuinte.toLowerCase().includes(searchVal)) ||
+             (item.localidade && item.localidade.toLowerCase().includes(searchVal)) ||
+             (item.codigoPostal && item.codigoPostal.toLowerCase().includes(searchVal)) ||
+             (item.direcao1 && item.direcao1.toLowerCase().includes(searchVal));
+    }
+  });
+
+  // Atualizar contadores
+  const totalCount = currentBulkLabelItemsCache.length;
+  const selectedCount = bulkLabelSelectedIds.size;
+  if (selectedCountEl) selectedCountEl.textContent = selectedCount;
+  if (totalCountEl) totalCountEl.textContent = totalCount;
+  if (btnCountEl) btnCountEl.textContent = selectedCount;
+
+  if (filteredList.length === 0) {
+    container.innerHTML = `
+      <div style="padding: 2rem; text-align: center; color: #64748b; font-size: 0.9rem;">
+        <i class="fa-solid fa-magnifying-glass" style="font-size: 1.5rem; margin-bottom: 0.5rem; display: block; opacity: 0.5;"></i>
+        Nenhum registo encontrado com o critério de pesquisa.
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = filteredList.map(item => {
+    const isSelected = bulkLabelSelectedIds.has(item.id);
+    const { linha1, linha2, linha3, linha4 } = formatPostalAddressLines(item, isContact);
+
+    let subInfo = '';
+    if (isContact) {
+      const client = db.clientes.find(c => c.id === item.clienteId);
+      subInfo = client ? `<span style="color: #2563eb; font-weight: 600;">${escapeHtml(client.nome)}</span>` : '';
+      if (item.cargo) subInfo += (subInfo ? ' &bull; ' : '') + escapeHtml(item.cargo);
+    } else {
+      subInfo = `<span class="badge ${item.tipoCliente === 'Estatal' ? 'badge-blue' : item.tipoCliente === 'Fundação' ? 'badge-purple' : 'badge-green'}" style="font-size: 0.72rem; padding: 0.15rem 0.45rem;">${escapeHtml(item.tipoCliente || 'Privado')}</span>`;
+      if (item.contribuinte && item.contribuinte !== '000000000') {
+        subInfo += ` <span style="color: #64748b; font-size: 0.78rem;">NIF: ${escapeHtml(item.contribuinte)}</span>`;
+      }
+    }
+
+    const moradaResumo = [linha2, linha3, linha4].filter(Boolean).join(' | ');
+
+    return `
+      <div class="bulk-label-item-row" onclick="toggleBulkLabelItem('${item.id}', event)" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.85rem; border-radius: 6px; border: 1px solid ${isSelected ? '#93c5fd' : '#e2e8f0'}; background: ${isSelected ? '#eff6ff' : '#ffffff'}; cursor: pointer; transition: all 0.15s ease;">
+        <input type="checkbox" ${isSelected ? 'checked' : ''} onclick="event.stopPropagation(); toggleBulkLabelItem('${item.id}', event)" style="width: 17px; height: 17px; cursor: pointer; accent-color: #2563eb;">
+        
+        <div style="width: 32px; height: 32px; border-radius: 50%; background: ${isContact ? '#e0e7ff' : '#dbeafe'}; color: ${isContact ? '#4338ca' : '#1e40af'}; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0;">
+          <i class="fa-solid ${isContact ? 'fa-user' : 'fa-building'}"></i>
+        </div>
+
+        <div style="flex: 1; min-width: 0;">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;">
+            <span style="font-weight: 700; color: #1e293b; font-size: 0.92rem;">${escapeHtml(linha1)}</span>
+            <div>${subInfo}</div>
+          </div>
+          <div style="font-size: 0.78rem; color: #64748b; margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+            <i class="fa-solid fa-location-dot" style="margin-right: 4px; color: #94a3b8;"></i> ${escapeHtml(moradaResumo || 'Sem morada detalhada')}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+window.renderBulkAddressLabelsList = renderBulkAddressLabelsList;
+
+function filterBulkAddressLabelsList() {
+  renderBulkAddressLabelsList();
+}
+window.filterBulkAddressLabelsList = filterBulkAddressLabelsList;
+
+function toggleBulkLabelItem(id, event) {
+  if (bulkLabelSelectedIds.has(id)) {
+    bulkLabelSelectedIds.delete(id);
+  } else {
+    bulkLabelSelectedIds.add(id);
+  }
+  renderBulkAddressLabelsList();
+}
+window.toggleBulkLabelItem = toggleBulkLabelItem;
+
+function toggleAllBulkLabels(selectAll) {
+  if (selectAll) {
+    currentBulkLabelItemsCache.forEach(item => bulkLabelSelectedIds.add(item.id));
+  } else {
+    bulkLabelSelectedIds.clear();
+  }
+  renderBulkAddressLabelsList();
+}
+window.toggleAllBulkLabels = toggleAllBulkLabels;
+
+function printBulkSelectedAddressLabels() {
+  if (bulkLabelSelectedIds.size === 0) {
+    showToast('Por favor selecione pelo menos um destinatário para imprimir etiquetas.', 'warning');
+    return;
+  }
+
+  const isContact = currentBulkLabelType === 'contactos';
+  const sourceList = isContact ? db.contactos : db.clientes;
+  const selectedItems = (sourceList || []).filter(item => bulkLabelSelectedIds.has(item.id));
+
+  if (selectedItems.length === 0) {
+    showToast('Nenhum destinatário válido selecionado.', 'warning');
+    return;
+  }
+
+  const printWin = window.open('', '_blank', 'width=860,height=640');
+  if (!printWin) {
+    alert('Por favor permita janelas de pop-up no navegador para imprimir as etiquetas.');
+    return;
+  }
+
+  const labelsHtml = selectedItems.map(item => {
+    const { linha1, linha2, linha3, linha4 } = formatPostalAddressLines(item, isContact);
+    return `
+      <div class="label-box">
+        <div class="line-1">${escapeHtml(linha1)}</div>
+        ${linha2 ? `<div class="line-2">${escapeHtml(linha2)}</div>` : ''}
+        <div class="line-3">${escapeHtml(linha3)}</div>
+        <div class="line-4">${escapeHtml(linha4)}</div>
+      </div>
+    `;
+  }).join('');
+
+  printWin.document.write(`
+    <!DOCTYPE html>
+    <html lang="pt">
+    <head>
+      <meta charset="UTF-8">
+      <title>Etiquetas Postais - SIGEC-Pro (${selectedItems.length})</title>
+      <style>
+        @page {
+          size: A4;
+          margin: 10mm;
+        }
+        body {
+          font-family: Arial, Helvetica, sans-serif;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 5mm;
+          justify-content: flex-start;
+          align-content: flex-start;
+          background: #ffffff;
+        }
+        .label-box {
+          width: 88mm;
+          min-height: 48mm;
+          max-height: 52mm;
+          border: 1px dashed #94a3b8;
+          padding: 4mm 5mm;
+          box-sizing: border-box;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          page-break-inside: avoid;
+          border-radius: 4px;
+        }
+        @media print {
+          body {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+          .label-box {
+            border: 1px solid #cbd5e1;
+          }
+        }
+        .line-1 {
+          font-size: 11.5pt;
+          font-weight: bold;
+          color: #000000;
+          margin-bottom: 3px;
+          line-height: 1.25;
+        }
+        .line-2 {
+          font-size: 10pt;
+          color: #111111;
+          margin-bottom: 2px;
+          line-height: 1.25;
+        }
+        .line-3 {
+          font-size: 10pt;
+          color: #111111;
+          margin-bottom: 2px;
+          line-height: 1.25;
+        }
+        .line-4 {
+          font-size: 10pt;
+          font-weight: bold;
+          color: #000000;
+          text-transform: uppercase;
+          line-height: 1.25;
+        }
+      </style>
+    </head>
+    <body>
+      ${labelsHtml}
+      <script>
+        window.onload = function() {
+          window.focus();
+          window.print();
+        };
+      <\/script>
+    </body>
+    </html>
+  `);
+  printWin.document.close();
+}
+window.printBulkSelectedAddressLabels = printBulkSelectedAddressLabels;
+
+
 
