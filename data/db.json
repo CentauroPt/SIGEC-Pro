@@ -3309,40 +3309,20 @@
   ],
   "userLogs": [
     {
-      "id": "log-1786963924686-269",
+      "id": "log-1786964252427-531",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-17T10:52:04.686Z"
-    },
-    {
-      "id": "log-1786963574752-50",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Projeto",
-      "descricao": "Ficha do projeto \"Unidade Móvel Bancária - Camião\" atualizada.",
-      "pagina": "Projetos",
+      "tipoAcao": "Início de Sessão",
+      "descricao": "Acesso autorizado efetuado por José Centúrio.",
+      "pagina": "Dashboard / Início",
       "detalhes": {
-        "acao": "Edição",
-        "ficha": "Projeto",
-        "nome": "Unidade Móvel Bancária - Camião",
-        "tipo": "Compra UM",
-        "estado": "Cancelado",
-        "cliente": "BCN (Banco Cabo-Verdiano de Negócios)",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas"
-          }
-        ]
+        "utilizador": "José Centúrio",
+        "email": "jmcenturio@alegria-activity.com",
+        "cargo": "Administrador do Sistema",
+        "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-17T10:46:14.752Z"
+      "timestamp": "2026-08-17T10:57:32.427Z"
     }
   ],
   "orcamentos": [],
