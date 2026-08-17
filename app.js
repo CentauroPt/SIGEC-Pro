@@ -4730,7 +4730,7 @@ function renderClientPageMainGrid() {
             <button type="button" class="action-icon-btn" onclick="loadClientIntoForm('${cli.id}')" title="Editar Ficha de Cliente">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
-            <button type="button" class="action-icon-btn danger" onclick="deleteClientInline('${cli.id}')" title="Apagar Cliente">
+            <button type="button" class="action-icon-btn danger" onclick="deleteClientInline('${cli.id}', event)" title="Apagar Cliente">
               <i class="fa-solid fa-trash"></i>
             </button>
           </td>
@@ -4756,7 +4756,7 @@ function renderClientPageMainGrid() {
           <button type="button" class="action-icon-btn" onclick="loadClientIntoForm('${cli.id}')" title="Editar Ficha do Cliente">
             <i class="fa-solid fa-pen-to-square"></i>
           </button>
-          <button type="button" class="action-icon-btn danger" onclick="deleteClientInline('${cli.id}')" title="Apagar Cliente">
+          <button type="button" class="action-icon-btn danger" onclick="deleteClientInline('${cli.id}', event)" title="Apagar Cliente">
             <i class="fa-solid fa-trash"></i>
           </button>
         </div>
@@ -6084,9 +6084,49 @@ function deleteCurrentClient() {
     resetClientForm(true);
     closeClientModal();
     renderClientPageMainGrid();
+    if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
+    if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
     showToast('Cliente apagado com sucesso.', 'danger');
   }
 }
+
+function deleteClientInline(clientId, e) {
+  if (e) {
+    if (typeof e.stopPropagation === 'function') e.stopPropagation();
+    if (typeof e.preventDefault === 'function') e.preventDefault();
+  }
+  if (!clientId) return;
+  const client = (db.clientes || []).find(c => c.id === clientId);
+  if (!client) return;
+
+  if (confirm(`Tem a certeza que deseja apagar o cliente "${client.nome}" e todos os seus registos associados?`)) {
+    const clientProjects = (db.projetos || []).filter(p => p.clienteId === clientId);
+    clientProjects.forEach(p => addDeletedProjectId(p.id));
+
+    db.clientes = (db.clientes || []).filter(c => c.id !== clientId);
+    db.contactos = (db.contactos || []).filter(con => con.clienteId !== clientId);
+    db.projetos = (db.projetos || []).filter(p => p.clienteId !== clientId);
+    db.interacoes = (db.interacoes || []).filter(i => i.clienteId !== clientId);
+    if (typeof currentClientId !== 'undefined' && currentClientId === clientId) {
+      localStorage.removeItem('sigec_pro_last_client_id');
+      resetClientForm(true);
+      closeClientModal();
+    }
+    logUserActivity('Eliminação de Cliente', `Cliente "${client.nome}" (NIF: ${client.contribuinte || ''}) eliminado da base de dados.`, {
+      acao: 'Eliminação',
+      ficha: 'Cliente',
+      nome: client.nome,
+      contribuinte: client.contribuinte || '',
+      tipoCliente: client.tipoCliente || ''
+    });
+    saveDatabase();
+    renderClientPageMainGrid();
+    if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
+    if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
+    showToast('Cliente apagado com sucesso.', 'danger');
+  }
+}
+window.deleteClientInline = deleteClientInline;
 
 // ==========================================
 // 4. GESTÃO DE CONTACTOS (MODAL DE PESSOAS)
@@ -8190,17 +8230,16 @@ function renderFileContentInViewer(item, container, targetProjectId) {
         console.error('Erro ao renderizar Excel:', err);
         container.innerHTML = `
           <div style="padding: 2.5rem; text-align: center; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
-            <i class="fa-solid fa-file-excel" style="font-size: 3.5rem; color: #10b981; margin-bottom: 1rem;"></i>
+            <div style="width: 80px; height: 80px; border-radius: 50%; background: #d1fae5; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto;">
+              <i class="fa-solid fa-file-excel" style="font-size: 2.8rem; color: #10b981;"></i>
+            </div>
             <h4 style="color: #1e293b; margin-bottom: 0.5rem;">${escapeHtml(item.name)}</h4>
             <p style="color: #64748b; font-size: 0.9rem; max-width: 500px; margin: 0 auto 1.5rem auto;">
-              Folha de cálculo registada com sucesso no sistema.
+              Não foi possível renderizar esta folha de cálculo. Descarregue o ficheiro para abrir no Excel ou LibreOffice Calc.
             </p>
-            <div style="display: flex; justify-content: center; gap: 0.75rem;">
-              <button type="button" class="btn btn-primary" onclick="openCurrentFileInNewTab()">
-                <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir em Nova Aba
-              </button>
-              <button type="button" class="btn btn-secondary" onclick="downloadDocItem('${item.id}', '${targetProjectId}')">
-                <i class="fa-solid fa-download"></i> Descarregar
+            <div style="display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
+              <button type="button" class="btn btn-primary" onclick="downloadDocItem('${item.id}', '${targetProjectId}')" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.25rem;">
+                <i class="fa-solid fa-download"></i> Descarregar Ficheiro
               </button>
             </div>
           </div>
@@ -8248,20 +8287,37 @@ function renderFileContentInViewer(item, container, targetProjectId) {
         }
       } catch(err) {
         console.warn('Erro ao processar Word com Mammoth:', err);
+        // Gerar blob URL para abrir em nova aba (para .doc antigo que o browser possa tentar abrir)
+        let docBlobUrl = '';
+        try {
+          const blob = dataUrlToBlob(item.dataUrl, item.mimeType || 'application/msword');
+          if (blob) docBlobUrl = URL.createObjectURL(blob);
+        } catch(e) {}
+        const isOldDoc = ext === 'doc';
         container.innerHTML = `
           <div style="padding: 2.5rem; text-align: center; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
-            <i class="fa-solid fa-file-word" style="font-size: 3.5rem; color: #2563eb; margin-bottom: 1rem;"></i>
-            <h4 style="color: #1e293b; margin-bottom: 0.5rem;">Documento Word: ${escapeHtml(item.name)}</h4>
+            <div style="width: 80px; height: 80px; border-radius: 50%; background: #dbeafe; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto;">
+              <i class="fa-solid fa-file-word" style="font-size: 2.8rem; color: #2563eb;"></i>
+            </div>
+            <h4 style="color: #1e293b; margin-bottom: 0.5rem;">${escapeHtml(item.name)}</h4>
+            ${isOldDoc ? `
+            <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #fef9c3; border: 1px solid #fde047; border-radius: 6px; padding: 0.5rem 0.85rem; margin-bottom: 1rem;">
+              <i class="fa-solid fa-triangle-exclamation" style="color: #ca8a04;"></i>
+              <span style="font-size: 0.82rem; color: #92400e; font-weight: 600;">Formato .DOC antigo — visualização inline não suportada</span>
+            </div>` : ''}
             <p style="color: #64748b; font-size: 0.9rem; max-width: 500px; margin: 0 auto 1.5rem auto;">
-              O documento está registado e guardado no sistema. Pode abri-lo diretamente ou descarregá-lo.
+              ${isOldDoc
+                ? 'O formato <strong>.doc</strong> (Word 97-2003) não pode ser visualizado diretamente no programa. Descarregue o ficheiro para abrir no Word ou LibreOffice.'
+                : 'O documento está guardado no sistema. Descarregue-o para abrir na sua aplicação de edição, ou tente abrir numa nova aba do browser.'}
             </p>
-            <div style="display: flex; justify-content: center; gap: 0.75rem;">
-              <button type="button" class="btn btn-primary" onclick="openCurrentFileInNewTab()">
-                <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Ficheiro
+            <div style="display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
+              <button type="button" class="btn btn-primary" onclick="downloadDocItem('${item.id}', '${targetProjectId}')" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.25rem;">
+                <i class="fa-solid fa-download"></i> Descarregar Ficheiro
               </button>
-              <button type="button" class="btn btn-secondary" onclick="downloadDocItem('${item.id}', '${targetProjectId}')">
-                <i class="fa-solid fa-download"></i> Descarregar
-              </button>
+              ${docBlobUrl ? `
+              <button type="button" class="btn btn-secondary" onclick="window.open('${docBlobUrl}', '_blank')" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.25rem;">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir em Nova Aba
+              </button>` : ''}
             </div>
           </div>
         `;
@@ -8388,6 +8444,12 @@ function renderFileContentInViewer(item, container, targetProjectId) {
   }
 
   // 8. GENERIC / CAD / ARCHIVE / OTHER FILES (dwg, zip, rar, 7z, ppt, etc.)
+  // Tentar gerar blob URL para abrir em nova aba
+  let genericBlobUrl = '';
+  try {
+    const blob = dataUrlToBlob(item.dataUrl, item.mimeType || 'application/octet-stream');
+    if (blob) genericBlobUrl = URL.createObjectURL(blob);
+  } catch(e) {}
   container.innerHTML = `
     <div style="padding: 2.5rem 1.5rem; text-align: center; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; max-width: 650px; margin: 0 auto;">
       <div style="width: 80px; height: 80px; border-radius: 50%; background: #e0f2fe; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto;">
@@ -8399,20 +8461,22 @@ function renderFileContentInViewer(item, container, targetProjectId) {
         <span class="badge badge-slate" style="font-size: 0.8rem; padding: 0.25rem 0.6rem; background: #f1f5f9; color: #475569; border-radius: 4px;">${(item.size / 1024).toFixed(1)} KB</span>
       </div>
       <p style="color: #64748b; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.75rem;">
-        Este ficheiro está protegido e guardado diretamente no SIGEC-Pro. Pode abri-lo numa nova janela/aplicação associada ou efetuar o seu descarregamento imediato.
+        Este tipo de ficheiro não pode ser visualizado diretamente no programa. Descarregue-o para abrir na aplicação associada (Word, Excel, AutoCAD, etc.).
       </p>
       <div style="display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
-        <button type="button" class="btn btn-primary" onclick="openCurrentFileInNewTab()" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.25rem;">
-          <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Ficheiro
-        </button>
-        <button type="button" class="btn btn-secondary" onclick="downloadDocItem('${item.id}', '${targetProjectId}')" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.25rem;">
+        <button type="button" class="btn btn-primary" onclick="downloadDocItem('${item.id}', '${targetProjectId}')" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.25rem;">
           <i class="fa-solid fa-download"></i> Descarregar Ficheiro
         </button>
+        ${genericBlobUrl ? `
+        <button type="button" class="btn btn-secondary" onclick="window.open('${genericBlobUrl}', '_blank')" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.25rem;">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir em Nova Aba
+        </button>` : ''}
       </div>
     </div>
   `;
 }
 window.renderFileContentInViewer = renderFileContentInViewer;
+
 
 // ==========================================
 // VISUALIZAÃ‡ÃƒO E DOWNLOAD ROBUSTO DE FICHEIROS
@@ -9099,48 +9163,49 @@ function openCurrentFileInNewTab() {
     return;
   }
   const item = currentViewerFileContext.item;
+  const targetProjectId = (currentViewerFileContext.projectId) || currentProjectId;
+
+  // Abrir no visualizador interno (modal do programa)
+  const modal = document.getElementById('mediaViewerModal');
+  const titleEl = document.getElementById('mediaViewerTitle');
+  const container = document.getElementById('mediaViewerContainer');
+  const info = document.getElementById('mediaViewerInfo');
+  const btnDownload = document.getElementById('btnDownloadCurrentMedia');
+  const btnDelete = document.getElementById('btnDeleteCurrentMedia');
+
+  if (!modal || !container) {
+    // Fallback: tentar descarregar
+    triggerBrowserFileDownload(item.dataUrl, item.name, item.mimeType);
+    return;
+  }
+
   const ext = (item.name.split('.').pop() || '').toLowerCase();
   const mime = (item.mimeType || '').toLowerCase();
   const docMeta = getDocFileType(item.name, mime);
+  const icon = docMeta.icon || 'fa-file';
+  const color = docMeta.color || '#64748b';
 
-  // 1. PDF
-  if (docMeta.type === 'pdf' || ext === 'pdf' || mime.includes('pdf')) {
-    openPdfInNewTab(item);
-    return;
+  if (titleEl) {
+    titleEl.innerHTML = `<i class="fa-solid ${icon}" style="color: ${color};"></i> ${escapeHtml(item.name)}`;
+  }
+  if (info) {
+    const sizeKB = item.size ? `${(item.size / 1024).toFixed(1)} KB` : '';
+    const dateStr = item.date ? new Date(item.date).toLocaleString('pt-PT') : '';
+    info.textContent = [sizeKB, dateStr ? `Adicionado em: ${dateStr}` : ''].filter(Boolean).join(' | ');
   }
 
-  // 2. WORD (.docx, .doc, .odt, .rtf)
-  if (docMeta.type === 'word' || ['docx', 'doc', 'odt', 'rtf'].includes(ext) || mime.includes('word')) {
-    openWordDocInNewTab(item);
-    return;
+  if (btnDownload) {
+    btnDownload.onclick = function () {
+      triggerBrowserFileDownload(item.dataUrl, item.name, item.mimeType);
+    };
+  }
+  if (btnDelete) {
+    // Esconder botão de apagar quando aberto via "Abrir Ficheiro" (contexto de documento)
+    btnDelete.style.display = currentViewerFileContext.isMedia ? 'inline-flex' : 'none';
   }
 
-  // 3. EXCEL / CSV (.xlsx, .xls, .csv, .ods)
-  if (docMeta.type === 'excel' || ['xlsx', 'xls', 'csv', 'ods'].includes(ext) || mime.includes('excel') || mime.includes('spreadsheet')) {
-    openExcelDocInNewTab(item);
-    return;
-  }
-
-  // 4. IMAGES
-  if (docMeta.type === 'image' || mime.startsWith('image/')) {
-    openImageInNewTab(item);
-    return;
-  }
-
-  // 5. VIDEOS / AUDIO
-  if (docMeta.type === 'video' || docMeta.type === 'audio' || mime.startsWith('video/') || mime.startsWith('audio/')) {
-    openMediaInNewTab(item);
-    return;
-  }
-
-  // 6. TEXT / CODE / MD
-  if (docMeta.type === 'text' || ['txt', 'md', 'json', 'xml', 'html', 'css', 'js', 'sql', 'log', 'ini', 'yaml', 'yml', 'env', 'bat', 'sh', 'ps1'].includes(ext)) {
-    openTextInNewTab(item);
-    return;
-  }
-
-  // 7. GENERIC / CAD / OTHER
-  openGenericInNewTab(item);
+  renderFileContentInViewer(item, container, targetProjectId);
+  modal.classList.add('active');
 }
 window.openCurrentFileInNewTab = openCurrentFileInNewTab;
 
