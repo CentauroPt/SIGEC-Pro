@@ -1539,6 +1539,44 @@ textarea.form-control {
   font-weight: 600;
 }
 
+.estatal-tab-btn .tab-move-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 0.72rem;
+  opacity: 0.8;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  margin-left: 2px;
+}
+
+.estatal-tab-btn:hover .tab-move-icon {
+  opacity: 1;
+}
+
+.estatal-tab-btn.active .tab-move-icon {
+  color: #ffffff;
+}
+
+.estatal-tab-btn.active .tab-move-icon:hover {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  transform: scale(1.15);
+}
+
+.estatal-tab-btn:not(.active) .tab-move-icon {
+  color: #64748b;
+}
+
+.estatal-tab-btn:not(.active) .tab-move-icon:hover {
+  background: rgba(37, 99, 235, 0.15);
+  color: var(--primary-blue);
+  transform: scale(1.15);
+}
+
 .estatal-tab-btn .tab-close-icon {
   display: inline-flex;
   align-items: center;

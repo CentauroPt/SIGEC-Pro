@@ -5159,7 +5159,7 @@ function renderEstatalSeparadores() {
     btn.draggable = true;
     btn.title = "Duplo clique para renomear | Arraste para reordenar";
     btn.onclick = (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.classList.contains('tab-inline-input') || e.target.classList.contains('tab-close-icon')) {
+      if (e.target.tagName === 'INPUT' || e.target.classList.contains('tab-inline-input') || e.target.classList.contains('tab-close-icon') || e.target.closest('.tab-move-icon') || e.target.closest('.tab-close-icon')) {
         return;
       }
       switchEstatalSeparador(idx);
@@ -5177,6 +5177,17 @@ function renderEstatalSeparadores() {
     titleSpan.className = 'tab-title-span';
     titleSpan.innerHTML = `<i class="fa-solid fa-folder" style="margin-right:4px;"></i> ${escapeHtml(title)}`;
     btn.appendChild(titleSpan);
+
+    // Ícone para Mudar / Transferir este Separador de Cliente
+    const moveBtn = document.createElement('span');
+    moveBtn.className = 'tab-move-icon';
+    moveBtn.innerHTML = `<i class="fa-solid fa-right-left"></i>`;
+    moveBtn.title = 'Mudar este separador para outro cliente';
+    moveBtn.onclick = (e) => {
+      e.stopPropagation();
+      openMoveSeparadorModal(idx);
+    };
+    btn.appendChild(moveBtn);
 
     if (currentEstatalSeparadores.length > 1) {
       const closeBtn = document.createElement('span');
@@ -5299,18 +5310,7 @@ function handleSeparadorCustomNameChange(index, value) {
   if (!currentEstatalSeparadores[index]) return;
   currentEstatalSeparadores[index].nomePersonalizado = value;
   markFormDirty();
-  const tabsList = document.getElementById('estatalTabsList');
-  if (tabsList) {
-    const btns = tabsList.getElementsByClassName('estatal-tab-btn');
-    if (btns[index]) {
-      const title = getSeparadorTitle(currentEstatalSeparadores[index]);
-      let html = `<span><i class="fa-solid fa-folder"></i> ${title}</span>`;
-      if (currentEstatalSeparadores.length > 1) {
-        html += `<span class="tab-close-icon" onclick="event.stopPropagation(); removeEstatalSeparador(${index});" title="Apagar separador">&times;</span>`;
-      }
-      btns[index].innerHTML = html;
-    }
-  }
+  renderEstatalSeparadores();
 }
 
 function syncSeparadorField(index, fieldName, value) {
@@ -5380,6 +5380,47 @@ function resetClientForm(skipConfirm = false) {
   }
 }
 
+function ensureClientSeparadoresArray(client) {
+  if (!client) return [];
+  if (Array.isArray(client.separadores) && client.separadores.length > 0) {
+    return client.separadores;
+  }
+  let defaultTipo = client.tipoCliente === 'Estatal' ? (client.ministerio ? 'Ministério' : 'Secretaria de Estado') : 'Geral';
+  let defaultCustomName = '';
+  if (client.secretariaEstado) {
+    const secLower = client.secretariaEstado.toLowerCase();
+    if (secLower.includes('direção') || secLower.includes('direccion')) {
+      defaultTipo = 'Direção Geral';
+    } else if (secLower.includes('secretaria')) {
+      defaultTipo = 'Secretaria de Estado';
+    } else {
+      defaultTipo = 'Outro';
+      defaultCustomName = client.secretariaEstado;
+    }
+  }
+
+  const initialSep = {
+    id: generateId('sep'),
+    tipoSeparador: defaultTipo,
+    nomePersonalizado: defaultCustomName,
+    nome: client.nome || '',
+    contribuinte: client.contribuinte || '',
+    direcao1: client.direcao1 || '',
+    direcao2: client.direcao2 || '',
+    numero: client.numero || '',
+    andar: client.andar || '',
+    codigoPostal: client.codigoPostal || '',
+    localidade: client.localidade || '',
+    pais: client.pais || '',
+    telefone: client.telefone || '',
+    telemovel: client.telemovel || '',
+    email: client.email || ''
+  };
+  client.separadores = [initialSep];
+  return client.separadores;
+}
+window.ensureClientSeparadoresArray = ensureClientSeparadoresArray;
+
 function loadClientIntoForm(clientId, skipDirtyCheck = false, skipTabSwitch = false, openModal = true) {
   if (!skipDirtyCheck && isFormDirty) {
     if (!confirm('Existem alterações não guardadas. Deseja mudar de cliente sem guardar?')) return;
@@ -5398,39 +5439,8 @@ function loadClientIntoForm(clientId, skipDirtyCheck = false, skipTabSwitch = fa
 
   if (tipoCliente === 'Estatal') {
     document.getElementById('ministerio').value = client.ministerio || '';
-    if (client.separadores && Array.isArray(client.separadores) && client.separadores.length > 0) {
-      currentEstatalSeparadores = JSON.parse(JSON.stringify(client.separadores));
-    } else {
-      let legacyTipo = 'Secretaria de Estado';
-      let legacyCustomName = '';
-      if (client.secretariaEstado) {
-        const secLower = client.secretariaEstado.toLowerCase();
-        if (secLower.includes('direção') || secLower.includes('direccion')) {
-          legacyTipo = 'Direção Geral';
-        } else if (secLower.includes('secretaria')) {
-          legacyTipo = 'Secretaria de Estado';
-        } else {
-          legacyTipo = 'Outro';
-          legacyCustomName = client.secretariaEstado;
-        }
-      }
-      currentEstatalSeparadores = [{
-        id: generateId('sep'),
-        tipoSeparador: legacyTipo,
-        nomePersonalizado: legacyCustomName,
-        nome: client.nome || '',
-        contribuinte: client.contribuinte || '',
-        direcao1: client.direcao1 || '',
-        direcao2: client.direcao2 || '',
-        numero: client.numero || '',
-        andar: client.andar || '',
-        codigoPostal: client.codigoPostal || '',
-        localidade: client.localidade || '',
-        telefone: client.telefone || '',
-        telemovel: client.telemovel || '',
-        email: client.email || ''
-      }];
-    }
+    const seps = ensureClientSeparadoresArray(client);
+    currentEstatalSeparadores = JSON.parse(JSON.stringify(seps));
     activeEstatalSeparadorIndex = 0;
   } else {
     currentEstatalSeparadores = [];
@@ -10302,6 +10312,228 @@ function openContactModalForSubTab(subTabIndex) {
   }
   openContactModalForNew();
 }
+
+function openMoveSeparadorModal(idx) {
+  if (!currentClientId) {
+    showToast('Guarde a ficha do cliente primeiro antes de mudar um separador para outro cliente.', 'warning');
+    return;
+  }
+  if (!currentEstatalSeparadores || !currentEstatalSeparadores[idx]) return;
+
+  const sep = currentEstatalSeparadores[idx];
+  const sepTitle = getSeparadorTitle(sep);
+  const currentClient = db.clientes.find(c => c.id === currentClientId);
+  const currentClientName = currentClient ? (currentClient.ministerio ? `${currentClient.ministerio} - ${currentClient.nome}` : currentClient.nome) : 'Cliente Atual';
+
+  // Contar e obter contactos associados a este separador
+  const assocContacts = (db.contactos || []).filter(c => c.clienteId === currentClientId && Number(c.subTabIndex || 0) === Number(idx));
+
+  document.getElementById('moveSeparadorIndex').value = idx;
+  document.getElementById('moveSeparadorTitleDisplay').textContent = sepTitle;
+  document.getElementById('moveSeparadorNomeDisplay').textContent = sep.nome || '(Sem Nome / Razão Social)';
+  document.getElementById('moveSeparadorNifDisplay').textContent = sep.contribuinte || 'Não definido';
+
+  // Formatar morada completa
+  const addressParts = [
+    sep.direcao1,
+    sep.direcao2,
+    sep.numero ? `Nº ${sep.numero}` : '',
+    sep.andar ? `${sep.andar}` : '',
+    sep.codigoPostal,
+    sep.localidade,
+    sep.pais
+  ].filter(p => p && String(p).trim().length > 0);
+  document.getElementById('moveSeparadorAddressDisplay').textContent = addressParts.length > 0 ? addressParts.join(', ') : 'Não definida';
+
+  // Formatar telefone e email
+  const contactInfoParts = [
+    sep.telefone ? `Tel: ${sep.telefone}` : '',
+    sep.telemovel ? `Tlm: ${sep.telemovel}` : '',
+    sep.email ? `Email: ${sep.email}` : ''
+  ].filter(p => p && String(p).trim().length > 0);
+  document.getElementById('moveSeparadorContactInfoDisplay').textContent = contactInfoParts.length > 0 ? contactInfoParts.join(' | ') : 'Não definidos';
+
+  document.getElementById('moveSeparadorCurrentClientDisplay').textContent = currentClientName;
+  document.getElementById('moveSeparadorContactsCount').textContent = assocContacts.length;
+
+  // Renderizar lista detalhada de contactos associados a transferir
+  const contactsListEl = document.getElementById('moveSeparadorContactsList');
+  if (contactsListEl) {
+    if (assocContacts.length === 0) {
+      contactsListEl.innerHTML = '<span style="color: #94a3b8; font-style: italic;">Nenhuma pessoa de contacto registada neste separador.</span>';
+    } else {
+      contactsListEl.innerHTML = assocContacts.map(con => `
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 2px 0; border-bottom: 1px dotted #f1f5f9;">
+          <span><strong>${escapeHtml(con.nome || 'Sem Nome')}</strong> ${con.cargo ? `<span style="color:#64748b; font-size:0.75rem;">(${escapeHtml(con.cargo)})</span>` : ''}</span>
+          <span style="color:#64748b; font-size:0.75rem;">${escapeHtml(con.telemovel || con.telefone || con.email || '')}</span>
+        </div>
+      `).join('');
+    }
+  }
+
+  // Preencher seletor de clientes de destino
+  const targetSelect = document.getElementById('moveSeparadorTargetClientId');
+  if (targetSelect) {
+    targetSelect.innerHTML = '<option value="">-- Selecione o Cliente de Destino --</option>';
+    (db.clientes || []).forEach(c => {
+      if (c.id !== currentClientId) {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        const displayName = c.ministerio ? `${c.ministerio} - ${c.nome}` : c.nome;
+        opt.textContent = `${displayName} [${c.tipoCliente || 'Cliente'}]`;
+        targetSelect.appendChild(opt);
+      }
+    });
+  }
+
+  document.getElementById('moveSeparadorModal')?.classList.add('active');
+}
+window.openMoveSeparadorModal = openMoveSeparadorModal;
+
+function closeMoveSeparadorModal() {
+  document.getElementById('moveSeparadorModal')?.classList.remove('active');
+}
+window.closeMoveSeparadorModal = closeMoveSeparadorModal;
+
+function saveMoveSeparador(e) {
+  if (e) e.preventDefault();
+  if (!currentClientId) return;
+
+  const sepIdx = Number(document.getElementById('moveSeparadorIndex').value);
+  const targetClientId = document.getElementById('moveSeparadorTargetClientId').value;
+
+  if (!targetClientId) {
+    showToast('Por favor, selecione o cliente de destino.', 'danger');
+    return;
+  }
+
+  if (!currentEstatalSeparadores || !currentEstatalSeparadores[sepIdx]) {
+    showToast('Separador de origem não encontrado.', 'danger');
+    return;
+  }
+
+  const currentClient = db.clientes.find(c => c.id === currentClientId);
+  if (!currentClient) {
+    showToast('Cliente de origem não encontrado.', 'danger');
+    return;
+  }
+
+  const targetClient = db.clientes.find(c => c.id === targetClientId);
+  if (!targetClient) {
+    showToast('Cliente de destino não encontrado.', 'danger');
+    return;
+  }
+
+  // 1. Clonar integralmente o separador com todos os seus dados
+  const sepToMove = JSON.parse(JSON.stringify(currentEstatalSeparadores[sepIdx]));
+  const sepTitle = getSeparadorTitle(sepToMove);
+
+  // 2. Garantir que o cliente de destino tem os seus separadores existentes preservados intactos
+  const targetSeparadores = ensureClientSeparadoresArray(targetClient);
+  const newSubTabIndex = targetSeparadores.length;
+
+  // Adicionar o separador transferido como nova aba no destino
+  targetSeparadores.push(sepToMove);
+  targetClient.separadores = targetSeparadores;
+  targetClient.tipoCliente = 'Estatal';
+  targetClient.secretariaEstado = targetSeparadores.map(s => s.tipoSeparador === 'Outro' ? (s.nomePersonalizado || 'Outro') : s.tipoSeparador).join(', ');
+
+  // 3. Transferir todos os contactos e interações associadas a este separador
+  let transferredContactsCount = 0;
+  const transferredContactIds = [];
+
+  (db.contactos || []).forEach(c => {
+    if (String(c.clienteId || '').trim() === String(currentClientId).trim()) {
+      const cSub = (c.subTabIndex !== undefined && c.subTabIndex !== null && c.subTabIndex !== '') ? Number(c.subTabIndex) : 0;
+      if (cSub === sepIdx) {
+        c.clienteId = targetClientId;
+        c.subTabIndex = newSubTabIndex;
+        transferredContactIds.push(c.id);
+        transferredContactsCount++;
+      } else if (cSub > sepIdx) {
+        // Contactos nos separadores seguintes do cliente de origem descem um índice
+        c.subTabIndex = cSub - 1;
+      }
+    }
+  });
+
+  // Transferir histórico de interações das pessoas de contacto transferidas
+  if (Array.isArray(db.interacoes) && transferredContactIds.length > 0) {
+    db.interacoes.forEach(i => {
+      if (i.contactoId && transferredContactIds.includes(i.contactoId)) {
+        i.clienteId = targetClientId;
+      }
+    });
+  }
+
+  // 4. Remover separador do cliente de origem
+  currentEstatalSeparadores.splice(sepIdx, 1);
+  if (currentEstatalSeparadores.length === 0) {
+    currentEstatalSeparadores.push({
+      id: generateId('sep'),
+      tipoSeparador: 'Secretaria de Estado',
+      nomePersonalizado: '',
+      nome: '',
+      contribuinte: '',
+      direcao1: '',
+      direcao2: '',
+      numero: '',
+      andar: '',
+      codigoPostal: '',
+      localidade: '',
+      pais: '',
+      telefone: '',
+      telemovel: '',
+      email: ''
+    });
+  }
+
+  currentClient.separadores = JSON.parse(JSON.stringify(currentEstatalSeparadores));
+  currentClient.secretariaEstado = currentEstatalSeparadores.map(s => s.tipoSeparador === 'Outro' ? (s.nomePersonalizado || 'Outro') : s.tipoSeparador).join(', ');
+  if (currentEstatalSeparadores[0]) {
+    currentClient.nome = currentEstatalSeparadores[0].nome || currentClient.nome;
+    currentClient.contribuinte = currentEstatalSeparadores[0].contribuinte || currentClient.contribuinte;
+    currentClient.direcao1 = currentEstatalSeparadores[0].direcao1 || '';
+    currentClient.direcao2 = currentEstatalSeparadores[0].direcao2 || '';
+    currentClient.numero = currentEstatalSeparadores[0].numero || '';
+    currentClient.andar = currentEstatalSeparadores[0].andar || '';
+    currentClient.codigoPostal = currentEstatalSeparadores[0].codigoPostal || '';
+    currentClient.localidade = currentEstatalSeparadores[0].localidade || '';
+    currentClient.pais = currentEstatalSeparadores[0].pais || '';
+    currentClient.telefone = currentEstatalSeparadores[0].telefone || '';
+    currentClient.telemovel = currentEstatalSeparadores[0].telemovel || '';
+    currentClient.email = currentEstatalSeparadores[0].email || '';
+  }
+
+  if (activeEstatalSeparadorIndex >= currentEstatalSeparadores.length) {
+    activeEstatalSeparadorIndex = Math.max(0, currentEstatalSeparadores.length - 1);
+  }
+
+  // 5. Guardar base de dados e registar atividade
+  saveDatabase();
+
+  const fromName = currentClient.ministerio ? `${currentClient.ministerio} - ${currentClient.nome}` : currentClient.nome;
+  const toName = targetClient.ministerio ? `${targetClient.ministerio} - ${targetClient.nome}` : targetClient.nome;
+
+  logUserActivity('Transferência de Separador', `Separador "${sepTitle}" transferido do cliente "${fromName}" para o cliente "${toName}" juntamente com todo o seu conteúdo e ${transferredContactsCount} contacto(s).`, {
+    acao: 'Transferência de Separador',
+    separador: sepTitle,
+    origem: fromName,
+    destino: toName,
+    contactosTransferidos: transferredContactsCount
+  });
+
+  // 6. Atualizar UI
+  closeMoveSeparadorModal();
+  renderEstatalSeparadores();
+  refreshClientSubLists(currentClientId);
+  renderClientPageMainGrid();
+  if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
+  if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
+
+  showToast(`Separador "${sepTitle}" e ${transferredContactsCount} contacto(s) transferidos com sucesso para "${toName}"!`, 'success');
+}
+window.saveMoveSeparador = saveMoveSeparador;
 
 // ==========================================
 // 19. PREVENÇÃO & CAIXA DE DIÁLOGO DE DUPLICADOS
