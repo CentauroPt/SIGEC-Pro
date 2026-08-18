@@ -4694,6 +4694,17 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787082668665-518",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-18T19:51:08.665Z"
+    },
+    {
       "id": "log-1787082498886-273",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -4761,6 +4772,233 @@
       "prazoEntrega": "3 meses",
       "descricao": "Unidade móvel de demonstração tecnológica 5G com sala de exposições interativa, climatização e conectividade por satélite.",
       "createdAt": "2023-09-15T09:00:00.000Z"
+    }
+  ],
+  "activityHistory": [
+    {
+      "id": "act-1787082896242",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-131,con-1787049428085-425",
+      "details": "Decidido manter ambos os registos (con-imp-131, con-1787049428085-425).",
+      "timestamp": "2026-08-18T19:54:56.242Z"
+    },
+    {
+      "id": "act-1787082885183",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-129,con-1787049428085-799,con-1787049428085-527,con-1787049428085-210,con-1785515106421-857",
+      "details": "Decidido manter ambos os registos (con-imp-129, con-1787049428085-799, con-1787049428085-527, con-1787049428085-210, con-1785515106421-857).",
+      "timestamp": "2026-08-18T19:54:45.183Z"
+    },
+    {
+      "id": "act-1787082874346",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-124,con-imp-135",
+      "details": "Decidido manter ambos os registos (con-imp-124, con-imp-135).",
+      "timestamp": "2026-08-18T19:54:34.346Z"
+    },
+    {
+      "id": "act-1787082869752",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-120,con-1785826295654-612",
+      "details": "Decidido manter ambos os registos (con-imp-120, con-1785826295654-612).",
+      "timestamp": "2026-08-18T19:54:29.752Z"
+    },
+    {
+      "id": "act-1787082859538",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-114,con-imp-117",
+      "details": "Decidido manter ambos os registos (con-imp-114, con-imp-117).",
+      "timestamp": "2026-08-18T19:54:19.538Z"
+    },
+    {
+      "id": "act-1787082845500",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-050,con-1787049428085-481,con-1787049428085-21,con-1787049428085-608,con-1787049428085-380",
+      "details": "Decidido manter ambos os registos (con-imp-050, con-1787049428085-481, con-1787049428085-21, con-1787049428085-608, con-1787049428085-380).",
+      "timestamp": "2026-08-18T19:54:05.500Z"
+    },
+    {
+      "id": "act-1787082838126",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-040,con-imp-048,con-imp-115,con-imp-126,con-1787049428085-95,con-1787049428085-826,con-1787049428085-379",
+      "details": "Decidido manter ambos os registos (con-imp-040, con-imp-048, con-imp-115, con-imp-126, con-1787049428085-95, con-1787049428085-826, con-1787049428085-379).",
+      "timestamp": "2026-08-18T19:53:58.126Z"
+    },
+    {
+      "id": "act-1787082827517",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-039,con-1787049428085-546",
+      "details": "Decidido manter ambos os registos (con-imp-039, con-1787049428085-546).",
+      "timestamp": "2026-08-18T19:53:47.517Z"
+    },
+    {
+      "id": "act-1787082823086",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-032,con-1785755195297-108",
+      "details": "Decidido manter ambos os registos (con-imp-032, con-1785755195297-108).",
+      "timestamp": "2026-08-18T19:53:43.086Z"
+    },
+    {
+      "id": "act-1787082817502",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-031,con-imp-049,con-imp-055",
+      "details": "Decidido manter ambos os registos (con-imp-031, con-imp-049, con-imp-055).",
+      "timestamp": "2026-08-18T19:53:37.502Z"
+    },
+    {
+      "id": "act-1787082808659",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-025,con-imp-122",
+      "details": "Decidido manter ambos os registos (con-imp-025, con-imp-122).",
+      "timestamp": "2026-08-18T19:53:28.659Z"
+    },
+    {
+      "id": "act-1787082803255",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-022,con-imp-047,con-1787049428085-884",
+      "details": "Decidido manter ambos os registos (con-imp-022, con-imp-047, con-1787049428085-884).",
+      "timestamp": "2026-08-18T19:53:23.255Z"
+    },
+    {
+      "id": "act-1787082795401",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-019,con-imp-037,con-imp-041,con-imp-123,con-1787049428085-473",
+      "details": "Decidido manter ambos os registos (con-imp-019, con-imp-037, con-imp-041, con-imp-123, con-1787049428085-473).",
+      "timestamp": "2026-08-18T19:53:15.401Z"
+    },
+    {
+      "id": "act-1787082789171",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-017,con-1787049428085-684,con-1787049428085-965",
+      "details": "Decidido manter ambos os registos (con-imp-017, con-1787049428085-684, con-1787049428085-965).",
+      "timestamp": "2026-08-18T19:53:09.171Z"
+    },
+    {
+      "id": "act-1787082776790",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-016,con-imp-028,con-imp-038",
+      "details": "Decidido manter ambos os registos (con-imp-016, con-imp-028, con-imp-038).",
+      "timestamp": "2026-08-18T19:52:56.790Z"
+    },
+    {
+      "id": "act-1787082772216",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-015,con-imp-029,con-imp-046,con-1787049428085-881",
+      "details": "Decidido manter ambos os registos (con-imp-015, con-imp-029, con-imp-046, con-1787049428085-881).",
+      "timestamp": "2026-08-18T19:52:52.216Z"
+    },
+    {
+      "id": "act-1787082766547",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-014,con-1787049428085-443",
+      "details": "Decidido manter ambos os registos (con-imp-014, con-1787049428085-443).",
+      "timestamp": "2026-08-18T19:52:46.547Z"
+    },
+    {
+      "id": "act-1787082761260",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-008,con-1787049428085-386",
+      "details": "Decidido manter ambos os registos (con-imp-008, con-1787049428085-386).",
+      "timestamp": "2026-08-18T19:52:41.260Z"
+    },
+    {
+      "id": "act-1787082746973",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-007,con-imp-054,con-1787049428085-72,con-1787049428085-561",
+      "details": "Decidido manter ambos os registos (con-imp-007, con-imp-054, con-1787049428085-72, con-1787049428085-561).",
+      "timestamp": "2026-08-18T19:52:26.973Z"
+    },
+    {
+      "id": "act-1787082728820",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-006,con-imp-034,con-1787049428085-253",
+      "details": "Decidido manter ambos os registos (con-imp-006, con-imp-034, con-1787049428085-253).",
+      "timestamp": "2026-08-18T19:52:08.820Z"
+    },
+    {
+      "id": "act-1787082721783",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-005,con-imp-009,con-imp-024,con-imp-030,con-1787049428085-529,con-1787049428085-306,con-1787049428085-649,con-1787049428085-1,con-1787049428085-735,con-1787049428085-352",
+      "details": "Decidido manter ambos os registos (con-imp-005, con-imp-009, con-imp-024, con-imp-030, con-1787049428085-529, con-1787049428085-306, con-1787049428085-649, con-1787049428085-1, con-1787049428085-735, con-1787049428085-352).",
+      "timestamp": "2026-08-18T19:52:01.783Z"
+    },
+    {
+      "id": "act-1787082710439",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-004,con-1785514369861-598",
+      "details": "Decidido manter ambos os registos (con-imp-004, con-1785514369861-598).",
+      "timestamp": "2026-08-18T19:51:50.439Z"
+    },
+    {
+      "id": "act-1787082705829",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-003,con-imp-018",
+      "details": "Decidido manter ambos os registos (con-imp-003, con-imp-018).",
+      "timestamp": "2026-08-18T19:51:45.829Z"
+    },
+    {
+      "id": "act-1787082698216",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-002,con-imp-033,con-imp-043",
+      "details": "Decidido manter ambos os registos (con-imp-002, con-imp-033, con-imp-043).",
+      "timestamp": "2026-08-18T19:51:38.216Z"
+    },
+    {
+      "id": "act-1787082692209",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "cli-imp-020,cli-imp-076",
+      "details": "Decidido manter ambos os registos (cli-imp-020, cli-imp-076).",
+      "timestamp": "2026-08-18T19:51:32.209Z"
     }
   ],
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg=="
