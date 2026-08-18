@@ -1954,24 +1954,6 @@
       "createdAt": "2026-08-18T07:19:52.339Z"
     },
     {
-      "id": "cli-1787037592339-937",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério do Ambiente e Energia",
-      "secretariaEstado": "Direção Geral da DGEG",
-      "nome": "Direção Geral da DGEG",
-      "contribuinte": "",
-      "direcao1": "Av. 5 de Outubro",
-      "direcao2": "",
-      "numero": "208",
-      "andar": "",
-      "codigoPostal": "1069-203",
-      "localidade": "Lisboa",
-      "telefone": "+351 217 922 700 / 800",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:19:52.339Z"
-    },
-    {
       "id": "cli-1787037592339-163",
       "tipoCliente": "Estatal",
       "ministerio": "Ministério do Ambiente e Energia",
@@ -2098,24 +2080,6 @@
       "createdAt": "2026-08-18T07:19:52.340Z"
     },
     {
-      "id": "cli-1787037592340-341",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da Educação, Ciência e Inovação",
-      "secretariaEstado": "Direção Geral de Educação",
-      "nome": "Direção Geral de Educação",
-      "contribuinte": "",
-      "direcao1": "Avenida 24 de Julho",
-      "direcao2": "",
-      "numero": "140",
-      "andar": "",
-      "codigoPostal": "1399-025",
-      "localidade": "Lisboa",
-      "telefone": "+351 218 430 500",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:19:52.340Z"
-    },
-    {
       "id": "cli-1787037592340-389",
       "tipoCliente": "Estatal",
       "ministerio": "Ministério do Trabalho, Solidariedade e Segurança Social",
@@ -2201,24 +2165,6 @@
       "codigoPostal": "1149-019",
       "localidade": "LISBOA",
       "telefone": "+351 213 222 300",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:19:52.340Z"
-    },
-    {
-      "id": "cli-1787037592340-821",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da Defesa Nacional",
-      "secretariaEstado": "Direção Geral de Recursos da Defesa Nacional",
-      "nome": "Direção Geral de Recursos da Defesa Nacional",
-      "contribuinte": "",
-      "direcao1": "Avenida da Ilha da Madeira",
-      "direcao2": "",
-      "numero": "1",
-      "andar": "2.º Piso",
-      "codigoPostal": "1400-204",
-      "localidade": "Lisboa",
-      "telefone": "+351 21 303 85 00",
       "telemovel": "",
       "email": "",
       "createdAt": "2026-08-18T07:19:52.340Z"
@@ -3414,6 +3360,68 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787037824149-114",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Direção Geral de Recursos da Defesa Nacional\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Direção Geral de Recursos da Defesa Nacional",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:23:44.149Z"
+    },
+    {
+      "id": "log-1787037823579-199",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Direção Geral de Educação\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Direção Geral de Educação",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:23:43.579Z"
+    },
+    {
+      "id": "log-1787037821656-960",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-18T07:23:41.656Z"
+    },
+    {
+      "id": "log-1787037817691-468",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Direção Geral da DGEG\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Direção Geral da DGEG",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:23:37.691Z"
+    },
+    {
       "id": "log-1787037817268-567",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -3739,7 +3747,10 @@
       "cli-1787037592340-954",
       "cli-1787037592340-493",
       "cli-1787037592339-755",
-      "cli-1787037592339-940"
+      "cli-1787037592339-940",
+      "cli-1787037592339-937",
+      "cli-1787037592340-341",
+      "cli-1787037592340-821"
     ],
     "contactos": [
       "con-imp-059",
