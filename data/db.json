@@ -4720,30 +4720,7 @@
       "createdAt": "2026-08-18T06:59:08.527Z"
     }
   ],
-  "userLogs": [
-    {
-      "id": "log-1787053659094-118",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "tab-duplicados",
-      "detalhes": null,
-      "timestamp": "2026-08-18T11:47:39.094Z"
-    },
-    {
-      "id": "log-1787053649184-547",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "tab-duplicados",
-      "detalhes": null,
-      "timestamp": "2026-08-18T11:47:29.184Z"
-    }
-  ],
+  "userLogs": [],
   "orcamentos": [
     {
       "id": "orc-bcn-camiao-001",
@@ -4951,35 +4928,6 @@
       "id1": "cli-1787038283893-566",
       "ignoredAt": "2026-08-18T11:01:24.180Z",
       "ignoredBy": "Sistema"
-    }
-  ],
-  "activityHistory": [
-    {
-      "id": "act-1787053681341-fg29",
-      "userId": "usr-admin-001",
-      "action": "DUPLICATE_MERGE",
-      "entity": "contactos",
-      "entityId": "con-imp-033",
-      "details": "Fusão de 2 registos duplicados em \"Joao\". 0 vínculos reatribuídos com sucesso.",
-      "timestamp": "2026-08-18T11:48:01.341Z"
-    },
-    {
-      "id": "act-1787053656518-z1dj",
-      "userId": "usr-admin-001",
-      "action": "DUPLICATE_MERGE",
-      "entity": "contactos",
-      "entityId": "con-imp-019",
-      "details": "Fusão de 2 registos duplicados em \"Antonio\". 0 vínculos reatribuídos com sucesso.",
-      "timestamp": "2026-08-18T11:47:36.518Z"
-    },
-    {
-      "id": "act-1787053646834-gui5",
-      "userId": "usr-admin-001",
-      "action": "DUPLICATE_MERGE",
-      "entity": "clientes",
-      "entityId": "cli-imp-073",
-      "details": "Fusão de 2 registos duplicados em \"Galp Energia, SGPS, S.A.\". 0 vínculos reatribuídos com sucesso.",
-      "timestamp": "2026-08-18T11:47:26.834Z"
     }
   ],
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
