@@ -3665,18 +3665,6 @@
       "subTabIndex": 0
     },
     {
-      "id": "con-imp-121",
-      "clienteId": "cli-imp-003",
-      "nome": "Pedro",
-      "apelido": "Rio",
-      "cargo": "Responsável de Relações con los Media",
-      "telefone": "217532000",
-      "telemovel": "",
-      "email": "comunicacao@jeronimo-martins.com",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
       "id": "con-imp-122",
       "clienteId": "cli-imp-076",
       "nome": "Raquel",
@@ -4827,6 +4815,17 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787052857785-813",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "tab-duplicados",
+      "detalhes": null,
+      "timestamp": "2026-08-18T11:34:17.785Z"
+    },
+    {
       "id": "log-1787052782103-174",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -4902,6 +4901,15 @@
   ],
   "ignoredDuplicates": [],
   "activityHistory": [
+    {
+      "id": "act-1787052900108-2t7e",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_MERGE",
+      "entity": "contactos",
+      "entityId": "con-imp-009",
+      "details": "Fusão de 2 registos duplicados em \"Pedro\". 0 vínculos reatribuídos com sucesso.",
+      "timestamp": "2026-08-18T11:35:00.108Z"
+    },
     {
       "id": "act-1787052854927-le1v",
       "userId": "usr-admin-001",
@@ -5129,7 +5137,8 @@
       "con-imp-118",
       "con-imp-133",
       "con-imp-134",
-      "con-imp-130"
+      "con-imp-130",
+      "con-imp-121"
     ],
     "projetos": [],
     "interacoes": [
