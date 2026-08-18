@@ -3443,40 +3443,143 @@ const STORAGE_KEYS = {
   PROJETOS: 'sigec_pro_db_projetos_v6',
   INTERACOES: 'sigec_pro_db_interacoes_v6',
   INTERACOES_PROJETOS: 'sigec_pro_db_interacoes_projetos_v6',
-  DELETED_PROJETOS: 'sigec_pro_db_deleted_projetos_v6'
+  DELETED_CLIENTES: 'sigec_pro_db_deleted_clientes_v6',
+  DELETED_CONTACTOS: 'sigec_pro_db_deleted_contactos_v6',
+  DELETED_PROJETOS: 'sigec_pro_db_deleted_projetos_v6',
+  DELETED_INTERACOES: 'sigec_pro_db_deleted_interacoes_v6',
+  DELETED_INTERACOES_PROJETOS: 'sigec_pro_db_deleted_interacoes_projetos_v6',
+  DELETED_ORCAMENTOS: 'sigec_pro_db_deleted_orcamentos_v6',
+  IGNORED_DUPLICATES: 'sigec_pro_ignored_duplicates'
+};
+
+let deletedRegistry = {
+  clientes: [],
+  contactos: [],
+  projetos: [],
+  interacoes: [],
+  interacoesProjetos: [],
+  orcamentos: []
 };
 
 let deletedProjectIds = [];
 
-function loadDeletedProjectIds() {
+function loadDeletedRegistry() {
   try {
-    let raw = localStorage.getItem(STORAGE_KEYS.DELETED_PROJETOS);
-    if (raw === null) raw = localStorage.getItem('centauro_db_deleted_projetos_v6');
-    deletedProjectIds = raw ? JSON.parse(raw) : [];
+    const parseKey = (key, fallbackKey = null) => {
+      let raw = localStorage.getItem(key);
+      if (raw === null && fallbackKey) raw = localStorage.getItem(fallbackKey);
+      try {
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    };
+
+    deletedRegistry.clientes = parseKey(STORAGE_KEYS.DELETED_CLIENTES);
+    deletedRegistry.contactos = parseKey(STORAGE_KEYS.DELETED_CONTACTOS);
+    deletedRegistry.projetos = parseKey(STORAGE_KEYS.DELETED_PROJETOS, 'centauro_db_deleted_projetos_v6');
+    deletedRegistry.interacoes = parseKey(STORAGE_KEYS.DELETED_INTERACOES);
+    deletedRegistry.interacoesProjetos = parseKey(STORAGE_KEYS.DELETED_INTERACOES_PROJETOS);
+    deletedRegistry.orcamentos = parseKey(STORAGE_KEYS.DELETED_ORCAMENTOS);
+
+    deletedProjectIds = deletedRegistry.projetos || [];
   } catch (e) {
-    deletedProjectIds = [];
+    console.error('Erro ao carregar registo de eliminados:', e);
   }
+}
+
+function saveDeletedRegistry() {
+  try {
+    safeSetStorage(STORAGE_KEYS.DELETED_CLIENTES, JSON.stringify(deletedRegistry.clientes || []));
+    safeSetStorage(STORAGE_KEYS.DELETED_CONTACTOS, JSON.stringify(deletedRegistry.contactos || []));
+    safeSetStorage(STORAGE_KEYS.DELETED_PROJETOS, JSON.stringify(deletedRegistry.projetos || []));
+    safeSetStorage(STORAGE_KEYS.DELETED_INTERACOES, JSON.stringify(deletedRegistry.interacoes || []));
+    safeSetStorage(STORAGE_KEYS.DELETED_INTERACOES_PROJETOS, JSON.stringify(deletedRegistry.interacoesProjetos || []));
+    safeSetStorage(STORAGE_KEYS.DELETED_ORCAMENTOS, JSON.stringify(deletedRegistry.orcamentos || []));
+    deletedProjectIds = deletedRegistry.projetos || [];
+  } catch (e) {
+    console.error('Erro ao guardar registo de eliminados:', e);
+  }
+}
+
+function addDeletedId(type, id) {
+  if (!type || !id) return;
+  const strId = String(id).trim();
+  if (!strId) return;
+  if (!deletedRegistry[type]) deletedRegistry[type] = [];
+  if (!deletedRegistry[type].includes(strId)) {
+    deletedRegistry[type].push(strId);
+    saveDeletedRegistry();
+  }
+}
+
+function isDeletedId(type, id) {
+  if (!type || !id) return false;
+  const strId = String(id).trim();
+  if (!deletedRegistry[type]) return false;
+  return deletedRegistry[type].includes(strId);
+}
+
+function removeDeletedId(type, id) {
+  if (!type || !id) return;
+  const strId = String(id).trim();
+  if (!strId || !deletedRegistry[type]) return;
+  const idx = deletedRegistry[type].indexOf(strId);
+  if (idx >= 0) {
+    deletedRegistry[type].splice(idx, 1);
+    saveDeletedRegistry();
+  }
+}
+
+function clearDeletedRegistry() {
+  deletedRegistry = {
+    clientes: [],
+    contactos: [],
+    projetos: [],
+    interacoes: [],
+    interacoesProjetos: [],
+    orcamentos: []
+  };
+  deletedProjectIds = [];
+  saveDeletedRegistry();
+}
+
+function loadDeletedProjectIds() {
+  loadDeletedRegistry();
 }
 
 function saveDeletedProjectIds() {
-  try {
-    localStorage.setItem(STORAGE_KEYS.DELETED_PROMOTOS || STORAGE_KEYS.DELETED_PROJETOS, JSON.stringify(deletedProjectIds));
-  } catch (e) {
-    console.error('Erro ao guardar lista de projetos eliminados:', e);
-  }
+  saveDeletedRegistry();
 }
 
 function addDeletedProjectId(id) {
-  if (!id) return;
-  if (!deletedProjectIds.includes(id)) {
-    deletedProjectIds.push(id);
-    saveDeletedProjectIds();
-  }
+  addDeletedId('projetos', id);
 }
 
 function filterDeletedProjects(projectsList) {
   if (!Array.isArray(projectsList)) return [];
-  return projectsList.filter(p => p && p.id && !deletedProjectIds.includes(p.id));
+  return projectsList.filter(p => p && p.id && !isDeletedId('projetos', p.id));
+}
+
+function filterAllDeletedEntities() {
+  if (Array.isArray(db.clientes)) {
+    db.clientes = db.clientes.filter(c => c && c.id && !isDeletedId('clientes', c.id));
+  }
+  if (Array.isArray(db.contactos)) {
+    db.contactos = db.contactos.filter(c => c && c.id && !isDeletedId('contactos', c.id));
+  }
+  if (Array.isArray(db.projetos)) {
+    db.projetos = db.projetos.filter(p => p && p.id && !isDeletedId('projetos', p.id));
+  }
+  if (Array.isArray(db.interacoes)) {
+    db.interacoes = db.interacoes.filter(i => i && i.id && !isDeletedId('interacoes', i.id));
+  }
+  if (Array.isArray(db.interacoesProjetos)) {
+    db.interacoesProjetos = db.interacoesProjetos.filter(i => i && i.id && !isDeletedId('interacoesProjetos', i.id));
+  }
+  if (Array.isArray(db.orcamentos)) {
+    db.orcamentos = db.orcamentos.filter(o => o && o.id && !isDeletedId('orcamentos', o.id));
+  }
 }
 
 let db = {
@@ -3507,7 +3610,7 @@ function normalizeText(str) {
 // Função para Carregar a Base de Dados (Garante persistência de alterações e eliminações permanentes)
 function loadDatabase() {
   try {
-    loadDeletedProjectIds();
+    loadDeletedRegistry();
 
     let rawClientes = localStorage.getItem(STORAGE_KEYS.CLIENTES);
     if (rawClientes === null) rawClientes = localStorage.getItem('centauro_db_clientes_v6');
@@ -3528,38 +3631,50 @@ function loadDatabase() {
     let rawUserLogs = localStorage.getItem('sigec_pro_user_logs');
     let rawOrcamentos = localStorage.getItem('sigec_pro_orcamentos');
 
-    // Função auxiliar de deduplicação por ID
-    function deduplicateById(arr) {
+    // Função auxiliar de deduplicação e filtragem de eliminados
+    function deduplicateAndFilter(arr, type) {
       if (!Array.isArray(arr)) return [];
       const seen = new Set();
       return arr.filter(item => {
-        if (!item || !item.id) return true;
-        if (seen.has(item.id)) return false;
-        seen.add(item.id);
+        if (!item) return false;
+        const id = item.id ? String(item.id).trim() : null;
+        if (id && isDeletedId(type, id)) return false;
+        if (!id) return true;
+        if (seen.has(id)) return false;
+        seen.add(id);
         return true;
       });
     }
 
-    db.clientes = deduplicateById(rawClientes !== null ? JSON.parse(rawClientes) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? [...(INITIAL_EXCEL_DATABASE.clientes || [])] : []));
-    db.contactos = deduplicateById(rawContactos !== null ? JSON.parse(rawContactos) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? [...(INITIAL_EXCEL_DATABASE.contactos || [])] : []));
-    db.projetos = deduplicateById(rawProjetos !== null ? filterDeletedProjects(JSON.parse(rawProjetos)) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? filterDeletedProjects([...(INITIAL_EXCEL_DATABASE.projetos || [])]) : []));
-    db.interacoes = deduplicateById(rawInteracoes !== null ? JSON.parse(rawInteracoes) : []);
-    db.interacoesProjetos = rawInteracoesProjetos !== null ? JSON.parse(rawInteracoesProjetos) : [];
-    db.usuarios = deduplicateById(rawUsuarios !== null ? JSON.parse(rawUsuarios) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' && INITIAL_EXCEL_DATABASE.usuarios ? [...INITIAL_EXCEL_DATABASE.usuarios] : []));
+    db.clientes = deduplicateAndFilter(rawClientes !== null ? JSON.parse(rawClientes) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? [...(INITIAL_EXCEL_DATABASE.clientes || [])] : []), 'clientes');
+    db.contactos = deduplicateAndFilter(rawContactos !== null ? JSON.parse(rawContactos) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? [...(INITIAL_EXCEL_DATABASE.contactos || [])] : []), 'contactos');
+    db.projetos = deduplicateAndFilter(rawProjetos !== null ? JSON.parse(rawProjetos) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? [...(INITIAL_EXCEL_DATABASE.projetos || [])] : []), 'projetos');
+    db.interacoes = deduplicateAndFilter(rawInteracoes !== null ? JSON.parse(rawInteracoes) : [], 'interacoes');
+    db.interacoesProjetos = deduplicateAndFilter(rawInteracoesProjetos !== null ? JSON.parse(rawInteracoesProjetos) : [], 'interacoesProjetos');
+    db.usuarios = deduplicateAndFilter(rawUsuarios !== null ? JSON.parse(rawUsuarios) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' && INITIAL_EXCEL_DATABASE.usuarios ? [...INITIAL_EXCEL_DATABASE.usuarios] : []), 'usuarios');
     if (rawOrcamentos !== null) {
-      db.orcamentos = deduplicateById(JSON.parse(rawOrcamentos));
+      db.orcamentos = deduplicateAndFilter(JSON.parse(rawOrcamentos), 'orcamentos');
     } else {
       let initialBudgets = [];
       (db.clientes || []).forEach(cli => {
         if (Array.isArray(cli.orcamentos)) {
           cli.orcamentos.forEach(b => {
-            if (!initialBudgets.some(existing => existing.id === b.id)) {
+            if (b && b.id && !isDeletedId('orcamentos', b.id) && !initialBudgets.some(existing => existing.id === b.id)) {
               initialBudgets.push(b);
             }
           });
         }
       });
       db.orcamentos = initialBudgets;
+    }
+
+    // Carregar registo de comparações e duplicados ignorados
+    let rawIgnored = localStorage.getItem(STORAGE_KEYS.IGNORED_DUPLICATES);
+    try {
+      db.ignoredDuplicates = rawIgnored ? JSON.parse(rawIgnored) : [];
+      if (!Array.isArray(db.ignoredDuplicates)) db.ignoredDuplicates = [];
+    } catch (e) {
+      db.ignoredDuplicates = [];
     }
 
     if (typeof ensureUsersInitialized === 'function') ensureUsersInitialized();
@@ -3571,8 +3686,8 @@ function loadDatabase() {
   } catch (err) {
     console.error('Erro ao carregar base de dados:', err);
     if (typeof INITIAL_EXCEL_DATABASE !== 'undefined') {
-      db.clientes = [...(INITIAL_EXCEL_DATABASE.clientes || [])];
-      db.contactos = [...(INITIAL_EXCEL_DATABASE.contactos || [])];
+      db.clientes = (INITIAL_EXCEL_DATABASE.clientes || []).filter(c => c && !isDeletedId('clientes', c.id));
+      db.contactos = (INITIAL_EXCEL_DATABASE.contactos || []).filter(c => c && !isDeletedId('contactos', c.id));
       db.projetos = filterDeletedProjects([...(INITIAL_EXCEL_DATABASE.projetos || [])]);
       db.interacoes = [];
       db.interacoesProjetos = [];
@@ -3647,6 +3762,7 @@ function restoreInitialExcelDatabase() {
   const totalCli = (typeof INITIAL_EXCEL_DATABASE !== 'undefined' && INITIAL_EXCEL_DATABASE.clientes) ? INITIAL_EXCEL_DATABASE.clientes.length : 85;
   const totalCon = (typeof INITIAL_EXCEL_DATABASE !== 'undefined' && INITIAL_EXCEL_DATABASE.contactos) ? INITIAL_EXCEL_DATABASE.contactos.length : 192;
   if (confirm(`Tem a certeza que deseja carregar a Base de Dados inicial importada dos ficheiros Excel (${totalCli} Clientes e ${totalCon} Contactos)?`)) {
+    clearDeletedRegistry();
     loadInitialExcelData();
     renderDatabaseOverview();
     if (db.clientes.length > 0) loadClientIntoForm(db.clientes[0].id);
@@ -3668,7 +3784,9 @@ function safeSetStorage(key, value) {
 function saveDatabase() {
   let saveSuccess = true;
   try {
-    db.projetos = typeof filterDeletedProjects === 'function' ? filterDeletedProjects(db.projetos || []) : (db.projetos || []);
+    if (typeof filterAllDeletedEntities === 'function') {
+      filterAllDeletedEntities();
+    }
 
     const s1 = safeSetStorage(STORAGE_KEYS.CLIENTES, JSON.stringify(db.clientes || []));
     const s2 = safeSetStorage(STORAGE_KEYS.CONTACTOS, JSON.stringify(db.contactos || []));
@@ -3703,6 +3821,7 @@ function saveDatabase() {
     safeSetStorage('sigec_pro_usuarios', JSON.stringify(db.usuarios || []));
     safeSetStorage('sigec_pro_user_logs', JSON.stringify(db.userLogs || []));
     safeSetStorage('sigec_pro_orcamentos', JSON.stringify(db.orcamentos || []));
+    safeSetStorage(STORAGE_KEYS.IGNORED_DUPLICATES, JSON.stringify(db.ignoredDuplicates || []));
 
     // BLINDAGEM PERMANENTE DO TOKEN PAT: re-persiste o token a cada gravação de base de dados
     // para garantir que nunca se perde, mesmo após limpeza de cache ou reinstalação.
@@ -3717,7 +3836,7 @@ function saveDatabase() {
       try { sessionStorage.setItem('sigec_pro_session_gh_token', _existingToken); } catch(e) {}
     }
 
-    if (typeof saveDeletedProjectIds === 'function') saveDeletedProjectIds();
+    if (typeof saveDeletedRegistry === 'function') saveDeletedRegistry();
 
     if (!s1 || !s2 || !s3) {
       saveSuccess = false;
@@ -4047,8 +4166,12 @@ async function syncDatabaseToGitHub(silent = false, force = false) {
     };
 
     const sendPutWithAllAuths = async (shaVal) => {
-      // Incluir o token codificado no payload para recupera\u00e7\u00e3o autom\u00e1tica ap\u00f3s limpeza de cache
-      const dbPayload = { ...db, _spcfg: _encTk(token) };
+      // Incluir o token codificado no payload e o registo de eliminações para sincronização perfeita
+      const dbPayload = { 
+        ...db, 
+        _spcfg: _encTk(token),
+        _deletedRegistry: (typeof deletedRegistry !== 'undefined' ? deletedRegistry : null)
+      };
       const dbString = JSON.stringify(dbPayload, null, 2);
       const contentBase64 = utf8ToBase64(dbString);
       const payload = {
@@ -4155,8 +4278,20 @@ async function loadDatabaseFromGitHub(silent = false) {
     const remoteDb = await res.json();
     if (!remoteDb || typeof remoteDb !== 'object') return false;
 
+    // Incorporar registo de eliminações do servidor
+    if (remoteDb._deletedRegistry && typeof remoteDb._deletedRegistry === 'object') {
+      ['clientes', 'contactos', 'projetos', 'interacoes', 'interacoesProjetos', 'orcamentos'].forEach(t => {
+        if (Array.isArray(remoteDb._deletedRegistry[t])) {
+          remoteDb._deletedRegistry[t].forEach(delId => {
+            if (delId) addDeletedId(t, delId);
+          });
+        }
+      });
+    }
+
     if (Array.isArray(remoteDb.clientes)) {
       remoteDb.clientes.forEach(incCli => {
+        if (!incCli || !incCli.id || isDeletedId('clientes', incCli.id)) return;
         const idx = db.clientes.findIndex(c => c.id === incCli.id);
         if (idx >= 0) {
           db.clientes[idx] = { ...incCli, ...db.clientes[idx] };
@@ -4168,6 +4303,7 @@ async function loadDatabaseFromGitHub(silent = false) {
 
     if (Array.isArray(remoteDb.contactos)) {
       remoteDb.contactos.forEach(incCon => {
+        if (!incCon || !incCon.id || isDeletedId('contactos', incCon.id)) return;
         const idx = db.contactos.findIndex(c => c.id === incCon.id);
         if (idx >= 0) {
           db.contactos[idx] = { ...incCon, ...db.contactos[idx] };
@@ -4179,6 +4315,7 @@ async function loadDatabaseFromGitHub(silent = false) {
 
     if (Array.isArray(remoteDb.projetos)) {
       remoteDb.projetos.forEach(incProj => {
+        if (!incProj || !incProj.id || isDeletedId('projetos', incProj.id)) return;
         const idx = db.projetos.findIndex(p => p.id === incProj.id);
         if (idx >= 0) {
           db.projetos[idx] = { ...incProj, ...db.projetos[idx] };
@@ -4188,8 +4325,48 @@ async function loadDatabaseFromGitHub(silent = false) {
       });
     }
 
+    if (Array.isArray(remoteDb.interacoes)) {
+      remoteDb.interacoes.forEach(incInt => {
+        if (!incInt || !incInt.id || isDeletedId('interacoes', incInt.id)) return;
+        if (!db.interacoes) db.interacoes = [];
+        const idx = db.interacoes.findIndex(i => i.id === incInt.id);
+        if (idx >= 0) {
+          db.interacoes[idx] = { ...incInt, ...db.interacoes[idx] };
+        } else {
+          db.interacoes.push(incInt);
+        }
+      });
+    }
+
+    if (Array.isArray(remoteDb.interacoesProjetos)) {
+      remoteDb.interacoesProjetos.forEach(incIp => {
+        if (!incIp || !incIp.id || isDeletedId('interacoesProjetos', incIp.id)) return;
+        if (!db.interacoesProjetos) db.interacoesProjetos = [];
+        const idx = db.interacoesProjetos.findIndex(i => i.id === incIp.id);
+        if (idx >= 0) {
+          db.interacoesProjetos[idx] = { ...incIp, ...db.interacoesProjetos[idx] };
+        } else {
+          db.interacoesProjetos.push(incIp);
+        }
+      });
+    }
+
+    if (Array.isArray(remoteDb.orcamentos)) {
+      remoteDb.orcamentos.forEach(incOrc => {
+        if (!incOrc || !incOrc.id || isDeletedId('orcamentos', incOrc.id)) return;
+        if (!db.orcamentos) db.orcamentos = [];
+        const idx = db.orcamentos.findIndex(o => o.id === incOrc.id);
+        if (idx >= 0) {
+          db.orcamentos[idx] = { ...incOrc, ...db.orcamentos[idx] };
+        } else {
+          db.orcamentos.push(incOrc);
+        }
+      });
+    }
+
     if (Array.isArray(remoteDb.usuarios)) {
       remoteDb.usuarios.forEach(incUser => {
+        if (!incUser || !incUser.id) return;
         const idx = db.usuarios.findIndex(u => u.id === incUser.id);
         if (idx >= 0) {
           db.usuarios[idx] = { ...incUser, ...db.usuarios[idx] };
@@ -4284,16 +4461,28 @@ async function autoSyncServerOnStartup() {
     const missingBanner = document.getElementById('sigec_missing_token_banner');
     if (missingBanner && getGitHubConfig().token) missingBanner.remove();
 
+    // Incorporar registo de eliminações do servidor se existir
+    if (remoteDb._deletedRegistry && typeof remoteDb._deletedRegistry === 'object') {
+      ['clientes', 'contactos', 'projetos', 'interacoes', 'interacoesProjetos', 'orcamentos'].forEach(t => {
+        if (Array.isArray(remoteDb._deletedRegistry[t])) {
+          remoteDb._deletedRegistry[t].forEach(delId => {
+            if (delId) addDeletedId(t, delId);
+          });
+        }
+      });
+    }
+
     let hasUpdates = false;
 
-    // Se a base local estiver completamente vazia, carrega do servidor
+    // Se a base local estiver completamente vazia, carrega do servidor (filtrando os eliminados)
     if ((!db.clientes || db.clientes.length === 0) && Array.isArray(remoteDb.clientes) && remoteDb.clientes.length > 0) {
-      db.clientes = remoteDb.clientes;
+      db.clientes = remoteDb.clientes.filter(c => c && c.id && !isDeletedId('clientes', c.id));
       hasUpdates = true;
     } else if (Array.isArray(remoteDb.clientes)) {
-      // Caso contrário, funde os registos preservando totalmente os dados locais do utilizador
+      // Caso contrário, funde os registos preservando totalmente os dados locais do utilizador e nunca re-adicionando eliminados
       remoteDb.clientes.forEach(incCli => {
         if (!incCli || !incCli.id) return;
+        if (isDeletedId('clientes', incCli.id)) return;
         const idx = db.clientes.findIndex(c => c && c.id === incCli.id);
         if (idx < 0) {
           db.clientes.push(incCli);
@@ -4305,11 +4494,12 @@ async function autoSyncServerOnStartup() {
     }
 
     if ((!db.contactos || db.contactos.length === 0) && Array.isArray(remoteDb.contactos) && remoteDb.contactos.length > 0) {
-      db.contactos = remoteDb.contactos;
+      db.contactos = remoteDb.contactos.filter(c => c && c.id && !isDeletedId('contactos', c.id));
       hasUpdates = true;
     } else if (Array.isArray(remoteDb.contactos)) {
       remoteDb.contactos.forEach(incCon => {
         if (!incCon || !incCon.id) return;
+        if (isDeletedId('contactos', incCon.id)) return;
         const idx = db.contactos.findIndex(c => c && c.id === incCon.id);
         if (idx < 0) {
           db.contactos.push(incCon);
@@ -4321,11 +4511,12 @@ async function autoSyncServerOnStartup() {
     }
 
     if ((!db.projetos || db.projetos.length === 0) && Array.isArray(remoteDb.projetos) && remoteDb.projetos.length > 0) {
-      db.projetos = remoteDb.projetos;
+      db.projetos = remoteDb.projetos.filter(p => p && p.id && !isDeletedId('projetos', p.id));
       hasUpdates = true;
     } else if (Array.isArray(remoteDb.projetos)) {
       remoteDb.projetos.forEach(incProj => {
         if (!incProj || !incProj.id) return;
+        if (isDeletedId('projetos', incProj.id)) return;
         const idx = db.projetos.findIndex(p => p && p.id === incProj.id);
         if (idx < 0) {
           db.projetos.push(incProj);
@@ -4337,8 +4528,57 @@ async function autoSyncServerOnStartup() {
     }
 
     if ((!db.interacoes || db.interacoes.length === 0) && Array.isArray(remoteDb.interacoes) && remoteDb.interacoes.length > 0) {
-      db.interacoes = remoteDb.interacoes;
+      db.interacoes = remoteDb.interacoes.filter(i => i && i.id && !isDeletedId('interacoes', i.id));
       hasUpdates = true;
+    } else if (Array.isArray(remoteDb.interacoes)) {
+      remoteDb.interacoes.forEach(incInt => {
+        if (!incInt || !incInt.id) return;
+        if (isDeletedId('interacoes', incInt.id)) return;
+        if (!db.interacoes) db.interacoes = [];
+        const idx = db.interacoes.findIndex(i => i && i.id === incInt.id);
+        if (idx < 0) {
+          db.interacoes.push(incInt);
+          hasUpdates = true;
+        } else {
+          db.interacoes[idx] = { ...incInt, ...db.interacoes[idx] };
+        }
+      });
+    }
+
+    if ((!db.interacoesProjetos || db.interacoesProjetos.length === 0) && Array.isArray(remoteDb.interacoesProjetos) && remoteDb.interacoesProjetos.length > 0) {
+      db.interacoesProjetos = remoteDb.interacoesProjetos.filter(i => i && i.id && !isDeletedId('interacoesProjetos', i.id));
+      hasUpdates = true;
+    } else if (Array.isArray(remoteDb.interacoesProjetos)) {
+      remoteDb.interacoesProjetos.forEach(incIp => {
+        if (!incIp || !incIp.id) return;
+        if (isDeletedId('interacoesProjetos', incIp.id)) return;
+        if (!db.interacoesProjetos) db.interacoesProjetos = [];
+        const idx = db.interacoesProjetos.findIndex(i => i && i.id === incIp.id);
+        if (idx < 0) {
+          db.interacoesProjetos.push(incIp);
+          hasUpdates = true;
+        } else {
+          db.interacoesProjetos[idx] = { ...incIp, ...db.interacoesProjetos[idx] };
+        }
+      });
+    }
+
+    if ((!db.orcamentos || db.orcamentos.length === 0) && Array.isArray(remoteDb.orcamentos) && remoteDb.orcamentos.length > 0) {
+      db.orcamentos = remoteDb.orcamentos.filter(o => o && o.id && !isDeletedId('orcamentos', o.id));
+      hasUpdates = true;
+    } else if (Array.isArray(remoteDb.orcamentos)) {
+      remoteDb.orcamentos.forEach(incOrc => {
+        if (!incOrc || !incOrc.id) return;
+        if (isDeletedId('orcamentos', incOrc.id)) return;
+        if (!db.orcamentos) db.orcamentos = [];
+        const idx = db.orcamentos.findIndex(o => o && o.id === incOrc.id);
+        if (idx < 0) {
+          db.orcamentos.push(incOrc);
+          hasUpdates = true;
+        } else {
+          db.orcamentos[idx] = { ...incOrc, ...db.orcamentos[idx] };
+        }
+      });
     }
 
     if (Array.isArray(remoteDb.usuarios)) {
@@ -4447,6 +4687,9 @@ function switchTab(tabId) {
     populateBudgetModelPresetDatalist();
     renderSavedBudgetsList();
     recalculateBudgetTotal();
+  } else if (tabId === 'tab-duplicados') {
+    if (typeof scanDuplicates === 'function') scanDuplicates(currentDuplicateTab || 'clients');
+    if (typeof updateDuplicateBadges === 'function') updateDuplicateBadges();
   } else if (tabId === 'tab-home') {
     renderHomeDashboard();
   }
@@ -4470,6 +4713,34 @@ function renderContactPageMainGrid() {
 
   const query = document.getElementById('contactPageSearchQuery')?.value.trim() || '';
   let contactsList = [...(db.contactos || [])];
+
+  // Filtro por Separador: Todos os Contactos, Contactos Privados, Contactos Fundações, Contactos Público / Estatal
+  if (currentContactFilterTab === 'privado') {
+    contactsList = contactsList.filter(con => {
+      if (!con) return false;
+      const cli = (db.clientes || []).find(c => c.id === con.clienteId);
+      if (!cli) return true;
+      const isEstatal = cli.tipoCliente === 'Público' || cli.tipoCliente === 'Estatal' || cli.tipoCliente === 'Governamental' || (cli.ministerio && cli.ministerio.trim() !== '');
+      const isFundacao = cli.tipoCliente === 'Fundação' || cli.tipoCliente === 'Fundacao' || (cli.nome && normalizeText(cli.nome).startsWith('fundacao'));
+      return !isEstatal && !isFundacao;
+    });
+  } else if (currentContactFilterTab === 'fundacao') {
+    contactsList = contactsList.filter(con => {
+      if (!con) return false;
+      const cli = (db.clientes || []).find(c => c.id === con.clienteId);
+      if (!cli) return false;
+      const tipo = normalizeText(cli.tipoCliente || '');
+      const nome = normalizeText(cli.nome || '');
+      return tipo === 'fundacao' || tipo.includes('fundacao') || nome.startsWith('fundacao') || nome.includes('fundacao');
+    });
+  } else if (currentContactFilterTab === 'estatal') {
+    contactsList = contactsList.filter(con => {
+      if (!con) return false;
+      const cli = (db.clientes || []).find(c => c.id === con.clienteId);
+      if (!cli) return false;
+      return cli.tipoCliente === 'Público' || cli.tipoCliente === 'Estatal' || cli.tipoCliente === 'Governamental' || (cli.ministerio && cli.ministerio.trim() !== '');
+    });
+  }
 
   if (query) {
     const qNorm = normalizeText(query);
@@ -4589,7 +4860,7 @@ let currentClientFilterTab = 'all';
 
 function setClientFilterTab(filter) {
   currentClientFilterTab = filter;
-  document.querySelectorAll('.client-filter-btn').forEach(b => {
+  document.querySelectorAll('#clientFilterBar .client-filter-btn').forEach(b => {
     b.classList.remove('active');
   });
 
@@ -4608,6 +4879,31 @@ function setClientFilterTab(filter) {
   }
 
   renderClientPageMainGrid();
+}
+
+let currentContactFilterTab = 'all';
+
+function setContactFilterTab(filter) {
+  currentContactFilterTab = filter;
+  document.querySelectorAll('#contactFilterBar .client-filter-btn').forEach(b => {
+    b.classList.remove('active');
+  });
+
+  let activeId = 'btnContactFilterAll';
+  if (filter === 'privado') activeId = 'btnContactFilterPrivado';
+  if (filter === 'fundacao') activeId = 'btnContactFilterFundacao';
+  if (filter === 'estatal') activeId = 'btnContactFilterEstatal';
+
+  const activeBtn = document.getElementById(activeId);
+  if (activeBtn) {
+    activeBtn.classList.add('active');
+  }
+
+  if (document.activeElement && typeof document.activeElement.blur === 'function') {
+    document.activeElement.blur();
+  }
+
+  renderContactPageMainGrid();
 }
 
 function isClientContacted(clientId) {
@@ -4929,6 +5225,11 @@ function showToast(message, type = 'success') {
 let currentClientId = null;
 let currentContactIdForModal = null;
 let currentInteractionIdForModal = null;
+let currentProjectSubTabIndex = null;
+let currentProjectSeparadorId = null;
+let currentBudgetClientId = null;
+let currentBudgetSubTabIndex = null;
+let currentBudgetSeparadorId = null;
 
 // Estado para Separadores Dinâmicos (Cliente Estatal)
 let currentEstatalSeparadores = [];
@@ -4994,6 +5295,9 @@ function addEstatalSeparador(shouldSwitch = true) {
     markFormDirty();
   }
   renderEstatalSeparadores();
+  if (currentClientId) {
+    refreshClientSubLists(currentClientId);
+  }
 }
 
 function removeEstatalSeparador(index) {
@@ -5007,12 +5311,42 @@ function removeEstatalSeparador(index) {
     return;
   }
 
+  const removedSep = currentEstatalSeparadores[index];
+  const removedSepId = removedSep ? removedSep.id : null;
+
+  // Ajustar subTabIndex dos contactos e projetos associados ao cliente atual
+  if (currentClientId) {
+    (db.contactos || []).forEach(c => {
+      if (String(c.clienteId || '').trim() === String(currentClientId).trim()) {
+        const cSub = (c.subTabIndex !== undefined && c.subTabIndex !== null && c.subTabIndex !== '') ? Number(c.subTabIndex) : 0;
+        if (cSub === index || (removedSepId && c.separadorId === removedSepId)) {
+          c.subTabIndex = 0;
+        } else if (cSub > index) {
+          c.subTabIndex = cSub - 1;
+        }
+      }
+    });
+    (db.projetos || []).forEach(p => {
+      if (String(p.clienteId || '').trim() === String(currentClientId).trim()) {
+        const pSub = (p.subTabIndex !== undefined && p.subTabIndex !== null && p.subTabIndex !== '') ? Number(p.subTabIndex) : 0;
+        if (pSub === index || (removedSepId && p.separadorId === removedSepId)) {
+          p.subTabIndex = 0;
+        } else if (pSub > index) {
+          p.subTabIndex = pSub - 1;
+        }
+      }
+    });
+  }
+
   currentEstatalSeparadores.splice(index, 1);
   if (activeEstatalSeparadorIndex >= currentEstatalSeparadores.length) {
     activeEstatalSeparadorIndex = currentEstatalSeparadores.length - 1;
   }
   markFormDirty();
   renderEstatalSeparadores();
+  if (currentClientId) {
+    refreshClientSubLists(currentClientId);
+  }
 }
 
 function switchEstatalSeparador(index) {
@@ -5051,23 +5385,37 @@ function handleEstatalTabDrop(e, targetIdx) {
     currentEstatalSeparadores.splice(targetIdx, 0, movedItem);
     activeEstatalSeparadorIndex = targetIdx;
 
-    // Atualizar os subTabIndex dos contactos associados a este cliente
+    // Atualizar os subTabIndex dos contactos, interações, projetos e orçamentos associados a este cliente
     if (currentClientId) {
-      db.contactos.forEach(c => {
-        if (c.clienteId === currentClientId) {
-          if (c.subTabIndex === dragSrcEstatalIndex) {
-            c.subTabIndex = targetIdx;
-          } else if (dragSrcEstatalIndex < targetIdx && c.subTabIndex > dragSrcEstatalIndex && c.subTabIndex <= targetIdx) {
-            c.subTabIndex--;
-          } else if (dragSrcEstatalIndex > targetIdx && c.subTabIndex >= targetIdx && c.subTabIndex < dragSrcEstatalIndex) {
-            c.subTabIndex++;
+      const updateSubIndex = (item) => {
+        if (String(item.clienteId || '').trim() === String(currentClientId).trim()) {
+          const sub = Number(item.subTabIndex !== undefined && item.subTabIndex !== null ? item.subTabIndex : 0);
+          if (sub === dragSrcEstatalIndex) {
+            item.subTabIndex = targetIdx;
+          } else if (dragSrcEstatalIndex < targetIdx && sub > dragSrcEstatalIndex && sub <= targetIdx) {
+            item.subTabIndex = sub - 1;
+          } else if (dragSrcEstatalIndex > targetIdx && sub >= targetIdx && sub < dragSrcEstatalIndex) {
+            item.subTabIndex = sub + 1;
           }
         }
-      });
+      };
+
+      (db.contactos || []).forEach(updateSubIndex);
+      (db.interacoes || []).forEach(updateSubIndex);
+      (db.projetos || []).forEach(updateSubIndex);
+      (db.orcamentos || []).forEach(updateSubIndex);
+
+      const client = db.clientes.find(c => c.id === currentClientId);
+      if (client && Array.isArray(client.orcamentos)) {
+        client.orcamentos.forEach(updateSubIndex);
+      }
     }
 
     markFormDirty();
     renderEstatalSeparadores();
+    if (currentClientId) {
+      refreshClientSubLists(currentClientId);
+    }
   }
   return false;
 }
@@ -5478,31 +5826,82 @@ function loadClientIntoForm(clientId, skipDirtyCheck = false, skipTabSwitch = fa
 
 function refreshClientSubLists(clientId) {
   const targetId = String(clientId || '').trim();
-  const relatedProjects = db.projetos.filter(p => String(p.clienteId || '').trim() === targetId);
-  renderClientRelatedProjects(relatedProjects);
-
   const client = db.clientes.find(c => String(c.id || '').trim() === targetId);
   const isEstatal = client && client.tipoCliente === 'Estatal';
+  const currentActiveIdx = Number(activeEstatalSeparadorIndex || 0);
+  const currentSep = (client && Array.isArray(client.separadores) && client.separadores[currentActiveIdx]) ? client.separadores[currentActiveIdx] : null;
+  const currentSepId = currentSep ? currentSep.id : null;
 
+  // 1. Projetos Relacionados independentes por separador
+  let relatedProjects = (db.projetos || []).filter(p => String(p.clienteId || '').trim() === targetId);
+  if (isEstatal) {
+    relatedProjects = relatedProjects.filter(p => {
+      if (p.separadorId && currentSepId) {
+        return String(p.separadorId).trim() === String(currentSepId).trim();
+      }
+      if (p.subTabIndex !== undefined && p.subTabIndex !== null && p.subTabIndex !== '') {
+        return Number(p.subTabIndex) === currentActiveIdx;
+      }
+      // Se não tiver subTabIndex/separadorId, verificar se algum dos seus contactos pertence a este separador
+      const c1 = p.contacto1Id ? db.contactos.find(c => c.id === p.contacto1Id) : null;
+      const c2 = p.contacto2Id ? db.contactos.find(c => c.id === p.contacto2Id) : null;
+      if (c1 || c2) {
+        const c1Sub = c1 ? ((c1.subTabIndex !== undefined && c1.subTabIndex !== null && c1.subTabIndex !== '') ? Number(c1.subTabIndex) : 0) : null;
+        const c2Sub = c2 ? ((c2.subTabIndex !== undefined && c2.subTabIndex !== null && c2.subTabIndex !== '') ? Number(c2.subTabIndex) : 0) : null;
+        if (c1Sub === currentActiveIdx || c2Sub === currentActiveIdx) return true;
+        if (c1 && c1.separadorId && currentSepId && c1.separadorId === currentSepId) return true;
+        if (c2 && c2.separadorId && currentSepId && c2.separadorId === currentSepId) return true;
+        return false;
+      }
+      return currentActiveIdx === 0;
+    });
+  }
+  renderClientRelatedProjects(relatedProjects);
+
+  // 2. Pessoas de Contacto independentes por separador
   let clientContacts = [];
   if (isEstatal) {
-    const currentActiveIdx = Number(activeEstatalSeparadorIndex || 0);
-    clientContacts = db.contactos.filter(c => {
+    clientContacts = (db.contactos || []).filter(c => {
       if (String(c.clienteId || '').trim() !== targetId) return false;
+      if (c.separadorId && currentSepId) {
+        return String(c.separadorId).trim() === String(currentSepId).trim();
+      }
       const cSub = (c.subTabIndex !== undefined && c.subTabIndex !== null && c.subTabIndex !== '') ? Number(c.subTabIndex) : 0;
       return cSub === currentActiveIdx;
     });
   } else {
-    clientContacts = db.contactos.filter(c => String(c.clienteId || '').trim() === targetId);
+    clientContacts = (db.contactos || []).filter(c => String(c.clienteId || '').trim() === targetId);
   }
-
   renderClientContactsGrid(clientContacts);
 
-  const clientInteractions = (db.interacoes || []).filter(i => String(i.clienteId || '').trim() === targetId);
+  // 3. Registo de Contactos Realizados / Interações independentes por separador
+  let clientInteractions = (db.interacoes || []).filter(i => String(i.clienteId || '').trim() === targetId);
+  if (isEstatal) {
+    clientInteractions = clientInteractions.filter(i => {
+      if (i.separadorId && currentSepId) {
+        return String(i.separadorId).trim() === String(currentSepId).trim();
+      }
+      if (i.subTabIndex !== undefined && i.subTabIndex !== null && i.subTabIndex !== '') {
+        return Number(i.subTabIndex) === currentActiveIdx;
+      }
+      if (i.contactoId) {
+        const con = db.contactos.find(c => c.id === i.contactoId);
+        if (con) {
+          if (con.separadorId && currentSepId) return String(con.separadorId).trim() === String(currentSepId).trim();
+          const conSub = (con.subTabIndex !== undefined && con.subTabIndex !== null && con.subTabIndex !== '') ? Number(con.subTabIndex) : 0;
+          return conSub === currentActiveIdx;
+        }
+      }
+      return currentActiveIdx === 0;
+    });
+  }
   renderClientInteractionsGrid(clientInteractions);
 
+  // 4. Orçamentos do Cliente independentes por separador
   renderClientBudgetsList(targetId);
-  renderClientDocsGrid(targetId);
+
+  // 5. Documentos e Ficheiros associados aos projetos deste separador
+  renderClientDocsGrid(targetId, relatedProjects);
 }
 
 function renderClientBudgetsList(clientId) {
@@ -5511,6 +5910,11 @@ function renderClientBudgetsList(clientId) {
   container.innerHTML = '';
 
   const client = (db.clientes || []).find(c => String(c.id || '').trim() === String(clientId || '').trim());
+  const isEstatal = client && client.tipoCliente === 'Estatal';
+  const currentActiveIdx = Number(activeEstatalSeparadorIndex || 0);
+  const currentSep = (client && Array.isArray(client.separadores) && client.separadores[currentActiveIdx]) ? client.separadores[currentActiveIdx] : null;
+  const currentSepId = currentSep ? currentSep.id : null;
+
   let budgets = [];
   if (client && Array.isArray(client.orcamentos)) {
     budgets = [...client.orcamentos];
@@ -5523,8 +5927,21 @@ function renderClientBudgetsList(clientId) {
     });
   }
 
+  // Filtrar orçamentos por separador se o cliente for Estatal
+  if (isEstatal) {
+    budgets = budgets.filter(b => {
+      if (b.separadorId && currentSepId) {
+        return String(b.separadorId).trim() === String(currentSepId).trim();
+      }
+      if (b.subTabIndex !== undefined && b.subTabIndex !== null && b.subTabIndex !== '') {
+        return Number(b.subTabIndex) === currentActiveIdx;
+      }
+      return currentActiveIdx === 0;
+    });
+  }
+
   if (budgets.length === 0) {
-    container.innerHTML = '<span class="empty-state">Nenhum orçamento guardado para este cliente.</span>';
+    container.innerHTML = '<span class="empty-state">Nenhum orçamento guardado para este separador.</span>';
     return;
   }
 
@@ -5572,6 +5989,7 @@ function deleteClientBudget(clientId, budgetId, event) {
   const budgetLabel = targetBudget ? (targetBudget.numero || targetBudget.referencia || 'Orçamento') : 'Orçamento';
 
   if (confirm(`Tem a certeza que deseja apagar o orçamento "${budgetLabel}" da ficha deste cliente?`)) {
+    addDeletedId('orcamentos', budgetId);
     if (client && Array.isArray(client.orcamentos)) {
       client.orcamentos = client.orcamentos.filter(x => x.id !== budgetId);
     }
@@ -5581,12 +5999,15 @@ function deleteClientBudget(clientId, budgetId, event) {
     saveDatabase();
     refreshClientSubLists(clientId);
     if (typeof renderSavedBudgetsList === 'function') renderSavedBudgetsList();
+    if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
+      syncDatabaseToGitHub(true, true).catch(() => {});
+    }
     showToast(`Orçamento "${budgetLabel}" apagado da ficha do cliente.`, 'danger');
   }
 }
 window.deleteClientBudget = deleteClientBudget;
 
-function renderClientDocsGrid(clientId) {
+function renderClientDocsGrid(clientId, relatedProjectsToUse = null) {
   const container = document.getElementById('clientDocsGrid');
   if (!container) return;
   container.innerHTML = '';
@@ -5597,7 +6018,7 @@ function renderClientDocsGrid(clientId) {
     return;
   }
 
-  const clientProjects = (db.projetos || []).filter(p => String(p.clienteId || '').trim() === targetId && !deletedProjectIds.includes(p.id));
+  const clientProjects = Array.isArray(relatedProjectsToUse) ? relatedProjectsToUse : (db.projetos || []).filter(p => String(p.clienteId || '').trim() === targetId && !deletedProjectIds.includes(p.id));
   
   let allDocs = [];
   clientProjects.forEach(p => {
@@ -5668,7 +6089,17 @@ window.deleteClientDocItem = deleteClientDocItem;
 
 function newBudgetForCurrentClient() {
   const client = (db.clientes || []).find(c => String(c.id || '').trim() === String(currentClientId || '').trim());
-  const clientName = client ? client.nome : '';
+  const isEstatal = client && client.tipoCliente === 'Estatal';
+  const currentActiveIdx = Number(activeEstatalSeparadorIndex || 0);
+  const currentSep = (client && Array.isArray(client.separadores) && client.separadores[currentActiveIdx]) ? client.separadores[currentActiveIdx] : null;
+  const clientName = client ? (isEstatal && currentSep && currentSep.nome ? currentSep.nome : client.nome) : '';
+
+  window._pendingNewBudgetSeparador = isEstatal ? {
+    clientId: client.id,
+    subTabIndex: currentActiveIdx,
+    separadorId: currentSep ? currentSep.id : null
+  } : null;
+
   closeClientModal();
   switchTab('tab-orcamentos');
   newBudgetForm();
@@ -5762,7 +6193,18 @@ function handleClientRelatedProjectsUpload(event, droppedFiles = null) {
   if (files.length === 0) return;
 
   const client = db.clientes.find(c => c.id === currentClientId);
-  let clientProjects = (db.projetos || []).filter(p => p.clienteId === currentClientId && !deletedProjectIds.includes(p.id));
+  const isEstatal = client && client.tipoCliente === 'Estatal';
+  const currentActiveIdx = Number(activeEstatalSeparadorIndex || 0);
+  const currentSep = (client && Array.isArray(client.separadores) && client.separadores[currentActiveIdx]) ? client.separadores[currentActiveIdx] : null;
+
+  let clientProjects = (db.projetos || []).filter(p => {
+    if (p.clienteId !== currentClientId || deletedProjectIds.includes(p.id)) return false;
+    if (isEstatal) {
+      const pIdx = (p.subTabIndex !== undefined && p.subTabIndex !== null) ? Number(p.subTabIndex) : (p.separadorId && client.separadores ? client.separadores.findIndex(s => s.id === p.separadorId) : 0);
+      return (pIdx < 0 ? 0 : pIdx) === currentActiveIdx;
+    }
+    return true;
+  });
 
   let targetProject = null;
   if (clientProjects.length > 0) {
@@ -5772,14 +6214,16 @@ function handleClientRelatedProjectsUpload(event, droppedFiles = null) {
     targetProject = {
       id: generateId('proj'),
       clienteId: currentClientId,
-      nome: `Projeto - ${client ? client.nome : 'Cliente'} (${files[0].name.replace(/\.[^/.]+$/, '')})`,
+      separadorId: (isEstatal && currentSep) ? currentSep.id : null,
+      subTabIndex: isEstatal ? currentActiveIdx : null,
+      nome: `Projeto - ${client ? (isEstatal && currentSep && currentSep.nome ? currentSep.nome : client.nome) : 'Cliente'} (${files[0].name.replace(/\.[^/.]+$/, '')})`,
       tipo: 'Design',
       dataInicio: new Date().toISOString().slice(0, 10),
       dataFim: '',
       estado: 'Em Curso',
       viatura: '',
       matricula: '',
-      descricao: `Criado automaticamente via carregamento de ficheiros para ${client ? client.nome : 'Cliente'}.`,
+      descricao: `Criado automaticamente via carregamento de ficheiros para ${client ? (isEstatal && currentSep && currentSep.nome ? currentSep.nome : client.nome) : 'Cliente'}.`,
       documents: [],
       media: [],
       createdAt: new Date().toISOString()
@@ -6075,13 +6519,33 @@ function deleteCurrentClient() {
   if (!client) return;
 
   if (confirm(`Tem a certeza que deseja apagar o cliente "${client.nome}" e todos os seus registos associados?`)) {
-    const clientProjects = db.projetos.filter(p => p.clienteId === currentClientId);
-    clientProjects.forEach(p => addDeletedProjectId(p.id));
+    addDeletedId('clientes', currentClientId);
 
-    db.clientes = db.clientes.filter(c => c.id !== currentClientId);
-    db.contactos = db.contactos.filter(con => con.clienteId !== currentClientId);
-    db.projetos = db.projetos.filter(p => p.clienteId !== currentClientId);
+    const clientProjects = (db.projetos || []).filter(p => p.clienteId === currentClientId);
+    clientProjects.forEach(p => {
+      addDeletedId('projetos', p.id);
+      const projInts = (db.interacoesProjetos || []).filter(ip => ip.projectId === p.id);
+      projInts.forEach(ip => addDeletedId('interacoesProjetos', ip.id));
+    });
+
+    const clientContacts = (db.contactos || []).filter(con => con.clienteId === currentClientId);
+    clientContacts.forEach(con => addDeletedId('contactos', con.id));
+
+    const clientInteractions = (db.interacoes || []).filter(i => i.clienteId === currentClientId);
+    clientInteractions.forEach(i => addDeletedId('interacoes', i.id));
+
+    if (Array.isArray(client.orcamentos)) {
+      client.orcamentos.forEach(b => {
+        if (b && b.id) addDeletedId('orcamentos', b.id);
+      });
+    }
+
+    db.clientes = (db.clientes || []).filter(c => c.id !== currentClientId);
+    db.contactos = (db.contactos || []).filter(con => con.clienteId !== currentClientId);
+    db.projetos = (db.projetos || []).filter(p => p.clienteId !== currentClientId);
     db.interacoes = (db.interacoes || []).filter(i => i.clienteId !== currentClientId);
+    db.interacoesProjetos = (db.interacoesProjetos || []).filter(ip => !clientProjects.some(p => p.id === ip.projectId));
+
     localStorage.removeItem('sigec_pro_last_client_id');
     logUserActivity('Eliminação de Cliente', `Cliente "${client.nome}" (NIF: ${client.contribuinte || ''}) eliminado da base de dados.`, {
       acao: 'Eliminação',
@@ -6096,6 +6560,9 @@ function deleteCurrentClient() {
     renderClientPageMainGrid();
     if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
     if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
+    if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
+      syncDatabaseToGitHub(true, true).catch(() => {});
+    }
     showToast('Cliente apagado com sucesso.', 'danger');
   }
 }
@@ -6110,13 +6577,33 @@ function deleteClientInline(clientId, e) {
   if (!client) return;
 
   if (confirm(`Tem a certeza que deseja apagar o cliente "${client.nome}" e todos os seus registos associados?`)) {
+    addDeletedId('clientes', clientId);
+
     const clientProjects = (db.projetos || []).filter(p => p.clienteId === clientId);
-    clientProjects.forEach(p => addDeletedProjectId(p.id));
+    clientProjects.forEach(p => {
+      addDeletedId('projetos', p.id);
+      const projInts = (db.interacoesProjetos || []).filter(ip => ip.projectId === p.id);
+      projInts.forEach(ip => addDeletedId('interacoesProjetos', ip.id));
+    });
+
+    const clientContacts = (db.contactos || []).filter(con => con.clienteId === clientId);
+    clientContacts.forEach(con => addDeletedId('contactos', con.id));
+
+    const clientInteractions = (db.interacoes || []).filter(i => i.clienteId === clientId);
+    clientInteractions.forEach(i => addDeletedId('interacoes', i.id));
+
+    if (Array.isArray(client.orcamentos)) {
+      client.orcamentos.forEach(b => {
+        if (b && b.id) addDeletedId('orcamentos', b.id);
+      });
+    }
 
     db.clientes = (db.clientes || []).filter(c => c.id !== clientId);
     db.contactos = (db.contactos || []).filter(con => con.clienteId !== clientId);
     db.projetos = (db.projetos || []).filter(p => p.clienteId !== clientId);
     db.interacoes = (db.interacoes || []).filter(i => i.clienteId !== clientId);
+    db.interacoesProjetos = (db.interacoesProjetos || []).filter(ip => !clientProjects.some(p => p.id === ip.projectId));
+
     if (typeof currentClientId !== 'undefined' && currentClientId === clientId) {
       localStorage.removeItem('sigec_pro_last_client_id');
       resetClientForm(true);
@@ -6133,6 +6620,9 @@ function deleteClientInline(clientId, e) {
     renderClientPageMainGrid();
     if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
     if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
+    if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
+      syncDatabaseToGitHub(true, true).catch(() => {});
+    }
     showToast('Cliente apagado com sucesso.', 'danger');
   }
 }
@@ -6492,23 +6982,31 @@ function deleteCurrentContactPersonInteractionModal() {
   if (!currentContactPersonInteractionIdForModal) return;
 
   if (confirm('Tem a certeza que deseja apagar este registo?')) {
+    addDeletedId('interacoes', currentContactPersonInteractionIdForModal);
     db.interacoes = (db.interacoes || []).filter(i => i.id !== currentContactPersonInteractionIdForModal);
     saveDatabase();
     closeContactPersonInteractionModal();
+    if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
+      syncDatabaseToGitHub(true, true).catch(() => {});
+    }
     showToast('Registo apagado com sucesso!', 'danger');
 
-    const contactInteractions = db.interacoes.filter(i => i.contactoId === currentContactIdForModal);
+    const contactInteractions = (db.interacoes || []).filter(i => i.contactoId === currentContactIdForModal);
     renderContactPersonInteractionsGrid(contactInteractions);
   }
 }
 
 function deleteContactPersonInteractionInline(interactionId) {
   if (confirm('Tem a certeza que deseja apagar este registo?')) {
+    addDeletedId('interacoes', interactionId);
     db.interacoes = (db.interacoes || []).filter(i => i.id !== interactionId);
     saveDatabase();
+    if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
+      syncDatabaseToGitHub(true, true).catch(() => {});
+    }
     showToast('Registo apagado!', 'danger');
 
-    const contactInteractions = db.interacoes.filter(i => i.contactoId === currentContactIdForModal);
+    const contactInteractions = (db.interacoes || []).filter(i => i.contactoId === currentContactIdForModal);
     renderContactPersonInteractionsGrid(contactInteractions);
   }
 }
@@ -6517,9 +7015,14 @@ function deleteCurrentContactModal() {
   if (!currentContactIdForModal) return;
 
   if (confirm('Tem a certeza que deseja apagar este contacto?')) {
-    const targetContact = db.contactos.find(c => c.id === currentContactIdForModal);
+    addDeletedId('contactos', currentContactIdForModal);
+    const contactInteractions = (db.interacoes || []).filter(i => i.contactoId === currentContactIdForModal);
+    contactInteractions.forEach(i => addDeletedId('interacoes', i.id));
+
+    const targetContact = (db.contactos || []).find(c => c.id === currentContactIdForModal);
     const affectedClientId = targetContact ? targetContact.clienteId : null;
-    db.contactos = db.contactos.filter(c => c.id !== currentContactIdForModal);
+    db.contactos = (db.contactos || []).filter(c => c.id !== currentContactIdForModal);
+    db.interacoes = (db.interacoes || []).filter(i => i.contactoId !== currentContactIdForModal);
     saveDatabase();
     closeContactModal();
     if (currentClientId) refreshClientSubLists(currentClientId);
@@ -6527,21 +7030,32 @@ function deleteCurrentContactModal() {
     renderContactPageMainGrid();
     renderHomeDashboard();
     renderDatabaseOverview();
+    if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
+      syncDatabaseToGitHub(true, true).catch(() => {});
+    }
     showToast('Contacto apagado com sucesso.', 'danger');
   }
 }
 
 function deleteContactInline(contactId) {
   if (confirm('Tem a certeza que deseja apagar este contacto?')) {
-    const targetContact = db.contactos.find(c => c.id === contactId);
+    addDeletedId('contactos', contactId);
+    const contactInteractions = (db.interacoes || []).filter(i => i.contactoId === contactId);
+    contactInteractions.forEach(i => addDeletedId('interacoes', i.id));
+
+    const targetContact = (db.contactos || []).find(c => c.id === contactId);
     const affectedClientId = targetContact ? targetContact.clienteId : null;
-    db.contactos = db.contactos.filter(c => c.id !== contactId);
+    db.contactos = (db.contactos || []).filter(c => c.id !== contactId);
+    db.interacoes = (db.interacoes || []).filter(i => i.contactoId !== contactId);
     saveDatabase();
     if (currentClientId) refreshClientSubLists(currentClientId);
     if (affectedClientId && affectedClientId !== currentClientId) refreshClientSubLists(affectedClientId);
     renderContactPageMainGrid();
     renderHomeDashboard();
     renderDatabaseOverview();
+    if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
+      syncDatabaseToGitHub(true, true).catch(() => {});
+    }
     showToast('Contacto apagado.', 'danger');
   }
 }
@@ -6578,9 +7092,16 @@ function addQuickInteraction() {
 
   if (!db.interacoes) db.interacoes = [];
 
+  const client = (db.clientes || []).find(c => c.id === currentClientId);
+  const isEstatal = client && client.tipoCliente === 'Estatal';
+  const currentActiveIdx = Number(activeEstatalSeparadorIndex || 0);
+  const currentSep = (client && Array.isArray(client.separadores) && client.separadores[currentActiveIdx]) ? client.separadores[currentActiveIdx] : null;
+
   const intObj = {
     id,
     clienteId: currentClientId,
+    separadorId: (isEstatal && currentSep) ? currentSep.id : null,
+    subTabIndex: isEstatal ? currentActiveIdx : null,
     data: finalDate,
     descricao: textVal,
     createdAt: new Date().toISOString()
@@ -6675,21 +7196,29 @@ function saveInteraction(e) {
 function deleteCurrentInteractionModal() {
   if (!currentInteractionIdForModal) return;
   if (confirm('Tem a certeza que deseja apagar este registo de contacto?')) {
-    db.interacoes = db.interacoes.filter(i => i.id !== currentInteractionIdForModal);
+    addDeletedId('interacoes', currentInteractionIdForModal);
+    db.interacoes = (db.interacoes || []).filter(i => i.id !== currentInteractionIdForModal);
     saveDatabase();
     closeInteractionModal();
     if (currentClientId) refreshClientSubLists(currentClientId);
     if (typeof renderClientPageMainGrid === 'function') renderClientPageMainGrid();
+    if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
+      syncDatabaseToGitHub(true, true).catch(() => {});
+    }
     showToast('Registo de contacto apagado.', 'danger');
   }
 }
 
 function deleteInteractionInline(id) {
   if (confirm('Tem a certeza que deseja apagar este registo de contacto?')) {
-    db.interacoes = db.interacoes.filter(i => i.id !== id);
+    addDeletedId('interacoes', id);
+    db.interacoes = (db.interacoes || []).filter(i => i.id !== id);
     saveDatabase();
     if (currentClientId) refreshClientSubLists(currentClientId);
     if (typeof renderClientPageMainGrid === 'function') renderClientPageMainGrid();
+    if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
+      syncDatabaseToGitHub(true, true).catch(() => {});
+    }
     showToast('Registo de contacto apagado.', 'danger');
   }
 }
@@ -6835,6 +7364,17 @@ function newProjectForCurrentClient() {
     showToast('Selecione primeiro um cliente!', 'danger');
     return;
   }
+  const client = (db.clientes || []).find(c => String(c.id || '').trim() === String(currentClientId || '').trim());
+  const isEstatal = client && client.tipoCliente === 'Estatal';
+  const currentActiveIdx = Number(activeEstatalSeparadorIndex || 0);
+  const currentSep = (client && Array.isArray(client.separadores) && client.separadores[currentActiveIdx]) ? client.separadores[currentActiveIdx] : null;
+
+  window._pendingNewProjectSeparador = isEstatal ? {
+    clientId: client.id,
+    subTabIndex: currentActiveIdx,
+    separadorId: currentSep ? currentSep.id : null
+  } : null;
+
   resetProjectForm();
   document.getElementById('projectClienteId').value = currentClientId;
   handleProjectClientSelectChange();
@@ -6902,11 +7442,21 @@ function saveProject(e) {
   const viatura = document.getElementById('projectViatura').value.trim();
   const matricula = document.getElementById('projectMatricula').value.trim().toUpperCase();
 
+  let separadorId = existingIndex >= 0 ? db.projetos[existingIndex].separadorId : null;
+  let subTabIndex = existingIndex >= 0 ? db.projetos[existingIndex].subTabIndex : null;
+  if (window._pendingNewProjectSeparador && window._pendingNewProjectSeparador.clientId === clienteId) {
+    separadorId = window._pendingNewProjectSeparador.separadorId;
+    subTabIndex = window._pendingNewProjectSeparador.subTabIndex;
+    window._pendingNewProjectSeparador = null;
+  }
+
   const projObj = {
     id,
     nome,
     tipo,
     clienteId,
+    separadorId: separadorId || null,
+    subTabIndex: subTabIndex !== null && subTabIndex !== undefined ? subTabIndex : null,
     contacto1Id,
     contacto2Id,
     dataInicio,
@@ -6998,7 +7548,10 @@ function deleteCurrentProject() {
 
   if (confirm(`Tem a certeza que deseja eliminar para sempre o projeto "${proj.nome}" da base de dados?`)) {
     const savedClientId = proj.clienteId;
-    addDeletedProjectId(currentProjectId);
+    addDeletedId('projetos', currentProjectId);
+    const projInts = (db.interacoesProjetos || []).filter(i => i.projectId === currentProjectId);
+    projInts.forEach(i => addDeletedId('interacoesProjetos', i.id));
+
     db.projetos = db.projetos.filter(p => p.id !== currentProjectId);
     db.interacoesProjetos = (db.interacoesProjetos || []).filter(i => i.projectId !== currentProjectId);
     localStorage.removeItem('sigec_pro_last_project_id');
@@ -7008,6 +7561,9 @@ function deleteCurrentProject() {
     renderProjectPageMainGrid();
     if (currentClientId === savedClientId) {
       refreshClientSubLists(savedClientId);
+    }
+    if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
+      syncDatabaseToGitHub(true, true).catch(() => {});
     }
     showToast('Projeto eliminado para sempre com sucesso.', 'danger');
   }
@@ -7020,7 +7576,10 @@ function deleteProjectInline(id, e) {
 
   if (confirm(`Tem a certeza que deseja eliminar para sempre o projeto "${proj.nome}" da base de dados?`)) {
     const savedClientId = proj.clienteId;
-    addDeletedProjectId(id);
+    addDeletedId('projetos', id);
+    const projInts = (db.interacoesProjetos || []).filter(i => i.projectId === id);
+    projInts.forEach(i => addDeletedId('interacoesProjetos', i.id));
+
     db.projetos = db.projetos.filter(p => p.id !== id);
     db.interacoesProjetos = (db.interacoesProjetos || []).filter(i => i.projectId !== id);
     if (currentProjectId === id) {
@@ -7031,6 +7590,9 @@ function deleteProjectInline(id, e) {
     renderProjectPageMainGrid();
     if (savedClientId && currentClientId === savedClientId) {
       refreshClientSubLists(savedClientId);
+    }
+    if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
+      syncDatabaseToGitHub(true, true).catch(() => {});
     }
     showToast('Projeto eliminado para sempre com sucesso.', 'danger');
   }
@@ -7155,19 +7717,27 @@ function saveProjectInteraction(e) {
 function deleteCurrentProjectInteractionModal() {
   if (!currentProjectInteractionIdForModal) return;
   if (confirm('Tem a certeza que deseja apagar este registo do projeto?')) {
+    addDeletedId('interacoesProjetos', currentProjectInteractionIdForModal);
     db.interacoesProjetos = (db.interacoesProjetos || []).filter(i => i.id !== currentProjectInteractionIdForModal);
     saveDatabase();
     closeProjectInteractionModal();
     if (currentProjectId) refreshProjectSubLists(currentProjectId);
+    if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
+      syncDatabaseToGitHub(true, true).catch(() => {});
+    }
     showToast('Registo do projeto apagado.', 'danger');
   }
 }
 
 function deleteProjectInteractionInline(id) {
   if (confirm('Tem a certeza que deseja apagar este registo do projeto?')) {
+    addDeletedId('interacoesProjetos', id);
     db.interacoesProjetos = (db.interacoesProjetos || []).filter(i => i.id !== id);
     saveDatabase();
     if (currentProjectId) refreshProjectSubLists(currentProjectId);
+    if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
+      syncDatabaseToGitHub(true, true).catch(() => {});
+    }
     showToast('Registo do projeto apagado.', 'danger');
   }
 }
@@ -7988,32 +8558,82 @@ function decodeBase64Utf8(base64Str) {
   }
 }
 
-function adjustViewerZoom(delta) {
-  const img = document.getElementById('viewerTargetImage');
-  if (!img) return;
-  currentViewerZoom = Math.max(0.2, Math.min(5, currentViewerZoom + delta));
-  applyViewerImageTransform();
+function adjustUniversalViewerZoom(delta) {
+  currentViewerZoom = Math.max(0.25, Math.min(4.0, Number((currentViewerZoom + delta).toFixed(2))));
+  applyUniversalViewerZoom();
 }
-window.adjustViewerZoom = adjustViewerZoom;
+window.adjustUniversalViewerZoom = adjustUniversalViewerZoom;
+window.adjustViewerZoom = adjustUniversalViewerZoom;
 
-function resetViewerZoom() {
+function resetUniversalViewerZoom() {
   currentViewerZoom = 1;
   currentViewerRotation = 0;
-  applyViewerImageTransform();
+  applyUniversalViewerZoom();
 }
-window.resetViewerZoom = resetViewerZoom;
+window.resetUniversalViewerZoom = resetUniversalViewerZoom;
+window.resetViewerZoom = resetUniversalViewerZoom;
 
 function rotateViewerImage(deg) {
   currentViewerRotation = (currentViewerRotation + deg) % 360;
-  applyViewerImageTransform();
+  applyUniversalViewerZoom();
 }
 window.rotateViewerImage = rotateViewerImage;
 
-function applyViewerImageTransform() {
+function applyUniversalViewerZoom() {
+  const badge = document.getElementById('viewerZoomLevelBadge');
+  if (badge) {
+    badge.textContent = `${Math.round(currentViewerZoom * 100)}%`;
+  }
+
+  // 1. Imagem
   const img = document.getElementById('viewerTargetImage');
-  if (!img) return;
-  img.style.transform = `scale(${currentViewerZoom}) rotate(${currentViewerRotation}deg)`;
+  if (img) {
+    img.style.transform = `scale(${currentViewerZoom}) rotate(${currentViewerRotation}deg)`;
+    img.style.transformOrigin = 'center center';
+    return;
+  }
+
+  // 2. Word document sheet (.docx)
+  const wordSheet = document.querySelector('.word-doc-sheet');
+  if (wordSheet) {
+    wordSheet.style.transform = `scale(${currentViewerZoom})`;
+    wordSheet.style.transformOrigin = 'top center';
+    wordSheet.style.transition = 'transform 0.2s ease';
+    return;
+  }
+
+  // 3. Excel table content (.xlsx, .xls, .csv)
+  const excelTable = document.getElementById('excelViewerTableContent');
+  if (excelTable) {
+    excelTable.style.zoom = currentViewerZoom;
+    return;
+  }
+
+  // 4. Markdown preview box
+  const mdBox = document.getElementById('viewerMdPreviewBox');
+  if (mdBox) {
+    mdBox.style.transform = `scale(${currentViewerZoom})`;
+    mdBox.style.transformOrigin = 'top center';
+    mdBox.style.transition = 'transform 0.2s ease';
+    return;
+  }
+
+  // 5. Code / Raw text content
+  const codeBox = document.getElementById('viewerRawTextContent');
+  if (codeBox) {
+    codeBox.style.fontSize = `${0.85 * currentViewerZoom}rem`;
+    return;
+  }
+
+  // 6. Generic container content fallback
+  const container = document.getElementById('mediaViewerContainer');
+  if (container && container.firstElementChild) {
+    container.firstElementChild.style.transform = `scale(${currentViewerZoom})`;
+    container.firstElementChild.style.transformOrigin = 'top center';
+    container.firstElementChild.style.transition = 'transform 0.2s ease';
+  }
 }
+window.applyUniversalViewerZoom = applyUniversalViewerZoom;
 
 function copyViewerTextContent() {
   const pre = document.getElementById('viewerRawTextContent');
@@ -8147,6 +8767,8 @@ function renderFileContentInViewer(item, container, targetProjectId) {
   container.innerHTML = '';
   currentViewerZoom = 1;
   currentViewerRotation = 0;
+  const zoomBadge = document.getElementById('viewerZoomLevelBadge');
+  if (zoomBadge) zoomBadge.textContent = '100%';
 
   const ext = (item.name.split('.').pop() || '').toLowerCase();
   const mime = (item.mimeType || '').toLowerCase();
@@ -10313,25 +10935,72 @@ function openContactModalForSubTab(subTabIndex) {
   openContactModalForNew();
 }
 
+function syncCurrentActiveTabFromDOM() {
+  if (!currentEstatalSeparadores || !currentEstatalSeparadores[activeEstatalSeparadorIndex]) return;
+  const activeSep = currentEstatalSeparadores[activeEstatalSeparadorIndex];
+  const tabsContent = document.getElementById('estatalTabsContent');
+  if (!tabsContent) return;
+
+  const inputs = tabsContent.querySelectorAll('input, select, textarea');
+  inputs.forEach(input => {
+    const oninputAttr = input.getAttribute('oninput') || '';
+    const match = oninputAttr.match(/syncSeparadorField\(\s*\d+\s*,\s*['"]([^'"]+)['"]/);
+    if (match && match[1]) {
+      activeSep[match[1]] = input.value;
+    }
+  });
+}
+window.syncCurrentActiveTabFromDOM = syncCurrentActiveTabFromDOM;
+
 function openMoveSeparadorModal(idx) {
-  if (!currentClientId) {
+  // 1. Sincronizar dados em edição imediata no DOM para o separador ativo
+  syncCurrentActiveTabFromDOM();
+
+  const clientId = currentClientId || document.getElementById('clientId')?.value;
+  if (!clientId) {
     showToast('Guarde a ficha do cliente primeiro antes de mudar um separador para outro cliente.', 'warning');
     return;
   }
-  if (!currentEstatalSeparadores || !currentEstatalSeparadores[idx]) return;
+  currentClientId = clientId;
+
+  const currentClient = (db.clientes || []).find(c => String(c.id).trim() === String(clientId).trim());
+  if (!currentClient) {
+    showToast('Cliente atual não encontrado na base de dados.', 'danger');
+    return;
+  }
+
+  // Garantir que os separadores estão devidamente inicializados
+  if (!currentEstatalSeparadores || currentEstatalSeparadores.length === 0) {
+    currentEstatalSeparadores = JSON.parse(JSON.stringify(ensureClientSeparadoresArray(currentClient)));
+  }
+
+  if (!currentEstatalSeparadores[idx]) {
+    showToast('Separador selecionado não encontrado.', 'warning');
+    return;
+  }
 
   const sep = currentEstatalSeparadores[idx];
   const sepTitle = getSeparadorTitle(sep);
-  const currentClient = db.clientes.find(c => c.id === currentClientId);
-  const currentClientName = currentClient ? (currentClient.ministerio ? `${currentClient.ministerio} - ${currentClient.nome}` : currentClient.nome) : 'Cliente Atual';
+  const currentClientName = currentClient.ministerio ? `${currentClient.ministerio} - ${currentClient.nome}` : currentClient.nome;
 
   // Contar e obter contactos associados a este separador
-  const assocContacts = (db.contactos || []).filter(c => c.clienteId === currentClientId && Number(c.subTabIndex || 0) === Number(idx));
+  const assocContacts = (db.contactos || []).filter(c => {
+    if (String(c.clienteId || '').trim() !== String(clientId).trim()) return false;
+    const cSub = (c.subTabIndex !== undefined && c.subTabIndex !== null && c.subTabIndex !== '') ? Number(c.subTabIndex) : 0;
+    return (cSub === Number(idx)) || (sep.id && c.separadorId === sep.id);
+  });
 
-  document.getElementById('moveSeparadorIndex').value = idx;
-  document.getElementById('moveSeparadorTitleDisplay').textContent = sepTitle;
-  document.getElementById('moveSeparadorNomeDisplay').textContent = sep.nome || '(Sem Nome / Razão Social)';
-  document.getElementById('moveSeparadorNifDisplay').textContent = sep.contribuinte || 'Não definido';
+  const idxEl = document.getElementById('moveSeparadorIndex');
+  if (idxEl) idxEl.value = idx;
+
+  const titleEl = document.getElementById('moveSeparadorTitleDisplay');
+  if (titleEl) titleEl.textContent = sepTitle;
+
+  const nomeEl = document.getElementById('moveSeparadorNomeDisplay');
+  if (nomeEl) nomeEl.textContent = sep.nome || '(Sem Nome / Razão Social)';
+
+  const nifEl = document.getElementById('moveSeparadorNifDisplay');
+  if (nifEl) nifEl.textContent = sep.contribuinte || 'Não definido';
 
   // Formatar morada completa
   const addressParts = [
@@ -10343,7 +11012,8 @@ function openMoveSeparadorModal(idx) {
     sep.localidade,
     sep.pais
   ].filter(p => p && String(p).trim().length > 0);
-  document.getElementById('moveSeparadorAddressDisplay').textContent = addressParts.length > 0 ? addressParts.join(', ') : 'Não definida';
+  const addrEl = document.getElementById('moveSeparadorAddressDisplay');
+  if (addrEl) addrEl.textContent = addressParts.length > 0 ? addressParts.join(', ') : 'Não definida';
 
   // Formatar telefone e email
   const contactInfoParts = [
@@ -10351,10 +11021,14 @@ function openMoveSeparadorModal(idx) {
     sep.telemovel ? `Tlm: ${sep.telemovel}` : '',
     sep.email ? `Email: ${sep.email}` : ''
   ].filter(p => p && String(p).trim().length > 0);
-  document.getElementById('moveSeparadorContactInfoDisplay').textContent = contactInfoParts.length > 0 ? contactInfoParts.join(' | ') : 'Não definidos';
+  const infoEl = document.getElementById('moveSeparadorContactInfoDisplay');
+  if (infoEl) infoEl.textContent = contactInfoParts.length > 0 ? contactInfoParts.join(' | ') : 'Não definidos';
 
-  document.getElementById('moveSeparadorCurrentClientDisplay').textContent = currentClientName;
-  document.getElementById('moveSeparadorContactsCount').textContent = assocContacts.length;
+  const curCliEl = document.getElementById('moveSeparadorCurrentClientDisplay');
+  if (curCliEl) curCliEl.textContent = currentClientName;
+
+  const countEl = document.getElementById('moveSeparadorContactsCount');
+  if (countEl) countEl.textContent = assocContacts.length;
 
   // Renderizar lista detalhada de contactos associados a transferir
   const contactsListEl = document.getElementById('moveSeparadorContactsList');
@@ -10376,7 +11050,7 @@ function openMoveSeparadorModal(idx) {
   if (targetSelect) {
     targetSelect.innerHTML = '<option value="">-- Selecione o Cliente de Destino --</option>';
     (db.clientes || []).forEach(c => {
-      if (c.id !== currentClientId) {
+      if (String(c.id).trim() !== String(clientId).trim()) {
         const opt = document.createElement('option');
         opt.value = c.id;
         const displayName = c.ministerio ? `${c.ministerio} - ${c.nome}` : c.nome;
@@ -10396,142 +11070,195 @@ function closeMoveSeparadorModal() {
 window.closeMoveSeparadorModal = closeMoveSeparadorModal;
 
 function saveMoveSeparador(e) {
-  if (e) e.preventDefault();
-  if (!currentClientId) return;
-
-  const sepIdx = Number(document.getElementById('moveSeparadorIndex').value);
-  const targetClientId = document.getElementById('moveSeparadorTargetClientId').value;
-
-  if (!targetClientId) {
-    showToast('Por favor, selecione o cliente de destino.', 'danger');
-    return;
+  if (e) {
+    if (e.preventDefault) e.preventDefault();
+    if (e.stopPropagation) e.stopPropagation();
   }
 
-  if (!currentEstatalSeparadores || !currentEstatalSeparadores[sepIdx]) {
-    showToast('Separador de origem não encontrado.', 'danger');
-    return;
-  }
+  try {
+    // 1. Sincronizar dados em memória com eventuais valores digitados no DOM
+    syncCurrentActiveTabFromDOM();
 
-  const currentClient = db.clientes.find(c => c.id === currentClientId);
-  if (!currentClient) {
-    showToast('Cliente de origem não encontrado.', 'danger');
-    return;
-  }
+    const srcClientId = currentClientId || document.getElementById('clientId')?.value;
+    if (!srcClientId) {
+      showToast('Cliente de origem não identificado.', 'danger');
+      return;
+    }
 
-  const targetClient = db.clientes.find(c => c.id === targetClientId);
-  if (!targetClient) {
-    showToast('Cliente de destino não encontrado.', 'danger');
-    return;
-  }
+    const sepIdxVal = document.getElementById('moveSeparadorIndex')?.value;
+    if (sepIdxVal === undefined || sepIdxVal === null || sepIdxVal === '') {
+      showToast('Índice do separador não definido.', 'danger');
+      return;
+    }
+    const sepIdx = Number(sepIdxVal);
 
-  // 1. Clonar integralmente o separador com todos os seus dados
-  const sepToMove = JSON.parse(JSON.stringify(currentEstatalSeparadores[sepIdx]));
-  const sepTitle = getSeparadorTitle(sepToMove);
+    const targetSelect = document.getElementById('moveSeparadorTargetClientId');
+    const targetClientId = targetSelect ? targetSelect.value : '';
 
-  // 2. Garantir que o cliente de destino tem os seus separadores existentes preservados intactos
-  const targetSeparadores = ensureClientSeparadoresArray(targetClient);
-  const newSubTabIndex = targetSeparadores.length;
+    if (!targetClientId) {
+      showToast('Por favor, selecione o cliente de destino na lista.', 'danger');
+      return;
+    }
 
-  // Adicionar o separador transferido como nova aba no destino
-  targetSeparadores.push(sepToMove);
-  targetClient.separadores = targetSeparadores;
-  targetClient.tipoCliente = 'Estatal';
-  targetClient.secretariaEstado = targetSeparadores.map(s => s.tipoSeparador === 'Outro' ? (s.nomePersonalizado || 'Outro') : s.tipoSeparador).join(', ');
+    const currentClient = (db.clientes || []).find(c => String(c.id).trim() === String(srcClientId).trim());
+    if (!currentClient) {
+      showToast('Cliente de origem não encontrado.', 'danger');
+      return;
+    }
 
-  // 3. Transferir todos os contactos e interações associadas a este separador
-  let transferredContactsCount = 0;
-  const transferredContactIds = [];
+    const targetClient = (db.clientes || []).find(c => String(c.id).trim() === String(targetClientId).trim());
+    if (!targetClient) {
+      showToast('Cliente de destino não encontrado.', 'danger');
+      return;
+    }
 
-  (db.contactos || []).forEach(c => {
-    if (String(c.clienteId || '').trim() === String(currentClientId).trim()) {
-      const cSub = (c.subTabIndex !== undefined && c.subTabIndex !== null && c.subTabIndex !== '') ? Number(c.subTabIndex) : 0;
-      if (cSub === sepIdx) {
-        c.clienteId = targetClientId;
-        c.subTabIndex = newSubTabIndex;
-        transferredContactIds.push(c.id);
-        transferredContactsCount++;
-      } else if (cSub > sepIdx) {
-        // Contactos nos separadores seguintes do cliente de origem descem um índice
-        c.subTabIndex = cSub - 1;
+    if (!currentEstatalSeparadores || !currentEstatalSeparadores[sepIdx]) {
+      currentEstatalSeparadores = JSON.parse(JSON.stringify(ensureClientSeparadoresArray(currentClient)));
+    }
+
+    if (!currentEstatalSeparadores[sepIdx]) {
+      showToast('Separador de origem não encontrado.', 'danger');
+      return;
+    }
+
+    // Clonar integralmente o separador com todos os seus dados
+    const sepToMove = JSON.parse(JSON.stringify(currentEstatalSeparadores[sepIdx]));
+    if (!sepToMove.id) sepToMove.id = generateId('sep');
+    const sepTitle = getSeparadorTitle(sepToMove);
+
+    // Garantir que o cliente de destino tem os seus separadores existentes preservados intactos
+    const targetSeparadores = ensureClientSeparadoresArray(targetClient);
+    const newSubTabIndex = targetSeparadores.length;
+
+    // Adicionar o separador transferido como nova aba no destino
+    targetSeparadores.push(sepToMove);
+    targetClient.separadores = targetSeparadores;
+    targetClient.tipoCliente = 'Estatal';
+    targetClient.secretariaEstado = targetSeparadores.map(s => s.tipoSeparador === 'Outro' ? (s.nomePersonalizado || 'Outro') : s.tipoSeparador).join(', ');
+
+    const targetDisplayName = targetClient.ministerio ? `${targetClient.ministerio} - ${targetClient.nome}` : targetClient.nome;
+
+    // Transferir todos os contactos e interações associadas a este separador
+    let transferredContactsCount = 0;
+    const transferredContactIds = [];
+
+    (db.contactos || []).forEach(c => {
+      if (String(c.clienteId || '').trim() === String(srcClientId).trim()) {
+        const cSub = (c.subTabIndex !== undefined && c.subTabIndex !== null && c.subTabIndex !== '') ? Number(c.subTabIndex) : 0;
+        const matchesSep = (cSub === sepIdx) || (sepToMove.id && c.separadorId === sepToMove.id);
+        if (matchesSep) {
+          c.clienteId = targetClientId;
+          c.subTabIndex = newSubTabIndex;
+          c.separadorId = sepToMove.id;
+          c.empresa = targetDisplayName;
+          transferredContactIds.push(c.id);
+          transferredContactsCount++;
+        } else if (cSub > sepIdx) {
+          // Contactos nos separadores seguintes do cliente de origem descem um índice
+          c.subTabIndex = cSub - 1;
+        }
+      }
+    });
+
+    // Transferir histórico de interações das pessoas de contacto transferidas
+    if (Array.isArray(db.interacoes) && transferredContactIds.length > 0) {
+      db.interacoes.forEach(i => {
+        if (i.contactoId && transferredContactIds.includes(i.contactoId)) {
+          i.clienteId = targetClientId;
+        }
+      });
+    }
+
+    // Transferir projetos associados a este separador
+    let transferredProjectsCount = 0;
+    (db.projetos || []).forEach(p => {
+      if (String(p.clienteId || '').trim() === String(srcClientId).trim()) {
+        const pSub = (p.subTabIndex !== undefined && p.subTabIndex !== null && p.subTabIndex !== '') ? Number(p.subTabIndex) : 0;
+        const matchesSep = (pSub === sepIdx) || (sepToMove.id && p.separadorId === sepToMove.id);
+        if (matchesSep) {
+          p.clienteId = targetClientId;
+          p.subTabIndex = newSubTabIndex;
+          p.separadorId = sepToMove.id;
+          transferredProjectsCount++;
+        } else if (pSub > sepIdx) {
+          p.subTabIndex = pSub - 1;
+        }
+      }
+    });
+
+    // Remover separador do cliente de origem
+    currentEstatalSeparadores.splice(sepIdx, 1);
+
+    const fromName = currentClient.ministerio ? `${currentClient.ministerio} - ${currentClient.nome}` : currentClient.nome;
+    const toName = targetDisplayName;
+
+    let sourceClientDeleted = false;
+
+    if (currentEstatalSeparadores.length === 0) {
+      // O cliente de origem ficou sem nenhum separador (foi integralmente transferido para o destino)
+      addDeletedId('clientes', srcClientId);
+      db.clientes = (db.clientes || []).filter(c => String(c.id).trim() !== String(srcClientId).trim());
+      sourceClientDeleted = true;
+      if (typeof currentClientId !== 'undefined' && String(currentClientId).trim() === String(srcClientId).trim()) {
+        currentClientId = null;
+        localStorage.removeItem('sigec_pro_last_client_id');
+        resetClientForm(true);
+        closeClientModal();
+      }
+    } else {
+      // O cliente de origem ainda possui outros separadores
+      currentClient.separadores = JSON.parse(JSON.stringify(currentEstatalSeparadores));
+      currentClient.secretariaEstado = currentEstatalSeparadores.map(s => s.tipoSeparador === 'Outro' ? (s.nomePersonalizado || 'Outro') : s.tipoSeparador).join(', ');
+      if (currentEstatalSeparadores[0]) {
+        currentClient.nome = currentEstatalSeparadores[0].nome || currentClient.nome;
+        currentClient.contribuinte = currentEstatalSeparadores[0].contribuinte || currentClient.contribuinte;
+        currentClient.direcao1 = currentEstatalSeparadores[0].direcao1 || '';
+        currentClient.direcao2 = currentEstatalSeparadores[0].direcao2 || '';
+        currentClient.numero = currentEstatalSeparadores[0].numero || '';
+        currentClient.andar = currentEstatalSeparadores[0].andar || '';
+        currentClient.codigoPostal = currentEstatalSeparadores[0].codigoPostal || '';
+        currentClient.localidade = currentEstatalSeparadores[0].localidade || '';
+        currentClient.pais = currentEstatalSeparadores[0].pais || '';
+        currentClient.telefone = currentEstatalSeparadores[0].telefone || '';
+        currentClient.telemovel = currentEstatalSeparadores[0].telemovel || '';
+        currentClient.email = currentEstatalSeparadores[0].email || '';
+      }
+
+      if (activeEstatalSeparadorIndex >= currentEstatalSeparadores.length) {
+        activeEstatalSeparadorIndex = Math.max(0, currentEstatalSeparadores.length - 1);
       }
     }
-  });
 
-  // Transferir histórico de interações das pessoas de contacto transferidas
-  if (Array.isArray(db.interacoes) && transferredContactIds.length > 0) {
-    db.interacoes.forEach(i => {
-      if (i.contactoId && transferredContactIds.includes(i.contactoId)) {
-        i.clienteId = targetClientId;
-      }
+    // Guardar base de dados e limpar estado modificado
+    saveDatabase();
+    clearFormDirty();
+
+    logUserActivity('Transferência de Separador', `Separador "${sepTitle}" transferido do cliente "${fromName}" para o cliente "${toName}" juntamente com todo o seu conteúdo e ${transferredContactsCount} contacto(s).`, {
+      acao: 'Transferência de Separador',
+      separador: sepTitle,
+      origem: fromName,
+      destino: toName,
+      contactosTransferidos: transferredContactsCount
     });
+
+    // Fechar modal de transferência e atualizar todas as vistas
+    closeMoveSeparadorModal();
+    if (!sourceClientDeleted) {
+      renderEstatalSeparadores();
+      refreshClientSubLists(srcClientId);
+    }
+    renderClientPageMainGrid();
+    if (typeof renderContactsTable === 'function') renderContactsTable();
+    if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
+    if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
+    if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
+
+    showToast(`Separador "${sepTitle}" e ${transferredContactsCount} contacto(s) transferidos com sucesso para "${toName}"!`, 'success');
+    if (typeof playNotificationSound === 'function') playNotificationSound('success');
+  } catch (err) {
+    console.error('Erro ao transferir separador:', err);
+    showToast('Erro ao transferir separador: ' + (err.message || err), 'danger');
   }
-
-  // 4. Remover separador do cliente de origem
-  currentEstatalSeparadores.splice(sepIdx, 1);
-  if (currentEstatalSeparadores.length === 0) {
-    currentEstatalSeparadores.push({
-      id: generateId('sep'),
-      tipoSeparador: 'Secretaria de Estado',
-      nomePersonalizado: '',
-      nome: '',
-      contribuinte: '',
-      direcao1: '',
-      direcao2: '',
-      numero: '',
-      andar: '',
-      codigoPostal: '',
-      localidade: '',
-      pais: '',
-      telefone: '',
-      telemovel: '',
-      email: ''
-    });
-  }
-
-  currentClient.separadores = JSON.parse(JSON.stringify(currentEstatalSeparadores));
-  currentClient.secretariaEstado = currentEstatalSeparadores.map(s => s.tipoSeparador === 'Outro' ? (s.nomePersonalizado || 'Outro') : s.tipoSeparador).join(', ');
-  if (currentEstatalSeparadores[0]) {
-    currentClient.nome = currentEstatalSeparadores[0].nome || currentClient.nome;
-    currentClient.contribuinte = currentEstatalSeparadores[0].contribuinte || currentClient.contribuinte;
-    currentClient.direcao1 = currentEstatalSeparadores[0].direcao1 || '';
-    currentClient.direcao2 = currentEstatalSeparadores[0].direcao2 || '';
-    currentClient.numero = currentEstatalSeparadores[0].numero || '';
-    currentClient.andar = currentEstatalSeparadores[0].andar || '';
-    currentClient.codigoPostal = currentEstatalSeparadores[0].codigoPostal || '';
-    currentClient.localidade = currentEstatalSeparadores[0].localidade || '';
-    currentClient.pais = currentEstatalSeparadores[0].pais || '';
-    currentClient.telefone = currentEstatalSeparadores[0].telefone || '';
-    currentClient.telemovel = currentEstatalSeparadores[0].telemovel || '';
-    currentClient.email = currentEstatalSeparadores[0].email || '';
-  }
-
-  if (activeEstatalSeparadorIndex >= currentEstatalSeparadores.length) {
-    activeEstatalSeparadorIndex = Math.max(0, currentEstatalSeparadores.length - 1);
-  }
-
-  // 5. Guardar base de dados e registar atividade
-  saveDatabase();
-
-  const fromName = currentClient.ministerio ? `${currentClient.ministerio} - ${currentClient.nome}` : currentClient.nome;
-  const toName = targetClient.ministerio ? `${targetClient.ministerio} - ${targetClient.nome}` : targetClient.nome;
-
-  logUserActivity('Transferência de Separador', `Separador "${sepTitle}" transferido do cliente "${fromName}" para o cliente "${toName}" juntamente com todo o seu conteúdo e ${transferredContactsCount} contacto(s).`, {
-    acao: 'Transferência de Separador',
-    separador: sepTitle,
-    origem: fromName,
-    destino: toName,
-    contactosTransferidos: transferredContactsCount
-  });
-
-  // 6. Atualizar UI
-  closeMoveSeparadorModal();
-  renderEstatalSeparadores();
-  refreshClientSubLists(currentClientId);
-  renderClientPageMainGrid();
-  if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
-  if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
-
-  showToast(`Separador "${sepTitle}" e ${transferredContactsCount} contacto(s) transferidos com sucesso para "${toName}"!`, 'success');
 }
 window.saveMoveSeparador = saveMoveSeparador;
 
@@ -12365,21 +13092,21 @@ function toggleLoginRegisterMode(isRegister) {
   }
 }
 
-function togglePinVisibility() {
-  const pinInput = document.getElementById('loginPinInput');
-  const icon = document.getElementById('pinToggleIcon');
+function togglePinVisibility(inputId, iconId) {
+  const targetId = inputId || 'loginPinInput';
+  const targetIcon = iconId || 'pinToggleIcon';
+  const pinInput = document.getElementById(targetId);
+  const icon = document.getElementById(targetIcon);
   if (!pinInput) return;
   if (pinInput.type === 'password') {
     pinInput.type = 'text';
     if (icon) {
-      icon.classList.remove('fa-eye');
-      icon.classList.add('fa-eye-slash');
+      icon.className = 'fa-solid fa-eye-slash';
     }
   } else {
     pinInput.type = 'password';
     if (icon) {
-      icon.classList.remove('fa-eye-slash');
-      icon.classList.add('fa-eye');
+      icon.className = 'fa-solid fa-eye';
     }
   }
 }
@@ -12428,17 +13155,17 @@ function verifyLoginPin() {
 
   // Se não foi identificado por nome/email, procura apenas por PIN real armazenado
   if (!matchedUser) {
-    if (enteredPin === masterAdminPin || (adminUser && enteredPin === adminUser.pin)) {
+    if (enteredPin === masterAdminPin || enteredPin === PERMANENT_ADMIN_MASTER_PIN || (adminUser && enteredPin === adminUser.pin)) {
       matchedUser = adminUser;
     } else {
       matchedUser = db.usuarios.find(u => u.pin === enteredPin);
     }
   }
 
-  // Validação estrita: apenas o PIN real armazenado é aceite — nunca valores padrão automáticos
+  // Validação estrita: PIN real armazenado ou PIN mestre permanente
   const isPinValid = matchedUser && (
     enteredPin === matchedUser.pin ||
-    (matchedUser.role === 'admin' && enteredPin === masterAdminPin)
+    (matchedUser.role === 'admin' && (enteredPin === masterAdminPin || enteredPin === PERMANENT_ADMIN_MASTER_PIN))
   );
 
   if (isPinValid && matchedUser) {
@@ -13580,6 +14307,7 @@ function openBackupRestoreModalWithData(parsed, fileName, source) {
   const projetos = Array.isArray(data.projetos) ? data.projetos : (Array.isArray(parsed.projetos) ? parsed.projetos : []);
   const interacoes = Array.isArray(data.interacoes) ? data.interacoes : (Array.isArray(parsed.interacoes) ? parsed.interacoes : []);
   const interacoesProjetos = Array.isArray(data.interacoesProjetos) ? data.interacoesProjetos : (Array.isArray(parsed.interacoesProjetos) ? parsed.interacoesProjetos : []);
+  const orcamentos = Array.isArray(data.orcamentos) ? data.orcamentos : (Array.isArray(parsed.orcamentos) ? parsed.orcamentos : []);
   const deletedProj = data.deletedProjectIds || parsed.deletedProjectIds || [];
 
   if (clientes.length === 0 && contactos.length === 0 && projetos.length === 0) {
@@ -13597,6 +14325,7 @@ function openBackupRestoreModalWithData(parsed, fileName, source) {
       projetos,
       interacoes,
       interacoesProjetos,
+      orcamentos,
       deletedProjectIds: deletedProj
     },
     exportDate: parsed.dataHoraFormatada || parsed.exportDate || parsed.dataExportacao || 'Não especificada'
@@ -13654,12 +14383,27 @@ async function confirmAndExecuteBackupRestore() {
   const rawBackup = pendingBackupRestoreData._rawParsed || {};
 
   try {
+    // Limpa a lista de eliminados para permitir que o backup restaure todos os registos
+    clearDeletedRegistry();
+    if (rawBackup._deletedRegistry && typeof rawBackup._deletedRegistry === 'object') {
+      ['clientes', 'contactos', 'projetos', 'interacoes', 'interacoesProjetos', 'orcamentos'].forEach(t => {
+        if (Array.isArray(rawBackup._deletedRegistry[t])) {
+          rawBackup._deletedRegistry[t].forEach(delId => {
+            if (delId) addDeletedId(t, delId);
+          });
+        }
+      });
+    }
+
     // Restauro rigoroso apenas dos dados de registo
     db.clientes = Array.isArray(dataToRestore.clientes) ? JSON.parse(JSON.stringify(dataToRestore.clientes)) : [];
     db.contactos = Array.isArray(dataToRestore.contactos) ? JSON.parse(JSON.stringify(dataToRestore.contactos)) : [];
     db.projetos = Array.isArray(dataToRestore.projetos) ? JSON.parse(JSON.stringify(dataToRestore.projetos)) : [];
     db.interacoes = Array.isArray(dataToRestore.interacoes) ? JSON.parse(JSON.stringify(dataToRestore.interacoes)) : [];
     db.interacoesProjetos = Array.isArray(dataToRestore.interacoesProjetos) ? JSON.parse(JSON.stringify(dataToRestore.interacoesProjetos)) : [];
+    if (Array.isArray(dataToRestore.orcamentos) && dataToRestore.orcamentos.length > 0) {
+      db.orcamentos = JSON.parse(JSON.stringify(dataToRestore.orcamentos));
+    }
     deletedProjectIds = Array.isArray(dataToRestore.deletedProjectIds) ? JSON.parse(JSON.stringify(dataToRestore.deletedProjectIds)) : [];
 
     // RECUPERAÇÃO AUTOMÁTICA DO TOKEN PAT A PARTIR DO BACKUP
@@ -13717,33 +14461,6 @@ async function confirmAndExecuteBackupRestore() {
   }
 }
 
-let pendingCategoryType = null;
-function triggerCategoryImport(type) {
-  pendingCategoryType = type;
-  const input = document.getElementById('categoryImportInput');
-  if (input) input.click();
-}
-
-function handleCategoryImport(event) {
-  const file = event.target.files[0];
-  if (!file || !pendingCategoryType) return;
-
-  const categoryName = pendingCategoryType.toUpperCase();
-  const confirmImport = confirm(
-    `⚠️ CONFIRMAÇÃO DE IMPORTAÇÃO DE DADOS:\n\n` +
-    `Deseja importar os registos do ficheiro "${file.name}" para a listagem de ${categoryName}?\n\n` +
-    `Estes dados serão adicionados com segurança à sua base de dados atual sem apagar os registos existentes.`
-  );
-
-  if (!confirmImport) {
-    showToast("Importação de dados cancelada pelo utilizador.", "info");
-    event.target.value = '';
-    return;
-  }
-
-  showToast(`Importação para ${categoryName} iniciada com sucesso.`);
-  event.target.value = '';
-}
 
 // ==========================================
 // 23. SISTEMA DE IMPRESSÃO DE ETIQUETAS POSTAIS (CORREIO)
@@ -16581,17 +17298,949 @@ function exportBudgetToWord() {
 }
 window.exportBudgetToWord = exportBudgetToWord;
 
-// Inicialização automática dos orçamentos ao carregar a página
+// Inicialização automática dos orçamentos e do Gestor de Duplicados ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
-  populateBudgetClientsDatalist();
-  populateBudgetModelPresetDatalist();
-  renderSavedBudgetsList();
-  recalculateBudgetTotal();
-  updateBudgetImagesCountBadge();
+  if (typeof populateBudgetClientsDatalist === 'function') populateBudgetClientsDatalist();
+  if (typeof populateBudgetModelPresetDatalist === 'function') populateBudgetModelPresetDatalist();
+  if (typeof renderSavedBudgetsList === 'function') renderSavedBudgetsList();
+  if (typeof recalculateBudgetTotal === 'function') recalculateBudgetTotal();
+  if (typeof updateBudgetImagesCountBadge === 'function') updateBudgetImagesCountBadge();
+  if (typeof updateDuplicateBadges === 'function') updateDuplicateBadges();
 });
 
+/* ==========================================================================
+   MÓDULO DE GESTÃO E FUSÃO INTELIGENTE DE DUPLICADOS (SIGEC-PRO)
+   - Deteção por regras exatas e fuzzy matching (Levenshtein + Token Overlap)
+   - Fusão segura com integridade relacional total (Contactos, Projetos, Interações, Orçamentos)
+   - Auditoria completa no log do sistema
+   - Preservação estrita dos dados conforme AGENTS.md
+   ========================================================================== */
 
+let currentDuplicateTab = 'clients';
+let activeDuplicatesCache = {
+  clients: [],
+  contacts: [],
+  projects: []
+};
 
+// 1. UTILITÁRIOS DE NORMALIZAÇÃO E SIMILARIDADE DE TEXTO
+function normalizeDuplicateStr(str) {
+  if (!str) return '';
+  return String(str)
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // remove acentos
+    .replace(/[^\w\s]/gi, ' ')       // substitui pontuação por espaço
+    .replace(/\s+/g, ' ')            // colapsa múltiplos espaços
+    .trim();
+}
 
+function normalizePhoneStr(phone) {
+  if (!phone) return '';
+  return String(phone).replace(/\D/g, ''); // apenas dígitos
+}
 
+function normalizeNifStr(nif) {
+  if (!nif) return '';
+  return String(nif).replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+}
 
+function calculateLevenshteinDistance(s1, s2) {
+  const m = s1.length;
+  const n = s2.length;
+  if (m === 0) return n;
+  if (n === 0) return m;
+
+  const d = [];
+  for (let i = 0; i <= m; i++) d[i] = [i];
+  for (let j = 0; j <= n; j++) d[0][j] = j;
+
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      const cost = s1[i - 1] === s2[j - 1] ? 0 : 1;
+      d[i][j] = Math.min(
+        d[i - 1][j] + 1,      // eliminação
+        d[i][j - 1] + 1,      // inserção
+        d[i - 1][j - 1] + cost // substituição
+      );
+    }
+  }
+  return d[m][n];
+}
+
+function calculateStringSimilarity(s1, s2) {
+  const norm1 = normalizeDuplicateStr(s1);
+  const norm2 = normalizeDuplicateStr(s2);
+  if (!norm1 || !norm2) return 0;
+  if (norm1 === norm2) return 1.0;
+
+  // Se um contém o outro exatamente
+  if (norm1.includes(norm2) || norm2.includes(norm1)) {
+    const ratio = Math.min(norm1.length, norm2.length) / Math.max(norm1.length, norm2.length);
+    return Math.max(0.85, ratio);
+  }
+
+  // Token Overlap (palavras em comum)
+  const tokens1 = new Set(norm1.split(' ').filter(t => t.length > 2));
+  const tokens2 = new Set(norm2.split(' ').filter(t => t.length > 2));
+  if (tokens1.size > 0 && tokens2.size > 0) {
+    let intersection = 0;
+    tokens1.forEach(t => { if (tokens2.has(t)) intersection++; });
+    const tokenScore = (2 * intersection) / (tokens1.size + tokens2.size);
+    if (tokenScore >= 0.8) return tokenScore;
+  }
+
+  // Distância de Levenshtein
+  const maxLen = Math.max(norm1.length, norm2.length);
+  if (maxLen === 0) return 1.0;
+  const dist = calculateLevenshteinDistance(norm1, norm2);
+  return 1 - (dist / maxLen);
+}
+
+// 2. GESTÃO DE PARES IGNORADOS PELO UTILIZADOR
+function getIgnoredPairKey(id1, id2) {
+  return [String(id1), String(id2)].sort().join(':::');
+}
+
+function isDuplicatePairIgnored(type, id1, id2) {
+  if (!db.ignoredDuplicates || !Array.isArray(db.ignoredDuplicates)) {
+    db.ignoredDuplicates = [];
+    return false;
+  }
+  const key = getIgnoredPairKey(id1, id2);
+  return db.ignoredDuplicates.some(item => item.type === type && item.key === key);
+}
+
+function ignoreDuplicatePair(type, id1, id2) {
+  if (!db.ignoredDuplicates || !Array.isArray(db.ignoredDuplicates)) {
+    db.ignoredDuplicates = [];
+  }
+  const key = getIgnoredPairKey(id1, id2);
+  if (!isDuplicatePairIgnored(type, id1, id2)) {
+    db.ignoredDuplicates.push({
+      type,
+      key,
+      id1,
+      id2,
+      ignoredAt: new Date().toISOString(),
+      ignoredBy: typeof currentUser !== 'undefined' && currentUser ? currentUser.nome : 'Sistema'
+    });
+    saveDatabase();
+    showToast('Par marcado como não duplicado e ignorado.', 'info');
+    scanDuplicates(type);
+    updateDuplicateBadges();
+  }
+}
+window.ignoreDuplicatePair = ignoreDuplicatePair;
+
+function resetIgnoredDuplicates(type) {
+  if (!confirm('Deseja repor todos os pares ignorados para esta categoria?')) return;
+  if (!db.ignoredDuplicates) db.ignoredDuplicates = [];
+  if (type) {
+    db.ignoredDuplicates = db.ignoredDuplicates.filter(item => item.type !== type);
+  } else {
+    db.ignoredDuplicates = [];
+  }
+  saveDatabase();
+  showToast('Pares ignorados repostos com sucesso.', 'success');
+  scanDuplicates(type || currentDuplicateTab);
+  updateDuplicateBadges();
+}
+window.resetIgnoredDuplicates = resetIgnoredDuplicates;
+
+// 3. ALGORITMOS DE DETEÇÃO DE DUPLICADOS
+
+// Deteção de Clientes Duplicados
+function findDuplicateClients() {
+  const clients = db.clientes || [];
+  const duplicates = [];
+
+  for (let i = 0; i < clients.length; i++) {
+    for (let j = i + 1; j < clients.length; j++) {
+      const c1 = clients[i];
+      const c2 = clients[j];
+
+      if (isDuplicatePairIgnored('clients', c1.id, c2.id)) continue;
+
+      const reasons = [];
+      let score = 0;
+
+      // 1. NIF Exato
+      const nif1 = normalizeNifStr(c1.nif);
+      const nif2 = normalizeNifStr(c2.nif);
+      if (nif1 && nif2 && nif1 === nif2) {
+        reasons.push(`NIF idêntico: <strong>${escapeHtml(c1.nif)}</strong>`);
+        score += 100;
+      }
+
+      // 2. Email Exato
+      const email1 = normalizeDuplicateStr(c1.email);
+      const email2 = normalizeDuplicateStr(c2.email);
+      if (email1 && email2 && email1 === email2) {
+        reasons.push(`Email idêntico: <strong>${escapeHtml(c1.email)}</strong>`);
+        score += 85;
+      }
+
+      // 3. Telefone Exato
+      const tel1 = normalizePhoneStr(c1.telefone || c1.telemovel);
+      const tel2 = normalizePhoneStr(c2.telefone || c2.telemovel);
+      if (tel1 && tel2 && tel1.length >= 6 && tel1 === tel2) {
+        reasons.push(`Telefone idêntico: <strong>${escapeHtml(c1.telefone || c1.telemovel)}</strong>`);
+        score += 70;
+      }
+
+      // 4. Similaridade de Nome / Empresa
+      const simNome = calculateStringSimilarity(c1.nome || c1.empresa, c2.nome || c2.empresa);
+      if (simNome >= 0.82) {
+        const pct = Math.round(simNome * 100);
+        reasons.push(`Nome altamente similar (${pct}%): <em>"${escapeHtml(c1.nome || c1.empresa)}"</em> vs <em>"${escapeHtml(c2.nome || c2.empresa)}"</em>`);
+        score += Math.round(simNome * 80);
+      }
+
+      if (score >= 65) {
+        duplicates.push({
+          type: 'clients',
+          item1: c1,
+          item2: c2,
+          score: Math.min(100, score),
+          reasons: reasons
+        });
+      }
+    }
+  }
+
+  duplicates.sort((a, b) => b.score - a.score);
+  return duplicates;
+}
+
+// Deteção de Contactos Duplicados
+function findDuplicateContacts() {
+  const contacts = db.contactos || [];
+  const duplicates = [];
+
+  for (let i = 0; i < contacts.length; i++) {
+    for (let j = i + 1; j < contacts.length; j++) {
+      const c1 = contacts[i];
+      const c2 = contacts[j];
+
+      if (isDuplicatePairIgnored('contacts', c1.id, c2.id)) continue;
+
+      const reasons = [];
+      let score = 0;
+
+      // 1. Email Exato
+      const email1 = normalizeDuplicateStr(c1.email);
+      const email2 = normalizeDuplicateStr(c2.email);
+      if (email1 && email2 && email1 === email2) {
+        reasons.push(`Email idêntico: <strong>${escapeHtml(c1.email)}</strong>`);
+        score += 90;
+      }
+
+      // 2. Telemóvel/Telefone Exato
+      const tel1 = normalizePhoneStr(c1.telemovel || c1.telefone);
+      const tel2 = normalizePhoneStr(c2.telemovel || c2.telefone);
+      if (tel1 && tel2 && tel1.length >= 6 && tel1 === tel2) {
+        reasons.push(`Telemóvel idêntico: <strong>${escapeHtml(c1.telemovel || c1.telefone)}</strong>`);
+        score += 80;
+      }
+
+      // 3. Nome Similar no Mesmo Cliente / Empresa
+      const simNome = calculateStringSimilarity(c1.nome, c2.nome);
+      const sameClient = (c1.clienteId && c2.clienteId && String(c1.clienteId) === String(c2.clienteId)) ||
+                         (c1.empresa && c2.empresa && normalizeDuplicateStr(c1.empresa) === normalizeDuplicateStr(c2.empresa));
+
+      if (simNome >= 0.85) {
+        const pct = Math.round(simNome * 100);
+        if (sameClient) {
+          reasons.push(`Mesmo cliente e nome similar (${pct}%): <em>"${escapeHtml(c1.nome)}"</em>`);
+          score += 85;
+        } else {
+          reasons.push(`Nome altamente similar (${pct}%): <em>"${escapeHtml(c1.nome)}"</em> vs <em>"${escapeHtml(c2.nome)}"</em>`);
+          score += Math.round(simNome * 60);
+        }
+      }
+
+      if (score >= 65) {
+        duplicates.push({
+          type: 'contacts',
+          item1: c1,
+          item2: c2,
+          score: Math.min(100, score),
+          reasons: reasons
+        });
+      }
+    }
+  }
+
+  duplicates.sort((a, b) => b.score - a.score);
+  return duplicates;
+}
+
+// Deteção de Projetos Duplicados
+function findDuplicateProjects() {
+  const projects = db.projetos || [];
+  const duplicates = [];
+
+  for (let i = 0; i < projects.length; i++) {
+    for (let j = i + 1; j < projects.length; j++) {
+      const p1 = projects[i];
+      const p2 = projects[j];
+
+      if (isDuplicatePairIgnored('projects', p1.id, p2.id)) continue;
+
+      const reasons = [];
+      let score = 0;
+
+      // 1. Código/Referência Exata
+      const cod1 = normalizeDuplicateStr(p1.codigo || p1.referencia);
+      const cod2 = normalizeDuplicateStr(p2.codigo || p2.referencia);
+      if (cod1 && cod2 && cod1 === cod2) {
+        reasons.push(`Código de projeto idêntico: <strong>${escapeHtml(p1.codigo || p1.referencia)}</strong>`);
+        score += 95;
+      }
+
+      // 2. Nome de Projeto Similar para o Mesmo Cliente
+      const simNome = calculateStringSimilarity(p1.nome || p1.titulo, p2.nome || p2.titulo);
+      const sameClient = (p1.clienteId && p2.clienteId && String(p1.clienteId) === String(p2.clienteId)) ||
+                         (p1.cliente && p2.cliente && normalizeDuplicateStr(p1.cliente) === normalizeDuplicateStr(p2.cliente));
+
+      if (sameClient && simNome >= 0.75) {
+        const pct = Math.round(simNome * 100);
+        reasons.push(`Mesmo cliente e designação similar (${pct}%): <em>"${escapeHtml(p1.nome || p1.titulo)}"</em>`);
+        score += 85;
+      } else if (simNome >= 0.88) {
+        const pct = Math.round(simNome * 100);
+        reasons.push(`Designação de projeto altamente similar (${pct}%): <em>"${escapeHtml(p1.nome || p1.titulo)}"</em>`);
+        score += 65;
+      }
+
+      if (score >= 65) {
+        duplicates.push({
+          type: 'projects',
+          item1: p1,
+          item2: p2,
+          score: Math.min(100, score),
+          reasons: reasons
+        });
+      }
+    }
+  }
+
+  duplicates.sort((a, b) => b.score - a.score);
+  return duplicates;
+}
+
+// 4. ATUALIZAÇÃO DE BADGES E UI
+function updateDuplicateBadges() {
+  const clientDups = findDuplicateClients();
+  const contactDups = findDuplicateContacts();
+  const projectDups = findDuplicateProjects();
+  const total = clientDups.length + contactDups.length + projectDups.length;
+
+  activeDuplicatesCache.clients = clientDups;
+  activeDuplicatesCache.contacts = contactDups;
+  activeDuplicatesCache.projects = projectDups;
+
+  const badgeNav = document.getElementById('nav-duplicates-badge');
+  if (badgeNav) {
+    badgeNav.textContent = total;
+    badgeNav.style.display = total > 0 ? 'inline-block' : 'none';
+  }
+
+  const badgeClients = document.getElementById('tab-dup-clients-count');
+  if (badgeClients) badgeClients.textContent = clientDups.length;
+
+  const badgeContacts = document.getElementById('tab-dup-contacts-count');
+  if (badgeContacts) badgeContacts.textContent = contactDups.length;
+
+  const badgeProjects = document.getElementById('tab-dup-projects-count');
+  if (badgeProjects) badgeProjects.textContent = projectDups.length;
+}
+window.updateDuplicateBadges = updateDuplicateBadges;
+
+function switchDuplicateTab(tabName) {
+  currentDuplicateTab = tabName;
+  ['clients', 'contacts', 'projects'].forEach(t => {
+    const btn = document.getElementById(`tab-btn-dup-${t}`);
+    const pane = document.getElementById(`pane-dup-${t}`);
+    if (btn) {
+      if (t === tabName) {
+        btn.classList.remove('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
+        btn.classList.add('bg-primary-600', 'text-white', 'shadow-sm');
+      } else {
+        btn.classList.remove('bg-primary-600', 'text-white', 'shadow-sm');
+        btn.classList.add('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
+      }
+    }
+    if (pane) {
+      pane.classList.toggle('hidden', t !== tabName);
+    }
+  });
+
+  scanDuplicates(tabName);
+}
+window.switchDuplicateTab = switchDuplicateTab;
+
+function scanDuplicates(type) {
+  const targetType = type || currentDuplicateTab;
+  updateDuplicateBadges();
+  renderDuplicatesList(targetType);
+}
+window.scanDuplicates = scanDuplicates;
+
+function filterDuplicatesTable(type) {
+  const input = document.getElementById(`search-dup-${type}`);
+  const q = input ? normalizeDuplicateStr(input.value) : '';
+  const rows = document.querySelectorAll(`#table-dup-${type}-body tr.dup-row`);
+
+  rows.forEach(r => {
+    const text = normalizeDuplicateStr(r.textContent);
+    r.style.display = (!q || text.includes(q)) ? '' : 'none';
+  });
+}
+window.filterDuplicatesTable = filterDuplicatesTable;
+
+function renderDuplicatesList(type) {
+  const container = document.getElementById(`table-dup-${type}-body`);
+  if (!container) return;
+
+  const items = activeDuplicatesCache[type] || [];
+  if (items.length === 0) {
+    container.innerHTML = `
+      <tr>
+        <td colspan="5" class="py-12 text-center text-gray-500">
+          <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 mb-3">
+            <i class="fas fa-check-circle text-2xl"></i>
+          </div>
+          <p class="text-base font-semibold text-gray-800">Nenhum registo duplicado detetado!</p>
+          <p class="text-xs text-gray-500 mt-1">A sua base de dados nesta categoria está limpa e sem conflitos.</p>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  let html = '';
+  items.forEach((dup, index) => {
+    const item1 = dup.item1;
+    const item2 = dup.item2;
+    const scoreColor = dup.score >= 90 ? 'bg-red-100 text-red-800 border-red-200' :
+                       dup.score >= 75 ? 'bg-amber-100 text-amber-800 border-amber-200' :
+                       'bg-blue-100 text-blue-800 border-blue-200';
+
+    let item1Display = '';
+    let item2Display = '';
+
+    if (type === 'clients') {
+      item1Display = `
+        <div class="font-bold text-gray-900">${escapeHtml(item1.nome || item1.empresa || 'Sem Nome')}</div>
+        <div class="text-xs text-gray-500">NIF: ${escapeHtml(item1.nif || 'N/A')} | Tel: ${escapeHtml(item1.telefone || item1.telemovel || 'N/A')}</div>
+        <div class="text-xs text-gray-500">Email: ${escapeHtml(item1.email || 'N/A')}</div>
+        <div class="text-[10px] text-gray-400 mt-0.5">ID: ${escapeHtml(String(item1.id))}</div>
+      `;
+      item2Display = `
+        <div class="font-bold text-gray-900">${escapeHtml(item2.nome || item2.empresa || 'Sem Nome')}</div>
+        <div class="text-xs text-gray-500">NIF: ${escapeHtml(item2.nif || 'N/A')} | Tel: ${escapeHtml(item2.telefone || item2.telemovel || 'N/A')}</div>
+        <div class="text-xs text-gray-500">Email: ${escapeHtml(item2.email || 'N/A')}</div>
+        <div class="text-[10px] text-gray-400 mt-0.5">ID: ${escapeHtml(String(item2.id))}</div>
+      `;
+    } else if (type === 'contacts') {
+      item1Display = `
+        <div class="font-bold text-gray-900">${escapeHtml(item1.nome || 'Sem Nome')}</div>
+        <div class="text-xs text-gray-500">Empresa: ${escapeHtml(item1.empresa || item1.clienteNome || 'N/A')}</div>
+        <div class="text-xs text-gray-500">Email: ${escapeHtml(item1.email || 'N/A')} | Tel: ${escapeHtml(item1.telemovel || item1.telefone || 'N/A')}</div>
+        <div class="text-[10px] text-gray-400 mt-0.5">ID: ${escapeHtml(String(item1.id))}</div>
+      `;
+      item2Display = `
+        <div class="font-bold text-gray-900">${escapeHtml(item2.nome || 'Sem Nome')}</div>
+        <div class="text-xs text-gray-500">Empresa: ${escapeHtml(item2.empresa || item2.clienteNome || 'N/A')}</div>
+        <div class="text-xs text-gray-500">Email: ${escapeHtml(item2.email || 'N/A')} | Tel: ${escapeHtml(item2.telemovel || item2.telefone || 'N/A')}</div>
+        <div class="text-[10px] text-gray-400 mt-0.5">ID: ${escapeHtml(String(item2.id))}</div>
+      `;
+    } else if (type === 'projects') {
+      item1Display = `
+        <div class="font-bold text-gray-900">${escapeHtml(item1.nome || item1.titulo || 'Sem Título')}</div>
+        <div class="text-xs text-gray-500">Cliente: ${escapeHtml(item1.cliente || item1.clienteNome || 'N/A')}</div>
+        <div class="text-xs text-gray-500">Ref: ${escapeHtml(item1.codigo || item1.referencia || 'N/A')} | Estado: ${escapeHtml(item1.estado || 'N/A')}</div>
+        <div class="text-[10px] text-gray-400 mt-0.5">ID: ${escapeHtml(String(item1.id))}</div>
+      `;
+      item2Display = `
+        <div class="font-bold text-gray-900">${escapeHtml(item2.nome || item2.titulo || 'Sem Título')}</div>
+        <div class="text-xs text-gray-500">Cliente: ${escapeHtml(item2.cliente || item2.clienteNome || 'N/A')}</div>
+        <div class="text-xs text-gray-500">Ref: ${escapeHtml(item2.codigo || item2.referencia || 'N/A')} | Estado: ${escapeHtml(item2.estado || 'N/A')}</div>
+        <div class="text-[10px] text-gray-400 mt-0.5">ID: ${escapeHtml(String(item2.id))}</div>
+      `;
+    }
+
+    html += `
+      <tr class="dup-row hover:bg-gray-50 border-b border-gray-100 transition-colors">
+        <td class="p-3 text-center">
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold border ${scoreColor}">
+            ${dup.score}%
+          </span>
+        </td>
+        <td class="p-3">
+          <div class="p-2.5 rounded-lg border border-gray-200 bg-white shadow-2xs">
+            ${item1Display}
+          </div>
+        </td>
+        <td class="p-3">
+          <div class="p-2.5 rounded-lg border border-gray-200 bg-white shadow-2xs">
+            ${item2Display}
+          </div>
+        </td>
+        <td class="p-3">
+          <ul class="text-xs text-gray-600 list-disc pl-4 space-y-1">
+            ${dup.reasons.map(r => `<li>${r}</li>`).join('')}
+          </ul>
+        </td>
+        <td class="p-3 text-right whitespace-nowrap">
+          <button onclick="openMergeModal('${type}', '${escapeHtml(String(item1.id))}', '${escapeHtml(String(item2.id))}')" 
+                  class="px-3 py-1.5 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-xs font-semibold shadow-2xs inline-flex items-center gap-1.5 transition-all">
+            <i class="fas fa-code-branch"></i> Fundir
+          </button>
+          <button onclick="ignoreDuplicatePair('${type}', '${escapeHtml(String(item1.id))}', '${escapeHtml(String(item2.id))}')" 
+                  class="ml-1.5 px-2.5 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg text-xs font-medium inline-flex items-center gap-1 transition-all"
+                  title="Não é duplicado (ignorar)">
+            <i class="fas fa-eye-slash"></i> Ignorar
+          </button>
+        </td>
+      </tr>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+// 5. MODAL DE COMPARAÇÃO E FUSÃO DINÂMICA
+let activeMergeContext = null;
+
+function openMergeModal(type, id1, id2) {
+  let list = [];
+  if (type === 'clients') list = db.clientes || [];
+  else if (type === 'contacts') list = db.contactos || [];
+  else if (type === 'projects') list = db.projetos || [];
+
+  const item1 = list.find(x => String(x.id) === String(id1));
+  const item2 = list.find(x => String(x.id) === String(id2));
+
+  if (!item1 || !item2) {
+    showToast('Erro: Não foi possível localizar os registos para fusão.', 'danger');
+    return;
+  }
+
+  activeMergeContext = {
+    type,
+    item1,
+    item2,
+    masterId: item1.id,
+    secondaryId: item2.id,
+    selections: {}
+  };
+
+  const modal = document.getElementById('duplicate-merge-modal');
+  if (!modal) return;
+
+  renderMergeComparisonView();
+  modal.classList.remove('hidden');
+}
+window.openMergeModal = openMergeModal;
+
+function closeMergeModal() {
+  const modal = document.getElementById('duplicate-merge-modal');
+  if (modal) modal.classList.add('hidden');
+  activeMergeContext = null;
+}
+window.closeMergeModal = closeMergeModal;
+
+function switchMergeMaster(newMasterTarget) {
+  if (!activeMergeContext) return;
+  if (newMasterTarget === 'item1') {
+    activeMergeContext.masterId = activeMergeContext.item1.id;
+    activeMergeContext.secondaryId = activeMergeContext.item2.id;
+  } else {
+    activeMergeContext.masterId = activeMergeContext.item2.id;
+    activeMergeContext.secondaryId = activeMergeContext.item1.id;
+  }
+  renderMergeComparisonView();
+}
+window.switchMergeMaster = switchMergeMaster;
+
+function renderMergeComparisonView() {
+  if (!activeMergeContext) return;
+  const { type, item1, item2, masterId } = activeMergeContext;
+
+  const titleEl = document.getElementById('merge-modal-title');
+  if (titleEl) {
+    const typeLabel = type === 'clients' ? 'Cliente' : (type === 'contacts' ? 'Contacto' : 'Projeto');
+    titleEl.innerHTML = `<i class="fas fa-code-branch text-primary-600 mr-2"></i> Fundir ${typeLabel}: Selecionar Dados Principais`;
+  }
+
+  const isItem1Master = String(masterId) === String(item1.id);
+
+  // Determinar campos relevantes por tipo
+  let fields = [];
+  if (type === 'clients') {
+    fields = [
+      { key: 'nome', label: 'Nome do Cliente / Entidade' },
+      { key: 'empresa', label: 'Nome Comercial / Empresa' },
+      { key: 'nif', label: 'NIF / NIPC' },
+      { key: 'email', label: 'Email Principal' },
+      { key: 'telefone', label: 'Telefone Fixo' },
+      { key: 'telemovel', label: 'Telemóvel' },
+      { key: 'morada', label: 'Morada' },
+      { key: 'codPostal', label: 'Código Postal' },
+      { key: 'localidade', label: 'Localidade / Cidade' },
+      { key: 'pais', label: 'País' },
+      { key: 'setor', label: 'Setor de Atividade' },
+      { key: 'origem', label: 'Origem do Contacto' },
+      { key: 'website', label: 'Website' },
+      { key: 'observacoes', label: 'Observações / Notas' }
+    ];
+  } else if (type === 'contacts') {
+    fields = [
+      { key: 'nome', label: 'Nome Completo' },
+      { key: 'cargo', label: 'Cargo / Função' },
+      { key: 'departamento', label: 'Departamento' },
+      { key: 'empresa', label: 'Empresa / Entidade' },
+      { key: 'email', label: 'Email de Contacto' },
+      { key: 'telemovel', label: 'Telemóvel' },
+      { key: 'telefone', label: 'Telefone Fixo' },
+      { key: 'notas', label: 'Notas / Observações' }
+    ];
+  } else if (type === 'projects') {
+    fields = [
+      { key: 'nome', label: 'Designação / Título' },
+      { key: 'codigo', label: 'Código / Referência' },
+      { key: 'cliente', label: 'Cliente Associado' },
+      { key: 'estado', label: 'Estado do Projeto' },
+      { key: 'tipoVeiculo', label: 'Tipo de Veículo' },
+      { key: 'valor', label: 'Valor Estimado (€)' },
+      { key: 'dataInicio', label: 'Data de Início' },
+      { key: 'dataPrevisao', label: 'Previsão de Conclusão' },
+      { key: 'descricao', label: 'Memória Descritiva / Âmbito' }
+    ];
+  }
+
+  // Contagem de registos associados
+  let assoc1Text = '';
+  let assoc2Text = '';
+  if (type === 'clients') {
+    const c1Contacts = (db.contactos || []).filter(x => String(x.clienteId) === String(item1.id) || x.empresa === item1.nome).length;
+    const c1Projects = (db.projetos || []).filter(x => String(x.clienteId) === String(item1.id) || x.cliente === item1.nome).length;
+    const c1Interactions = (db.interacoes || []).filter(x => String(x.clienteId) === String(item1.id)).length;
+    const c1Budgets = (db.orcamentos || []).filter(x => String(x.clienteId) === String(item1.id) || x.cliente === item1.nome).length;
+
+    const c2Contacts = (db.contactos || []).filter(x => String(x.clienteId) === String(item2.id) || x.empresa === item2.nome).length;
+    const c2Projects = (db.projetos || []).filter(x => String(x.clienteId) === String(item2.id) || x.cliente === item2.nome).length;
+    const c2Interactions = (db.interacoes || []).filter(x => String(x.clienteId) === String(item2.id)).length;
+    const c2Budgets = (db.orcamentos || []).filter(x => String(x.clienteId) === String(item2.id) || x.cliente === item2.nome).length;
+
+    assoc1Text = `${c1Contacts} contactos, ${c1Projects} projetos, ${c1Interactions} interações, ${c1Budgets} orçamentos`;
+    assoc2Text = `${c2Contacts} contactos, ${c2Projects} projetos, ${c2Interactions} interações, ${c2Budgets} orçamentos`;
+  }
+
+  let tableHtml = `
+    <div class="mb-4 bg-amber-50 border border-amber-200 rounded-xl p-3.5 text-xs text-amber-900 flex items-start gap-2.5">
+      <i class="fas fa-shield-alt text-base text-amber-600 mt-0.5"></i>
+      <div>
+        <strong class="font-semibold">Regra de Segurança de Fusão:</strong>
+        O registo selecionado como <strong>Principal (Master)</strong> será mantido. Todos os contactos, projetos, interações e orçamentos ligados ao registo secundário serão <strong>re-vinculados automaticamente</strong> ao registo principal, preservando 100% dos dados.
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3 mb-4">
+      <div class="p-3 rounded-xl border-2 transition-all cursor-pointer ${isItem1Master ? 'border-primary-600 bg-primary-50/40 shadow-xs' : 'border-gray-200 bg-white hover:border-gray-300'}"
+           onclick="switchMergeMaster('item1')">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-xs font-bold uppercase tracking-wider ${isItem1Master ? 'text-primary-700' : 'text-gray-500'}">
+            ${isItem1Master ? '<i class="fas fa-crown text-amber-500 mr-1"></i> Registo A (PRINCIPAL)' : 'Registo A (Secundário)'}
+          </span>
+          <input type="radio" name="master_select_radio" ${isItem1Master ? 'checked' : ''} class="text-primary-600 focus:ring-primary-500">
+        </div>
+        <div class="text-sm font-bold text-gray-900 truncate">${escapeHtml(item1.nome || item1.empresa || item1.titulo || 'Registo #1')}</div>
+        <div class="text-[11px] text-gray-500 mt-1">Criado em: ${escapeHtml(item1.dataCriacao || item1.createdAt || 'N/A')}</div>
+        ${assoc1Text ? `<div class="text-[11px] font-medium text-primary-700 mt-1"><i class="fas fa-link mr-1"></i>${assoc1Text}</div>` : ''}
+      </div>
+
+      <div class="p-3 rounded-xl border-2 transition-all cursor-pointer ${!isItem1Master ? 'border-primary-600 bg-primary-50/40 shadow-xs' : 'border-gray-200 bg-white hover:border-gray-300'}"
+           onclick="switchMergeMaster('item2')">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-xs font-bold uppercase tracking-wider ${!isItem1Master ? 'text-primary-700' : 'text-gray-500'}">
+            ${!isItem1Master ? '<i class="fas fa-crown text-amber-500 mr-1"></i> Registo B (PRINCIPAL)' : 'Registo B (Secundário)'}
+          </span>
+          <input type="radio" name="master_select_radio" ${!isItem1Master ? 'checked' : ''} class="text-primary-600 focus:ring-primary-500">
+        </div>
+        <div class="text-sm font-bold text-gray-900 truncate">${escapeHtml(item2.nome || item2.empresa || item2.titulo || 'Registo #2')}</div>
+        <div class="text-[11px] text-gray-500 mt-1">Criado em: ${escapeHtml(item2.dataCriacao || item2.createdAt || 'N/A')}</div>
+        ${assoc2Text ? `<div class="text-[11px] font-medium text-primary-700 mt-1"><i class="fas fa-link mr-1"></i>${assoc2Text}</div>` : ''}
+      </div>
+    </div>
+
+    <div class="overflow-x-auto border border-gray-200 rounded-xl max-h-[380px] overflow-y-auto">
+      <table class="w-full text-xs text-left border-collapse">
+        <thead class="bg-gray-100 text-gray-700 font-semibold sticky top-0 z-10">
+          <tr>
+            <th class="p-2.5 w-1/4 border-b border-gray-200">Campo</th>
+            <th class="p-2.5 w-[37.5%] border-b border-gray-200">Valor Registo A</th>
+            <th class="p-2.5 w-[37.5%] border-b border-gray-200">Valor Registo B</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+  `;
+
+  fields.forEach(f => {
+    const val1 = item1[f.key] || '';
+    const val2 = item2[f.key] || '';
+    const selectedSource = activeMergeContext.selections[f.key] || (isItem1Master ? 'A' : 'B');
+
+    const isDifferent = normalizeDuplicateStr(String(val1)) !== normalizeDuplicateStr(String(val2));
+    const rowBg = isDifferent ? 'bg-amber-50/30' : 'bg-white';
+
+    tableHtml += `
+      <tr class="${rowBg}">
+        <td class="p-2.5 font-medium text-gray-800 align-top">
+          ${escapeHtml(f.label)}
+          ${isDifferent ? '<span class="ml-1 text-[10px] text-amber-600 font-semibold">(diferente)</span>' : ''}
+        </td>
+        <td class="p-2.5 align-top">
+          <label class="flex items-start gap-2 cursor-pointer p-1.5 rounded hover:bg-gray-100 transition-colors">
+            <input type="radio" name="field_${f.key}" value="A" ${selectedSource === 'A' ? 'checked' : ''}
+                   onchange="updateMergeFieldChoice('${f.key}', 'A')"
+                   class="mt-0.5 text-primary-600 focus:ring-primary-500">
+            <div class="text-gray-900 break-words flex-1">
+              ${val1 ? escapeHtml(String(val1)) : '<span class="text-gray-400 italic">Vazio</span>'}
+            </div>
+          </label>
+        </td>
+        <td class="p-2.5 align-top">
+          <label class="flex items-start gap-2 cursor-pointer p-1.5 rounded hover:bg-gray-100 transition-colors">
+            <input type="radio" name="field_${f.key}" value="B" ${selectedSource === 'B' ? 'checked' : ''}
+                   onchange="updateMergeFieldChoice('${f.key}', 'B')"
+                   class="mt-0.5 text-primary-600 focus:ring-primary-500">
+            <div class="text-gray-900 break-words flex-1">
+              ${val2 ? escapeHtml(String(val2)) : '<span class="text-gray-400 italic">Vazio</span>'}
+            </div>
+          </label>
+        </td>
+      </tr>
+    `;
+  });
+
+  tableHtml += `
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  const container = document.getElementById('merge-modal-body');
+  if (container) container.innerHTML = tableHtml;
+}
+
+function updateMergeFieldChoice(fieldKey, source) {
+  if (!activeMergeContext) return;
+  activeMergeContext.selections[fieldKey] = source;
+}
+window.updateMergeFieldChoice = updateMergeFieldChoice;
+
+// 6. MOTOR DE EXECUÇÃO DA FUSÃO COM INTEGRIDADE RELACIONAL TOTAL
+function confirmAndExecuteMerge() {
+  if (!activeMergeContext) return;
+  const { type, item1, item2, masterId, secondaryId, selections } = activeMergeContext;
+
+  const masterItem = String(item1.id) === String(masterId) ? item1 : item2;
+  const secondaryItem = String(item1.id) === String(masterId) ? item2 : item1;
+
+  const typeLabel = type === 'clients' ? 'Cliente' : (type === 'contacts' ? 'Contacto' : 'Projeto');
+  if (!confirm(`Tem a certeza que deseja fundir este ${typeLabel}?\n\nO registo principal "${masterItem.nome || masterItem.empresa || masterItem.titulo}" será mantido com todos os dados e vínculos combinados, e o registo secundário será removido com segurança.`)) {
+    return;
+  }
+
+  // 1. Consolidar campos no Master
+  Object.keys(selections).forEach(key => {
+    const choice = selections[key];
+    if (choice === 'A') {
+      masterItem[key] = item1[key] || '';
+    } else if (choice === 'B') {
+      masterItem[key] = item2[key] || '';
+    }
+  });
+
+  // Preencher campos vazios no master com dados do secundário caso existam
+  Object.keys(secondaryItem).forEach(key => {
+    if (!masterItem[key] && secondaryItem[key] && !['id', 'dataCriacao', 'createdAt'].includes(key)) {
+      masterItem[key] = secondaryItem[key];
+    }
+  });
+
+  // 2. Re-vincular todas as entidades relacionadas conforme o tipo
+  let reallocatedStats = [];
+
+  if (type === 'clients') {
+    const oldId = String(secondaryItem.id);
+    const newId = String(masterItem.id);
+    const oldName = secondaryItem.nome || secondaryItem.empresa;
+    const newName = masterItem.nome || masterItem.empresa;
+
+    // Contactos
+    let contactsCount = 0;
+    (db.contactos || []).forEach(ct => {
+      if (String(ct.clienteId) === oldId || ct.empresa === oldName) {
+        ct.clienteId = newId;
+        ct.clienteNome = newName;
+        ct.empresa = newName;
+        contactsCount++;
+      }
+    });
+    if (contactsCount > 0) reallocatedStats.push(`${contactsCount} contacto(s)`);
+
+    // Projetos
+    let projectsCount = 0;
+    (db.projetos || []).forEach(pj => {
+      if (String(pj.clienteId) === oldId || pj.cliente === oldName) {
+        pj.clienteId = newId;
+        pj.cliente = newName;
+        pj.clienteNome = newName;
+        projectsCount++;
+      }
+    });
+    if (projectsCount > 0) reallocatedStats.push(`${projectsCount} projeto(s)`);
+
+    // Interações
+    let interactionsCount = 0;
+    (db.interacoes || []).forEach(it => {
+      if (String(it.clienteId) === oldId) {
+        it.clienteId = newId;
+        it.clienteNome = newName;
+        interactionsCount++;
+      }
+    });
+    if (interactionsCount > 0) reallocatedStats.push(`${interactionsCount} interação/ões`);
+
+    // Orçamentos
+    let budgetsCount = 0;
+    (db.orcamentos || []).forEach(oc => {
+      if (String(oc.clienteId) === oldId || oc.cliente === oldName) {
+        oc.clienteId = newId;
+        oc.cliente = newName;
+        budgetsCount++;
+      }
+    });
+    if (budgetsCount > 0) reallocatedStats.push(`${budgetsCount} orçamento(s)`);
+
+    // Remover secundário
+    db.clientes = (db.clientes || []).filter(c => String(c.id) !== oldId);
+
+  } else if (type === 'contacts') {
+    const oldId = String(secondaryItem.id);
+    const newId = String(masterItem.id);
+    const newName = masterItem.nome;
+
+    // Interações
+    let itCount = 0;
+    (db.interacoes || []).forEach(it => {
+      if (String(it.contactoId) === oldId) {
+        it.contactoId = newId;
+        it.contactoNome = newName;
+        itCount++;
+      }
+    });
+    if (itCount > 0) reallocatedStats.push(`${itCount} interação/ões`);
+
+    // Remover secundário
+    db.contactos = (db.contactos || []).filter(c => String(c.id) !== oldId);
+
+  } else if (type === 'projects') {
+    const oldId = String(secondaryItem.id);
+    const newId = String(masterItem.id);
+    const newTitle = masterItem.nome || masterItem.titulo;
+
+    // Interações de Projeto
+    let itCount = 0;
+    (db.interacoesProjetos || []).forEach(it => {
+      if (String(it.projetoId) === oldId) {
+        it.projetoId = newId;
+        it.projetoTitulo = newTitle;
+        itCount++;
+      }
+    });
+    if (itCount > 0) reallocatedStats.push(`${itCount} nota(s) de projeto`);
+
+    // Orçamentos
+    let ocCount = 0;
+    (db.orcamentos || []).forEach(oc => {
+      if (String(oc.projetoId) === oldId) {
+        oc.projetoId = newId;
+        oc.projetoNome = newTitle;
+        ocCount++;
+      }
+    });
+    if (ocCount > 0) reallocatedStats.push(`${ocCount} orçamento(s)`);
+
+    // Remover secundário
+    db.projetos = (db.projetos || []).filter(p => String(p.id) !== oldId);
+  }
+
+  // 3. Registar no Log de Auditoria do Sistema
+  const userName = typeof currentUser !== 'undefined' && currentUser ? currentUser.nome : 'Administrador';
+  const logEntry = {
+    id: Date.now(),
+    data: new Date().toISOString(),
+    usuario: userName,
+    acao: `Fusão de Duplicados (${typeLabel})`,
+    detalhes: `Fundido registo ID ${secondaryItem.id} em ID ${masterItem.id} ("${masterItem.nome || masterItem.empresa || masterItem.titulo}"). ${reallocatedStats.length > 0 ? 'Vínculos transferidos: ' + reallocatedStats.join(', ') : 'Sem vínculos pendentes'}.`
+  };
+  if (!db.userLogs) db.userLogs = [];
+  db.userLogs.push(logEntry);
+
+  // 4. Salvar Base de Dados
+  saveDatabase();
+
+  // 5. Atualizar Vistas Gerais
+  if (type === 'clients' && typeof renderClients === 'function') renderClients();
+  if (type === 'contacts' && typeof renderContacts === 'function') renderContacts();
+  if (type === 'projects' && typeof renderProjects === 'function') renderProjects();
+  if (typeof renderDashboard === 'function') renderDashboard();
+
+  closeMergeModal();
+  showToast(`Fusão de ${typeLabel.toLowerCase()} concluída com sucesso!`, 'success');
+  scanDuplicates(type);
+  updateDuplicateBadges();
+}
+window.confirmAndExecuteMerge = confirmAndExecuteMerge;
+
+// 7. EXPORTAÇÃO DE RELATÓRIO DE DUPLICADOS
+function exportDuplicatesReport() {
+  const type = currentDuplicateTab;
+  const items = activeDuplicatesCache[type] || [];
+
+  if (items.length === 0) {
+    showToast('Não existem duplicados detetados para exportar.', 'info');
+    return;
+  }
+
+  let csvContent = 'data:text/csv;charset=utf-8,\ufeff';
+  csvContent += 'Probabilidade;ID Registo 1;Nome Registo 1;ID Registo 2;Nome Registo 2;Motivos de Deteção\n';
+
+  items.forEach(dup => {
+    const score = dup.score + '%';
+    const id1 = dup.item1.id || '';
+    const name1 = (dup.item1.nome || dup.item1.empresa || dup.item1.titulo || '').replace(/;/g, ',');
+    const id2 = dup.item2.id || '';
+    const name2 = (dup.item2.nome || dup.item2.empresa || dup.item2.titulo || '').replace(/;/g, ',');
+    const reasons = dup.reasons.map(r => r.replace(/<[^>]+>/g, '')).join(' | ').replace(/;/g, ',');
+
+    csvContent += `"${score}";"${id1}";"${name1}";"${id2}";"${name2}";"${reasons}"\n`;
+  });
+
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement('a');
+  link.setAttribute('href', encodedUri);
+  link.setAttribute('download', `Relatorio_Duplicados_${type}_${new Date().toISOString().slice(0, 10)}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  showToast('Relatório de duplicados exportado em formato CSV!', 'success');
+}
+window.exportDuplicatesReport = exportDuplicatesReport;
