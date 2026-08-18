@@ -1918,24 +1918,6 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "cli-1787037592339-702",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério das Finanças",
-      "secretariaEstado": "",
-      "nome": "Ministério",
-      "contribuinte": "",
-      "direcao1": "Avenida Infante Dom Henrique",
-      "direcao2": "",
-      "numero": "1",
-      "andar": "",
-      "codigoPostal": "1149-009",
-      "localidade": "Lisboa",
-      "telefone": "+351 218 816 800",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:19:52.339Z"
-    },
-    {
       "id": "cli-1787037592339-501",
       "tipoCliente": "Estatal",
       "ministerio": "Ministério da saúde",
@@ -1949,24 +1931,6 @@
       "codigoPostal": "1049-062",
       "localidade": "Lisboa",
       "telefone": "+351 21 330 51 00",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:19:52.339Z"
-    },
-    {
-      "id": "cli-1787037592339-163",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério do Ambiente e Energia",
-      "secretariaEstado": "Secretaria de Estado Adjunto E da Energia",
-      "nome": "Secretaria de Estado Adjunto E da Energia",
-      "contribuinte": "",
-      "direcao1": "Avenida João XXI",
-      "direcao2": "Campus XXI",
-      "numero": "63",
-      "andar": "",
-      "codigoPostal": "1000-300",
-      "localidade": "LISBOA",
-      "telefone": "+351 213 927 600",
       "telemovel": "",
       "email": "",
       "createdAt": "2026-08-18T07:19:52.339Z"
@@ -2044,42 +2008,6 @@
       "createdAt": "2026-08-18T07:19:52.339Z"
     },
     {
-      "id": "cli-1787037592339-621",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da Cultura, Juventude e desporto",
-      "secretariaEstado": "Secretaria de Estado Adjunta E da Juventude e da Igualdade",
-      "nome": "Secretaria de Estado Adjunta E da Juventude e da Igualdade",
-      "contribuinte": "",
-      "direcao1": "Avenida João XXI",
-      "direcao2": "Campus XXI",
-      "numero": "63",
-      "andar": "",
-      "codigoPostal": "1000-300",
-      "localidade": "LISBOA",
-      "telefone": "+351 213 927 600",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:19:52.339Z"
-    },
-    {
-      "id": "cli-1787037592340-942",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério do Trabalho, Solidariedade e Segurança Social",
-      "secretariaEstado": "Secretaria de Estado de Acción Social e de Inclusão",
-      "nome": "Secretaria de Estado de Acción Social e de Inclusão",
-      "contribuinte": "",
-      "direcao1": "Praça de Londres",
-      "direcao2": "",
-      "numero": "2",
-      "andar": "",
-      "codigoPostal": "1049-056",
-      "localidade": "LISBOA",
-      "telefone": "+351 215 963 800",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:19:52.340Z"
-    },
-    {
       "id": "cli-1787037592340-389",
       "tipoCliente": "Estatal",
       "ministerio": "Ministério do Trabalho, Solidariedade e Segurança Social",
@@ -2098,24 +2026,6 @@
       "createdAt": "2026-08-18T07:19:52.340Z"
     },
     {
-      "id": "cli-1787037592340-878",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério do Trabalho, Solidariedade e Segurança Social",
-      "secretariaEstado": "Direção Geral de Segurança Social",
-      "nome": "Direção Geral de Segurança Social",
-      "contribuinte": "",
-      "direcao1": "Largo do Rato",
-      "direcao2": "",
-      "numero": "1",
-      "andar": "",
-      "codigoPostal": "1269-144",
-      "localidade": "Lisboa",
-      "telefone": "+351 215 952 990",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:19:52.340Z"
-    },
-    {
       "id": "cli-1787037592340-510",
       "tipoCliente": "Estatal",
       "ministerio": "Ministério da Administração Interna",
@@ -2129,42 +2039,6 @@
       "codigoPostal": "1149-015",
       "localidade": "LISBOA",
       "telefone": "+351 213 232 000",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:19:52.340Z"
-    },
-    {
-      "id": "cli-1787037592340-931",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério das Infraestruturas e Habitação",
-      "secretariaEstado": "Secretaria de Estado das Infraestruturas",
-      "nome": "Secretaria de Estado das Infraestruturas",
-      "contribuinte": "",
-      "direcao1": "Avenida João XXI",
-      "direcao2": "Campus XXI",
-      "numero": "63",
-      "andar": "",
-      "codigoPostal": "1000-300",
-      "localidade": "LISBOA",
-      "telefone": "",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:19:52.340Z"
-    },
-    {
-      "id": "cli-1787037592340-634",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da Justiça",
-      "secretariaEstado": "Secretaria de Estado da Justiça",
-      "nome": "Secretaria de Estado da Justiça",
-      "contribuinte": "",
-      "direcao1": "Praça do Comércio",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1149-019",
-      "localidade": "LISBOA",
-      "telefone": "+351 213 222 300",
       "telemovel": "",
       "email": "",
       "createdAt": "2026-08-18T07:19:52.340Z"
@@ -3360,6 +3234,136 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787037826980-527",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Secretaria de Estado de Acción Social e de Inclusão\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Secretaria de Estado de Acción Social e de Inclusão",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:23:46.980Z"
+    },
+    {
+      "id": "log-1787037826587-855",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Secretaria de Estado das Infraestruturas\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Secretaria de Estado das Infraestruturas",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:23:46.587Z"
+    },
+    {
+      "id": "log-1787037826288-54",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-18T07:23:46.288Z"
+    },
+    {
+      "id": "log-1787037826211-394",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Secretaria de Estado da Justiça\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Secretaria de Estado da Justiça",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:23:46.212Z"
+    },
+    {
+      "id": "log-1787037825814-216",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Secretaria de Estado Adjunto E da Energia\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Secretaria de Estado Adjunto E da Energia",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:23:45.814Z"
+    },
+    {
+      "id": "log-1787037825428-762",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Secretaria de Estado Adjunta E da Juventude e da Igualdade\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Secretaria de Estado Adjunta E da Juventude e da Igualdade",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:23:45.428Z"
+    },
+    {
+      "id": "log-1787037824983-1",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Ministério\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Ministério",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:23:44.983Z"
+    },
+    {
+      "id": "log-1787037824565-972",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Direção Geral de Segurança Social\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Direção Geral de Segurança Social",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:23:44.565Z"
+    },
+    {
       "id": "log-1787037824149-114",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -3750,7 +3754,14 @@
       "cli-1787037592339-940",
       "cli-1787037592339-937",
       "cli-1787037592340-341",
-      "cli-1787037592340-821"
+      "cli-1787037592340-821",
+      "cli-1787037592340-878",
+      "cli-1787037592339-702",
+      "cli-1787037592339-621",
+      "cli-1787037592339-163",
+      "cli-1787037592340-634",
+      "cli-1787037592340-931",
+      "cli-1787037592340-942"
     ],
     "contactos": [
       "con-imp-059",
