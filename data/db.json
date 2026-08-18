@@ -2170,24 +2170,6 @@
       "createdAt": "2026-08-18T07:24:08.337Z"
     },
     {
-      "id": "cli-1787037848337-350",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da Administração Interna",
-      "secretariaEstado": "",
-      "nome": "Cliente Importado",
-      "contribuinte": "",
-      "direcao1": "Praça do Comércio",
-      "direcao2": "Ala Oriental",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1149-015",
-      "localidade": "LISBOA",
-      "telefone": "+351 213 232 000",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:24:08.337Z"
-    },
-    {
       "id": "cli-1787037848337-737",
       "tipoCliente": "Estatal",
       "ministerio": "Ministério da Administração Interna",
@@ -2201,24 +2183,6 @@
       "codigoPostal": "1149-015",
       "localidade": "LISBOA",
       "telefone": "+351 213 232 000",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:24:08.337Z"
-    },
-    {
-      "id": "cli-1787037848337-233",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério das Infraestruturas e Habitação",
-      "secretariaEstado": "",
-      "nome": "Cliente Importado",
-      "contribuinte": "",
-      "direcao1": "Avenida João XXI",
-      "direcao2": "Campus XXI",
-      "numero": "63",
-      "andar": "",
-      "codigoPostal": "1000-300",
-      "localidade": "LISBOA",
-      "telefone": "",
       "telemovel": "",
       "email": "",
       "createdAt": "2026-08-18T07:24:08.337Z"
@@ -2240,61 +2204,6 @@
       "telemovel": "",
       "email": "",
       "createdAt": "2026-08-18T07:24:08.337Z"
-    },
-    {
-      "id": "cli-1787037848337-339",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério das Infraestruturas e Habitação",
-      "secretariaEstado": "",
-      "nome": "Cliente Importado",
-      "contribuinte": "",
-      "direcao1": "Avenida Columbano Bordalo Pinheiro",
-      "direcao2": "",
-      "numero": "5",
-      "andar": "",
-      "codigoPostal": "",
-      "localidade": "Lisboa",
-      "telefone": "+351 217 231 500",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:24:08.337Z"
-    },
-    {
-      "id": "cli-1787037848337-521",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da Justiça",
-      "secretariaEstado": "",
-      "nome": "Cliente Importado",
-      "contribuinte": "",
-      "direcao1": "Praça do Comércio",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1149-019",
-      "localidade": "LISBOA",
-      "telefone": "+351 213 222 300",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:24:08.337Z",
-      "separadores": [
-        {
-          "id": "sep-1787037870222-252",
-          "tipoSeparador": "Ministério",
-          "nomePersonalizado": "",
-          "nome": "Cliente Importado",
-          "contribuinte": "",
-          "direcao1": "Praça do Comércio",
-          "direcao2": "",
-          "numero": "",
-          "andar": "",
-          "codigoPostal": "1149-019",
-          "localidade": "LISBOA",
-          "pais": "",
-          "telefone": "+351 213 222 300",
-          "telemovel": "",
-          "email": ""
-        }
-      ]
     },
     {
       "id": "cli-1787037848337-959",
@@ -3631,6 +3540,85 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787038111039-638",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Cliente Importado\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Cliente Importado",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:28:31.039Z"
+    },
+    {
+      "id": "log-1787038110357-923",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-18T07:28:30.357Z"
+    },
+    {
+      "id": "log-1787038110317-905",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Cliente Importado\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Cliente Importado",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:28:30.317Z"
+    },
+    {
+      "id": "log-1787038109633-281",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Cliente Importado\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Cliente Importado",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:28:29.633Z"
+    },
+    {
+      "id": "log-1787038109166-956",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Cliente Importado\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Cliente Importado",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:28:29.166Z"
+    },
+    {
       "id": "log-1787038108220-90",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -3768,7 +3756,11 @@
       "cli-1787037592340-262",
       "cli-1787037592340-248",
       "cli-1787037592339-501",
-      "cli-1787037848337-180"
+      "cli-1787037848337-180",
+      "cli-1787037848337-350",
+      "cli-1787037848337-233",
+      "cli-1787037848337-339",
+      "cli-1787037848337-521"
     ],
     "contactos": [
       "con-imp-059",
