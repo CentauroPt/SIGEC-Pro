@@ -1808,24 +1808,6 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "cli-imp-083",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "EDP - Energias de Portugal, S.A. (EDP NEW)",
-      "contribuinte": "500001428",
-      "direcao1": "Avenida 24 de Julho, 12, 1249-300 Lisboa",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1249-300",
-      "localidade": "Lisboa",
-      "telefone": "+351 210 012 500",
-      "telemovel": "",
-      "email": "edponservices@edp.com",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
       "id": "cli-imp-085",
       "tipoCliente": "Privado",
       "ministerio": "",
@@ -3851,7 +3833,7 @@
     },
     {
       "id": "con-imp-132",
-      "clienteId": "cli-imp-083",
+      "clienteId": "cli-imp-072",
       "nome": "Júlia",
       "apelido": "Pereira",
       "cargo": "Project Coordinator (POCITYF)",
@@ -3864,7 +3846,7 @@
     },
     {
       "id": "con-imp-133",
-      "clienteId": "cli-imp-083",
+      "clienteId": "cli-imp-072",
       "nome": "João",
       "apelido": "Vieira da Silva",
       "cargo": "Senior R&D Project Manager (MAGPIE)",
@@ -3877,7 +3859,7 @@
     },
     {
       "id": "con-imp-134",
-      "clienteId": "cli-imp-083",
+      "clienteId": "cli-imp-072",
       "nome": "João",
       "apelido": "Formiga",
       "cargo": "Head of Renewable Energy Technologies / Project Manager (POCITYF)",
@@ -4978,13 +4960,13 @@
   "ignoredDuplicates": [],
   "activityHistory": [
     {
-      "id": "act-1787052268572-6ppc",
+      "id": "act-1787052477404-e5lp",
       "userId": "usr-admin-001",
       "action": "DUPLICATE_MERGE",
       "entity": "clientes",
-      "entityId": "cli-imp-068",
-      "details": "Fusão de 2 registos duplicados em \"Fundação de Serralves\". 1 vínculos reatribuídos com sucesso.",
-      "timestamp": "2026-08-18T11:24:28.572Z"
+      "entityId": "cli-imp-072",
+      "details": "Fusão de 2 registos duplicados em \"EDP - Energias de Portugal, S.A.\". 3 vínculos reatribuídos com sucesso.",
+      "timestamp": "2026-08-18T11:27:57.405Z"
     }
   ],
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
@@ -5131,7 +5113,8 @@
       "cli-imp-010",
       "cli-imp-015",
       "cli-imp-075",
-      "cli-imp-024"
+      "cli-imp-024",
+      "cli-imp-083"
     ],
     "contactos": [
       "con-imp-059",
