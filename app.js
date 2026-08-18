@@ -3448,7 +3448,8 @@ const STORAGE_KEYS = {
   DELETED_PROJETOS: 'sigec_pro_db_deleted_projetos_v6',
   DELETED_INTERACOES: 'sigec_pro_db_deleted_interacoes_v6',
   DELETED_INTERACOES_PROJETOS: 'sigec_pro_db_deleted_interacoes_projetos_v6',
-  DELETED_ORCAMENTOS: 'sigec_pro_db_deleted_orcamentos_v6'
+  DELETED_ORCAMENTOS: 'sigec_pro_db_deleted_orcamentos_v6',
+  IGNORED_DUPLICATES: 'sigec_pro_ignored_duplicates'
 };
 
 let deletedRegistry = {
@@ -3667,6 +3668,15 @@ function loadDatabase() {
       db.orcamentos = initialBudgets;
     }
 
+    // Carregar registo de comparações e duplicados ignorados
+    let rawIgnored = localStorage.getItem(STORAGE_KEYS.IGNORED_DUPLICATES);
+    try {
+      db.ignoredDuplicates = rawIgnored ? JSON.parse(rawIgnored) : [];
+      if (!Array.isArray(db.ignoredDuplicates)) db.ignoredDuplicates = [];
+    } catch (e) {
+      db.ignoredDuplicates = [];
+    }
+
     if (typeof ensureUsersInitialized === 'function') ensureUsersInitialized();
 
     // Eliminação permanente e irreversível de quaisquer projetos fictícios antigos
@@ -3811,6 +3821,7 @@ function saveDatabase() {
     safeSetStorage('sigec_pro_usuarios', JSON.stringify(db.usuarios || []));
     safeSetStorage('sigec_pro_user_logs', JSON.stringify(db.userLogs || []));
     safeSetStorage('sigec_pro_orcamentos', JSON.stringify(db.orcamentos || []));
+    safeSetStorage(STORAGE_KEYS.IGNORED_DUPLICATES, JSON.stringify(db.ignoredDuplicates || []));
 
     // BLINDAGEM PERMANENTE DO TOKEN PAT: re-persiste o token a cada gravação de base de dados
     // para garantir que nunca se perde, mesmo após limpeza de cache ou reinstalação.
@@ -4676,6 +4687,9 @@ function switchTab(tabId) {
     populateBudgetModelPresetDatalist();
     renderSavedBudgetsList();
     recalculateBudgetTotal();
+  } else if (tabId === 'tab-duplicados') {
+    if (typeof scanDuplicates === 'function') scanDuplicates(currentDuplicateTab || 'clients');
+    if (typeof updateDuplicateBadges === 'function') updateDuplicateBadges();
   } else if (tabId === 'tab-home') {
     renderHomeDashboard();
   }
@@ -7337,6 +7351,7 @@ function resetProjectForm(skipConfirm = false) {
   if (btnDupReset) btnDupReset.style.display = 'none';
   updateClientProjectOptions();
   renderProjectInteractionsGrid([]);
+  renderProjectOrcamentosGrid(null);
   renderProjectDocsGrid(null);
   renderProjectMediaGrid(null);
 
@@ -7408,6 +7423,7 @@ function loadProjectIntoForm(projectId, skipDirtyCheck = false, skipTabSwitch = 
 function refreshProjectSubLists(projectId) {
   const projectInteractions = (db.interacoesProjetos || []).filter(i => i.projectId === projectId);
   renderProjectInteractionsGrid(projectInteractions);
+  renderProjectOrcamentosGrid(projectId);
   renderProjectDocsGrid(projectId);
   renderProjectMediaGrid(projectId);
 }
@@ -7450,6 +7466,7 @@ function saveProject(e) {
     estado,
     viatura,
     matricula,
+    orcamentos: existingIndex >= 0 ? (db.projetos[existingIndex].orcamentos || []) : [],
     documents: existingIndex >= 0 ? (db.projetos[existingIndex].documents || []) : [],
     media: existingIndex >= 0 ? (db.projetos[existingIndex].media || []) : [],
     createdAt: existingIndex >= 0 ? db.projetos[existingIndex].createdAt : new Date().toISOString()
@@ -8547,32 +8564,82 @@ function decodeBase64Utf8(base64Str) {
   }
 }
 
-function adjustViewerZoom(delta) {
-  const img = document.getElementById('viewerTargetImage');
-  if (!img) return;
-  currentViewerZoom = Math.max(0.2, Math.min(5, currentViewerZoom + delta));
-  applyViewerImageTransform();
+function adjustUniversalViewerZoom(delta) {
+  currentViewerZoom = Math.max(0.25, Math.min(4.0, Number((currentViewerZoom + delta).toFixed(2))));
+  applyUniversalViewerZoom();
 }
-window.adjustViewerZoom = adjustViewerZoom;
+window.adjustUniversalViewerZoom = adjustUniversalViewerZoom;
+window.adjustViewerZoom = adjustUniversalViewerZoom;
 
-function resetViewerZoom() {
+function resetUniversalViewerZoom() {
   currentViewerZoom = 1;
   currentViewerRotation = 0;
-  applyViewerImageTransform();
+  applyUniversalViewerZoom();
 }
-window.resetViewerZoom = resetViewerZoom;
+window.resetUniversalViewerZoom = resetUniversalViewerZoom;
+window.resetViewerZoom = resetUniversalViewerZoom;
 
 function rotateViewerImage(deg) {
   currentViewerRotation = (currentViewerRotation + deg) % 360;
-  applyViewerImageTransform();
+  applyUniversalViewerZoom();
 }
 window.rotateViewerImage = rotateViewerImage;
 
-function applyViewerImageTransform() {
+function applyUniversalViewerZoom() {
+  const badge = document.getElementById('viewerZoomLevelBadge');
+  if (badge) {
+    badge.textContent = `${Math.round(currentViewerZoom * 100)}%`;
+  }
+
+  // 1. Imagem
   const img = document.getElementById('viewerTargetImage');
-  if (!img) return;
-  img.style.transform = `scale(${currentViewerZoom}) rotate(${currentViewerRotation}deg)`;
+  if (img) {
+    img.style.transform = `scale(${currentViewerZoom}) rotate(${currentViewerRotation}deg)`;
+    img.style.transformOrigin = 'center center';
+    return;
+  }
+
+  // 2. Word document sheet (.docx)
+  const wordSheet = document.querySelector('.word-doc-sheet');
+  if (wordSheet) {
+    wordSheet.style.transform = `scale(${currentViewerZoom})`;
+    wordSheet.style.transformOrigin = 'top center';
+    wordSheet.style.transition = 'transform 0.2s ease';
+    return;
+  }
+
+  // 3. Excel table content (.xlsx, .xls, .csv)
+  const excelTable = document.getElementById('excelViewerTableContent');
+  if (excelTable) {
+    excelTable.style.zoom = currentViewerZoom;
+    return;
+  }
+
+  // 4. Markdown preview box
+  const mdBox = document.getElementById('viewerMdPreviewBox');
+  if (mdBox) {
+    mdBox.style.transform = `scale(${currentViewerZoom})`;
+    mdBox.style.transformOrigin = 'top center';
+    mdBox.style.transition = 'transform 0.2s ease';
+    return;
+  }
+
+  // 5. Code / Raw text content
+  const codeBox = document.getElementById('viewerRawTextContent');
+  if (codeBox) {
+    codeBox.style.fontSize = `${0.85 * currentViewerZoom}rem`;
+    return;
+  }
+
+  // 6. Generic container content fallback
+  const container = document.getElementById('mediaViewerContainer');
+  if (container && container.firstElementChild) {
+    container.firstElementChild.style.transform = `scale(${currentViewerZoom})`;
+    container.firstElementChild.style.transformOrigin = 'top center';
+    container.firstElementChild.style.transition = 'transform 0.2s ease';
+  }
 }
+window.applyUniversalViewerZoom = applyUniversalViewerZoom;
 
 function copyViewerTextContent() {
   const pre = document.getElementById('viewerRawTextContent');
@@ -8706,6 +8773,8 @@ function renderFileContentInViewer(item, container, targetProjectId) {
   container.innerHTML = '';
   currentViewerZoom = 1;
   currentViewerRotation = 0;
+  const zoomBadge = document.getElementById('viewerZoomLevelBadge');
+  if (zoomBadge) zoomBadge.textContent = '100%';
 
   const ext = (item.name.split('.').pop() || '').toLowerCase();
   const mime = (item.mimeType || '').toLowerCase();
@@ -9978,6 +10047,181 @@ function openBudgetImgInViewer(imgKey) {
 window.openBudgetImgInViewer = openBudgetImgInViewer;
 
 // ==========================================
+// ORÇAMENTOS CLIENTE DO PROJETO (INDEPENDENTE)
+// ==========================================
+
+function triggerProjectOrcamentosUpload() {
+  if (!currentProjectId) {
+    showToast('Guarde ou selecione um Projeto primeiro antes de carregar ficheiros!', 'danger');
+    return;
+  }
+  const input = document.getElementById('projectOrcamentosInput');
+  if (input) input.click();
+}
+window.triggerProjectOrcamentosUpload = triggerProjectOrcamentosUpload;
+
+function handleProjectOrcamentosDragOver(event) {
+  event.preventDefault();
+  event.stopPropagation();
+  const dropzone = event.currentTarget || document.getElementById('projectOrcamentosDropzone');
+  if (dropzone) dropzone.classList.add('dragover');
+}
+window.handleProjectOrcamentosDragOver = handleProjectOrcamentosDragOver;
+
+function handleProjectOrcamentosDragLeave(event) {
+  event.preventDefault();
+  event.stopPropagation();
+  const dropzone = event.currentTarget || document.getElementById('projectOrcamentosDropzone');
+  if (dropzone) dropzone.classList.remove('dragover');
+}
+window.handleProjectOrcamentosDragLeave = handleProjectOrcamentosDragLeave;
+
+function handleProjectOrcamentosDrop(event) {
+  event.preventDefault();
+  event.stopPropagation();
+  const dropzone = event.currentTarget || document.getElementById('projectOrcamentosDropzone');
+  if (dropzone) dropzone.classList.remove('dragover');
+  if (event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length > 0) {
+    handleProjectOrcamentosUpload(null, event.dataTransfer.files);
+  }
+}
+window.handleProjectOrcamentosDrop = handleProjectOrcamentosDrop;
+
+function handleProjectOrcamentosUpload(event, droppedFiles = null) {
+  if (!currentProjectId) {
+    showToast('Guarde ou selecione um Projeto primeiro antes de carregar ficheiros!', 'danger');
+    return;
+  }
+  const files = droppedFiles ? Array.from(droppedFiles) : Array.from((event && event.target && event.target.files) || []);
+  if (files.length === 0) return;
+
+  const project = db.projetos.find(p => p.id === currentProjectId);
+  if (!project) return;
+
+  if (!project.orcamentos) project.orcamentos = [];
+
+  let loadedCount = 0;
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const dataUrl = e.target.result;
+      const docMeta = getDocFileType(file.name, file.type);
+      const docItem = {
+        id: 'orc-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5),
+        name: file.name,
+        type: docMeta.type,
+        mimeType: file.type,
+        dataUrl: dataUrl,
+        size: file.size,
+        date: new Date().toISOString()
+      };
+      project.orcamentos.push(docItem);
+      loadedCount++;
+
+      if (loadedCount === files.length) {
+        saveDatabase();
+        renderProjectOrcamentosGrid(currentProjectId);
+        showToast(`${files.length} orçamento(s) adicionado(s) a Orçamentos Cliente do projeto!`, 'success');
+        if (event && event.target) event.target.value = '';
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+window.handleProjectOrcamentosUpload = handleProjectOrcamentosUpload;
+
+function renderProjectOrcamentosGrid(projectId) {
+  const container = document.getElementById('projectOrcamentosGrid');
+  if (!container) return;
+
+  if (!projectId) {
+    container.innerHTML = '<span class="empty-state">Selecione ou guarde um projeto para ver os orçamentos.</span>';
+    return;
+  }
+
+  const project = db.projetos.find(p => p.id === projectId);
+  if (!project || !project.orcamentos || project.orcamentos.length === 0) {
+    container.innerHTML = '<span class="empty-state">Nenhum orçamento carregado neste quadro. Utilize o botão acima para importar ficheiros de orçamento do seu PC.</span>';
+    return;
+  }
+
+  container.innerHTML = '';
+  project.orcamentos.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'media-card';
+    
+    const sizeKB = (item.size / 1024).toFixed(1);
+    const docMeta = getDocFileType(item.name, item.mimeType || '');
+
+    card.innerHTML = `
+      <div class="media-thumb-box" onclick="openDocViewer('${item.id}', '${projectId}')" style="background: #fefce8; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.35rem; padding: 0.75rem; cursor: pointer; border-bottom: 1px solid #fef08a;" title="Clique para abrir e visualizar este orçamento">
+        <i class="fa-solid ${docMeta.icon}" style="color: ${docMeta.color}; font-size: 2.3rem;"></i>
+        <span style="font-size: 0.7rem; font-weight: 700; color: #854d0e; letter-spacing: 0.5px;">${docMeta.label}</span>
+      </div>
+      <div class="media-info">
+        <span class="media-name" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</span>
+        <div class="media-meta">
+          <span>${docMeta.label}</span>
+          <span>${sizeKB} KB</span>
+        </div>
+      </div>
+      <div class="media-actions-btns">
+        <button type="button" class="media-action-btn" onclick="openDocViewer('${item.id}', '${projectId}')" title="Abrir / Visualizar diretamente">
+          <i class="fa-solid fa-folder-open"></i> Abrir
+        </button>
+        <button type="button" class="media-action-btn" onclick="downloadDocItem('${item.id}', '${projectId}')" title="Descarregar">
+          <i class="fa-solid fa-download"></i>
+        </button>
+        <button type="button" class="media-action-btn delete" onclick="deleteProjectOrcamentoItem('${item.id}', '${projectId}')" title="Eliminar este Orçamento">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
+window.renderProjectOrcamentosGrid = renderProjectOrcamentosGrid;
+
+function deleteProjectOrcamentoItem(docId, optionalProjectId = null) {
+  const targetProjectId = optionalProjectId || currentProjectId;
+  if (!targetProjectId) return;
+  const project = (db.projetos || []).find(p => String(p.id) === String(targetProjectId));
+  if (!project || !Array.isArray(project.orcamentos)) return;
+
+  const idx = project.orcamentos.findIndex(d => String(d.id) === String(docId));
+  if (idx === -1) return;
+
+  const docName = project.orcamentos[idx].name;
+  if (confirm(`Tem a certeza que deseja eliminar o orçamento "${docName}"?`)) {
+    project.orcamentos.splice(idx, 1);
+    saveDatabase();
+    renderProjectOrcamentosGrid(targetProjectId);
+    closeMediaViewerModal();
+    showToast(`Orçamento "${docName}" eliminado com sucesso.`, 'danger');
+  }
+}
+window.deleteProjectOrcamentoItem = deleteProjectOrcamentoItem;
+
+function exportProjectOrcamentosAll() {
+  if (!currentProjectId) {
+    showToast('Selecione ou guarde um projeto primeiro!', 'danger');
+    return;
+  }
+  const project = db.projetos.find(p => p.id === currentProjectId);
+  if (!project || !project.orcamentos || project.orcamentos.length === 0) {
+    showToast('Este projeto não possui orçamentos em Orçamentos Cliente para exportar.', 'danger');
+    return;
+  }
+
+  project.orcamentos.forEach(item => {
+    downloadDocItem(item.id, currentProjectId);
+  });
+  showToast(`A descarregar ${project.orcamentos.length} orçamento(s) do projeto...`);
+}
+window.exportProjectOrcamentosAll = exportProjectOrcamentosAll;
+
+// ==========================================
 // DOCUMENTOS DO PROJETO
 // ==========================================
 
@@ -9994,7 +10238,7 @@ window.triggerProjectDocsUpload = triggerProjectDocsUpload;
 function handleProjectDocsDragOver(event) {
   event.preventDefault();
   event.stopPropagation();
-  const dropzone = event.currentTarget || document.getElementById('projectDocsDropzone');
+  const dropzone = event.currentTarget || document.getElementById('projectDocsGridDropzone') || document.getElementById('projectDocsDropzone');
   if (dropzone) dropzone.classList.add('dragover');
 }
 window.handleProjectDocsDragOver = handleProjectDocsDragOver;
@@ -10002,7 +10246,7 @@ window.handleProjectDocsDragOver = handleProjectDocsDragOver;
 function handleProjectDocsDragLeave(event) {
   event.preventDefault();
   event.stopPropagation();
-  const dropzone = event.currentTarget || document.getElementById('projectDocsDropzone');
+  const dropzone = event.currentTarget || document.getElementById('projectDocsGridDropzone') || document.getElementById('projectDocsDropzone');
   if (dropzone) dropzone.classList.remove('dragover');
 }
 window.handleProjectDocsDragLeave = handleProjectDocsDragLeave;
@@ -10010,7 +10254,7 @@ window.handleProjectDocsDragLeave = handleProjectDocsDragLeave;
 function handleProjectDocsDrop(event) {
   event.preventDefault();
   event.stopPropagation();
-  const dropzone = event.currentTarget || document.getElementById('projectDocsDropzone');
+  const dropzone = event.currentTarget || document.getElementById('projectDocsGridDropzone') || document.getElementById('projectDocsDropzone');
   if (dropzone) dropzone.classList.remove('dragover');
   if (event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length > 0) {
     handleProjectDocsUpload(null, event.dataTransfer.files);
@@ -10070,7 +10314,7 @@ function handleProjectDocsUpload(event, droppedFiles = null) {
         saveDatabase();
         renderProjectDocsGrid(currentProjectId);
         if (currentClientId) renderClientDocsGrid(currentClientId);
-        showToast(`${files.length} ficheiro(s) adicionado(s) ao projeto!`);
+        showToast(`${files.length} ficheiro(s) adicionado(s) a Documentos do Projeto!`);
         if (event && event.target) event.target.value = '';
       }
     };
@@ -10137,12 +10381,21 @@ function openDocViewer(docId, optionalProjectId = null) {
   const targetProjectId = optionalProjectId || currentProjectId;
   if (targetProjectId) {
     const project = (db.projetos || []).find(p => String(p.id) === String(targetProjectId));
-    if (project && Array.isArray(project.documents)) {
-      item = project.documents.find(d => String(d.id) === String(docId));
+    if (project) {
+      if (Array.isArray(project.orcamentos)) {
+        item = project.orcamentos.find(d => String(d.id) === String(docId));
+      }
+      if (!item && Array.isArray(project.documents)) {
+        item = project.documents.find(d => String(d.id) === String(docId));
+      }
     }
   }
   if (!item) {
     for (const p of (db.projetos || [])) {
+      if (Array.isArray(p.orcamentos)) {
+        const found = p.orcamentos.find(d => String(d.id) === String(docId));
+        if (found) { item = found; break; }
+      }
       if (Array.isArray(p.documents)) {
         const found = p.documents.find(d => String(d.id) === String(docId));
         if (found) { item = found; break; }
@@ -10201,12 +10454,21 @@ function downloadDocItem(docId, optionalProjectId = null) {
   const targetProjectId = optionalProjectId || currentProjectId;
   if (!item && targetProjectId) {
     const project = (db.projetos || []).find(p => String(p.id) === String(targetProjectId));
-    if (project && Array.isArray(project.documents)) {
-      item = project.documents.find(d => String(d.id) === String(docId));
+    if (project) {
+      if (Array.isArray(project.orcamentos)) {
+        item = project.orcamentos.find(d => String(d.id) === String(docId));
+      }
+      if (!item && Array.isArray(project.documents)) {
+        item = project.documents.find(d => String(d.id) === String(docId));
+      }
     }
   }
   if (!item) {
     for (const p of (db.projetos || [])) {
+      if (Array.isArray(p.orcamentos)) {
+        const found = p.orcamentos.find(d => String(d.id) === String(docId));
+        if (found) { item = found; break; }
+      }
       if (Array.isArray(p.documents)) {
         const found = p.documents.find(d => String(d.id) === String(docId));
         if (found) { item = found; break; }
@@ -10238,25 +10500,47 @@ function deleteDocItem(docId, optionalProjectId = null) {
   const targetProjectId = optionalProjectId || currentProjectId;
   let targetProject = null;
   let targetIndex = -1;
+  let targetArrayName = 'documents';
 
   if (targetProjectId) {
     const project = (db.projetos || []).find(p => String(p.id) === String(targetProjectId));
-    if (project && Array.isArray(project.documents)) {
-      const idx = project.documents.findIndex(d => String(d.id) === String(docId));
-      if (idx !== -1) {
-        targetProject = project;
-        targetIndex = idx;
+    if (project) {
+      if (Array.isArray(project.orcamentos)) {
+        const idx = project.orcamentos.findIndex(d => String(d.id) === String(docId));
+        if (idx !== -1) {
+          targetProject = project;
+          targetIndex = idx;
+          targetArrayName = 'orcamentos';
+        }
+      }
+      if (targetIndex === -1 && Array.isArray(project.documents)) {
+        const idx = project.documents.findIndex(d => String(d.id) === String(docId));
+        if (idx !== -1) {
+          targetProject = project;
+          targetIndex = idx;
+          targetArrayName = 'documents';
+        }
       }
     }
   }
 
   if (!targetProject) {
     for (const p of (db.projetos || [])) {
+      if (Array.isArray(p.orcamentos)) {
+        const idx = p.orcamentos.findIndex(d => String(d.id) === String(docId));
+        if (idx !== -1) {
+          targetProject = p;
+          targetIndex = idx;
+          targetArrayName = 'orcamentos';
+          break;
+        }
+      }
       if (Array.isArray(p.documents)) {
         const idx = p.documents.findIndex(d => String(d.id) === String(docId));
         if (idx !== -1) {
           targetProject = p;
           targetIndex = idx;
+          targetArrayName = 'documents';
           break;
         }
       }
@@ -10268,11 +10552,14 @@ function deleteDocItem(docId, optionalProjectId = null) {
     return;
   }
 
-  const docName = targetProject.documents[targetIndex].name;
+  const docName = targetProject[targetArrayName][targetIndex].name;
   if (confirm(`Tem a certeza que deseja eliminar o documento "${docName}"?`)) {
-    targetProject.documents.splice(targetIndex, 1);
+    targetProject[targetArrayName].splice(targetIndex, 1);
     saveDatabase();
-    if (currentProjectId) renderProjectDocsGrid(currentProjectId);
+    if (currentProjectId) {
+      renderProjectOrcamentosGrid(currentProjectId);
+      renderProjectDocsGrid(currentProjectId);
+    }
     if (currentClientId) refreshClientSubLists(currentClientId);
     closeMediaViewerModal();
     showToast(`Documento "${docName}" eliminado com sucesso.`, 'danger');
@@ -10782,6 +11069,8 @@ function duplicateProjectById(projectId) {
   clone.createdAt = new Date().toISOString();
   if (!clone.media) clone.media = [];
   if (!clone.documents) clone.documents = [];
+  if (!clone.orcamentos) clone.orcamentos = [];
+  clone.orcamentos = (project.orcamentos || []).map(o => ({ ...o, id: 'orc-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5) }));
 
   // Duplicar também os registos e notas de contactos/interações do projeto
   const projectInteractions = (db.interacoesProjetos || []).filter(i => i.projectId === projectId);
@@ -17238,17 +17527,949 @@ function exportBudgetToWord() {
 }
 window.exportBudgetToWord = exportBudgetToWord;
 
-// Inicialização automática dos orçamentos ao carregar a página
+// Inicialização automática dos orçamentos e do Gestor de Duplicados ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
-  populateBudgetClientsDatalist();
-  populateBudgetModelPresetDatalist();
-  renderSavedBudgetsList();
-  recalculateBudgetTotal();
-  updateBudgetImagesCountBadge();
+  if (typeof populateBudgetClientsDatalist === 'function') populateBudgetClientsDatalist();
+  if (typeof populateBudgetModelPresetDatalist === 'function') populateBudgetModelPresetDatalist();
+  if (typeof renderSavedBudgetsList === 'function') renderSavedBudgetsList();
+  if (typeof recalculateBudgetTotal === 'function') recalculateBudgetTotal();
+  if (typeof updateBudgetImagesCountBadge === 'function') updateBudgetImagesCountBadge();
+  if (typeof updateDuplicateBadges === 'function') updateDuplicateBadges();
 });
 
+/* ==========================================================================
+   MÓDULO DE GESTÃO E FUSÃO INTELIGENTE DE DUPLICADOS (SIGEC-PRO)
+   - Deteção por regras exatas e fuzzy matching (Levenshtein + Token Overlap)
+   - Fusão segura com integridade relacional total (Contactos, Projetos, Interações, Orçamentos)
+   - Auditoria completa no log do sistema
+   - Preservação estrita dos dados conforme AGENTS.md
+   ========================================================================== */
 
+let currentDuplicateTab = 'clients';
+let activeDuplicatesCache = {
+  clients: [],
+  contacts: [],
+  projects: []
+};
 
+// 1. UTILITÁRIOS DE NORMALIZAÇÃO E SIMILARIDADE DE TEXTO
+function normalizeDuplicateStr(str) {
+  if (!str) return '';
+  return String(str)
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // remove acentos
+    .replace(/[^\w\s]/gi, ' ')       // substitui pontuação por espaço
+    .replace(/\s+/g, ' ')            // colapsa múltiplos espaços
+    .trim();
+}
 
+function normalizePhoneStr(phone) {
+  if (!phone) return '';
+  return String(phone).replace(/\D/g, ''); // apenas dígitos
+}
 
+function normalizeNifStr(nif) {
+  if (!nif) return '';
+  return String(nif).replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+}
 
+function calculateLevenshteinDistance(s1, s2) {
+  const m = s1.length;
+  const n = s2.length;
+  if (m === 0) return n;
+  if (n === 0) return m;
+
+  const d = [];
+  for (let i = 0; i <= m; i++) d[i] = [i];
+  for (let j = 0; j <= n; j++) d[0][j] = j;
+
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      const cost = s1[i - 1] === s2[j - 1] ? 0 : 1;
+      d[i][j] = Math.min(
+        d[i - 1][j] + 1,      // eliminação
+        d[i][j - 1] + 1,      // inserção
+        d[i - 1][j - 1] + cost // substituição
+      );
+    }
+  }
+  return d[m][n];
+}
+
+function calculateStringSimilarity(s1, s2) {
+  const norm1 = normalizeDuplicateStr(s1);
+  const norm2 = normalizeDuplicateStr(s2);
+  if (!norm1 || !norm2) return 0;
+  if (norm1 === norm2) return 1.0;
+
+  // Se um contém o outro exatamente
+  if (norm1.includes(norm2) || norm2.includes(norm1)) {
+    const ratio = Math.min(norm1.length, norm2.length) / Math.max(norm1.length, norm2.length);
+    return Math.max(0.85, ratio);
+  }
+
+  // Token Overlap (palavras em comum)
+  const tokens1 = new Set(norm1.split(' ').filter(t => t.length > 2));
+  const tokens2 = new Set(norm2.split(' ').filter(t => t.length > 2));
+  if (tokens1.size > 0 && tokens2.size > 0) {
+    let intersection = 0;
+    tokens1.forEach(t => { if (tokens2.has(t)) intersection++; });
+    const tokenScore = (2 * intersection) / (tokens1.size + tokens2.size);
+    if (tokenScore >= 0.8) return tokenScore;
+  }
+
+  // Distância de Levenshtein
+  const maxLen = Math.max(norm1.length, norm2.length);
+  if (maxLen === 0) return 1.0;
+  const dist = calculateLevenshteinDistance(norm1, norm2);
+  return 1 - (dist / maxLen);
+}
+
+// 2. GESTÃO DE PARES IGNORADOS PELO UTILIZADOR
+function getIgnoredPairKey(id1, id2) {
+  return [String(id1), String(id2)].sort().join(':::');
+}
+
+function isDuplicatePairIgnored(type, id1, id2) {
+  if (!db.ignoredDuplicates || !Array.isArray(db.ignoredDuplicates)) {
+    db.ignoredDuplicates = [];
+    return false;
+  }
+  const key = getIgnoredPairKey(id1, id2);
+  return db.ignoredDuplicates.some(item => item.type === type && item.key === key);
+}
+
+function ignoreDuplicatePair(type, id1, id2) {
+  if (!db.ignoredDuplicates || !Array.isArray(db.ignoredDuplicates)) {
+    db.ignoredDuplicates = [];
+  }
+  const key = getIgnoredPairKey(id1, id2);
+  if (!isDuplicatePairIgnored(type, id1, id2)) {
+    db.ignoredDuplicates.push({
+      type,
+      key,
+      id1,
+      id2,
+      ignoredAt: new Date().toISOString(),
+      ignoredBy: typeof currentUser !== 'undefined' && currentUser ? currentUser.nome : 'Sistema'
+    });
+    saveDatabase();
+    showToast('Par marcado como não duplicado e ignorado.', 'info');
+    scanDuplicates(type);
+    updateDuplicateBadges();
+  }
+}
+window.ignoreDuplicatePair = ignoreDuplicatePair;
+
+function resetIgnoredDuplicates(type) {
+  if (!confirm('Deseja repor todos os pares ignorados para esta categoria?')) return;
+  if (!db.ignoredDuplicates) db.ignoredDuplicates = [];
+  if (type) {
+    db.ignoredDuplicates = db.ignoredDuplicates.filter(item => item.type !== type);
+  } else {
+    db.ignoredDuplicates = [];
+  }
+  saveDatabase();
+  showToast('Pares ignorados repostos com sucesso.', 'success');
+  scanDuplicates(type || currentDuplicateTab);
+  updateDuplicateBadges();
+}
+window.resetIgnoredDuplicates = resetIgnoredDuplicates;
+
+// 3. ALGORITMOS DE DETEÇÃO DE DUPLICADOS
+
+// Deteção de Clientes Duplicados
+function findDuplicateClients() {
+  const clients = db.clientes || [];
+  const duplicates = [];
+
+  for (let i = 0; i < clients.length; i++) {
+    for (let j = i + 1; j < clients.length; j++) {
+      const c1 = clients[i];
+      const c2 = clients[j];
+
+      if (isDuplicatePairIgnored('clients', c1.id, c2.id)) continue;
+
+      const reasons = [];
+      let score = 0;
+
+      // 1. NIF Exato
+      const nif1 = normalizeNifStr(c1.nif);
+      const nif2 = normalizeNifStr(c2.nif);
+      if (nif1 && nif2 && nif1 === nif2) {
+        reasons.push(`NIF idêntico: <strong>${escapeHtml(c1.nif)}</strong>`);
+        score += 100;
+      }
+
+      // 2. Email Exato
+      const email1 = normalizeDuplicateStr(c1.email);
+      const email2 = normalizeDuplicateStr(c2.email);
+      if (email1 && email2 && email1 === email2) {
+        reasons.push(`Email idêntico: <strong>${escapeHtml(c1.email)}</strong>`);
+        score += 85;
+      }
+
+      // 3. Telefone Exato
+      const tel1 = normalizePhoneStr(c1.telefone || c1.telemovel);
+      const tel2 = normalizePhoneStr(c2.telefone || c2.telemovel);
+      if (tel1 && tel2 && tel1.length >= 6 && tel1 === tel2) {
+        reasons.push(`Telefone idêntico: <strong>${escapeHtml(c1.telefone || c1.telemovel)}</strong>`);
+        score += 70;
+      }
+
+      // 4. Similaridade de Nome / Empresa
+      const simNome = calculateStringSimilarity(c1.nome || c1.empresa, c2.nome || c2.empresa);
+      if (simNome >= 0.82) {
+        const pct = Math.round(simNome * 100);
+        reasons.push(`Nome altamente similar (${pct}%): <em>"${escapeHtml(c1.nome || c1.empresa)}"</em> vs <em>"${escapeHtml(c2.nome || c2.empresa)}"</em>`);
+        score += Math.round(simNome * 80);
+      }
+
+      if (score >= 65) {
+        duplicates.push({
+          type: 'clients',
+          item1: c1,
+          item2: c2,
+          score: Math.min(100, score),
+          reasons: reasons
+        });
+      }
+    }
+  }
+
+  duplicates.sort((a, b) => b.score - a.score);
+  return duplicates;
+}
+
+// Deteção de Contactos Duplicados
+function findDuplicateContacts() {
+  const contacts = db.contactos || [];
+  const duplicates = [];
+
+  for (let i = 0; i < contacts.length; i++) {
+    for (let j = i + 1; j < contacts.length; j++) {
+      const c1 = contacts[i];
+      const c2 = contacts[j];
+
+      if (isDuplicatePairIgnored('contacts', c1.id, c2.id)) continue;
+
+      const reasons = [];
+      let score = 0;
+
+      // 1. Email Exato
+      const email1 = normalizeDuplicateStr(c1.email);
+      const email2 = normalizeDuplicateStr(c2.email);
+      if (email1 && email2 && email1 === email2) {
+        reasons.push(`Email idêntico: <strong>${escapeHtml(c1.email)}</strong>`);
+        score += 90;
+      }
+
+      // 2. Telemóvel/Telefone Exato
+      const tel1 = normalizePhoneStr(c1.telemovel || c1.telefone);
+      const tel2 = normalizePhoneStr(c2.telemovel || c2.telefone);
+      if (tel1 && tel2 && tel1.length >= 6 && tel1 === tel2) {
+        reasons.push(`Telemóvel idêntico: <strong>${escapeHtml(c1.telemovel || c1.telefone)}</strong>`);
+        score += 80;
+      }
+
+      // 3. Nome Similar no Mesmo Cliente / Empresa
+      const simNome = calculateStringSimilarity(c1.nome, c2.nome);
+      const sameClient = (c1.clienteId && c2.clienteId && String(c1.clienteId) === String(c2.clienteId)) ||
+                         (c1.empresa && c2.empresa && normalizeDuplicateStr(c1.empresa) === normalizeDuplicateStr(c2.empresa));
+
+      if (simNome >= 0.85) {
+        const pct = Math.round(simNome * 100);
+        if (sameClient) {
+          reasons.push(`Mesmo cliente e nome similar (${pct}%): <em>"${escapeHtml(c1.nome)}"</em>`);
+          score += 85;
+        } else {
+          reasons.push(`Nome altamente similar (${pct}%): <em>"${escapeHtml(c1.nome)}"</em> vs <em>"${escapeHtml(c2.nome)}"</em>`);
+          score += Math.round(simNome * 60);
+        }
+      }
+
+      if (score >= 65) {
+        duplicates.push({
+          type: 'contacts',
+          item1: c1,
+          item2: c2,
+          score: Math.min(100, score),
+          reasons: reasons
+        });
+      }
+    }
+  }
+
+  duplicates.sort((a, b) => b.score - a.score);
+  return duplicates;
+}
+
+// Deteção de Projetos Duplicados
+function findDuplicateProjects() {
+  const projects = db.projetos || [];
+  const duplicates = [];
+
+  for (let i = 0; i < projects.length; i++) {
+    for (let j = i + 1; j < projects.length; j++) {
+      const p1 = projects[i];
+      const p2 = projects[j];
+
+      if (isDuplicatePairIgnored('projects', p1.id, p2.id)) continue;
+
+      const reasons = [];
+      let score = 0;
+
+      // 1. Código/Referência Exata
+      const cod1 = normalizeDuplicateStr(p1.codigo || p1.referencia);
+      const cod2 = normalizeDuplicateStr(p2.codigo || p2.referencia);
+      if (cod1 && cod2 && cod1 === cod2) {
+        reasons.push(`Código de projeto idêntico: <strong>${escapeHtml(p1.codigo || p1.referencia)}</strong>`);
+        score += 95;
+      }
+
+      // 2. Nome de Projeto Similar para o Mesmo Cliente
+      const simNome = calculateStringSimilarity(p1.nome || p1.titulo, p2.nome || p2.titulo);
+      const sameClient = (p1.clienteId && p2.clienteId && String(p1.clienteId) === String(p2.clienteId)) ||
+                         (p1.cliente && p2.cliente && normalizeDuplicateStr(p1.cliente) === normalizeDuplicateStr(p2.cliente));
+
+      if (sameClient && simNome >= 0.75) {
+        const pct = Math.round(simNome * 100);
+        reasons.push(`Mesmo cliente e designação similar (${pct}%): <em>"${escapeHtml(p1.nome || p1.titulo)}"</em>`);
+        score += 85;
+      } else if (simNome >= 0.88) {
+        const pct = Math.round(simNome * 100);
+        reasons.push(`Designação de projeto altamente similar (${pct}%): <em>"${escapeHtml(p1.nome || p1.titulo)}"</em>`);
+        score += 65;
+      }
+
+      if (score >= 65) {
+        duplicates.push({
+          type: 'projects',
+          item1: p1,
+          item2: p2,
+          score: Math.min(100, score),
+          reasons: reasons
+        });
+      }
+    }
+  }
+
+  duplicates.sort((a, b) => b.score - a.score);
+  return duplicates;
+}
+
+// 4. ATUALIZAÇÃO DE BADGES E UI
+function updateDuplicateBadges() {
+  const clientDups = findDuplicateClients();
+  const contactDups = findDuplicateContacts();
+  const projectDups = findDuplicateProjects();
+  const total = clientDups.length + contactDups.length + projectDups.length;
+
+  activeDuplicatesCache.clients = clientDups;
+  activeDuplicatesCache.contacts = contactDups;
+  activeDuplicatesCache.projects = projectDups;
+
+  const badgeNav = document.getElementById('nav-duplicates-badge');
+  if (badgeNav) {
+    badgeNav.textContent = total;
+    badgeNav.style.display = total > 0 ? 'inline-block' : 'none';
+  }
+
+  const badgeClients = document.getElementById('tab-dup-clients-count');
+  if (badgeClients) badgeClients.textContent = clientDups.length;
+
+  const badgeContacts = document.getElementById('tab-dup-contacts-count');
+  if (badgeContacts) badgeContacts.textContent = contactDups.length;
+
+  const badgeProjects = document.getElementById('tab-dup-projects-count');
+  if (badgeProjects) badgeProjects.textContent = projectDups.length;
+}
+window.updateDuplicateBadges = updateDuplicateBadges;
+
+function switchDuplicateTab(tabName) {
+  currentDuplicateTab = tabName;
+  ['clients', 'contacts', 'projects'].forEach(t => {
+    const btn = document.getElementById(`tab-btn-dup-${t}`);
+    const pane = document.getElementById(`pane-dup-${t}`);
+    if (btn) {
+      if (t === tabName) {
+        btn.classList.remove('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
+        btn.classList.add('bg-primary-600', 'text-white', 'shadow-sm');
+      } else {
+        btn.classList.remove('bg-primary-600', 'text-white', 'shadow-sm');
+        btn.classList.add('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
+      }
+    }
+    if (pane) {
+      pane.classList.toggle('hidden', t !== tabName);
+    }
+  });
+
+  scanDuplicates(tabName);
+}
+window.switchDuplicateTab = switchDuplicateTab;
+
+function scanDuplicates(type) {
+  const targetType = type || currentDuplicateTab;
+  updateDuplicateBadges();
+  renderDuplicatesList(targetType);
+}
+window.scanDuplicates = scanDuplicates;
+
+function filterDuplicatesTable(type) {
+  const input = document.getElementById(`search-dup-${type}`);
+  const q = input ? normalizeDuplicateStr(input.value) : '';
+  const rows = document.querySelectorAll(`#table-dup-${type}-body tr.dup-row`);
+
+  rows.forEach(r => {
+    const text = normalizeDuplicateStr(r.textContent);
+    r.style.display = (!q || text.includes(q)) ? '' : 'none';
+  });
+}
+window.filterDuplicatesTable = filterDuplicatesTable;
+
+function renderDuplicatesList(type) {
+  const container = document.getElementById(`table-dup-${type}-body`);
+  if (!container) return;
+
+  const items = activeDuplicatesCache[type] || [];
+  if (items.length === 0) {
+    container.innerHTML = `
+      <tr>
+        <td colspan="5" class="py-12 text-center text-gray-500">
+          <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 mb-3">
+            <i class="fas fa-check-circle text-2xl"></i>
+          </div>
+          <p class="text-base font-semibold text-gray-800">Nenhum registo duplicado detetado!</p>
+          <p class="text-xs text-gray-500 mt-1">A sua base de dados nesta categoria está limpa e sem conflitos.</p>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  let html = '';
+  items.forEach((dup, index) => {
+    const item1 = dup.item1;
+    const item2 = dup.item2;
+    const scoreColor = dup.score >= 90 ? 'bg-red-100 text-red-800 border-red-200' :
+                       dup.score >= 75 ? 'bg-amber-100 text-amber-800 border-amber-200' :
+                       'bg-blue-100 text-blue-800 border-blue-200';
+
+    let item1Display = '';
+    let item2Display = '';
+
+    if (type === 'clients') {
+      item1Display = `
+        <div class="font-bold text-gray-900">${escapeHtml(item1.nome || item1.empresa || 'Sem Nome')}</div>
+        <div class="text-xs text-gray-500">NIF: ${escapeHtml(item1.nif || 'N/A')} | Tel: ${escapeHtml(item1.telefone || item1.telemovel || 'N/A')}</div>
+        <div class="text-xs text-gray-500">Email: ${escapeHtml(item1.email || 'N/A')}</div>
+        <div class="text-[10px] text-gray-400 mt-0.5">ID: ${escapeHtml(String(item1.id))}</div>
+      `;
+      item2Display = `
+        <div class="font-bold text-gray-900">${escapeHtml(item2.nome || item2.empresa || 'Sem Nome')}</div>
+        <div class="text-xs text-gray-500">NIF: ${escapeHtml(item2.nif || 'N/A')} | Tel: ${escapeHtml(item2.telefone || item2.telemovel || 'N/A')}</div>
+        <div class="text-xs text-gray-500">Email: ${escapeHtml(item2.email || 'N/A')}</div>
+        <div class="text-[10px] text-gray-400 mt-0.5">ID: ${escapeHtml(String(item2.id))}</div>
+      `;
+    } else if (type === 'contacts') {
+      item1Display = `
+        <div class="font-bold text-gray-900">${escapeHtml(item1.nome || 'Sem Nome')}</div>
+        <div class="text-xs text-gray-500">Empresa: ${escapeHtml(item1.empresa || item1.clienteNome || 'N/A')}</div>
+        <div class="text-xs text-gray-500">Email: ${escapeHtml(item1.email || 'N/A')} | Tel: ${escapeHtml(item1.telemovel || item1.telefone || 'N/A')}</div>
+        <div class="text-[10px] text-gray-400 mt-0.5">ID: ${escapeHtml(String(item1.id))}</div>
+      `;
+      item2Display = `
+        <div class="font-bold text-gray-900">${escapeHtml(item2.nome || 'Sem Nome')}</div>
+        <div class="text-xs text-gray-500">Empresa: ${escapeHtml(item2.empresa || item2.clienteNome || 'N/A')}</div>
+        <div class="text-xs text-gray-500">Email: ${escapeHtml(item2.email || 'N/A')} | Tel: ${escapeHtml(item2.telemovel || item2.telefone || 'N/A')}</div>
+        <div class="text-[10px] text-gray-400 mt-0.5">ID: ${escapeHtml(String(item2.id))}</div>
+      `;
+    } else if (type === 'projects') {
+      item1Display = `
+        <div class="font-bold text-gray-900">${escapeHtml(item1.nome || item1.titulo || 'Sem Título')}</div>
+        <div class="text-xs text-gray-500">Cliente: ${escapeHtml(item1.cliente || item1.clienteNome || 'N/A')}</div>
+        <div class="text-xs text-gray-500">Ref: ${escapeHtml(item1.codigo || item1.referencia || 'N/A')} | Estado: ${escapeHtml(item1.estado || 'N/A')}</div>
+        <div class="text-[10px] text-gray-400 mt-0.5">ID: ${escapeHtml(String(item1.id))}</div>
+      `;
+      item2Display = `
+        <div class="font-bold text-gray-900">${escapeHtml(item2.nome || item2.titulo || 'Sem Título')}</div>
+        <div class="text-xs text-gray-500">Cliente: ${escapeHtml(item2.cliente || item2.clienteNome || 'N/A')}</div>
+        <div class="text-xs text-gray-500">Ref: ${escapeHtml(item2.codigo || item2.referencia || 'N/A')} | Estado: ${escapeHtml(item2.estado || 'N/A')}</div>
+        <div class="text-[10px] text-gray-400 mt-0.5">ID: ${escapeHtml(String(item2.id))}</div>
+      `;
+    }
+
+    html += `
+      <tr class="dup-row hover:bg-gray-50 border-b border-gray-100 transition-colors">
+        <td class="p-3 text-center">
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold border ${scoreColor}">
+            ${dup.score}%
+          </span>
+        </td>
+        <td class="p-3">
+          <div class="p-2.5 rounded-lg border border-gray-200 bg-white shadow-2xs">
+            ${item1Display}
+          </div>
+        </td>
+        <td class="p-3">
+          <div class="p-2.5 rounded-lg border border-gray-200 bg-white shadow-2xs">
+            ${item2Display}
+          </div>
+        </td>
+        <td class="p-3">
+          <ul class="text-xs text-gray-600 list-disc pl-4 space-y-1">
+            ${dup.reasons.map(r => `<li>${r}</li>`).join('')}
+          </ul>
+        </td>
+        <td class="p-3 text-right whitespace-nowrap">
+          <button onclick="openMergeModal('${type}', '${escapeHtml(String(item1.id))}', '${escapeHtml(String(item2.id))}')" 
+                  class="px-3 py-1.5 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-xs font-semibold shadow-2xs inline-flex items-center gap-1.5 transition-all">
+            <i class="fas fa-code-branch"></i> Fundir
+          </button>
+          <button onclick="ignoreDuplicatePair('${type}', '${escapeHtml(String(item1.id))}', '${escapeHtml(String(item2.id))}')" 
+                  class="ml-1.5 px-2.5 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg text-xs font-medium inline-flex items-center gap-1 transition-all"
+                  title="Não é duplicado (ignorar)">
+            <i class="fas fa-eye-slash"></i> Ignorar
+          </button>
+        </td>
+      </tr>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+// 5. MODAL DE COMPARAÇÃO E FUSÃO DINÂMICA
+let activeMergeContext = null;
+
+function openMergeModal(type, id1, id2) {
+  let list = [];
+  if (type === 'clients') list = db.clientes || [];
+  else if (type === 'contacts') list = db.contactos || [];
+  else if (type === 'projects') list = db.projetos || [];
+
+  const item1 = list.find(x => String(x.id) === String(id1));
+  const item2 = list.find(x => String(x.id) === String(id2));
+
+  if (!item1 || !item2) {
+    showToast('Erro: Não foi possível localizar os registos para fusão.', 'danger');
+    return;
+  }
+
+  activeMergeContext = {
+    type,
+    item1,
+    item2,
+    masterId: item1.id,
+    secondaryId: item2.id,
+    selections: {}
+  };
+
+  const modal = document.getElementById('duplicate-merge-modal');
+  if (!modal) return;
+
+  renderMergeComparisonView();
+  modal.classList.remove('hidden');
+}
+window.openMergeModal = openMergeModal;
+
+function closeMergeModal() {
+  const modal = document.getElementById('duplicate-merge-modal');
+  if (modal) modal.classList.add('hidden');
+  activeMergeContext = null;
+}
+window.closeMergeModal = closeMergeModal;
+
+function switchMergeMaster(newMasterTarget) {
+  if (!activeMergeContext) return;
+  if (newMasterTarget === 'item1') {
+    activeMergeContext.masterId = activeMergeContext.item1.id;
+    activeMergeContext.secondaryId = activeMergeContext.item2.id;
+  } else {
+    activeMergeContext.masterId = activeMergeContext.item2.id;
+    activeMergeContext.secondaryId = activeMergeContext.item1.id;
+  }
+  renderMergeComparisonView();
+}
+window.switchMergeMaster = switchMergeMaster;
+
+function renderMergeComparisonView() {
+  if (!activeMergeContext) return;
+  const { type, item1, item2, masterId } = activeMergeContext;
+
+  const titleEl = document.getElementById('merge-modal-title');
+  if (titleEl) {
+    const typeLabel = type === 'clients' ? 'Cliente' : (type === 'contacts' ? 'Contacto' : 'Projeto');
+    titleEl.innerHTML = `<i class="fas fa-code-branch text-primary-600 mr-2"></i> Fundir ${typeLabel}: Selecionar Dados Principais`;
+  }
+
+  const isItem1Master = String(masterId) === String(item1.id);
+
+  // Determinar campos relevantes por tipo
+  let fields = [];
+  if (type === 'clients') {
+    fields = [
+      { key: 'nome', label: 'Nome do Cliente / Entidade' },
+      { key: 'empresa', label: 'Nome Comercial / Empresa' },
+      { key: 'nif', label: 'NIF / NIPC' },
+      { key: 'email', label: 'Email Principal' },
+      { key: 'telefone', label: 'Telefone Fixo' },
+      { key: 'telemovel', label: 'Telemóvel' },
+      { key: 'morada', label: 'Morada' },
+      { key: 'codPostal', label: 'Código Postal' },
+      { key: 'localidade', label: 'Localidade / Cidade' },
+      { key: 'pais', label: 'País' },
+      { key: 'setor', label: 'Setor de Atividade' },
+      { key: 'origem', label: 'Origem do Contacto' },
+      { key: 'website', label: 'Website' },
+      { key: 'observacoes', label: 'Observações / Notas' }
+    ];
+  } else if (type === 'contacts') {
+    fields = [
+      { key: 'nome', label: 'Nome Completo' },
+      { key: 'cargo', label: 'Cargo / Função' },
+      { key: 'departamento', label: 'Departamento' },
+      { key: 'empresa', label: 'Empresa / Entidade' },
+      { key: 'email', label: 'Email de Contacto' },
+      { key: 'telemovel', label: 'Telemóvel' },
+      { key: 'telefone', label: 'Telefone Fixo' },
+      { key: 'notas', label: 'Notas / Observações' }
+    ];
+  } else if (type === 'projects') {
+    fields = [
+      { key: 'nome', label: 'Designação / Título' },
+      { key: 'codigo', label: 'Código / Referência' },
+      { key: 'cliente', label: 'Cliente Associado' },
+      { key: 'estado', label: 'Estado do Projeto' },
+      { key: 'tipoVeiculo', label: 'Tipo de Veículo' },
+      { key: 'valor', label: 'Valor Estimado (€)' },
+      { key: 'dataInicio', label: 'Data de Início' },
+      { key: 'dataPrevisao', label: 'Previsão de Conclusão' },
+      { key: 'descricao', label: 'Memória Descritiva / Âmbito' }
+    ];
+  }
+
+  // Contagem de registos associados
+  let assoc1Text = '';
+  let assoc2Text = '';
+  if (type === 'clients') {
+    const c1Contacts = (db.contactos || []).filter(x => String(x.clienteId) === String(item1.id) || x.empresa === item1.nome).length;
+    const c1Projects = (db.projetos || []).filter(x => String(x.clienteId) === String(item1.id) || x.cliente === item1.nome).length;
+    const c1Interactions = (db.interacoes || []).filter(x => String(x.clienteId) === String(item1.id)).length;
+    const c1Budgets = (db.orcamentos || []).filter(x => String(x.clienteId) === String(item1.id) || x.cliente === item1.nome).length;
+
+    const c2Contacts = (db.contactos || []).filter(x => String(x.clienteId) === String(item2.id) || x.empresa === item2.nome).length;
+    const c2Projects = (db.projetos || []).filter(x => String(x.clienteId) === String(item2.id) || x.cliente === item2.nome).length;
+    const c2Interactions = (db.interacoes || []).filter(x => String(x.clienteId) === String(item2.id)).length;
+    const c2Budgets = (db.orcamentos || []).filter(x => String(x.clienteId) === String(item2.id) || x.cliente === item2.nome).length;
+
+    assoc1Text = `${c1Contacts} contactos, ${c1Projects} projetos, ${c1Interactions} interações, ${c1Budgets} orçamentos`;
+    assoc2Text = `${c2Contacts} contactos, ${c2Projects} projetos, ${c2Interactions} interações, ${c2Budgets} orçamentos`;
+  }
+
+  let tableHtml = `
+    <div class="mb-4 bg-amber-50 border border-amber-200 rounded-xl p-3.5 text-xs text-amber-900 flex items-start gap-2.5">
+      <i class="fas fa-shield-alt text-base text-amber-600 mt-0.5"></i>
+      <div>
+        <strong class="font-semibold">Regra de Segurança de Fusão:</strong>
+        O registo selecionado como <strong>Principal (Master)</strong> será mantido. Todos os contactos, projetos, interações e orçamentos ligados ao registo secundário serão <strong>re-vinculados automaticamente</strong> ao registo principal, preservando 100% dos dados.
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3 mb-4">
+      <div class="p-3 rounded-xl border-2 transition-all cursor-pointer ${isItem1Master ? 'border-primary-600 bg-primary-50/40 shadow-xs' : 'border-gray-200 bg-white hover:border-gray-300'}"
+           onclick="switchMergeMaster('item1')">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-xs font-bold uppercase tracking-wider ${isItem1Master ? 'text-primary-700' : 'text-gray-500'}">
+            ${isItem1Master ? '<i class="fas fa-crown text-amber-500 mr-1"></i> Registo A (PRINCIPAL)' : 'Registo A (Secundário)'}
+          </span>
+          <input type="radio" name="master_select_radio" ${isItem1Master ? 'checked' : ''} class="text-primary-600 focus:ring-primary-500">
+        </div>
+        <div class="text-sm font-bold text-gray-900 truncate">${escapeHtml(item1.nome || item1.empresa || item1.titulo || 'Registo #1')}</div>
+        <div class="text-[11px] text-gray-500 mt-1">Criado em: ${escapeHtml(item1.dataCriacao || item1.createdAt || 'N/A')}</div>
+        ${assoc1Text ? `<div class="text-[11px] font-medium text-primary-700 mt-1"><i class="fas fa-link mr-1"></i>${assoc1Text}</div>` : ''}
+      </div>
+
+      <div class="p-3 rounded-xl border-2 transition-all cursor-pointer ${!isItem1Master ? 'border-primary-600 bg-primary-50/40 shadow-xs' : 'border-gray-200 bg-white hover:border-gray-300'}"
+           onclick="switchMergeMaster('item2')">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-xs font-bold uppercase tracking-wider ${!isItem1Master ? 'text-primary-700' : 'text-gray-500'}">
+            ${!isItem1Master ? '<i class="fas fa-crown text-amber-500 mr-1"></i> Registo B (PRINCIPAL)' : 'Registo B (Secundário)'}
+          </span>
+          <input type="radio" name="master_select_radio" ${!isItem1Master ? 'checked' : ''} class="text-primary-600 focus:ring-primary-500">
+        </div>
+        <div class="text-sm font-bold text-gray-900 truncate">${escapeHtml(item2.nome || item2.empresa || item2.titulo || 'Registo #2')}</div>
+        <div class="text-[11px] text-gray-500 mt-1">Criado em: ${escapeHtml(item2.dataCriacao || item2.createdAt || 'N/A')}</div>
+        ${assoc2Text ? `<div class="text-[11px] font-medium text-primary-700 mt-1"><i class="fas fa-link mr-1"></i>${assoc2Text}</div>` : ''}
+      </div>
+    </div>
+
+    <div class="overflow-x-auto border border-gray-200 rounded-xl max-h-[380px] overflow-y-auto">
+      <table class="w-full text-xs text-left border-collapse">
+        <thead class="bg-gray-100 text-gray-700 font-semibold sticky top-0 z-10">
+          <tr>
+            <th class="p-2.5 w-1/4 border-b border-gray-200">Campo</th>
+            <th class="p-2.5 w-[37.5%] border-b border-gray-200">Valor Registo A</th>
+            <th class="p-2.5 w-[37.5%] border-b border-gray-200">Valor Registo B</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+  `;
+
+  fields.forEach(f => {
+    const val1 = item1[f.key] || '';
+    const val2 = item2[f.key] || '';
+    const selectedSource = activeMergeContext.selections[f.key] || (isItem1Master ? 'A' : 'B');
+
+    const isDifferent = normalizeDuplicateStr(String(val1)) !== normalizeDuplicateStr(String(val2));
+    const rowBg = isDifferent ? 'bg-amber-50/30' : 'bg-white';
+
+    tableHtml += `
+      <tr class="${rowBg}">
+        <td class="p-2.5 font-medium text-gray-800 align-top">
+          ${escapeHtml(f.label)}
+          ${isDifferent ? '<span class="ml-1 text-[10px] text-amber-600 font-semibold">(diferente)</span>' : ''}
+        </td>
+        <td class="p-2.5 align-top">
+          <label class="flex items-start gap-2 cursor-pointer p-1.5 rounded hover:bg-gray-100 transition-colors">
+            <input type="radio" name="field_${f.key}" value="A" ${selectedSource === 'A' ? 'checked' : ''}
+                   onchange="updateMergeFieldChoice('${f.key}', 'A')"
+                   class="mt-0.5 text-primary-600 focus:ring-primary-500">
+            <div class="text-gray-900 break-words flex-1">
+              ${val1 ? escapeHtml(String(val1)) : '<span class="text-gray-400 italic">Vazio</span>'}
+            </div>
+          </label>
+        </td>
+        <td class="p-2.5 align-top">
+          <label class="flex items-start gap-2 cursor-pointer p-1.5 rounded hover:bg-gray-100 transition-colors">
+            <input type="radio" name="field_${f.key}" value="B" ${selectedSource === 'B' ? 'checked' : ''}
+                   onchange="updateMergeFieldChoice('${f.key}', 'B')"
+                   class="mt-0.5 text-primary-600 focus:ring-primary-500">
+            <div class="text-gray-900 break-words flex-1">
+              ${val2 ? escapeHtml(String(val2)) : '<span class="text-gray-400 italic">Vazio</span>'}
+            </div>
+          </label>
+        </td>
+      </tr>
+    `;
+  });
+
+  tableHtml += `
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  const container = document.getElementById('merge-modal-body');
+  if (container) container.innerHTML = tableHtml;
+}
+
+function updateMergeFieldChoice(fieldKey, source) {
+  if (!activeMergeContext) return;
+  activeMergeContext.selections[fieldKey] = source;
+}
+window.updateMergeFieldChoice = updateMergeFieldChoice;
+
+// 6. MOTOR DE EXECUÇÃO DA FUSÃO COM INTEGRIDADE RELACIONAL TOTAL
+function confirmAndExecuteMerge() {
+  if (!activeMergeContext) return;
+  const { type, item1, item2, masterId, secondaryId, selections } = activeMergeContext;
+
+  const masterItem = String(item1.id) === String(masterId) ? item1 : item2;
+  const secondaryItem = String(item1.id) === String(masterId) ? item2 : item1;
+
+  const typeLabel = type === 'clients' ? 'Cliente' : (type === 'contacts' ? 'Contacto' : 'Projeto');
+  if (!confirm(`Tem a certeza que deseja fundir este ${typeLabel}?\n\nO registo principal "${masterItem.nome || masterItem.empresa || masterItem.titulo}" será mantido com todos os dados e vínculos combinados, e o registo secundário será removido com segurança.`)) {
+    return;
+  }
+
+  // 1. Consolidar campos no Master
+  Object.keys(selections).forEach(key => {
+    const choice = selections[key];
+    if (choice === 'A') {
+      masterItem[key] = item1[key] || '';
+    } else if (choice === 'B') {
+      masterItem[key] = item2[key] || '';
+    }
+  });
+
+  // Preencher campos vazios no master com dados do secundário caso existam
+  Object.keys(secondaryItem).forEach(key => {
+    if (!masterItem[key] && secondaryItem[key] && !['id', 'dataCriacao', 'createdAt'].includes(key)) {
+      masterItem[key] = secondaryItem[key];
+    }
+  });
+
+  // 2. Re-vincular todas as entidades relacionadas conforme o tipo
+  let reallocatedStats = [];
+
+  if (type === 'clients') {
+    const oldId = String(secondaryItem.id);
+    const newId = String(masterItem.id);
+    const oldName = secondaryItem.nome || secondaryItem.empresa;
+    const newName = masterItem.nome || masterItem.empresa;
+
+    // Contactos
+    let contactsCount = 0;
+    (db.contactos || []).forEach(ct => {
+      if (String(ct.clienteId) === oldId || ct.empresa === oldName) {
+        ct.clienteId = newId;
+        ct.clienteNome = newName;
+        ct.empresa = newName;
+        contactsCount++;
+      }
+    });
+    if (contactsCount > 0) reallocatedStats.push(`${contactsCount} contacto(s)`);
+
+    // Projetos
+    let projectsCount = 0;
+    (db.projetos || []).forEach(pj => {
+      if (String(pj.clienteId) === oldId || pj.cliente === oldName) {
+        pj.clienteId = newId;
+        pj.cliente = newName;
+        pj.clienteNome = newName;
+        projectsCount++;
+      }
+    });
+    if (projectsCount > 0) reallocatedStats.push(`${projectsCount} projeto(s)`);
+
+    // Interações
+    let interactionsCount = 0;
+    (db.interacoes || []).forEach(it => {
+      if (String(it.clienteId) === oldId) {
+        it.clienteId = newId;
+        it.clienteNome = newName;
+        interactionsCount++;
+      }
+    });
+    if (interactionsCount > 0) reallocatedStats.push(`${interactionsCount} interação/ões`);
+
+    // Orçamentos
+    let budgetsCount = 0;
+    (db.orcamentos || []).forEach(oc => {
+      if (String(oc.clienteId) === oldId || oc.cliente === oldName) {
+        oc.clienteId = newId;
+        oc.cliente = newName;
+        budgetsCount++;
+      }
+    });
+    if (budgetsCount > 0) reallocatedStats.push(`${budgetsCount} orçamento(s)`);
+
+    // Remover secundário
+    db.clientes = (db.clientes || []).filter(c => String(c.id) !== oldId);
+
+  } else if (type === 'contacts') {
+    const oldId = String(secondaryItem.id);
+    const newId = String(masterItem.id);
+    const newName = masterItem.nome;
+
+    // Interações
+    let itCount = 0;
+    (db.interacoes || []).forEach(it => {
+      if (String(it.contactoId) === oldId) {
+        it.contactoId = newId;
+        it.contactoNome = newName;
+        itCount++;
+      }
+    });
+    if (itCount > 0) reallocatedStats.push(`${itCount} interação/ões`);
+
+    // Remover secundário
+    db.contactos = (db.contactos || []).filter(c => String(c.id) !== oldId);
+
+  } else if (type === 'projects') {
+    const oldId = String(secondaryItem.id);
+    const newId = String(masterItem.id);
+    const newTitle = masterItem.nome || masterItem.titulo;
+
+    // Interações de Projeto
+    let itCount = 0;
+    (db.interacoesProjetos || []).forEach(it => {
+      if (String(it.projetoId) === oldId) {
+        it.projetoId = newId;
+        it.projetoTitulo = newTitle;
+        itCount++;
+      }
+    });
+    if (itCount > 0) reallocatedStats.push(`${itCount} nota(s) de projeto`);
+
+    // Orçamentos
+    let ocCount = 0;
+    (db.orcamentos || []).forEach(oc => {
+      if (String(oc.projetoId) === oldId) {
+        oc.projetoId = newId;
+        oc.projetoNome = newTitle;
+        ocCount++;
+      }
+    });
+    if (ocCount > 0) reallocatedStats.push(`${ocCount} orçamento(s)`);
+
+    // Remover secundário
+    db.projetos = (db.projetos || []).filter(p => String(p.id) !== oldId);
+  }
+
+  // 3. Registar no Log de Auditoria do Sistema
+  const userName = typeof currentUser !== 'undefined' && currentUser ? currentUser.nome : 'Administrador';
+  const logEntry = {
+    id: Date.now(),
+    data: new Date().toISOString(),
+    usuario: userName,
+    acao: `Fusão de Duplicados (${typeLabel})`,
+    detalhes: `Fundido registo ID ${secondaryItem.id} em ID ${masterItem.id} ("${masterItem.nome || masterItem.empresa || masterItem.titulo}"). ${reallocatedStats.length > 0 ? 'Vínculos transferidos: ' + reallocatedStats.join(', ') : 'Sem vínculos pendentes'}.`
+  };
+  if (!db.userLogs) db.userLogs = [];
+  db.userLogs.push(logEntry);
+
+  // 4. Salvar Base de Dados
+  saveDatabase();
+
+  // 5. Atualizar Vistas Gerais
+  if (type === 'clients' && typeof renderClients === 'function') renderClients();
+  if (type === 'contacts' && typeof renderContacts === 'function') renderContacts();
+  if (type === 'projects' && typeof renderProjects === 'function') renderProjects();
+  if (typeof renderDashboard === 'function') renderDashboard();
+
+  closeMergeModal();
+  showToast(`Fusão de ${typeLabel.toLowerCase()} concluída com sucesso!`, 'success');
+  scanDuplicates(type);
+  updateDuplicateBadges();
+}
+window.confirmAndExecuteMerge = confirmAndExecuteMerge;
+
+// 7. EXPORTAÇÃO DE RELATÓRIO DE DUPLICADOS
+function exportDuplicatesReport() {
+  const type = currentDuplicateTab;
+  const items = activeDuplicatesCache[type] || [];
+
+  if (items.length === 0) {
+    showToast('Não existem duplicados detetados para exportar.', 'info');
+    return;
+  }
+
+  let csvContent = 'data:text/csv;charset=utf-8,\ufeff';
+  csvContent += 'Probabilidade;ID Registo 1;Nome Registo 1;ID Registo 2;Nome Registo 2;Motivos de Deteção\n';
+
+  items.forEach(dup => {
+    const score = dup.score + '%';
+    const id1 = dup.item1.id || '';
+    const name1 = (dup.item1.nome || dup.item1.empresa || dup.item1.titulo || '').replace(/;/g, ',');
+    const id2 = dup.item2.id || '';
+    const name2 = (dup.item2.nome || dup.item2.empresa || dup.item2.titulo || '').replace(/;/g, ',');
+    const reasons = dup.reasons.map(r => r.replace(/<[^>]+>/g, '')).join(' | ').replace(/;/g, ',');
+
+    csvContent += `"${score}";"${id1}";"${name1}";"${id2}";"${name2}";"${reasons}"\n`;
+  });
+
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement('a');
+  link.setAttribute('href', encodedUri);
+  link.setAttribute('download', `Relatorio_Duplicados_${type}_${new Date().toISOString().slice(0, 10)}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  showToast('Relatório de duplicados exportado em formato CSV!', 'success');
+}
+window.exportDuplicatesReport = exportDuplicatesReport;

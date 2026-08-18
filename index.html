@@ -422,11 +422,6 @@
           id="navBtnConfiguracao" title="Configuração">
           <i class="fa-solid fa-gear" style="color: #64748b;"></i> <span>Configuração</span>
         </button>
-        <button type="button" class="nav-slide-btn" data-tab="tab-duplicados" onclick="switchTab('tab-duplicados')"
-          id="navBtnDuplicados" title="Gestão de Duplicados">
-          <i class="fa-solid fa-clone" style="color: #6366f1;"></i> <span>Duplicados</span>
-          <span id="nav-duplicates-badge" style="display:none; background:#ef4444; color:#fff; font-size:11px; font-weight:700; padding:1px 6px; border-radius:10px; margin-left:4px;">0</span>
-        </button>
         <button type="button" class="nav-slide-btn" data-tab="tab-orcamentos" onclick="switchTab('tab-orcamentos')"
           title="Orçamentos">
           <i class="fa-solid fa-file-invoice-dollar" style="color: #f59e0b;"></i> <span>Orçamentos</span>
@@ -549,7 +544,8 @@
             <i class="fa-solid fa-clone" style="color: #6366f1;"></i>
           </div>
           <div class="menu-card-title">Gestão de Duplicados</div>
-          <div class="menu-card-desc">Deteção inteligente e fusão segura de clientes, contactos e projetos duplicados</div>
+          <div class="menu-card-desc">Deteção inteligente e fusão segura de clientes, contactos e projetos duplicados
+          </div>
         </button>
 
         <button type="button" class="main-menu-card" onclick="switchTab('tab-database')">
@@ -2046,8 +2042,25 @@
 
     </section>
 
-    <!-- TAB: CONFIGURAÇÃO DO SISTEMA -->
+    <!-- TAB: CONFIGURAÇÃO DO SISTEMA (inclui sub-tab Duplicados) -->
     <section id="tab-database" class="tab-content">
+
+      <!-- SUB-NAV INTERNA DA CONFIGURAÇÃO -->
+      <div style="display:flex; gap:0.5rem; margin-bottom:1.5rem; border-bottom:2px solid var(--border-color, #e2e8f0); padding-bottom:0;">
+        <button type="button" id="cfgSubTab-config" onclick="switchCfgSubTab('config')"
+          style="padding:0.55rem 1.2rem; border:none; background:none; cursor:pointer; font-size:0.95rem; font-weight:600; color:#64748b; border-bottom:3px solid transparent; margin-bottom:-2px; border-radius:4px 4px 0 0; transition:all .2s;">
+          <i class="fa-solid fa-gear" style="margin-right:6px;"></i>Configuração
+        </button>
+        <button type="button" id="cfgSubTab-duplicados" onclick="switchCfgSubTab('duplicados')"
+          style="padding:0.55rem 1.2rem; border:none; background:none; cursor:pointer; font-size:0.95rem; font-weight:600; color:#64748b; border-bottom:3px solid transparent; margin-bottom:-2px; border-radius:4px 4px 0 0; transition:all .2s; display:flex; align-items:center; gap:6px;">
+          <i class="fa-solid fa-clone" style="color:#6366f1;"></i>Duplicados
+          <span id="nav-duplicates-badge-cfg"
+            style="display:none; background:#ef4444; color:#fff; font-size:11px; font-weight:700; padding:1px 6px; border-radius:10px;">0</span>
+        </button>
+      </div>
+
+      <!-- PAINEL: CONFIGURAÇÃO -->
+      <div id="cfgPanel-config">
       <div class="card">
         <div class="card-header">
           <h2 class="card-title">
@@ -2332,15 +2345,16 @@
 
         </div>
       </div>
-    </section>
+      </div><!-- /cfgPanel-config -->
 
-    <!-- ========================================== -->
-    <!-- SECÇÃO: GESTÃO E LIMPEZA DE DUPLICADOS    -->
-    <!-- ========================================== -->
-    <section id="tab-duplicados" class="tab-content">
-      <div class="page-header" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <!-- PAINEL: DUPLICADOS (movido para dentro de Configuração) -->
+      <div id="cfgPanel-duplicados" style="display:none;">
+
+      <div class="page-header"
+        style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         <div>
-          <h2 style="margin: 0; font-size: 1.5rem; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 0.6rem;">
+          <h2
+            style="margin: 0; font-size: 1.5rem; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 0.6rem;">
             <i class="fa-solid fa-clone" style="color: #6366f1;"></i> Deteção e Limpeza de Duplicados
           </h2>
           <p style="margin: 0.3rem 0 0 0; color: #64748b; font-size: 0.9rem;">
@@ -2348,72 +2362,92 @@
           </p>
         </div>
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-          <button type="button" class="btn btn-secondary" onclick="exportDuplicatesReportExcel()" title="Exportar relatório detalhado de duplicados para Excel">
+          <button type="button" class="btn btn-secondary" onclick="exportDuplicatesReportExcel()"
+            title="Exportar relatório detalhado de duplicados para Excel">
             <i class="fa-solid fa-file-excel" style="color: #10b981;"></i> Exportar Relatório
           </button>
-          <button type="button" class="btn btn-primary" onclick="runDuplicatesScan(true)" style="background: #6366f1; border-color: #6366f1;" title="Executar verificação profunda agora">
+          <button type="button" class="btn btn-primary" onclick="runDuplicatesScan(true)"
+            style="background: #6366f1; border-color: #6366f1;" title="Executar verificação profunda agora">
             <i class="fa-solid fa-arrows-rotate"></i> Verificar Agora
           </button>
         </div>
       </div>
 
       <!-- CARDS DE ESTATÍSTICAS DE DUPLICADOS -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
-        <div class="card" style="padding: 1.2rem; display: flex; align-items: center; gap: 1rem; border-left: 4px solid #6366f1;">
-          <div style="width: 46px; height: 46px; border-radius: 12px; background: #e0e7ff; color: #6366f1; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
+      <div
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+        <div class="card"
+          style="padding: 1.2rem; display: flex; align-items: center; gap: 1rem; border-left: 4px solid #6366f1;">
+          <div
+            style="width: 46px; height: 46px; border-radius: 12px; background: #e0e7ff; color: #6366f1; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
             <i class="fa-solid fa-layer-group"></i>
           </div>
           <div>
-            <div style="font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase;">Total Grupos</div>
+            <div style="font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase;">Total Grupos
+            </div>
             <div id="dup-stat-total" style="font-size: 1.6rem; font-weight: 700; color: #1e293b;">0</div>
           </div>
         </div>
 
-        <div class="card" style="padding: 1.2rem; display: flex; align-items: center; gap: 1rem; border-left: 4px solid #2563eb;">
-          <div style="width: 46px; height: 46px; border-radius: 12px; background: #dbeafe; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
+        <div class="card"
+          style="padding: 1.2rem; display: flex; align-items: center; gap: 1rem; border-left: 4px solid #2563eb;">
+          <div
+            style="width: 46px; height: 46px; border-radius: 12px; background: #dbeafe; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
             <i class="fa-solid fa-building-user"></i>
           </div>
           <div>
-            <div style="font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase;">Clientes Duplicados</div>
+            <div style="font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase;">Clientes
+              Duplicados</div>
             <div id="dup-stat-clients" style="font-size: 1.6rem; font-weight: 700; color: #1e293b;">0</div>
           </div>
         </div>
 
-        <div class="card" style="padding: 1.2rem; display: flex; align-items: center; gap: 1rem; border-left: 4px solid #10b981;">
-          <div style="width: 46px; height: 46px; border-radius: 12px; background: #d1fae5; color: #10b981; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
+        <div class="card"
+          style="padding: 1.2rem; display: flex; align-items: center; gap: 1rem; border-left: 4px solid #10b981;">
+          <div
+            style="width: 46px; height: 46px; border-radius: 12px; background: #d1fae5; color: #10b981; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
             <i class="fa-solid fa-address-book"></i>
           </div>
           <div>
-            <div style="font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase;">Contactos Duplicados</div>
+            <div style="font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase;">Contactos
+              Duplicados</div>
             <div id="dup-stat-contacts" style="font-size: 1.6rem; font-weight: 700; color: #1e293b;">0</div>
           </div>
         </div>
 
-        <div class="card" style="padding: 1.2rem; display: flex; align-items: center; gap: 1rem; border-left: 4px solid #0284c7;">
-          <div style="width: 46px; height: 46px; border-radius: 12px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
+        <div class="card"
+          style="padding: 1.2rem; display: flex; align-items: center; gap: 1rem; border-left: 4px solid #0284c7;">
+          <div
+            style="width: 46px; height: 46px; border-radius: 12px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
             <i class="fa-solid fa-diagram-project"></i>
           </div>
           <div>
-            <div style="font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase;">Projetos Duplicados</div>
+            <div style="font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase;">Projetos
+              Duplicados</div>
             <div id="dup-stat-projects" style="font-size: 1.6rem; font-weight: 700; color: #1e293b;">0</div>
           </div>
         </div>
       </div>
 
       <!-- BANNER DE RESOLUÇÃO AUTOMÁTICA EM LOTE -->
-      <div class="card" style="margin-bottom: 1.5rem; background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%); border: 1px solid #c7d2fe; padding: 1.2rem;">
+      <div class="card"
+        style="margin-bottom: 1.5rem; background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%); border: 1px solid #c7d2fe; padding: 1.2rem;">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
           <div style="max-width: 650px;">
-            <h4 style="margin: 0 0 0.4rem 0; color: #3730a3; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+            <h4
+              style="margin: 0 0 0.4rem 0; color: #3730a3; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
               <i class="fa-solid fa-wand-magic-sparkles" style="color: #6366f1;"></i> Fusão Automática Segura (Em Lote)
             </h4>
             <p style="margin: 0; font-size: 0.88rem; color: #475569;">
-              Funde automaticamente os grupos com <strong>100% de certeza (NIF idêntico, Email idêntico ou Código exato)</strong>.
-              Todos os campos preenchidos e relações (projetos, contactos, orçamentos, interações) são preservados integralmente.
+              Funde automaticamente os grupos com <strong>100% de certeza (NIF idêntico, Email idêntico ou Código
+                exato)</strong>.
+              Todos os campos preenchidos e relações (projetos, contactos, orçamentos, interações) são preservados
+              integralmente.
             </p>
           </div>
           <div style="display: flex; gap: 0.5rem;">
-            <button type="button" class="btn btn-primary" onclick="autoMergeHighConfidenceDuplicates()" id="btnAutoMergeHighConfidence" style="background: #4f46e5; border-color: #4f46e5;">
+            <button type="button" class="btn btn-primary" onclick="autoMergeHighConfidenceDuplicates()"
+              id="btnAutoMergeHighConfidence" style="background: #4f46e5; border-color: #4f46e5;">
               <i class="fa-solid fa-bolt"></i> Fundir Duplicados Óbvios com Segurança
             </button>
           </div>
@@ -2424,12 +2458,16 @@
       <div class="card" style="margin-bottom: 1.5rem; padding: 1rem;">
         <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
           <div style="flex: 1; min-width: 250px; position: relative;">
-            <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
-            <input type="text" id="duplicatesSearchInput" class="form-control" placeholder="Pesquisar nos duplicados por nome, NIF, email, empresa..." style="padding-left: 2.5rem;" oninput="filterDuplicatesList()">
+            <i class="fa-solid fa-magnifying-glass"
+              style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
+            <input type="text" id="duplicatesSearchInput" class="form-control"
+              placeholder="Pesquisar nos duplicados por nome, NIF, email, empresa..." style="padding-left: 2.5rem;"
+              oninput="filterDuplicatesList()">
           </div>
           <div style="display: flex; gap: 0.5rem; align-items: center;">
             <label style="font-size: 0.85rem; font-weight: 600; color: #475569;">Tipo:</label>
-            <select id="duplicatesTypeFilter" class="form-control" style="width: auto; min-width: 140px;" onchange="filterDuplicatesList()">
+            <select id="duplicatesTypeFilter" class="form-control" style="width: auto; min-width: 140px;"
+              onchange="filterDuplicatesList()">
               <option value="all">Todos os Tipos</option>
               <option value="clientes">Clientes</option>
               <option value="contactos">Contactos</option>
@@ -2438,10 +2476,11 @@
           </div>
           <div style="display: flex; gap: 0.5rem; align-items: center;">
             <label style="font-size: 0.85rem; font-weight: 600; color: #475569;">Confiança:</label>
-            <select id="duplicatesConfidenceFilter" class="form-control" style="width: auto; min-width: 150px;" onchange="filterDuplicatesList()">
+            <select id="duplicatesConfidenceFilter" class="form-control" style="width: auto; min-width: 150px;"
+              onchange="filterDuplicatesList()">
               <option value="all">Todas as Certezas</option>
-              <option value="high">Alta (NIF / Email / Código)</option>
-              <option value="medium">Média (Nome / Fone)</option>
+              <option value="high">Alta (Nome / NIF / Código)</option>
+              <option value="medium">Média (Nome Similar / Email)</option>
             </select>
           </div>
         </div>
@@ -2450,8 +2489,13 @@
       <!-- LISTA DE RESULTADOS DE DUPLICADOS -->
       <div id="duplicates-results-container">
         <!-- Rendered dynamically by renderDuplicatesUI() -->
-      </div>
-    </section>
+      </div><!-- /duplicates-results-container -->
+      </div><!-- /cfgPanel-duplicados -->
+
+    </section><!-- /tab-database -->
+
+    <!-- stub para compatibilidade de switchTab('tab-duplicados') -->
+    <section id="tab-duplicados" class="tab-content" style="display:none !important;"></section>
 
   </main>
 
@@ -3507,6 +3551,21 @@
           <i class="fa-solid fa-eye"></i> Visualizar Ficheiro
         </h3>
         <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+          <!-- Controles Universais de Zoom (+ e -) para Documentos e Imagens -->
+          <div style="display: inline-flex; align-items: center; gap: 0.25rem; background: rgba(255, 255, 255, 0.18); padding: 0.2rem 0.4rem; border-radius: 6px; margin-right: 0.35rem; border: 1px solid rgba(255, 255, 255, 0.25);">
+            <button type="button" class="btn btn-sm" onclick="adjustUniversalViewerZoom(-0.15)" title="Diminuir / Reduzir (-)"
+              style="background: transparent; color: #ffffff; border: none; padding: 0.25rem 0.55rem; font-size: 0.95rem; font-weight: 700; cursor: pointer; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center;">
+              <i class="fa-solid fa-minus"></i>
+            </button>
+            <button type="button" id="viewerZoomLevelBadge" onclick="resetUniversalViewerZoom()" title="Tamanho normal (100%)"
+              style="background: rgba(255,255,255,0.12); color: #ffffff; border: 1px solid rgba(255,255,255,0.25); border-radius: 4px; padding: 0.2rem 0.45rem; font-size: 0.8rem; font-weight: 700; cursor: pointer; min-width: 48px; text-align: center;">
+              100%
+            </button>
+            <button type="button" class="btn btn-sm" onclick="adjustUniversalViewerZoom(0.15)" title="Aumentar / Ampliar (+)"
+              style="background: transparent; color: #ffffff; border: none; padding: 0.25rem 0.55rem; font-size: 0.95rem; font-weight: 700; cursor: pointer; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center;">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+          </div>
           <button class="btn btn-secondary btn-sm" id="btnDownloadCurrentMedia" onclick="downloadCurrentViewerFile()"
             title="Descarregar Ficheiro">
             <i class="fa-solid fa-download"></i> Descarregar
@@ -3627,26 +3686,34 @@
       <form onsubmit="saveMoveSeparador(event)">
         <div class="modal-body" style="padding: 1.25rem;">
           <input type="hidden" id="moveSeparadorIndex">
-          
-          <div style="background: var(--bg-body, #f8fafc); border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-bottom: 1.2rem;">
+
+          <div
+            style="background: var(--bg-body, #f8fafc); border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-bottom: 1.2rem;">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
-              <span style="font-size: 0.78rem; text-transform: uppercase; font-weight: 700; color: #64748b; letter-spacing: 0.5px;">Separador a Transferir</span>
+              <span
+                style="font-size: 0.78rem; text-transform: uppercase; font-weight: 700; color: #64748b; letter-spacing: 0.5px;">Separador
+                a Transferir</span>
               <span id="moveSeparadorTitleDisplay" class="badge badge-blue" style="font-size: 0.82rem;"></span>
             </div>
-            
-            <div style="margin-bottom: 0.4rem; font-size: 0.92rem; color: var(--navy-dark); font-weight: 700;" id="moveSeparadorNomeDisplay"></div>
-            
+
+            <div style="margin-bottom: 0.4rem; font-size: 0.92rem; color: var(--navy-dark); font-weight: 700;"
+              id="moveSeparadorNomeDisplay"></div>
+
             <div style="font-size: 0.83rem; color: #475569; margin-bottom: 0.35rem;">
-              <i class="fa-solid fa-id-card" style="width: 16px; color: #64748b;"></i> <strong>NIF:</strong> <span id="moveSeparadorNifDisplay">-</span>
+              <i class="fa-solid fa-id-card" style="width: 16px; color: #64748b;"></i> <strong>NIF:</strong> <span
+                id="moveSeparadorNifDisplay">-</span>
             </div>
             <div style="font-size: 0.83rem; color: #475569; margin-bottom: 0.35rem;">
-              <i class="fa-solid fa-location-dot" style="width: 16px; color: #64748b;"></i> <strong>Morada:</strong> <span id="moveSeparadorAddressDisplay">-</span>
+              <i class="fa-solid fa-location-dot" style="width: 16px; color: #64748b;"></i> <strong>Morada:</strong>
+              <span id="moveSeparadorAddressDisplay">-</span>
             </div>
             <div style="font-size: 0.83rem; color: #475569; margin-bottom: 0.35rem;">
-              <i class="fa-solid fa-phone" style="width: 16px; color: #64748b;"></i> <strong>Telefone / Email:</strong> <span id="moveSeparadorContactInfoDisplay">-</span>
+              <i class="fa-solid fa-phone" style="width: 16px; color: #64748b;"></i> <strong>Telefone / Email:</strong>
+              <span id="moveSeparadorContactInfoDisplay">-</span>
             </div>
             <div style="font-size: 0.83rem; color: #475569; margin-bottom: 0.5rem;">
-              <i class="fa-solid fa-building" style="width: 16px; color: #64748b;"></i> <strong>Cliente de Origem:</strong> <span id="moveSeparadorCurrentClientDisplay" style="font-weight: 600;"></span>
+              <i class="fa-solid fa-building" style="width: 16px; color: #64748b;"></i> <strong>Cliente de
+                Origem:</strong> <span id="moveSeparadorCurrentClientDisplay" style="font-weight: 600;"></span>
             </div>
 
             <!-- Lista de Contactos a Transferir -->
@@ -3654,23 +3721,29 @@
               <div style="font-size: 0.84rem; font-weight: 700; color: #15803d; margin-bottom: 0.35rem;">
                 <i class="fa-solid fa-users"></i> Contactos incluídos (<span id="moveSeparadorContactsCount">0</span>):
               </div>
-              <div id="moveSeparadorContactsList" style="font-size: 0.8rem; color: #334155; max-height: 90px; overflow-y: auto; background: #ffffff; padding: 0.4rem 0.6rem; border-radius: 6px; border: 1px solid #e2e8f0;"></div>
+              <div id="moveSeparadorContactsList"
+                style="font-size: 0.8rem; color: #334155; max-height: 90px; overflow-y: auto; background: #ffffff; padding: 0.4rem 0.6rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+              </div>
             </div>
           </div>
 
           <div class="form-group">
             <label for="moveSeparadorTargetClientId"><strong>Selecione o Cliente de Destino *</strong></label>
-            <select id="moveSeparadorTargetClientId" class="form-control" required style="width: 100%; padding: 0.6rem;">
+            <select id="moveSeparadorTargetClientId" class="form-control" required
+              style="width: 100%; padding: 0.6rem;">
               <option value="">-- Selecione o Cliente de Destino --</option>
             </select>
             <small style="display: block; color: #64748b; margin-top: 0.35rem; font-size: 0.78rem;">
-              <i class="fa-solid fa-circle-info"></i> Todo o separador (dados institucionais, morada, NIF, contactos telefónicos/email e lista de pessoas) será transferido integralmente para o cliente de destino selecionado.
+              <i class="fa-solid fa-circle-info"></i> Todo o separador (dados institucionais, morada, NIF, contactos
+              telefónicos/email e lista de pessoas) será transferido integralmente para o cliente de destino
+              selecionado.
             </small>
           </div>
         </div>
         <div class="modal-footer" style="justify-content: flex-end; gap: 0.5rem;">
           <button type="button" class="btn btn-close" onclick="closeMoveSeparadorModal()">Cancelar</button>
-          <button type="button" class="btn btn-primary" onclick="saveMoveSeparador(event)" style="background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);">
+          <button type="button" class="btn btn-primary" onclick="saveMoveSeparador(event)"
+            style="background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);">
             <i class="fa-solid fa-right-left"></i> Transferir Todo o Separador
           </button>
         </div>
@@ -3848,13 +3921,57 @@
       } else if (tabId === 'tab-home') {
         if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
       } else if (tabId === 'tab-duplicados') {
-        if (typeof renderDuplicatesUI === 'function') renderDuplicatesUI();
+        // Duplicados está agora dentro de Configuração
+        switchTab('tab-database');
+        setTimeout(function() { switchCfgSubTab('duplicados'); }, 50);
+        return;
       } else if (tabId === 'tab-orcamento' || tabId === 'tab-orcamentos') {
         if (typeof populateBudgetClientsDatalist === 'function') populateBudgetClientsDatalist();
         if (typeof populateBudgetModelPresetDatalist === 'function') populateBudgetModelPresetDatalist();
         if (typeof renderSavedBudgetsList === 'function') renderSavedBudgetsList();
       }
     };
+
+    // Função para gerir sub-tabs internos da Configuração
+    window.switchCfgSubTab = function(subTab) {
+      var panels = ['config', 'duplicados'];
+      panels.forEach(function(p) {
+        var panel = document.getElementById('cfgPanel-' + p);
+        var btn = document.getElementById('cfgSubTab-' + p);
+        if (panel) panel.style.display = (p === subTab) ? '' : 'none';
+        if (btn) {
+          if (p === subTab) {
+            btn.style.color = '#4f46e5';
+            btn.style.borderBottomColor = '#4f46e5';
+            btn.style.background = 'rgba(99,102,241,0.06)';
+          } else {
+            btn.style.color = '#64748b';
+            btn.style.borderBottomColor = 'transparent';
+            btn.style.background = 'none';
+          }
+        }
+      });
+      if (subTab === 'config') {
+        if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
+        if (typeof renderUserManagementGrid === 'function') renderUserManagementGrid();
+      } else if (subTab === 'duplicados') {
+        if (typeof renderDuplicatesUI === 'function') renderDuplicatesUI();
+      }
+    };
+
+    // Inicializar sub-tab de Configuração ao abrir a página
+    (function() {
+      var cfgTab = document.getElementById('tab-database');
+      if (cfgTab) {
+        cfgTab.addEventListener('transitionend', function() {}, { once: true });
+      }
+      // Garantir que o sub-tab de Configuração está ativo por defeito
+      var panel = document.getElementById('cfgPanel-config');
+      var btn = document.getElementById('cfgSubTab-config');
+      if (panel) panel.style.display = '';
+      if (btn) { btn.style.color='#4f46e5'; btn.style.borderBottomColor='#4f46e5'; btn.style.background='rgba(99,102,241,0.06)'; }
+    })();
+
 
     window.saveContact = function (e) {
       if (e && e.preventDefault) e.preventDefault();
@@ -4160,9 +4277,15 @@
         </p>
 
         <form onsubmit="confirmAdminAuthForActivityLog(event)">
-          <input type="password" id="adminAuthPinInput" placeholder="Insira o PIN de Administrador" class="form-control"
-            style="padding: 0.75rem; border-radius: 8px; border: 1.5px solid #cbd5e1; font-weight: 700; text-align: center; margin-bottom: 1rem;"
-            autofocus required>
+          <div style="position: relative; margin-bottom: 1rem; width: 100%;">
+            <input type="password" id="adminAuthPinInput" placeholder="Insira o PIN de Administrador" class="form-control"
+              style="padding: 0.75rem 2.75rem 0.75rem 0.75rem; border-radius: 8px; border: 1.5px solid #cbd5e1; font-weight: 700; text-align: center; width: 100%; box-sizing: border-box;"
+              autofocus required>
+            <button type="button" onclick="togglePinVisibility('adminAuthPinInput', 'adminAuthPinToggleIcon')" title="Mostrar / Ocultar Palavra-passe"
+              style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; font-size: 1.1rem; padding: 4px; z-index: 20; display: flex; align-items: center; justify-content: center; outline: none;">
+              <i id="adminAuthPinToggleIcon" class="fa-solid fa-eye"></i>
+            </button>
+          </div>
           <button type="submit" class="btn btn-primary"
             style="width: 100%; justify-content: center; padding: 0.75rem; background: #0284c7;">
             <i class="fa-solid fa-unlock-keyhole"></i> Desbloquear Histórico Real
@@ -4385,7 +4508,8 @@
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
-      <div class="modal-body" id="duplicate-merge-modal-body" style="padding: 1.5rem; max-height: 80vh; overflow-y: auto;">
+      <div class="modal-body" id="duplicate-merge-modal-body"
+        style="padding: 1.5rem; max-height: 80vh; overflow-y: auto;">
         <!-- Rendered dynamically by openMergeModal() -->
       </div>
     </div>
