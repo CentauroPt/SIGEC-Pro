@@ -3827,7 +3827,8 @@
       "telemovel": "",
       "email": "paulo.lima@bcn.cv",
       "notas": "",
-      "createdAt": "2026-07-31T16:25:06.422Z"
+      "createdAt": "2026-07-31T16:25:06.422Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-1785515478798-243",
@@ -3877,19 +3878,6 @@
       "email": "daniel.paiva@huawei.com",
       "notas": "",
       "createdAt": "2026-08-04T06:51:35.654Z"
-    },
-    {
-      "id": "con-1786989137440-465",
-      "clienteId": "cli-imp-085",
-      "subTabIndex": 0,
-      "nome": "Paulo",
-      "apelido": "Lima",
-      "cargo": "Administraddor",
-      "telefone": "",
-      "telemovel": "",
-      "email": "paulo.lima@bcn.cv",
-      "notas": "",
-      "createdAt": "2026-08-17T17:52:17.440Z"
     },
     {
       "id": "con-1787036001308-748",
@@ -4791,6 +4779,17 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787053110723-406",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "tab-duplicados",
+      "detalhes": null,
+      "timestamp": "2026-08-18T11:38:30.723Z"
+    },
+    {
       "id": "log-1787052992604-209",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -4899,6 +4898,15 @@
   ],
   "ignoredDuplicates": [],
   "activityHistory": [
+    {
+      "id": "act-1787053305150-qfyj",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_MERGE",
+      "entity": "contactos",
+      "entityId": "con-1785515106421-857",
+      "details": "Fusão de 2 registos duplicados em \"Paulo\". 0 vínculos reatribuídos com sucesso.",
+      "timestamp": "2026-08-18T11:41:45.150Z"
+    },
     {
       "id": "act-1787053108252-fcwm",
       "userId": "usr-admin-001",
@@ -5156,7 +5164,8 @@
       "con-imp-130",
       "con-imp-121",
       "con-imp-036",
-      "con-imp-026"
+      "con-imp-026",
+      "con-1786989137440-465"
     ],
     "projetos": [],
     "interacoes": [
