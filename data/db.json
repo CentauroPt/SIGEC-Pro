@@ -1754,40 +1754,22 @@
     },
     {
       "id": "cli-imp-073",
-      "tipoCliente": "Estatal",
-      "ministerio": "Galp Energia, SGPS, S.A.",
-      "secretariaEstado": "Galp Energia, SGPS, S.A.",
-      "nome": "Galp Energia, SGPS, S.A.",
-      "contribuinte": "500000051",
-      "direcao1": "Avenida da Índia",
+      "tipoCliente": "Privado",
+      "ministerio": "",
+      "secretariaEstado": "",
+      "nome": "Fundação Aga Khan Portugal",
+      "contribuinte": "500000459",
+      "direcao1": "Av. Lusíada",
       "direcao2": "",
-      "numero": "8",
+      "numero": "10",
       "andar": "",
-      "codigoPostal": "1349-065",
+      "codigoPostal": "1600-150",
       "localidade": "Lisboa",
-      "pais": "",
-      "telefone": "+351 217 242 500",
+      "pais": "Portugal",
+      "telefone": "+351 217 229 000",
       "telemovel": "",
-      "email": "galp@galp.com",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "separadores": [
-        {
-          "id": "sep-1787047255980-706",
-          "tipoSeparador": "Galp Energia, SGPS, S.A.",
-          "nomePersonalizado": "",
-          "nome": "Galp Energia, SGPS, S.A.",
-          "contribuinte": "500000051",
-          "direcao1": "Avenida da Índia",
-          "direcao2": "",
-          "numero": "8",
-          "andar": "",
-          "codigoPostal": "1349-065",
-          "localidade": "Lisboa",
-          "telefone": "+351 217 242 500",
-          "telemovel": "",
-          "email": "galp@galp.com"
-        }
-      ]
+      "email": "akfportugal@akdn.org",
+      "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
       "id": "cli-imp-080",
@@ -4507,20 +4489,22 @@
   "projetos": [
     {
       "id": "proj-norte-2040",
-      "clienteId": "cli-imp-084",
       "nome": "Estratégia Norte 2040",
       "tipo": "Aluguer UM",
+      "clienteId": "cli-1787038283894-503",
+      "separadorId": null,
+      "subTabIndex": null,
+      "contacto1Id": "con-imp-136",
+      "contacto2Id": "con-1787036001308-748",
       "dataInicio": "2026-07-31",
       "dataFim": "2026-12-31",
-      "estado": "Aguarda Proposta",
+      "estado": "Aguarda Orçamento",
       "viatura": "Unidade Móvel CCDR-N",
       "matricula": "CC-99-XX",
-      "obs": "CCDR-N (Comissão de Coordenação e Desenvolvimento Regional do Norte)",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "contacto1Id": "con-imp-136",
-      "contacto2Id": "",
+      "orcamentos": [],
       "documents": [],
-      "media": []
+      "media": [],
+      "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
       "id": "proj-huawei-smartbus",
@@ -4731,6 +4715,42 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1787086214801-361",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Projeto",
+      "descricao": "Ficha do projeto \"Estratégia Norte 2040\" atualizada.",
+      "pagina": "Projetos",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Projeto",
+        "nome": "Estratégia Norte 2040",
+        "tipo": "Aluguer UM",
+        "estado": "Aguarda Orçamento",
+        "cliente": "Ministério da Economia e da Coesão Territorial",
+        "camposAlterados": [
+          {
+            "campo": "Estado",
+            "anterior": "Aguarda Proposta",
+            "novo": "Aguarda Orçamento"
+          }
+        ]
+      },
+      "timestamp": "2026-08-18T20:50:14.801Z"
+    },
+    {
+      "id": "log-1787086079701-313",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-18T20:47:59.701Z"
+    },
     {
       "id": "log-1787085961539-642",
       "usuarioId": "usr-admin-001",
@@ -5037,6 +5057,20 @@
       "key": "cli-1787038283893-566:::undefined",
       "id1": "cli-1787038283893-566",
       "ignoredAt": "2026-08-18T11:01:24.180Z",
+      "ignoredBy": "Sistema"
+    },
+    {
+      "type": "cli-imp-073",
+      "key": "cli-imp-026:::undefined",
+      "id1": "cli-imp-026",
+      "ignoredAt": "2026-08-18T20:54:37.248Z",
+      "ignoredBy": "Sistema"
+    },
+    {
+      "type": "cli-1787038283894-313",
+      "key": "cli-1787050401189-194:::undefined",
+      "id1": "cli-1787050401189-194",
+      "ignoredAt": "2026-08-18T20:56:53.436Z",
       "ignoredBy": "Sistema"
     }
   ],
