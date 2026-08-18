@@ -3016,7 +3016,8 @@
       "telemovel": "",
       "email": "miguel.herdade@fundacao-jeronimomartins.com",
       "notas": "Temas: Salud y bienestar. Educación y desarrollo. Protección social y financiera. Respuesta a situaciones de emergencia y apoyo a personas en situación de vulnerabilidad.",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 1
     },
     {
       "id": "con-imp-012",
@@ -3309,19 +3310,6 @@
       "notas": "Temas: telecomunicaciones, televisión, internet, telefonía móvil, entretenimiento",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 0
-    },
-    {
-      "id": "con-imp-036",
-      "clienteId": "cli-imp-010",
-      "nome": "Miguel",
-      "apelido": "Herdade",
-      "cargo": "Director Executivo",
-      "telefone": "+351 217 526 100",
-      "telemovel": "",
-      "email": "fundacao@jeronimo-martins.com",
-      "notas": "Temas: Salud y bienestar. Educación y desarrollo. Protección social y financiera. Respuesta a situaciones de emergencia y apoyo a personas en situación de vulnerabilidad.",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 1
     },
     {
       "id": "con-imp-037",
@@ -4815,6 +4803,17 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787052903610-435",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "tab-duplicados",
+      "detalhes": null,
+      "timestamp": "2026-08-18T11:35:03.610Z"
+    },
+    {
       "id": "log-1787052857785-813",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -4901,6 +4900,15 @@
   ],
   "ignoredDuplicates": [],
   "activityHistory": [
+    {
+      "id": "act-1787052989832-h708",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_MERGE",
+      "entity": "contactos",
+      "entityId": "con-imp-011",
+      "details": "Fusão de 2 registos duplicados em \"Miguel\". 0 vínculos reatribuídos com sucesso.",
+      "timestamp": "2026-08-18T11:36:29.832Z"
+    },
     {
       "id": "act-1787052900108-2t7e",
       "userId": "usr-admin-001",
@@ -5138,7 +5146,8 @@
       "con-imp-133",
       "con-imp-134",
       "con-imp-130",
-      "con-imp-121"
+      "con-imp-121",
+      "con-imp-036"
     ],
     "projetos": [],
     "interacoes": [
