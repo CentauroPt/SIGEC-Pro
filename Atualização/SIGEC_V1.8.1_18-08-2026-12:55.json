@@ -1,0 +1,24 @@
+{
+  "packageName": "SIGEC_V1.8.1_18-08-2026-12:55",
+  "version": "SIGEC_V1.8.1_18-08-2026-12:55",
+  "createdAt": "2026-08-18T10:55:44.843Z",
+  "system": "SIGEC-Pro",
+  "tipoPacote": "ATUALIZACAO_SOFTWARE_EXCLUSIVA",
+  "notes": "Pacote de atualização de software SIGEC_V1.8.1_18-08-2026-12:55 - Otimização de Interface, Segurança e Funcionalidades do Sistema",
+  "software": {
+    "version": "SIGEC_V1.8.1_18-08-2026-12:55",
+    "releasedAt": "2026-08-18T10:55:44.843Z",
+    "modules": [
+      "clientes",
+      "contactos",
+      "projetos",
+      "interacoes",
+      "estatais",
+      "configuracao",
+      "seguranca",
+      "backups",
+      "servidor_github"
+    ],
+    "requiresDataPreservation": true
+  }
+}
