@@ -1936,24 +1936,6 @@
       "createdAt": "2026-08-18T07:19:52.339Z"
     },
     {
-      "id": "cli-1787037592339-755",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da saúde",
-      "secretariaEstado": "Direção Geral",
-      "nome": "Direção Geral",
-      "contribuinte": "",
-      "direcao1": "Aameda D. Afonso Henriques",
-      "direcao2": "",
-      "numero": "45",
-      "andar": "",
-      "codigoPostal": "1049-005",
-      "localidade": "Lisboa",
-      "telefone": "+351 21 843 05 00",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:19:52.339Z"
-    },
-    {
       "id": "cli-1787037592339-501",
       "tipoCliente": "Estatal",
       "ministerio": "Ministério da saúde",
@@ -2039,24 +2021,6 @@
       "codigoPostal": "1000-300",
       "localidade": "LISBOA",
       "telefone": "+351 213 234 600",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:19:52.339Z"
-    },
-    {
-      "id": "cli-1787037592339-940",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da Agricultura e Mar",
-      "secretariaEstado": "Direção Geral Agricultura e Desenvolvimento Rural",
-      "nome": "Direção Geral Agricultura e Desenvolvimento Rural",
-      "contribuinte": "",
-      "direcao1": "Avenida Afonso Costa",
-      "direcao2": "",
-      "numero": "3",
-      "andar": "",
-      "codigoPostal": "1949-002",
-      "localidade": "Lisboa",
-      "telefone": "+351 218 443 000",
       "telemovel": "",
       "email": "",
       "createdAt": "2026-08-18T07:19:52.339Z"
@@ -2278,24 +2242,6 @@
       "createdAt": "2026-08-18T07:19:52.340Z"
     },
     {
-      "id": "cli-1787037592340-954",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da Reforma do Estado",
-      "secretariaEstado": "",
-      "nome": "Cliente Importado",
-      "contribuinte": "",
-      "direcao1": "Rua de Santa Marta",
-      "direcao2": "",
-      "numero": "55",
-      "andar": "",
-      "codigoPostal": "",
-      "localidade": "Lisboa",
-      "telefone": "+351 217 231 200",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:19:52.340Z"
-    },
-    {
       "id": "cli-1787037592340-262",
       "tipoCliente": "Estatal",
       "ministerio": "Ministério da Economia e da Coesão Territorial",
@@ -2309,24 +2255,6 @@
       "codigoPostal": "1000-300",
       "localidade": "LISBOA",
       "telefone": "+351 213 245 400",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:19:52.340Z"
-    },
-    {
-      "id": "cli-1787037592340-493",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da Presidência",
-      "secretariaEstado": "",
-      "nome": "Cliente Importado",
-      "contribuinte": "",
-      "direcao1": "Avenida João XXI",
-      "direcao2": "Campus XXI",
-      "numero": "63",
-      "andar": "",
-      "codigoPostal": "1000-300",
-      "localidade": "LISBOA",
-      "telefone": "+351 213 927 600",
       "telemovel": "",
       "email": "",
       "createdAt": "2026-08-18T07:19:52.340Z"
@@ -3486,6 +3414,85 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787037817268-567",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Direção Geral Agricultura e Desenvolvimento Rural\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Direção Geral Agricultura e Desenvolvimento Rural",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:23:37.268Z"
+    },
+    {
+      "id": "log-1787037816852-244",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-18T07:23:36.852Z"
+    },
+    {
+      "id": "log-1787037816819-317",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Direção Geral\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Direção Geral",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:23:36.819Z"
+    },
+    {
+      "id": "log-1787037816339-596",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Cliente Importado\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Cliente Importado",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:23:36.339Z"
+    },
+    {
+      "id": "log-1787037815427-350",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Cliente Importado\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Cliente Importado",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:23:35.427Z"
+    },
+    {
       "id": "log-1787037815070-735",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -3728,7 +3735,11 @@
       "cli-1787037592340-930",
       "cli-1787037592340-370",
       "cli-1787037592340-569",
-      "cli-1787037592340-194"
+      "cli-1787037592340-194",
+      "cli-1787037592340-954",
+      "cli-1787037592340-493",
+      "cli-1787037592339-755",
+      "cli-1787037592339-940"
     ],
     "contactos": [
       "con-imp-059",
