@@ -503,11 +503,11 @@
       "andar": "2º",
       "codigoPostal": "1100-053",
       "localidade": "Lisboa",
+      "pais": "Portugal",
       "telefone": "211131682",
       "telemovel": "",
       "email": "fundacao@millenniumbcp.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "pais": "Portugal"
+      "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
       "id": "cli-imp-071",
@@ -1752,24 +1752,6 @@
       "telefone": "+351 217 532 000",
       "telemovel": "",
       "email": "comunicacao@jeronimo-martins.com",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "cli-imp-015",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "Fundação Millenium BCP",
-      "contribuinte": "500000272",
-      "direcao1": "Rua Augusta nº 84 – 2º Piso, 1100-053 Lisboa – Portugal",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1100-053",
-      "localidade": "Lisboa",
-      "telefone": "+ 351 211 131 682",
-      "telemovel": "",
-      "email": "fundacao@millenniumbcp.pt",
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
@@ -4008,6 +3990,106 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787047190566-447",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Fundação Millenium BCP\" (NIF: 500000272) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Fundação Millenium BCP",
+        "contribuinte": "500000272",
+        "tipoCliente": "Privado"
+      },
+      "timestamp": "2026-08-18T09:59:50.566Z"
+    },
+    {
+      "id": "log-1787047178234-3",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Millennium BCP\" (NIF: 500001207) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Millennium BCP",
+        "contribuinte": "500001207",
+        "tipoCliente": "Fundação",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-18T09:59:38.234Z"
+    },
+    {
+      "id": "log-1787047166341-285",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Millenium BCP\" (NIF: 500000272) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Millenium BCP",
+        "contribuinte": "500000272",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-18T09:59:26.341Z"
+    },
+    {
+      "id": "log-1787047155193-815",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Millennium BCP\" (NIF: 500001207) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Millennium BCP",
+        "contribuinte": "500001207",
+        "tipoCliente": "Fundação",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-18T09:59:15.193Z"
+    },
+    {
+      "id": "log-1787047124253-537",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-18T09:58:44.253Z"
+    },
+    {
       "id": "log-1787047121710-200",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -4353,7 +4435,8 @@
       "cli-1787038283893-214",
       "cli-imp-084",
       "cli-1787044627790-53",
-      "cli-imp-010"
+      "cli-imp-010",
+      "cli-imp-015"
     ],
     "contactos": [
       "con-imp-059",
