@@ -1,25 +1,6 @@
 {
   "clientes": [
     {
-      "id": "cli-1787044627790-53",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "Ministério da Economia e Coesão Territorial",
-      "contribuinte": "000000000",
-      "direcao1": "",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "",
-      "localidade": "",
-      "pais": "",
-      "telefone": "",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T09:17:07.790Z"
-    },
-    {
       "id": "cli-imp-002",
       "tipoCliente": "Privado",
       "ministerio": "",
@@ -2839,7 +2820,6 @@
       "telefone": "+351 213 245 400",
       "telemovel": "",
       "email": "",
-      "createdAt": "2026-08-18T07:31:23.894Z",
       "separadores": [
         {
           "id": "sep-1787044807409-959",
@@ -2892,7 +2872,8 @@
           "email": "geral@ccdr-n.pt",
           "pais": "Portugal"
         }
-      ]
+      ],
+      "createdAt": "2026-08-18T07:31:23.894Z"
     }
   ],
   "contactos": [
@@ -4010,7 +3991,17 @@
       "media": []
     }
   ],
-  "interacoes": [],
+  "interacoes": [
+    {
+      "id": "int-1787046531397-690",
+      "clienteId": "cli-1787038283894-503",
+      "separadorId": "sep-1786751754158-584",
+      "subTabIndex": 2,
+      "data": "2026-07-31T11:42",
+      "descricao": "Reunião com a Dra Gabriela Leite e Com a Dra. Isaura Costa, para possível fornecimento de uma UM de aluguer.",
+      "createdAt": "2026-08-18T09:48:51.397Z"
+    }
+  ],
   "interacoesProjetos": [],
   "usuarios": [
     {
@@ -4033,7 +4024,36 @@
       "createdAt": "2026-08-15T21:42:09.122Z"
     }
   ],
-  "userLogs": [],
+  "userLogs": [
+    {
+      "id": "log-1787046930068-788",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Ministério da Economia e Coesão Territorial\" (NIF: 000000000) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Ministério da Economia e Coesão Territorial",
+        "contribuinte": "000000000",
+        "tipoCliente": "Privado"
+      },
+      "timestamp": "2026-08-18T09:55:30.068Z"
+    },
+    {
+      "id": "log-1787046459360-706",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-18T09:47:39.360Z"
+    }
+  ],
   "orcamentos": [
     {
       "id": "orc-bcn-camiao-001",
@@ -4220,7 +4240,8 @@
       "cli-1787038283893-689",
       "cli-1787043088120-765",
       "cli-1787038283893-214",
-      "cli-imp-084"
+      "cli-imp-084",
+      "cli-1787044627790-53"
     ],
     "contactos": [
       "con-imp-059",
