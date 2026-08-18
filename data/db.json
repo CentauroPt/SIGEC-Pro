@@ -2224,24 +2224,6 @@
       "createdAt": "2026-08-18T07:19:52.340Z"
     },
     {
-      "id": "cli-1787037592340-44",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da Justiça",
-      "secretariaEstado": "",
-      "nome": "Cliente Importado",
-      "contribuinte": "",
-      "direcao1": "Praça do Comércio",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1149-019",
-      "localidade": "LISBOA",
-      "telefone": "+351 213 222 300",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:19:52.340Z"
-    },
-    {
       "id": "cli-1787037592340-634",
       "tipoCliente": "Estatal",
       "ministerio": "Ministério da Justiça",
@@ -2258,43 +2240,6 @@
       "telemovel": "",
       "email": "",
       "createdAt": "2026-08-18T07:19:52.340Z"
-    },
-    {
-      "id": "cli-1787037592340-930",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da Defesa Nacional",
-      "secretariaEstado": "",
-      "nome": "Cliente Importado",
-      "contribuinte": "",
-      "direcao1": "Avenida da Ilha da Madeira",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1400-204",
-      "localidade": "LISBOA",
-      "telefone": "+351 213 034 500",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:19:52.340Z",
-      "separadores": [
-        {
-          "id": "sep-1787037802988-206",
-          "tipoSeparador": "Ministério",
-          "nomePersonalizado": "",
-          "nome": "Cliente Importado",
-          "contribuinte": "",
-          "direcao1": "Avenida da Ilha da Madeira",
-          "direcao2": "",
-          "numero": "",
-          "andar": "",
-          "codigoPostal": "1400-204",
-          "localidade": "LISBOA",
-          "pais": "",
-          "telefone": "+351 213 034 500",
-          "telemovel": "",
-          "email": ""
-        }
-      ]
     },
     {
       "id": "cli-1787037592340-821",
@@ -2315,84 +2260,11 @@
       "createdAt": "2026-08-18T07:19:52.340Z"
     },
     {
-      "id": "cli-1787037592340-370",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério de Assuntos Parlamentares",
-      "secretariaEstado": "",
-      "nome": "Cliente Importado",
-      "contribuinte": "",
-      "direcao1": "Palácio de São Bento",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1249-068",
-      "localidade": "LISBOA",
-      "telefone": "+351 213 920 500",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:19:52.340Z",
-      "separadores": [
-        {
-          "id": "sep-1787037663427-689",
-          "tipoSeparador": "Ministério",
-          "nomePersonalizado": "",
-          "nome": "Cliente Importado",
-          "contribuinte": "",
-          "direcao1": "Palácio de São Bento",
-          "direcao2": "",
-          "numero": "",
-          "andar": "",
-          "codigoPostal": "1249-068",
-          "localidade": "LISBOA",
-          "pais": "",
-          "telefone": "+351 213 920 500",
-          "telemovel": "",
-          "email": ""
-        }
-      ]
-    },
-    {
-      "id": "cli-1787037592340-569",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da Reforma do Estado",
-      "secretariaEstado": "",
-      "nome": "Cliente Importado",
-      "contribuinte": "",
-      "direcao1": "Avenida João XXI",
-      "direcao2": "Campus XXI",
-      "numero": "63",
-      "andar": "",
-      "codigoPostal": "1000-300",
-      "localidade": "LISBOA",
-      "telefone": "+351 213 245 400",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:19:52.340Z"
-    },
-    {
       "id": "cli-1787037592340-248",
       "tipoCliente": "Estatal",
       "ministerio": "Ministério da Reforma do Estado",
       "secretariaEstado": "Secretaria de Estado para a Digitalização",
       "nome": "Secretaria de Estado para a Digitalização",
-      "contribuinte": "",
-      "direcao1": "Avenida João XXI",
-      "direcao2": "Campus XXI",
-      "numero": "63",
-      "andar": "",
-      "codigoPostal": "1000-300",
-      "localidade": "LISBOA",
-      "telefone": "+351 213 927 600",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:19:52.340Z"
-    },
-    {
-      "id": "cli-1787037592340-194",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da Economia e da Coesão Territorial",
-      "secretariaEstado": "",
-      "nome": "Cliente Importado",
       "contribuinte": "",
       "direcao1": "Avenida João XXI",
       "direcao2": "Campus XXI",
@@ -3614,6 +3486,102 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787037815070-735",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Cliente Importado\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Cliente Importado",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:23:35.070Z"
+    },
+    {
+      "id": "log-1787037814502-952",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-18T07:23:34.502Z"
+    },
+    {
+      "id": "log-1787037814364-458",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Cliente Importado\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Cliente Importado",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:23:34.364Z"
+    },
+    {
+      "id": "log-1787037813996-394",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Cliente Importado\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Cliente Importado",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:23:33.996Z"
+    },
+    {
+      "id": "log-1787037813621-612",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Cliente Importado\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Cliente Importado",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:23:33.621Z"
+    },
+    {
+      "id": "log-1787037813213-453",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Cliente Importado\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Cliente Importado",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:23:33.213Z"
+    },
+    {
       "id": "log-1787037812788-618",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -3755,7 +3723,12 @@
       "cli-imp-058",
       "cli-1787037592340-576",
       "cli-1787037592340-872",
-      "cli-1787037592340-925"
+      "cli-1787037592340-925",
+      "cli-1787037592340-44",
+      "cli-1787037592340-930",
+      "cli-1787037592340-370",
+      "cli-1787037592340-569",
+      "cli-1787037592340-194"
     ],
     "contactos": [
       "con-imp-059",
