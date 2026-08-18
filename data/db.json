@@ -3188,18 +3188,6 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "con-imp-026",
-      "clienteId": "cli-imp-008",
-      "nome": "mail",
-      "apelido": "general",
-      "cargo": "mail general",
-      "telefone": "+351 225 190 300",
-      "telemovel": "",
-      "email": "mota-engil@mota-engil.com",
-      "notas": "Temas: construcción, infraestructuras, ingeniería, gestión de residuos, concesiones de transporte",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
       "id": "con-imp-027",
       "clienteId": "cli-imp-008",
       "nome": "mail",
@@ -4803,6 +4791,17 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787052992604-209",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "tab-duplicados",
+      "detalhes": null,
+      "timestamp": "2026-08-18T11:36:32.604Z"
+    },
+    {
       "id": "log-1787052903610-435",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -4900,6 +4899,15 @@
   ],
   "ignoredDuplicates": [],
   "activityHistory": [
+    {
+      "id": "act-1787053108252-fcwm",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_MERGE",
+      "entity": "contactos",
+      "entityId": "con-imp-027",
+      "details": "Fusão de 2 registos duplicados em \"mail\". 0 vínculos reatribuídos com sucesso.",
+      "timestamp": "2026-08-18T11:38:28.252Z"
+    },
     {
       "id": "act-1787052989832-h708",
       "userId": "usr-admin-001",
@@ -5147,7 +5155,8 @@
       "con-imp-134",
       "con-imp-130",
       "con-imp-121",
-      "con-imp-036"
+      "con-imp-036",
+      "con-imp-026"
     ],
     "projetos": [],
     "interacoes": [
