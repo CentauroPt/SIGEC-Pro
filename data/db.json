@@ -1918,60 +1918,6 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "cli-imp-047",
-      "tipoCliente": "Estatal",
-      "ministerio": "MINISTÉRIO DO TRABALHO, SOLIDARIEDADE E SEGURANÇA SOCIAL",
-      "secretariaEstado": "Ministra",
-      "nome": "MINISTÉRIO DO TRABALHO, SOLIDARIEDADE E SEGURANÇA SOCIAL",
-      "contribuinte": "500000816",
-      "direcao1": "Praça de Londres, 2 1049-056 LISBOA",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1049-056",
-      "localidade": "Lisboa",
-      "telefone": "+351 215 963 800",
-      "telemovel": "",
-      "email": "gabinete.mtsss@mtsss.gov.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "cli-imp-048",
-      "tipoCliente": "Estatal",
-      "ministerio": "MINISTÉRIO DO TRABALHO, SOLIDARIEDADE E SEGURANÇA SOCIAL / Secretaria de Estado da Ação Social e da Inclusão",
-      "secretariaEstado": "Secretaria de Estado da Ação Social e da Inclusão",
-      "nome": "MINISTÉRIO DO TRABALHO, SOLIDARIEDADE E SEGURANÇA SOCIAL / Secretaria de Estado da Ação Social e da Inclusão",
-      "contribuinte": "500000833",
-      "direcao1": "Praça de Londres, 2 1049-056 LISBOA",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1049-056",
-      "localidade": "Lisboa",
-      "telefone": "+351 215 963 800",
-      "telemovel": "",
-      "email": "gabinete.seasi@mtsss.gov.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "cli-imp-049",
-      "tipoCliente": "Estatal",
-      "ministerio": "MINISTÉRIO DO TRABALHO, SOLIDARIEDADE E SEGURANÇA SOCIAL / Direção-Geral da Segurança Social",
-      "secretariaEstado": "Direção-Geral da Segurança Social",
-      "nome": "MINISTÉRIO DO TRABALHO, SOLIDARIEDADE E SEGURANÇA SOCIAL / Direção-Geral da Segurança Social",
-      "contribuinte": "500000850",
-      "direcao1": "Largo do Rato, n.º 1, 1269-144 Lisboa, Portugal",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1269-144",
-      "localidade": "Lisboa",
-      "telefone": "+351 215 952 990",
-      "telemovel": "",
-      "email": "dgss@seg-social.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
       "id": "cli-imp-058",
       "tipoCliente": "Estatal",
       "ministerio": "MINISTÉRIO DOS ASSUNTOS PARLAMENTARES",
@@ -1987,42 +1933,6 @@
       "telefone": "+351 213 920 500",
       "telemovel": "",
       "email": "gabinete.map@map.gov.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "cli-imp-065",
-      "tipoCliente": "Estatal",
-      "ministerio": "MINISTÉRIO DE ESTADO E DOS NEGÓCIOS ESTRANGEIROS",
-      "secretariaEstado": "Ministro",
-      "nome": "MINISTÉRIO DE ESTADO E DOS NEGÓCIOS ESTRANGEIROS",
-      "contribuinte": "500001122",
-      "direcao1": "Palácio das Necessidades Largo do Rilvas 1399-030 LISBOA",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1399-030",
-      "localidade": "Lisboa",
-      "telefone": "+351 213 946 000",
-      "telemovel": "",
-      "email": "gabinete.ministro@mne.gov.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "cli-imp-066",
-      "tipoCliente": "Estatal",
-      "ministerio": "MINISTÉRIO DE ESTADO E DOS NEGÓCIOS ESTRANGEIROS / Secretaria de Estado dos Negócios Estrangeiros e Cooperação",
-      "secretariaEstado": "Secretaria de Estado dos Negócios Estrangeiros e Cooperação",
-      "nome": "MINISTÉRIO DE ESTADO E DOS NEGÓCIOS ESTRANGEIROS / Secretaria de Estado dos Negócios Estrangeiros e Cooperação",
-      "contribuinte": "500001139",
-      "direcao1": "Palácio das Necessidades Largo do Rilvas 1399-030 LISBOA",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1399-030",
-      "localidade": "Lisboa",
-      "telefone": "+351 213 946 000",
-      "telemovel": "",
-      "email": "gabinete.senec@mne.gov.pt",
       "createdAt": "2026-07-31T16:30:00.000Z"
     }
   ],
@@ -3048,54 +2958,6 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "con-imp-073",
-      "clienteId": "cli-imp-047",
-      "nome": "Maria",
-      "apelido": "do Rosário Palma Ramalho",
-      "cargo": "Ministra",
-      "telefone": "+351 215 963 800",
-      "telemovel": "",
-      "email": "gabinete.mtsss@mtsss.gov.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "con-imp-074",
-      "clienteId": "cli-imp-048",
-      "nome": "Clara",
-      "apelido": "Marques Mendes",
-      "cargo": "Secretaria de estado de acción social y de inclusión",
-      "telefone": "+351 215 963 800",
-      "telemovel": "",
-      "email": "gabinete.seasi@mtsss.gov.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "con-imp-075",
-      "clienteId": "cli-imp-048",
-      "nome": "Susana",
-      "apelido": "Lamas",
-      "cargo": "Chefe de Gabinete - Secretaria de estado de acción social y de inclusión",
-      "telefone": "+351 215 963 800",
-      "telemovel": "",
-      "email": "gabinete.seasi@mtsss.gov.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "con-imp-076",
-      "clienteId": "cli-imp-049",
-      "nome": "João",
-      "apelido": "Manuel Grossinho Gonçalves",
-      "cargo": "Dirección general de seguridad social",
-      "telefone": "+351 215 952 990",
-      "telemovel": "",
-      "email": "dgss@seg-social.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
       "id": "con-imp-093",
       "clienteId": "cli-imp-058",
       "nome": "Carlos",
@@ -3116,30 +2978,6 @@
       "telefone": "+351 213 920 500",
       "telemovel": "",
       "email": "gabinete.map@map.gov.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "con-imp-108",
-      "clienteId": "cli-imp-065",
-      "nome": "Paulo",
-      "apelido": "Rangel",
-      "cargo": "Ministro",
-      "telefone": "+351 213 946 000",
-      "telemovel": "",
-      "email": "gabinete.ministro@mne.gov.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "con-imp-109",
-      "clienteId": "cli-imp-066",
-      "nome": "Ana",
-      "apelido": "Isabel Xavier",
-      "cargo": "Secretaria de estado de negocios extranjeros y cooperación",
-      "telefone": "+351 213 946 000",
-      "telemovel": "",
-      "email": "gabinete.senec@mne.gov.pt",
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z"
     }
@@ -3243,6 +3081,102 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1787035465602-537",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"MINISTÉRIO DO TRABALHO, SOLIDARIEDADE E SEGURANÇA SOCIAL / Secretaria de Estado da Ação Social e da Inclusão\" (NIF: 500000833) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "MINISTÉRIO DO TRABALHO, SOLIDARIEDADE E SEGURANÇA SOCIAL / Secretaria de Estado da Ação Social e da Inclusão",
+        "contribuinte": "500000833",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T06:44:25.602Z"
+    },
+    {
+      "id": "log-1787035464917-313",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-18T06:44:24.917Z"
+    },
+    {
+      "id": "log-1787035464898-768",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"MINISTÉRIO DO TRABALHO, SOLIDARIEDADE E SEGURANÇA SOCIAL / Direção-Geral da Segurança Social\" (NIF: 500000850) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "MINISTÉRIO DO TRABALHO, SOLIDARIEDADE E SEGURANÇA SOCIAL / Direção-Geral da Segurança Social",
+        "contribuinte": "500000850",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T06:44:24.898Z"
+    },
+    {
+      "id": "log-1787035464200-153",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"MINISTÉRIO DO TRABALHO, SOLIDARIEDADE E SEGURANÇA SOCIAL\" (NIF: 500000816) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "MINISTÉRIO DO TRABALHO, SOLIDARIEDADE E SEGURANÇA SOCIAL",
+        "contribuinte": "500000816",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T06:44:24.200Z"
+    },
+    {
+      "id": "log-1787035463600-918",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"MINISTÉRIO DE ESTADO E DOS NEGÓCIOS ESTRANGEIROS / Secretaria de Estado dos Negócios Estrangeiros e Cooperação\" (NIF: 500001139) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "MINISTÉRIO DE ESTADO E DOS NEGÓCIOS ESTRANGEIROS / Secretaria de Estado dos Negócios Estrangeiros e Cooperação",
+        "contribuinte": "500001139",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T06:44:23.600Z"
+    },
+    {
+      "id": "log-1787035463120-185",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"MINISTÉRIO DE ESTADO E DOS NEGÓCIOS ESTRANGEIROS\" (NIF: 500001122) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "MINISTÉRIO DE ESTADO E DOS NEGÓCIOS ESTRANGEIROS",
+        "contribuinte": "500001122",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T06:44:23.120Z"
+    },
     {
       "id": "log-1787035462672-931",
       "usuarioId": "usr-admin-001",
@@ -3913,7 +3847,12 @@
       "cli-imp-032",
       "cli-imp-067",
       "cli-imp-052",
-      "cli-imp-053"
+      "cli-imp-053",
+      "cli-imp-065",
+      "cli-imp-066",
+      "cli-imp-047",
+      "cli-imp-049",
+      "cli-imp-048"
     ],
     "contactos": [
       "con-imp-059",
@@ -3962,7 +3901,13 @@
       "con-imp-082",
       "con-imp-085",
       "con-imp-083",
-      "con-imp-084"
+      "con-imp-084",
+      "con-imp-108",
+      "con-imp-109",
+      "con-imp-073",
+      "con-imp-076",
+      "con-imp-074",
+      "con-imp-075"
     ],
     "projetos": [],
     "interacoes": [],
