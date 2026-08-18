@@ -1972,60 +1972,6 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "cli-imp-035",
-      "tipoCliente": "Estatal",
-      "ministerio": "MINISTÉRIO AMBIENTE E ENERGIA / Secretário de Estado Adjunto e da Energia",
-      "secretariaEstado": "Secretário de Estado Adjunto e da Energia",
-      "nome": "MINISTÉRIO AMBIENTE E ENERGIA / Secretário de Estado Adjunto e da Energia",
-      "contribuinte": "500000612",
-      "direcao1": "Campus XXI, Avenida João XXI, 63 1000-300 LISBOA",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1000-300",
-      "localidade": "Lisboa",
-      "telefone": "+351 213 927 600",
-      "telemovel": "",
-      "email": "gabinete.seen@maen.gov.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "cli-imp-036",
-      "tipoCliente": "Estatal",
-      "ministerio": "MINISTÉRIO AMBIENTE E ENERGIA / Secretário de Estado do Ambiente",
-      "secretariaEstado": "Secretário de Estado do Ambiente",
-      "nome": "MINISTÉRIO AMBIENTE E ENERGIA / Secretário de Estado do Ambiente",
-      "contribuinte": "500000629",
-      "direcao1": "Campus XXI, Avenida João XXI, 63 1000-300 LISBOA",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1000-300",
-      "localidade": "Lisboa",
-      "telefone": "+351 213 927 600",
-      "telemovel": "",
-      "email": "gabinete.seamb@maen.gov.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "cli-imp-037",
-      "tipoCliente": "Estatal",
-      "ministerio": "MINISTÉRIO DA AGRICULTURA E DO MAR",
-      "secretariaEstado": "Ministro",
-      "nome": "MINISTÉRIO DA AGRICULTURA E DO MAR",
-      "contribuinte": "500000646",
-      "direcao1": "Campus XXI, Avenida João XXI, 63 1000-300 LISBOA",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1000-300",
-      "localidade": "Lisboa",
-      "telefone": "+351 213 234 600",
-      "telemovel": "",
-      "email": "gabinete.magrim@magrim.gov.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
       "id": "cli-imp-038",
       "tipoCliente": "Estatal",
       "ministerio": "MINISTÉRIO DA AGRICULTURA E DO MAR / Secretário de Estado da Agricultura",
@@ -2239,42 +2185,6 @@
       "telefone": "+351 215 952 990",
       "telemovel": "",
       "email": "dgss@seg-social.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "cli-imp-050",
-      "tipoCliente": "Estatal",
-      "ministerio": "MINISTÉRIO DA ADMINISTRAÇÃO INTERNA",
-      "secretariaEstado": "Ministro",
-      "nome": "MINISTÉRIO DA ADMINISTRAÇÃO INTERNA",
-      "contribuinte": "500000867",
-      "direcao1": "Praça do Comércio - Ala Oriental 1149-015 LISBOA",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1149-015",
-      "localidade": "Lisboa",
-      "telefone": "+351 213 232 000",
-      "telemovel": "",
-      "email": "gabinete.mai@mai.gov.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "cli-imp-051",
-      "tipoCliente": "Estatal",
-      "ministerio": "MINISTÉRIO DA ADMINISTRAÇÃO INTERNA / Secretaria de Estado da Administração Interna",
-      "secretariaEstado": "Secretaria de Estado da Administração Interna",
-      "nome": "MINISTÉRIO DA ADMINISTRAÇÃO INTERNA / Secretaria de Estado da Administração Interna",
-      "contribuinte": "500000884",
-      "direcao1": "Praça do Comércio - Ala Oriental 1149-015 LISBOA",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1149-015",
-      "localidade": "Lisboa",
-      "telefone": "+351 213 232 000",
-      "telemovel": "",
-      "email": "gabinete.seai@mai.gov.pt",
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
@@ -3624,42 +3534,6 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "con-imp-061",
-      "clienteId": "cli-imp-035",
-      "nome": "Jean",
-      "apelido": "Barroca",
-      "cargo": "Secretario del estado adjunto e da energia",
-      "telefone": "+351 213 927 600",
-      "telemovel": "",
-      "email": "gabinete.seen@maen.gov.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "con-imp-062",
-      "clienteId": "cli-imp-036",
-      "nome": "Manuel",
-      "apelido": "Esteves",
-      "cargo": "Secretario del estado de ambiente",
-      "telefone": "+351 213 927 600",
-      "telemovel": "",
-      "email": "gabinete.seamb@maen.gov.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "con-imp-063",
-      "clienteId": "cli-imp-037",
-      "nome": "Jose",
-      "apelido": "Manuel Fernandes",
-      "cargo": "Ministro",
-      "telefone": "+351 213 234 600",
-      "telemovel": "",
-      "email": "gabinete.magrim@magrim.gov.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
       "id": "con-imp-064",
       "clienteId": "cli-imp-038",
       "nome": "Joao",
@@ -3812,54 +3686,6 @@
       "telefone": "+351 215 952 990",
       "telemovel": "",
       "email": "dgss@seg-social.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "con-imp-077",
-      "clienteId": "cli-imp-050",
-      "nome": "Luís",
-      "apelido": "Neves",
-      "cargo": "Ministro",
-      "telefone": "+351 213 232 000",
-      "telemovel": "",
-      "email": "gabinete.mai@mai.gov.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "con-imp-078",
-      "clienteId": "cli-imp-050",
-      "nome": "Joana",
-      "apelido": "Espírito Santo de Araújo",
-      "cargo": "Chefe de Gabinete",
-      "telefone": "+351 213 232 000",
-      "telemovel": "",
-      "email": "gabinete.mai@mai.gov.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "con-imp-079",
-      "clienteId": "cli-imp-051",
-      "nome": "Telmo",
-      "apelido": "Correia",
-      "cargo": "Secretaria del estado de administración interna",
-      "telefone": "+351 213 232 000",
-      "telemovel": "",
-      "email": "gabinete.seai@mai.gov.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "con-imp-080",
-      "clienteId": "cli-imp-051",
-      "nome": "Rui",
-      "apelido": "Ribeiro",
-      "cargo": "Chefe de Gabinete - Secretaria del estado de administración interna",
-      "telefone": "+351 213 232 000",
-      "telemovel": "",
-      "email": "gabinete.seai@mai.gov.pt",
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
@@ -4324,6 +4150,102 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787035450272-561",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"MINISTÉRIO DA AGRICULTURA E DO MAR\" (NIF: 500000646) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "MINISTÉRIO DA AGRICULTURA E DO MAR",
+        "contribuinte": "500000646",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T06:44:10.272Z"
+    },
+    {
+      "id": "log-1787035449701-163",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"MINISTÉRIO DA ADMINISTRAÇÃO INTERNA / Secretaria de Estado da Administração Interna\" (NIF: 500000884) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "MINISTÉRIO DA ADMINISTRAÇÃO INTERNA / Secretaria de Estado da Administração Interna",
+        "contribuinte": "500000884",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T06:44:09.701Z"
+    },
+    {
+      "id": "log-1787035449278-940",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-18T06:44:09.278Z"
+    },
+    {
+      "id": "log-1787035449234-831",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"MINISTÉRIO DA ADMINISTRAÇÃO INTERNA\" (NIF: 500000867) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "MINISTÉRIO DA ADMINISTRAÇÃO INTERNA",
+        "contribuinte": "500000867",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T06:44:09.234Z"
+    },
+    {
+      "id": "log-1787035448760-570",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"MINISTÉRIO AMBIENTE E ENERGIA / Secretário de Estado do Ambiente\" (NIF: 500000629) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "MINISTÉRIO AMBIENTE E ENERGIA / Secretário de Estado do Ambiente",
+        "contribuinte": "500000629",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T06:44:08.760Z"
+    },
+    {
+      "id": "log-1787035448168-552",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"MINISTÉRIO AMBIENTE E ENERGIA / Secretário de Estado Adjunto e da Energia\" (NIF: 500000612) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "MINISTÉRIO AMBIENTE E ENERGIA / Secretário de Estado Adjunto e da Energia",
+        "contribuinte": "500000612",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T06:44:08.168Z"
+    },
+    {
       "id": "log-1787035447592-897",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -4409,11 +4331,23 @@
   "_deletedRegistry": {
     "clientes": [
       "cli-imp-033",
-      "cli-imp-034"
+      "cli-imp-034",
+      "cli-imp-035",
+      "cli-imp-036",
+      "cli-imp-050",
+      "cli-imp-051",
+      "cli-imp-037"
     ],
     "contactos": [
       "con-imp-059",
-      "con-imp-060"
+      "con-imp-060",
+      "con-imp-061",
+      "con-imp-062",
+      "con-imp-077",
+      "con-imp-078",
+      "con-imp-079",
+      "con-imp-080",
+      "con-imp-063"
     ],
     "projetos": [],
     "interacoes": [],
