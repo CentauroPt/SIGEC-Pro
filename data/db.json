@@ -2802,25 +2802,6 @@
       "createdAt": "2026-08-18T07:31:23.894Z"
     },
     {
-      "id": "cli-imp-002",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "Galp Energia, SGPS, S.A.",
-      "contribuinte": "500000051",
-      "direcao1": "Avenida da Índia, 8, 1349-065 Lisboa, Portugal",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1349-065",
-      "localidade": "Lisboa",
-      "telefone": "+351 217 242 500",
-      "telemovel": "",
-      "email": "galp@galp.com",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "pais": ""
-    },
-    {
       "id": "cli-imp-003",
       "tipoCliente": "Privado",
       "ministerio": "",
@@ -4976,13 +4957,13 @@
   ],
   "activityHistory": [
     {
-      "id": "act-1787053625153-6emu",
+      "id": "act-1787053646834-gui5",
       "userId": "usr-admin-001",
       "action": "DUPLICATE_MERGE",
       "entity": "clientes",
-      "entityId": "cli-imp-009",
-      "details": "Fusão de 2 registos duplicados em \"NOS, SGPS, S.A.\". 0 vínculos reatribuídos com sucesso.",
-      "timestamp": "2026-08-18T11:47:05.153Z"
+      "entityId": "cli-imp-073",
+      "details": "Fusão de 2 registos duplicados em \"Galp Energia, SGPS, S.A.\". 0 vínculos reatribuídos com sucesso.",
+      "timestamp": "2026-08-18T11:47:26.834Z"
     }
   ],
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
@@ -5132,7 +5113,8 @@
       "cli-imp-024",
       "cli-imp-083",
       "cli-imp-074",
-      "cli-imp-077"
+      "cli-imp-077",
+      "cli-imp-002"
     ],
     "contactos": [
       "con-imp-059",
