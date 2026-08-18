@@ -3639,18 +3639,6 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "con-imp-118",
-      "clienteId": "cli-imp-072",
-      "nome": "Rui",
-      "apelido": "Cabrita",
-      "cargo": "Diretor de Comunicação Corporativa",
-      "telefone": "210012500",
-      "telemovel": "",
-      "email": "edponservices@edp.com",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
       "id": "con-imp-119",
       "clienteId": "cli-imp-073",
       "nome": "Rute",
@@ -4876,7 +4864,19 @@
       "createdAt": "2026-08-18T06:59:08.527Z"
     }
   ],
-  "userLogs": [],
+  "userLogs": [
+    {
+      "id": "log-1787052571120-368",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "tab-duplicados",
+      "detalhes": null,
+      "timestamp": "2026-08-18T11:29:31.120Z"
+    }
+  ],
   "orcamentos": [
     {
       "id": "orc-bcn-camiao-001",
@@ -4941,6 +4941,15 @@
   ],
   "ignoredDuplicates": [],
   "activityHistory": [
+    {
+      "id": "act-1787052617555-fzz3",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_MERGE",
+      "entity": "contactos",
+      "entityId": "con-imp-001",
+      "details": "Fusão de 2 registos duplicados em \"Rui\". 0 vínculos reatribuídos com sucesso.",
+      "timestamp": "2026-08-18T11:30:17.555Z"
+    },
     {
       "id": "act-1787052568380-0bol",
       "userId": "usr-admin-001",
@@ -5155,7 +5164,8 @@
       "con-imp-075",
       "con-imp-093",
       "con-imp-094",
-      "con-1787049428085-902"
+      "con-1787049428085-902",
+      "con-imp-118"
     ],
     "projetos": [],
     "interacoes": [
