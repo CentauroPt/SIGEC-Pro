@@ -1,271 +1,74 @@
 {
   "clientes": [
     {
-      "id": "cli-imp-001",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "EDP",
-      "contribuinte": "500000034",
-      "direcao1": "Avenida 24 de Julho, n.º 12, 1249-300 Lisboa, Portugal",
+      "id": "cli-1787050401189-194",
+      "tipoCliente": "Estatal",
+      "ministerio": "Ministério da Presidência",
+      "secretariaEstado": "Ministério, Agencia para modernização Administrativa (AMA)",
+      "nome": "Ministério da Presidência",
+      "contribuinte": "000000000",
+      "direcao1": "Campus XXI, Avenida João XXI, 63 1000-300 LISBOA",
       "direcao2": "",
-      "numero": "",
+      "numero": "63",
       "andar": "",
-      "codigoPostal": "1249-300",
+      "codigoPostal": "1000-300",
       "localidade": "Lisboa",
-      "telefone": "+351 210 012 500",
+      "telefone": "+351 213 927 600",
       "telemovel": "",
-      "email": "rui.cabrita@edp.com",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "orcamentos": [
+      "email": "gabinete.mp@mp.gov.pt",
+      "separadores": [
         {
-          "id": "orc-1786833050377",
-          "numero": "ORC-2026-001",
-          "referencia": "EDP-2026",
-          "clienteId": "cli-imp-001",
-          "clienteNome": "EDP",
-          "data": "2026-08-15",
-          "ambito": "Em Orçamento",
-          "fabricante": "alegría-activity, S.L.",
-          "total": 149650,
-          "items": [
-            {
-              "capituloNum": "1",
-              "capituloTitulo": "CHASSI E DIMENSÕES DO VEÍCULO",
-              "linhas": [
-                {
-                  "itemLabel": "Marca e Modelo Base",
-                  "desc": "IVECO Eurocargo (Camião 12T - PMA 12.000 kg)",
-                  "price": 58200
-                },
-                {
-                  "itemLabel": "Tipo de Veículo e PMA",
-                  "desc": "Camião rígido de 12 Toneladas (PMA 12.000 kg)",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Motorização e Combustível",
-                  "desc": "Diesel Euro III, 4 tempos, refrigeração a água, mín. 220 CV",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Cilindrada e Potência",
-                  "desc": "Mínimo 5.880 cm³ | Potência Mínima: 220 CV",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Caixa de Velocidades",
-                  "desc": "Manual de 6 velocidades à frente + marcha-atrás",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Suspensão e Travões",
-                  "desc": "Suspensão pneumática traseira com regulação de nível e ABS",
-                  "price": 0
-                }
-              ]
-            },
-            {
-              "capituloNum": "2",
-              "capituloTitulo": "PORTAS, ACESSOS E EXTERIOR",
-              "linhas": [
-                {
-                  "itemLabel": "Portas de Acesso Principal",
-                  "desc": "Porta de segurança exterior com persiana de alumínio e porta interior envidraçada",
-                  "price": 36500
-                },
-                {
-                  "itemLabel": "Escadas e Acessibilidade",
-                  "desc": "Escada exterior com corrimãos de montagem manual para acesso confortável de clientes",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Toldo Exterior Lateral",
-                  "desc": "Toldo de proteção contra intempéries em toda a extensão lateral da zona de acesso",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Iluminação Exterior",
-                  "desc": "Projetores LED de alta luminosidade integrados para trabalho noturno",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Pintura e Imagem Corporativa",
-                  "desc": "Personalização integral em pintura e vinil de alta durabilidade com a identidade do cliente",
-                  "price": 0
-                }
-              ]
-            },
-            {
-              "capituloNum": "3",
-              "capituloTitulo": "ISOLAMENTO TÉRMICO E REVESTIMENTOS",
-              "linhas": [
-                {
-                  "itemLabel": "Isolamento Térmico e Acústico",
-                  "desc": "Sistema multicamada com lã de rocha e poliuretano de alta densidade",
-                  "price": 19800
-                },
-                {
-                  "itemLabel": "Revestimento de Paredes e Teto",
-                  "desc": "Painéis Alucobond® brancos de fácil higienização e elevada durabilidade",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Pavimento Técnico e Vinílico",
-                  "desc": "Contraplacado fenólico marítimo com piso antiderrapante Polyfloors®",
-                  "price": 0
-                }
-              ]
-            },
-            {
-              "capituloNum": "4",
-              "capituloTitulo": "DIVISÓRIAS, MOBILIÁRIO E ESPAÇO INTERIOR",
-              "linhas": [
-                {
-                  "itemLabel": "Postos de Atendimento",
-                  "desc": "Bancadas de atendimento personalizadas em melamina Egger® com passa-cabos",
-                  "price": 7850
-                },
-                {
-                  "itemLabel": "Cadeiras de Operador e Clientes",
-                  "desc": "Até 3 un. cadeiras giratórias ergonómicas + 3 un. cadeiras fixas de clientes",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Cofre de Segurança Reforçado",
-                  "desc": "Cofre de segurança ~175 kg (600x600x500 mm) ancorado à estrutura do chassi",
-                  "price": 0
-                }
-              ]
-            },
-            {
-              "capituloNum": "5",
-              "capituloTitulo": "CLIMATIZAÇÃO E VENTILAÇÃO",
-              "linhas": [
-                {
-                  "itemLabel": "Sistema Ar Condicionado Multi-Split",
-                  "desc": "MUNDOCLIMA MUPR-12x2-H9M (A+++, Gás R32, 5.270 frig/h frio e 5.500 cal/h calor)",
-                  "price": 12400
-                },
-                {
-                  "itemLabel": "Ventilação e Renovação de Ar",
-                  "desc": "Grelhas de ventilação dinâmica com extratores elétricos para renovação forçada",
-                  "price": 0
-                }
-              ]
-            },
-            {
-              "capituloNum": "6",
-              "capituloTitulo": "INSTALAÇÃO ELÉTRICA, ENERGIA E ILUMINAÇÃO",
-              "linhas": [
-                {
-                  "itemLabel": "Quadro Elétrico e Proteções",
-                  "desc": "Quadro elétrico com diferenciais e disjuntores magnetotérmicos Schneider®",
-                  "price": 8900
-                },
-                {
-                  "itemLabel": "Sistema de Baterias e Inversor",
-                  "desc": "Inversor/Carregador Victron Energy 3kVA com baterias de ciclo profundo",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Tomadas 230V e USB",
-                  "desc": "Rede de tomadas Schuko 230V e portas USB de carregamento rápido",
-                  "price": 0
-                }
-              ]
-            },
-            {
-              "capituloNum": "7",
-              "capituloTitulo": "INSTALAÇÃO DE ÁGUAS E SANITÁRIOS",
-              "linhas": [
-                {
-                  "itemLabel": "Depósitos de Água e Bomba",
-                  "desc": "Depósitos de água potável (50L) e águas residuais com bomba de pressão 12V",
-                  "price": 6000
-                },
-                {
-                  "itemLabel": "Lavatório Inox e Torneira",
-                  "desc": "Lavatório em aço inoxidável com torneira automática e dispensadores",
-                  "price": 0
-                }
-              ]
-            },
-            {
-              "capituloNum": "8",
-              "capituloTitulo": "EQUIPAMENTO TÉCNICO E SEGURANÇA ADICIONAL",
-              "linhas": [
-                {
-                  "itemLabel": "Rede Informática e Wi-Fi",
-                  "desc": "Router 4G/5G industrial com antenas exteriores de alto ganho e switch Gigabit",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Extintores e Segurança",
-                  "desc": "Extintores ABC de 6kg, manta ignífuga e kit de primeiros socorros homologado",
-                  "price": 0
-                }
-              ]
-            }
-          ],
-          "createdAt": "2026-08-15T22:30:50.377Z",
-          "updatedAt": "2026-08-15T22:30:50.377Z"
+          "id": "sep-1787050303901-510",
+          "tipoSeparador": "Ministério",
+          "nomePersonalizado": "",
+          "nome": "Ministério da Presidência",
+          "contribuinte": "000000000",
+          "direcao1": "Campus XXI, Avenida João XXI, 63 1000-300 LISBOA",
+          "direcao2": "",
+          "numero": "63",
+          "andar": "",
+          "codigoPostal": "1000-300",
+          "localidade": "Lisboa",
+          "telefone": "+351 213 927 600",
+          "telemovel": "",
+          "email": "gabinete.mp@mp.gov.pt",
+          "pais": "Portugal"
+        },
+        {
+          "id": "sep-1787050841202-79",
+          "tipoSeparador": "Agencia para modernização Administrativa (AMA)",
+          "nomePersonalizado": "",
+          "nome": "Agencia para modernização Administrativa (AMA)",
+          "contribuinte": "000000000",
+          "direcao1": "",
+          "direcao2": "",
+          "numero": "",
+          "andar": "",
+          "codigoPostal": "",
+          "localidade": "",
+          "telefone": "",
+          "telemovel": "",
+          "email": "ama@ama.gov.pt"
         }
-      ]
-    },
-    {
-      "id": "cli-imp-002",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "GALP",
-      "contribuinte": "500000051",
-      "direcao1": "Avenida da Índia, 8, 1349-065 Lisboa, Portugal",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1349-065",
-      "localidade": "Lisboa",
-      "telefone": "+351 217 242 500",
-      "telemovel": "",
-      "email": "diogo.sousa@galp.com",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "pais": ""
-    },
-    {
-      "id": "cli-imp-003",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "JERONIMO MARTINS",
-      "contribuinte": "500000068",
-      "direcao1": "Rua Actor António Silva, n.º 7, 1649-033 Lisboa, Portugal",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1649-033",
-      "localidade": "Lisboa",
-      "telefone": "+351 217 532 000",
-      "telemovel": "",
-      "email": "comunicacao@jeronimo-martins.com",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      ],
+      "createdAt": "2026-08-18T10:53:21.189Z"
     },
     {
       "id": "cli-imp-004",
       "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
-      "nome": "FUNDAÇÃO JERÓNIMO MARTINS",
-      "contribuinte": "500000085",
-      "direcao1": "Rua Actor António Silva, n.º 7, 1649-033 Lisboa, Portugal",
+      "nome": "Fundação Jeronimo Martins",
+      "contribuinte": "500000187",
+      "direcao1": "Rua Actor António Silva",
       "direcao2": "",
-      "numero": "",
+      "numero": "7",
       "andar": "",
       "codigoPostal": "1649-033",
       "localidade": "Lisboa",
       "telefone": "+351 217 526 100",
       "telemovel": "",
-      "email": "miguel.herdade@fundacao-jeronimomartins.com",
+      "email": "fundacao@jeronimo-martins.com",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": "Portugal"
     },
@@ -346,7 +149,7 @@
       "tipoCliente": "Privado",
       "ministerio": "",
       "secretariaEstado": "",
-      "nome": "NOS",
+      "nome": "NOS, SGPS, S.A.",
       "contribuinte": "500000170",
       "direcao1": "Rua Actor António Silva, n.º 9, Campo Grande, 1600-404 Lisboa, Portugal",
       "direcao2": "",
@@ -362,14 +165,14 @@
     },
     {
       "id": "cli-imp-011",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Calouste Gulbenkian",
       "contribuinte": "500000204",
-      "direcao1": "AV. de Berna, 45A, 1067-001 Lisboa",
+      "direcao1": "AV. de Berna",
       "direcao2": "",
-      "numero": "",
+      "numero": "45A",
       "andar": "",
       "codigoPostal": "1067-001",
       "localidade": "Lisboa",
@@ -381,15 +184,15 @@
     },
     {
       "id": "cli-imp-012",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Vodafone Portugal",
       "contribuinte": "500000221",
-      "direcao1": "Parque das Nações, Avenida D. João II 36, 8.º Piso, 1998-017 Lisboa",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
+      "direcao1": "Avenida D. João II",
+      "direcao2": "Parque das Nações",
+      "numero": "36",
+      "andar": "8º",
       "codigoPostal": "1998-017",
       "localidade": "Lisboa",
       "telefone": "+351 210 915 000",
@@ -400,13 +203,13 @@
     },
     {
       "id": "cli-imp-013",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Galp",
       "contribuinte": "500000238",
-      "direcao1": "Rua Tomás da Fonseca, Torre C\n1600-209 Lisboa\nPortugal",
-      "direcao2": "",
+      "direcao1": "Rua Tomás da Fonseca",
+      "direcao2": "Torre C",
       "numero": "",
       "andar": "",
       "codigoPostal": "1600-209",
@@ -419,12 +222,12 @@
     },
     {
       "id": "cli-imp-014",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação António Cupertino da Miranda",
       "contribuinte": "500000255",
-      "direcao1": "Avenida da Boavista, 4245 4100–140\nOporto, Portugal",
+      "direcao1": "Avenida da Boavista, 4245 4100–140Oporto, Portugal",
       "direcao2": "",
       "numero": "",
       "andar": "",
@@ -438,12 +241,12 @@
     },
     {
       "id": "cli-imp-016",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação EDP",
       "contribuinte": "500000289",
-      "direcao1": "Av. Brasília, Central Tejo\n1300-598 Lisboa",
+      "direcao1": "Av. Brasília, Central Tejo",
       "direcao2": "",
       "numero": "",
       "andar": "",
@@ -457,14 +260,14 @@
     },
     {
       "id": "cli-imp-017",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Ageas",
       "contribuinte": "500000306",
-      "direcao1": "Edifício Ageas Tejo\nPraça Príncipe Perfeito, 2\n1990-278 Lisboa\nPortugal",
-      "direcao2": "",
-      "numero": "",
+      "direcao1": "Edifício Ageas Tejo",
+      "direcao2": "Praça Príncipe Perfeito",
+      "numero": "2",
       "andar": "",
       "codigoPostal": "1990-278",
       "localidade": "Lisboa",
@@ -476,15 +279,15 @@
     },
     {
       "id": "cli-imp-018",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Ilídio Pinho",
       "contribuinte": "500000323",
-      "direcao1": "Edifício Península\nPraça do Bom Sucesso 127/137, 7.º – 702\n4150-146 Porto",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
+      "direcao1": "Edifício Península",
+      "direcao2": "Praça do Bom Sucesso",
+      "numero": "127/137",
+      "andar": "7º",
       "codigoPostal": "4150-146",
       "localidade": "Porto",
       "telefone": "+351 226 075 560",
@@ -495,13 +298,13 @@
     },
     {
       "id": "cli-imp-019",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Eugénio de Almeida",
       "contribuinte": "500000340",
-      "direcao1": "Páteo de São Miguel\nApartado 2001\n7001-901 Évora\nPortugal",
-      "direcao2": "",
+      "direcao1": "Páteo de São Miguel",
+      "direcao2": "Apartado 2001",
       "numero": "",
       "andar": "",
       "codigoPostal": "7001-901",
@@ -514,15 +317,15 @@
     },
     {
       "id": "cli-imp-020",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Altice Portugal",
       "contribuinte": "500000357",
-      "direcao1": "Avenida Fontes Pereira de Melo, nº40, 6ºpiso\n1069-300 Lisboa - Portugal",
+      "direcao1": "Avenida Fontes Pereira de Melo",
       "direcao2": "",
-      "numero": "",
-      "andar": "",
+      "numero": "40",
+      "andar": "6º",
       "codigoPostal": "1069-300",
       "localidade": "Lisboa",
       "telefone": "+351 215 003 500",
@@ -533,14 +336,14 @@
     },
     {
       "id": "cli-imp-021",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Belmiro de Azevedo",
       "contribuinte": "500000374",
-      "direcao1": "Praça de Liège, 146\n4150-455 Porto",
+      "direcao1": "Praça de Liège",
       "direcao2": "",
-      "numero": "",
+      "numero": "146",
       "andar": "",
       "codigoPostal": "4150-455",
       "localidade": "Porto",
@@ -552,15 +355,15 @@
     },
     {
       "id": "cli-imp-022",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Manuel António da Mota",
       "contribuinte": "500000391",
-      "direcao1": "Praça do Bom Sucesso,74-90, piso 1, 4150-146 Porto",
+      "direcao1": "Praça do Bom Sucesso",
       "direcao2": "",
-      "numero": "",
-      "andar": "",
+      "numero": "74-90",
+      "andar": "1º",
       "codigoPostal": "4150-146",
       "localidade": "Porto",
       "telefone": "+351 226 079 100",
@@ -571,14 +374,14 @@
     },
     {
       "id": "cli-imp-023",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação José Neves",
       "contribuinte": "500000408",
-      "direcao1": "Largo de Nevogilde, 9\n4150-527 Porto\nPortugal",
+      "direcao1": "Largo de Nevogilde",
       "direcao2": "",
-      "numero": "",
+      "numero": "9",
       "andar": "",
       "codigoPostal": "4150-527",
       "localidade": "Porto",
@@ -590,13 +393,13 @@
     },
     {
       "id": "cli-imp-025",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Luso",
       "contribuinte": "500000442",
-      "direcao1": "Rua Emídio Navarro, Alameda do Casino, 3050-224 Luso",
-      "direcao2": "",
+      "direcao1": "Rua Emídio Navarro",
+      "direcao2": "Alameda do Casino",
       "numero": "",
       "andar": "",
       "codigoPostal": "3050-224",
@@ -609,14 +412,14 @@
     },
     {
       "id": "cli-imp-026",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Aga Khan Portugal",
       "contribuinte": "500000459",
-      "direcao1": "Av. Lusíada 10,\n1600-150 Lisboa\nPortugal",
+      "direcao1": "Av. Lusíada",
       "direcao2": "",
-      "numero": "",
+      "numero": "10",
       "andar": "",
       "codigoPostal": "1600-150",
       "localidade": "Lisboa",
@@ -628,14 +431,14 @@
     },
     {
       "id": "cli-imp-027",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Montepio",
       "contribuinte": "500000476",
-      "direcao1": "Rua Áurea, 219 a 241\n1100-062 Lisboa",
+      "direcao1": "Rua Áurea",
       "direcao2": "",
-      "numero": "",
+      "numero": "2219-241",
       "andar": "",
       "codigoPostal": "1100-062",
       "localidade": "Lisboa",
@@ -647,13 +450,13 @@
     },
     {
       "id": "cli-imp-028",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Oriente",
       "contribuinte": "500000493",
-      "direcao1": "Edificio Pedro Álvares Cabral, Muelle de Alcântara (Norte) 1350-352 Lisboa",
-      "direcao2": "",
+      "direcao1": "Edificio Pedro Álvares Cabral",
+      "direcao2": "Doca de Alcântara - Norte",
       "numero": "",
       "andar": "",
       "codigoPostal": "1350-352",
@@ -666,14 +469,14 @@
     },
     {
       "id": "cli-imp-029",
-      "tipoCliente": "Privado",
+      "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
       "nome": "Fundação Mestre Casais",
       "contribuinte": "500000510",
-      "direcao1": "Rua do Anjo, n.º 27, Mire de Tibães\nApartado 2702\n4700-565 Braga, Portugal",
-      "direcao2": "",
-      "numero": "",
+      "direcao1": "Rua do Anjo",
+      "direcao2": "Mire de Tibães - Apartado 2702",
+      "numero": "27",
       "andar": "",
       "codigoPostal": "4700-565",
       "localidade": "Braga",
@@ -690,9 +493,9 @@
       "secretariaEstado": "",
       "nome": "Fundação de Serralves",
       "contribuinte": "500001173",
-      "direcao1": "Rua Dom João de Castro, 210, 4150-417 Porto",
+      "direcao1": "Rua Dom João de Castro",
       "direcao2": "",
-      "numero": "",
+      "numero": "210",
       "andar": "",
       "codigoPostal": "4150-417",
       "localidade": "Porto",
@@ -709,7 +512,7 @@
       "secretariaEstado": "",
       "nome": "Fundação Champalimaud",
       "contribuinte": "500001190",
-      "direcao1": "Avenida de Brasília, 1400-038 Lisboa",
+      "direcao1": "Avenida de Brasília",
       "direcao2": "",
       "numero": "",
       "andar": "",
@@ -726,12 +529,12 @@
       "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
-      "nome": "Fundação Millennium bcp",
+      "nome": "Fundação Millennium BCP",
       "contribuinte": "500001207",
-      "direcao1": "Rua Augusta, nº 84 – 2º Piso, 1100-053 Lisboa",
+      "direcao1": "Rua Augusta",
       "direcao2": "",
-      "numero": "",
-      "andar": "",
+      "numero": "84",
+      "andar": "2º",
       "codigoPostal": "1100-053",
       "localidade": "Lisboa",
       "pais": "Portugal",
@@ -747,10 +550,10 @@
       "secretariaEstado": "",
       "nome": "Fundação Francisco Manuel dos Santos",
       "contribuinte": "500001224",
-      "direcao1": "Largo Monterroio Mascarenhas, nº 1, 7º piso, 1099-081 Lisboa",
+      "direcao1": "Largo Monterroio Mascarenhas",
       "direcao2": "",
-      "numero": "",
-      "andar": "",
+      "numero": "1",
+      "andar": "7º",
       "codigoPostal": "1099-081",
       "localidade": "Lisboa",
       "telefone": "210015800",
@@ -1609,42 +1412,6 @@
       "pais": ""
     },
     {
-      "id": "cli-imp-073",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "Galp Energia, SGPS, S.A.",
-      "contribuinte": "500001258",
-      "direcao1": "Avenida da Índia, 8, 1349-065 Lisboa",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1349-065",
-      "localidade": "Lisboa",
-      "telefone": "217242500",
-      "telemovel": "",
-      "email": "galp@galp.com",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "separadores": [
-        {
-          "id": "sep-1787047255980-706",
-          "tipoSeparador": "Galp Energia, SGPS, S.A.",
-          "nomePersonalizado": "",
-          "nome": "Galp Energia, SGPS, S.A.",
-          "contribuinte": "500000051",
-          "direcao1": "Avenida da Índia",
-          "direcao2": "",
-          "numero": "8",
-          "andar": "",
-          "codigoPostal": "1349-065",
-          "localidade": "Lisboa",
-          "telefone": "+351 217 242 500",
-          "telemovel": "",
-          "email": "galp@galp.com"
-        }
-      ]
-    },
-    {
       "id": "cli-imp-076",
       "tipoCliente": "Privado",
       "ministerio": "",
@@ -1657,29 +1424,11 @@
       "andar": "",
       "codigoPostal": "1069-300",
       "localidade": "Lisboa",
-      "telefone": "215003501",
+      "telefone": "215003500",
       "telemovel": "",
       "email": "media@altice.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": ""
-    },
-    {
-      "id": "cli-imp-077",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "NOS, SGPS, S.A.",
-      "contribuinte": "500001326",
-      "direcao1": "Rua Actor António Silva, n.º 9, Campo Grande, 1600-404 Lisboa",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1600-404",
-      "localidade": "Lisboa",
-      "telefone": "217824700",
-      "telemovel": "",
-      "email": "secretaria.geral@nos.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
       "id": "cli-imp-078",
@@ -1715,24 +1464,6 @@
       "telefone": "217948800",
       "telemovel": "",
       "email": "apoiocliente@fidelidade.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "cli-imp-080",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "Altice Portugal (Altice Labs)",
-      "contribuinte": "500001377",
-      "direcao1": "Rua Eng. José Ferreira Pinto Basto, 3810–106 Aveiro",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "3810-001",
-      "localidade": "Aveiro",
-      "telefone": "234403200",
-      "telemovel": "",
-      "email": "contact@alticelabs.com",
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
@@ -1809,22 +1540,271 @@
       "pais": ""
     },
     {
-      "id": "cli-1785514129444-833",
+      "id": "cli-imp-001",
       "tipoCliente": "Privado",
       "ministerio": "",
       "secretariaEstado": "",
-      "nome": "Huawei Technologies Portugal",
-      "contribuinte": "000000000",
-      "direcao1": "",
+      "nome": "EDP",
+      "contribuinte": "500000034",
+      "direcao1": "Avenida 24 de Julho, n.º 12, 1249-300 Lisboa, Portugal",
       "direcao2": "",
       "numero": "",
       "andar": "",
-      "codigoPostal": "0000-000",
+      "codigoPostal": "1249-300",
       "localidade": "Lisboa",
-      "telefone": "+351 217 828 400",
+      "telefone": "+351 210 012 500",
       "telemovel": "",
-      "email": "",
-      "createdAt": "2026-07-31T16:08:49.444Z"
+      "email": "rui.cabrita@edp.com",
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "orcamentos": [
+        {
+          "id": "orc-1786833050377",
+          "numero": "ORC-2026-001",
+          "referencia": "EDP-2026",
+          "clienteId": "cli-imp-001",
+          "clienteNome": "EDP",
+          "data": "2026-08-15",
+          "ambito": "Em Orçamento",
+          "fabricante": "alegría-activity, S.L.",
+          "total": 149650,
+          "items": [
+            {
+              "capituloNum": "1",
+              "capituloTitulo": "CHASSI E DIMENSÕES DO VEÍCULO",
+              "linhas": [
+                {
+                  "itemLabel": "Marca e Modelo Base",
+                  "desc": "IVECO Eurocargo (Camião 12T - PMA 12.000 kg)",
+                  "price": 58200
+                },
+                {
+                  "itemLabel": "Tipo de Veículo e PMA",
+                  "desc": "Camião rígido de 12 Toneladas (PMA 12.000 kg)",
+                  "price": 0
+                },
+                {
+                  "itemLabel": "Motorização e Combustível",
+                  "desc": "Diesel Euro III, 4 tempos, refrigeração a água, mín. 220 CV",
+                  "price": 0
+                },
+                {
+                  "itemLabel": "Cilindrada e Potência",
+                  "desc": "Mínimo 5.880 cm³ | Potência Mínima: 220 CV",
+                  "price": 0
+                },
+                {
+                  "itemLabel": "Caixa de Velocidades",
+                  "desc": "Manual de 6 velocidades à frente + marcha-atrás",
+                  "price": 0
+                },
+                {
+                  "itemLabel": "Suspensão e Travões",
+                  "desc": "Suspensão pneumática traseira com regulação de nível e ABS",
+                  "price": 0
+                }
+              ]
+            },
+            {
+              "capituloNum": "2",
+              "capituloTitulo": "PORTAS, ACESSOS E EXTERIOR",
+              "linhas": [
+                {
+                  "itemLabel": "Portas de Acesso Principal",
+                  "desc": "Porta de segurança exterior com persiana de alumínio e porta interior envidraçada",
+                  "price": 36500
+                },
+                {
+                  "itemLabel": "Escadas e Acessibilidade",
+                  "desc": "Escada exterior com corrimãos de montagem manual para acesso confortável de clientes",
+                  "price": 0
+                },
+                {
+                  "itemLabel": "Toldo Exterior Lateral",
+                  "desc": "Toldo de proteção contra intempéries em toda a extensão lateral da zona de acesso",
+                  "price": 0
+                },
+                {
+                  "itemLabel": "Iluminação Exterior",
+                  "desc": "Projetores LED de alta luminosidade integrados para trabalho noturno",
+                  "price": 0
+                },
+                {
+                  "itemLabel": "Pintura e Imagem Corporativa",
+                  "desc": "Personalização integral em pintura e vinil de alta durabilidade com a identidade do cliente",
+                  "price": 0
+                }
+              ]
+            },
+            {
+              "capituloNum": "3",
+              "capituloTitulo": "ISOLAMENTO TÉRMICO E REVESTIMENTOS",
+              "linhas": [
+                {
+                  "itemLabel": "Isolamento Térmico e Acústico",
+                  "desc": "Sistema multicamada com lã de rocha e poliuretano de alta densidade",
+                  "price": 19800
+                },
+                {
+                  "itemLabel": "Revestimento de Paredes e Teto",
+                  "desc": "Painéis Alucobond® brancos de fácil higienização e elevada durabilidade",
+                  "price": 0
+                },
+                {
+                  "itemLabel": "Pavimento Técnico e Vinílico",
+                  "desc": "Contraplacado fenólico marítimo com piso antiderrapante Polyfloors®",
+                  "price": 0
+                }
+              ]
+            },
+            {
+              "capituloNum": "4",
+              "capituloTitulo": "DIVISÓRIAS, MOBILIÁRIO E ESPAÇO INTERIOR",
+              "linhas": [
+                {
+                  "itemLabel": "Postos de Atendimento",
+                  "desc": "Bancadas de atendimento personalizadas em melamina Egger® com passa-cabos",
+                  "price": 7850
+                },
+                {
+                  "itemLabel": "Cadeiras de Operador e Clientes",
+                  "desc": "Até 3 un. cadeiras giratórias ergonómicas + 3 un. cadeiras fixas de clientes",
+                  "price": 0
+                },
+                {
+                  "itemLabel": "Cofre de Segurança Reforçado",
+                  "desc": "Cofre de segurança ~175 kg (600x600x500 mm) ancorado à estrutura do chassi",
+                  "price": 0
+                }
+              ]
+            },
+            {
+              "capituloNum": "5",
+              "capituloTitulo": "CLIMATIZAÇÃO E VENTILAÇÃO",
+              "linhas": [
+                {
+                  "itemLabel": "Sistema Ar Condicionado Multi-Split",
+                  "desc": "MUNDOCLIMA MUPR-12x2-H9M (A+++, Gás R32, 5.270 frig/h frio e 5.500 cal/h calor)",
+                  "price": 12400
+                },
+                {
+                  "itemLabel": "Ventilação e Renovação de Ar",
+                  "desc": "Grelhas de ventilação dinâmica com extratores elétricos para renovação forçada",
+                  "price": 0
+                }
+              ]
+            },
+            {
+              "capituloNum": "6",
+              "capituloTitulo": "INSTALAÇÃO ELÉTRICA, ENERGIA E ILUMINAÇÃO",
+              "linhas": [
+                {
+                  "itemLabel": "Quadro Elétrico e Proteções",
+                  "desc": "Quadro elétrico com diferenciais e disjuntores magnetotérmicos Schneider®",
+                  "price": 8900
+                },
+                {
+                  "itemLabel": "Sistema de Baterias e Inversor",
+                  "desc": "Inversor/Carregador Victron Energy 3kVA com baterias de ciclo profundo",
+                  "price": 0
+                },
+                {
+                  "itemLabel": "Tomadas 230V e USB",
+                  "desc": "Rede de tomadas Schuko 230V e portas USB de carregamento rápido",
+                  "price": 0
+                }
+              ]
+            },
+            {
+              "capituloNum": "7",
+              "capituloTitulo": "INSTALAÇÃO DE ÁGUAS E SANITÁRIOS",
+              "linhas": [
+                {
+                  "itemLabel": "Depósitos de Água e Bomba",
+                  "desc": "Depósitos de água potável (50L) e águas residuais com bomba de pressão 12V",
+                  "price": 6000
+                },
+                {
+                  "itemLabel": "Lavatório Inox e Torneira",
+                  "desc": "Lavatório em aço inoxidável com torneira automática e dispensadores",
+                  "price": 0
+                }
+              ]
+            },
+            {
+              "capituloNum": "8",
+              "capituloTitulo": "EQUIPAMENTO TÉCNICO E SEGURANÇA ADICIONAL",
+              "linhas": [
+                {
+                  "itemLabel": "Rede Informática e Wi-Fi",
+                  "desc": "Router 4G/5G industrial com antenas exteriores de alto ganho e switch Gigabit",
+                  "price": 0
+                },
+                {
+                  "itemLabel": "Extintores e Segurança",
+                  "desc": "Extintores ABC de 6kg, manta ignífuga e kit de primeiros socorros homologado",
+                  "price": 0
+                }
+              ]
+            }
+          ],
+          "createdAt": "2026-08-15T22:30:50.377Z",
+          "updatedAt": "2026-08-15T22:30:50.377Z"
+        }
+      ]
+    },
+    {
+      "id": "cli-imp-073",
+      "tipoCliente": "Estatal",
+      "ministerio": "Galp Energia, SGPS, S.A.",
+      "secretariaEstado": "Galp Energia, SGPS, S.A.",
+      "nome": "Galp Energia, SGPS, S.A.",
+      "contribuinte": "500000051",
+      "direcao1": "Avenida da Índia",
+      "direcao2": "",
+      "numero": "8",
+      "andar": "",
+      "codigoPostal": "1349-065",
+      "localidade": "Lisboa",
+      "telefone": "+351 217 242 500",
+      "telemovel": "",
+      "email": "galp@galp.com",
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "separadores": [
+        {
+          "id": "sep-1787047255980-706",
+          "tipoSeparador": "Galp Energia, SGPS, S.A.",
+          "nomePersonalizado": "",
+          "nome": "Galp Energia, SGPS, S.A.",
+          "contribuinte": "500000051",
+          "direcao1": "Avenida da Índia",
+          "direcao2": "",
+          "numero": "8",
+          "andar": "",
+          "codigoPostal": "1349-065",
+          "localidade": "Lisboa",
+          "telefone": "+351 217 242 500",
+          "telemovel": "",
+          "email": "galp@galp.com"
+        }
+      ]
+    },
+    {
+      "id": "cli-imp-080",
+      "tipoCliente": "Privado",
+      "ministerio": "",
+      "secretariaEstado": "",
+      "nome": "Altice Portugal (Altice Labs)",
+      "contribuinte": "500001377",
+      "direcao1": "Rua Eng. José Ferreira Pinto Basto, 3810–106 Aveiro",
+      "direcao2": "",
+      "numero": "",
+      "andar": "",
+      "codigoPostal": "3810-001",
+      "localidade": "Aveiro",
+      "telefone": "234403200",
+      "telemovel": "",
+      "email": "contact@alticelabs.com",
+      "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
       "id": "cli-1787038283893-566",
@@ -2822,63 +2802,65 @@
       "createdAt": "2026-08-18T07:31:23.894Z"
     },
     {
-      "id": "cli-1787050401189-194",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da Presidência",
-      "secretariaEstado": "Ministério, Agencia para modernização Administrativa (AMA)",
-      "nome": "Ministério da Presidência",
-      "contribuinte": "000000000",
-      "direcao1": "Campus XXI, Avenida João XXI, 63 1000-300 LISBOA",
+      "id": "cli-imp-002",
+      "tipoCliente": "Privado",
+      "ministerio": "",
+      "secretariaEstado": "",
+      "nome": "Galp Energia, SGPS, S.A.",
+      "contribuinte": "500000051",
+      "direcao1": "Avenida da Índia, 8, 1349-065 Lisboa, Portugal",
       "direcao2": "",
-      "numero": "63",
+      "numero": "",
       "andar": "",
-      "codigoPostal": "1000-300",
+      "codigoPostal": "1349-065",
       "localidade": "Lisboa",
-      "telefone": "+351 213 927 600",
+      "telefone": "+351 217 242 500",
       "telemovel": "",
-      "email": "gabinete.mp@mp.gov.pt",
-      "separadores": [
-        {
-          "id": "sep-1787050303901-510",
-          "tipoSeparador": "Ministério",
-          "nomePersonalizado": "",
-          "nome": "Ministério da Presidência",
-          "contribuinte": "000000000",
-          "direcao1": "Campus XXI, Avenida João XXI, 63 1000-300 LISBOA",
-          "direcao2": "",
-          "numero": "63",
-          "andar": "",
-          "codigoPostal": "1000-300",
-          "localidade": "Lisboa",
-          "telefone": "+351 213 927 600",
-          "telemovel": "",
-          "email": "gabinete.mp@mp.gov.pt",
-          "pais": "Portugal"
-        },
-        {
-          "id": "sep-1787050841202-79",
-          "tipoSeparador": "Agencia para modernização Administrativa (AMA)",
-          "nomePersonalizado": "",
-          "nome": "Agencia para modernização Administrativa (AMA)",
-          "contribuinte": "000000000",
-          "direcao1": "",
-          "direcao2": "",
-          "numero": "",
-          "andar": "",
-          "codigoPostal": "",
-          "localidade": "",
-          "telefone": "",
-          "telemovel": "",
-          "email": "ama@ama.gov.pt"
-        }
-      ],
-      "createdAt": "2026-08-18T10:53:21.189Z"
+      "email": "galp@galp.com",
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "pais": ""
+    },
+    {
+      "id": "cli-imp-003",
+      "tipoCliente": "Privado",
+      "ministerio": "",
+      "secretariaEstado": "",
+      "nome": "JERONIMO MARTINS",
+      "contribuinte": "500000068",
+      "direcao1": "Rua Actor António Silva, n.º 7, 1649-033 Lisboa, Portugal",
+      "direcao2": "",
+      "numero": "",
+      "andar": "",
+      "codigoPostal": "1649-033",
+      "localidade": "Lisboa",
+      "telefone": "+351 217 532 000",
+      "telemovel": "",
+      "email": "comunicacao@jeronimo-martins.com",
+      "createdAt": "2026-07-31T16:30:00.000Z"
+    },
+    {
+      "id": "cli-1785514129444-833",
+      "tipoCliente": "Privado",
+      "ministerio": "",
+      "secretariaEstado": "",
+      "nome": "Huawei Technologies Portugal",
+      "contribuinte": "000000000",
+      "direcao1": "",
+      "direcao2": "",
+      "numero": "",
+      "andar": "",
+      "codigoPostal": "0000-000",
+      "localidade": "Lisboa",
+      "telefone": "+351 217 828 400",
+      "telemovel": "",
+      "email": "",
+      "createdAt": "2026-07-31T16:08:49.444Z"
     }
   ],
   "contactos": [
     {
       "id": "con-imp-001",
-      "clienteId": "cli-imp-001",
+      "clienteId": "cli-imp-072",
       "nome": "Rui",
       "apelido": "Cabrita",
       "cargo": "Diretor de Comunicação Corporativa",
@@ -2891,7 +2873,7 @@
     },
     {
       "id": "con-imp-002",
-      "clienteId": "cli-imp-001",
+      "clienteId": "cli-imp-072",
       "nome": "Joao",
       "apelido": "Parreira",
       "cargo": "Strategic Projects & Planning",
@@ -2904,7 +2886,7 @@
     },
     {
       "id": "con-imp-003",
-      "clienteId": "cli-imp-001",
+      "clienteId": "cli-imp-072",
       "nome": "Catarina",
       "apelido": "Barradas",
       "cargo": "Executive Director of Global Brand",
@@ -2917,7 +2899,7 @@
     },
     {
       "id": "con-imp-004",
-      "clienteId": "cli-imp-002",
+      "clienteId": "cli-imp-073",
       "nome": "Diogo",
       "apelido": "Sousa",
       "cargo": "Comunicación Corporativa",
@@ -2930,7 +2912,7 @@
     },
     {
       "id": "con-imp-005",
-      "clienteId": "cli-imp-002",
+      "clienteId": "cli-imp-073",
       "nome": "Pedro",
       "apelido": "Marques Pereira",
       "cargo": "Comunicación Corporativa",
@@ -2943,7 +2925,7 @@
     },
     {
       "id": "con-imp-006",
-      "clienteId": "cli-imp-002",
+      "clienteId": "cli-imp-073",
       "nome": "Gonçalo",
       "apelido": "Venâncio",
       "cargo": "Comunicación Corporativa",
@@ -2956,7 +2938,7 @@
     },
     {
       "id": "con-imp-007",
-      "clienteId": "cli-imp-002",
+      "clienteId": "cli-imp-073",
       "nome": "Carlos",
       "apelido": "Relancio",
       "cargo": "Renewable Energy Director",
@@ -2969,7 +2951,7 @@
     },
     {
       "id": "con-imp-008",
-      "clienteId": "cli-imp-002",
+      "clienteId": "cli-imp-073",
       "nome": "Gustavo",
       "apelido": "Sa",
       "cargo": "Events Planner & Business Partner",
@@ -2982,7 +2964,7 @@
     },
     {
       "id": "con-imp-009",
-      "clienteId": "cli-imp-003",
+      "clienteId": "cli-imp-075",
       "nome": "Pedro",
       "apelido": "Rio",
       "cargo": "Media Relations",
@@ -2995,7 +2977,7 @@
     },
     {
       "id": "con-imp-010",
-      "clienteId": "cli-imp-003",
+      "clienteId": "cli-imp-075",
       "nome": "Duarte",
       "apelido": "Gaspar",
       "cargo": "Global Identity & Access Management Senior Manager",
@@ -3005,19 +2987,6 @@
       "notas": "Temas: distribución alimentaria, supermercados, comercio minorista, agroalimentación",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 0
-    },
-    {
-      "id": "con-imp-011",
-      "clienteId": "cli-imp-004",
-      "nome": "Miguel",
-      "apelido": "Herdade",
-      "cargo": "Director",
-      "telefone": "+351 217 526 100",
-      "telemovel": "",
-      "email": "miguel.herdade@fundacao-jeronimomartins.com",
-      "notas": "Temas: Salud y bienestar. Educación y desarrollo. Protección social y financiera. Respuesta a situaciones de emergencia y apoyo a personas en situación de vulnerabilidad.",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 1
     },
     {
       "id": "con-imp-012",
@@ -3349,7 +3318,7 @@
     },
     {
       "id": "con-imp-041",
-      "clienteId": "cli-imp-015",
+      "clienteId": "cli-imp-070",
       "nome": "António",
       "apelido": "Vítor Martins Monteiro",
       "cargo": "Presidente",
@@ -3414,10 +3383,10 @@
       "nome": "Ana",
       "apelido": "Figueiredo",
       "cargo": "Presidente",
-      "telefone": "+351 999 999 999",
+      "telefone": "+351 215 003 500",
       "telemovel": "",
       "email": "fundacao@altice.pt",
-      "notas": "Updated notes for test.",
+      "notas": "Temas: innovación, la inclusión social y el acceso al conocimiento mediante la tecnología",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 0
     },
@@ -3629,7 +3598,7 @@
     },
     {
       "id": "con-imp-120",
-      "clienteId": "cli-imp-082",
+      "clienteId": "cli-imp-009",
       "nome": "Daniel",
       "apelido": "Fonseca",
       "cargo": "Diretor de Marca e Comunicação",
@@ -3655,7 +3624,7 @@
     },
     {
       "id": "con-imp-123",
-      "clienteId": "cli-imp-077",
+      "clienteId": "cli-imp-009",
       "nome": "António",
       "apelido": "Fuzeta da Ponte",
       "cargo": "Diretor de Marca e Comunicação",
@@ -3704,7 +3673,7 @@
     },
     {
       "id": "con-imp-127",
-      "clienteId": "cli-imp-080",
+      "clienteId": "cli-imp-076",
       "nome": "Tiago",
       "apelido": "Silva Vieira",
       "cargo": "Project Manager and Scrum Master",
@@ -3717,7 +3686,7 @@
     },
     {
       "id": "con-imp-128",
-      "clienteId": "cli-imp-080",
+      "clienteId": "cli-imp-076",
       "nome": "Ricardo",
       "apelido": "Melo",
       "cargo": "Project Manager",
@@ -3779,14 +3748,14 @@
     },
     {
       "id": "con-imp-136",
-      "clienteId": "cli-imp-084",
-      "nome": "Presidente",
-      "apelido": "CCDR-N",
-      "cargo": "Presidente",
-      "telefone": "226086300",
-      "telemovel": "",
-      "email": "presidencia@ccdr-n.pt",
-      "notas": "",
+      "clienteId": "cli-1787038283894-503",
+      "nome": "Gabriela",
+      "apelido": "Leite",
+      "cargo": "Vice Presidente",
+      "telefone": "+351 226 086 300",
+      "telemovel": "+351 935 394 975",
+      "email": "gabriela.leite@ccdr-n.pt",
+      "notas": "presidencia@ccdr-n.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 2,
       "separadorId": "sep-1786751754158-584",
@@ -3795,8 +3764,8 @@
     {
       "id": "con-imp-137",
       "clienteId": "cli-imp-085",
-      "nome": "Gestor",
-      "apelido": "de Conta BCN",
+      "nome": "Alexey",
+      "apelido": "Coimbra",
       "cargo": "Diretor de Marketing",
       "telefone": "213456789",
       "telemovel": "",
@@ -3804,80 +3773,6 @@
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 0
-    },
-    {
-      "id": "con-1785514369861-598",
-      "clienteId": "cli-1785514129444-833",
-      "nome": "Diogo",
-      "apelido": "Madeira",
-      "cargo": "Diretor de Relações Públicas e Comunicação",
-      "telefone": "+351 217 828 400",
-      "telemovel": "",
-      "email": "diogo.madeira@huawei.com",
-      "notas": "",
-      "createdAt": "2026-07-31T16:12:49.863Z"
-    },
-    {
-      "id": "con-1785515106421-857",
-      "clienteId": "cli-imp-085",
-      "nome": "Paulo",
-      "apelido": "Lima",
-      "cargo": "Administrador do Banco",
-      "telefone": "",
-      "telemovel": "",
-      "email": "paulo.lima@bcn.cv",
-      "notas": "",
-      "createdAt": "2026-07-31T16:25:06.422Z",
-      "subTabIndex": 0
-    },
-    {
-      "id": "con-1785515478798-243",
-      "clienteId": "cli-imp-084",
-      "nome": "Isaura",
-      "apelido": "Costa",
-      "cargo": "Diretora de comunicação",
-      "telefone": "",
-      "telemovel": "",
-      "email": "isaura.costa@ccdn-n.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:31:18.798Z",
-      "subTabIndex": 0
-    },
-    {
-      "id": "con-1785755195297-108",
-      "clienteId": "cli-imp-004",
-      "nome": "Inês",
-      "apelido": "Alberto",
-      "cargo": "Project Operacional Manager",
-      "telefone": "",
-      "telemovel": "",
-      "email": "ines.alberto@fundacao-jeronimomartins.com",
-      "notas": "",
-      "createdAt": "2026-08-03T11:06:35.298Z"
-    },
-    {
-      "id": "con-1785825214404-496",
-      "clienteId": "cli-1785514129444-833",
-      "nome": "Henrique",
-      "apelido": "Street",
-      "cargo": "Relações Públicas e Comunicação",
-      "telefone": "",
-      "telemovel": "+351 910 016 837",
-      "email": "henrique.street@huawei.com",
-      "notas": "",
-      "createdAt": "2026-08-04T06:33:34.405Z"
-    },
-    {
-      "id": "con-1785826295654-612",
-      "clienteId": "cli-1785514129444-833",
-      "nome": "Daniel",
-      "apelido": "Paiva",
-      "cargo": "Responsável de Compras",
-      "telefone": "",
-      "telemovel": "+351 964 354 106",
-      "email": "daniel.paiva@huawei.com",
-      "notas": "",
-      "createdAt": "2026-08-04T06:51:35.654Z"
     },
     {
       "id": "con-1787036001308-748",
@@ -4065,29 +3960,33 @@
     },
     {
       "id": "con-1787049428085-684",
-      "clienteId": "Ministério da Cultura, Juventude e desporto",
+      "clienteId": "cli-1787050401189-194",
       "tratamento": "",
-      "nome": "Cara Rodrigues",
-      "apelido": "",
+      "nome": "Carla",
+      "apelido": "Rodrigues",
       "cargo": "Secretária de Estado adjunta e da juventude e da igualdade",
       "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.seaji@mcjd.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "subTabIndex": 1,
+      "notas": ""
     },
     {
       "id": "con-1787049428085-204",
-      "clienteId": "Ministério da Educação, Ciência e Inovação",
+      "clienteId": "cli-1787050401189-194",
       "tratamento": "",
-      "nome": "Fernando Alexandre",
-      "apelido": "",
+      "nome": "Fernando",
+      "apelido": "Alexandre",
       "cargo": "Ministro",
       "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.meci@meci.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "subTabIndex": 1,
+      "notas": ""
     },
     {
       "id": "con-1787049428085-826",
@@ -4104,16 +4003,18 @@
     },
     {
       "id": "con-1787049428085-72",
-      "clienteId": "Ministério da Educação, Ciência e Inovação",
+      "clienteId": "cli-1787050401189-194",
       "tratamento": "",
-      "nome": "david Carlos da Rocha Sousa",
-      "apelido": "",
+      "nome": "David Carlos",
+      "apelido": "da Rocha Sousa",
       "cargo": "Diretor Geral da Educação",
       "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "dge@dge.mec.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "subTabIndex": 1,
+      "notas": ""
     },
     {
       "id": "con-1787049428085-379",
@@ -4130,16 +4031,18 @@
     },
     {
       "id": "con-1787049428085-965",
-      "clienteId": "Ministério do Trabalho, Solidariedade e Segurança Social",
+      "clienteId": "cli-1787050401189-194",
       "tratamento": "",
-      "nome": "Cara Marques Mendes",
-      "apelido": "",
+      "nome": "Carla",
+      "apelido": "Marques Mendes",
       "cargo": "Secretária de Estado de acción social e de Inclusão",
       "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.seasi@mtsss.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "subTabIndex": 1,
+      "notas": ""
     },
     {
       "id": "con-1787049428085-251",
@@ -4299,23 +4202,25 @@
     },
     {
       "id": "con-1787049428085-801",
-      "clienteId": "Ministério da Justiça",
+      "clienteId": "cli-1787050401189-194",
       "tratamento": "",
-      "nome": "Elsa Martins",
-      "apelido": "",
+      "nome": "Elsa",
+      "apelido": "Martins",
       "cargo": "Chefe de Gabinete",
       "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.mj@mj.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "subTabIndex": 1,
+      "notas": ""
     },
     {
       "id": "con-1787049428085-715",
       "clienteId": "cli-1787038283894-51",
       "subTabIndex": 0,
-      "nome": "Ana Luísa Machado",
-      "apelido": "",
+      "nome": "Ana Luísa",
+      "apelido": "Machado",
       "cargo": "Secretária de Estado de Justiça",
       "telefone": "",
       "telemovel": "",
@@ -4377,16 +4282,18 @@
     },
     {
       "id": "con-1787049428085-561",
-      "clienteId": "Ministério de Assuntos Parlamentares",
+      "clienteId": "cli-1787050401189-194",
       "tratamento": "",
-      "nome": "Carlos Abreu Amorim",
-      "apelido": "",
+      "nome": "Carlos",
+      "apelido": "Abreu Amorim",
       "cargo": "Ministro",
       "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.map@map.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "subTabIndex": 1,
+      "notas": ""
     },
     {
       "id": "con-1787049428085-370",
@@ -4429,7 +4336,7 @@
     },
     {
       "id": "con-1787049428085-580",
-      "clienteId": "Ministério de Reforma de Estado",
+      "clienteId": "cli-1787038283894-699",
       "tratamento": "",
       "nome": "Bernardo Correia",
       "apelido": "",
@@ -4438,20 +4345,24 @@
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.digitalizacao@mare.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "subTabIndex": 1,
+      "notas": ""
     },
     {
       "id": "con-1787049428085-443",
-      "clienteId": "Ministério de Reforma de Estado",
+      "clienteId": "cli-1787050401189-194",
       "tratamento": "",
-      "nome": "Francisco Santos",
-      "apelido": "",
+      "nome": "Francisco",
+      "apelido": "Santos",
       "cargo": "Chefe de Gabinete - Secretaria de Estado para a Digitalização",
       "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.digitalizacao@mare.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "subTabIndex": 1,
+      "notas": ""
     },
     {
       "id": "con-1787049428085-527",
@@ -4520,16 +4431,18 @@
     },
     {
       "id": "con-1787049428085-473",
-      "clienteId": "Ministério da Presidência",
+      "clienteId": "cli-1787050401189-194",
       "tratamento": "",
-      "nome": "Antonio Leitao Amaro",
-      "apelido": "",
+      "nome": "António",
+      "apelido": "Leitão Amaro",
       "cargo": "Ministro",
       "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.mp@mp.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "subTabIndex": 1,
+      "notas": ""
     },
     {
       "id": "con-1787049428085-212",
@@ -4569,6 +4482,80 @@
       "email": "gabinete.senec@mne.gov.pt",
       "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z"
+    },
+    {
+      "id": "con-1785514369861-598",
+      "clienteId": "cli-1785514129444-833",
+      "nome": "Diogo",
+      "apelido": "Madeira",
+      "cargo": "Diretor de Relações Públicas e Comunicação",
+      "telefone": "+351 217 828 400",
+      "telemovel": "",
+      "email": "diogo.madeira@huawei.com",
+      "notas": "",
+      "createdAt": "2026-07-31T16:12:49.863Z"
+    },
+    {
+      "id": "con-1785515106421-857",
+      "clienteId": "cli-imp-085",
+      "nome": "Paulo",
+      "apelido": "Lima",
+      "cargo": "Administrador do Banco",
+      "telefone": "",
+      "telemovel": "",
+      "email": "paulo.lima@bcn.cv",
+      "notas": "",
+      "createdAt": "2026-07-31T16:25:06.422Z",
+      "subTabIndex": 0
+    },
+    {
+      "id": "con-1785515478798-243",
+      "clienteId": "cli-imp-084",
+      "nome": "Isaura",
+      "apelido": "Costa",
+      "cargo": "Diretora de comunicação",
+      "telefone": "",
+      "telemovel": "",
+      "email": "isaura.costa@ccdn-n.pt",
+      "notas": "",
+      "createdAt": "2026-07-31T16:31:18.798Z",
+      "subTabIndex": 0
+    },
+    {
+      "id": "con-1785755195297-108",
+      "clienteId": "cli-imp-004",
+      "nome": "Inês",
+      "apelido": "Alberto",
+      "cargo": "Project Operacional Manager",
+      "telefone": "",
+      "telemovel": "",
+      "email": "ines.alberto@fundacao-jeronimomartins.com",
+      "notas": "",
+      "createdAt": "2026-08-03T11:06:35.298Z"
+    },
+    {
+      "id": "con-1785825214404-496",
+      "clienteId": "cli-1785514129444-833",
+      "nome": "Henrique",
+      "apelido": "Street",
+      "cargo": "Relações Públicas e Comunicação",
+      "telefone": "",
+      "telemovel": "+351 910 016 837",
+      "email": "henrique.street@huawei.com",
+      "notas": "",
+      "createdAt": "2026-08-04T06:33:34.405Z"
+    },
+    {
+      "id": "con-1785826295654-612",
+      "clienteId": "cli-1785514129444-833",
+      "nome": "Daniel",
+      "apelido": "Paiva",
+      "cargo": "Responsável de Compras",
+      "telefone": "",
+      "telemovel": "+351 964 354 106",
+      "email": "daniel.paiva@huawei.com",
+      "notas": "",
+      "createdAt": "2026-08-04T06:51:35.654Z"
     }
   ],
   "projetos": [
@@ -4579,7 +4566,7 @@
       "tipo": "Aluguer UM",
       "dataInicio": "2026-07-31",
       "dataFim": "2026-12-31",
-      "estado": "Orçamentado",
+      "estado": "Aguarda Proposta",
       "viatura": "Unidade Móvel CCDR-N",
       "matricula": "CC-99-XX",
       "obs": "CCDR-N (Comissão de Coordenação e Desenvolvimento Regional do Norte)",
@@ -4611,7 +4598,7 @@
       "contacto2Id": "",
       "dataInicio": "2026-07-27",
       "dataFim": "2026-08-31",
-      "estado": "Orçamentado",
+      "estado": "Cancelado",
       "viatura": "Iveco Eurocargo 12000Kg ()",
       "matricula": "BC-10-NV",
       "documents": [],
@@ -4648,6 +4635,15 @@
     }
   ],
   "interacoes": [
+    {
+      "id": "int-1787046531397-690",
+      "clienteId": "cli-1787038283894-503",
+      "separadorId": "sep-1786751754158-584",
+      "subTabIndex": 2,
+      "data": "2026-07-31T11:42",
+      "descricao": "Reunião com a Dra Gabriela Leite e Com a Dra. Isaura Costa, para possível fornecimento de uma UM de aluguer.",
+      "createdAt": "2026-08-18T09:48:51.397Z"
+    },
     {
       "id": "int-1785515776952-436",
       "clienteId": "cli-imp-085",
@@ -4696,15 +4692,6 @@
       "data": "2026-07-14T10:00",
       "descricao": "Reunião com os adjuntos do secretário de Estado do ambiente. Falámos das possíveis sinergias com a CCDR-N e que deveria falar com a Dr. Gabriela Leite",
       "createdAt": "2026-08-07T11:46:33.880Z"
-    },
-    {
-      "id": "int-1787046531397-690",
-      "clienteId": "cli-1787038283894-503",
-      "separadorId": "sep-1786751754158-584",
-      "subTabIndex": 2,
-      "data": "2026-07-31T11:42",
-      "descricao": "Reunião com a Dra Gabriela Leite e Com a Dra. Isaura Costa, para possível fornecimento de uma UM de aluguer.",
-      "createdAt": "2026-08-18T09:48:51.397Z"
     }
   ],
   "interacoesProjetos": [],
@@ -4714,9 +4701,19 @@
       "nome": "José Centúrio",
       "email": "jmcenturio@alegria-activity.com",
       "cargo": "Administrador do Sistema",
-      "pin": "1234",
+      "pin": "J*cen*1971",
       "role": "admin",
       "createdAt": "2026-08-10T09:45:00.000Z"
+    },
+    {
+      "id": "usr-1786830129122",
+      "nome": "antonio",
+      "email": "antonio@antonio.es",
+      "cargo": "Teste",
+      "pin": "0000",
+      "role": "user",
+      "active": true,
+      "createdAt": "2026-08-15T21:42:09.122Z"
     },
     {
       "id": "usr-1786381890691",
@@ -4757,16 +4754,6 @@
       "createdAt": "2026-08-14T23:46:52.893Z"
     },
     {
-      "id": "usr-1786830129122",
-      "nome": "antonio",
-      "email": "antonio@antonio.es",
-      "cargo": "Teste",
-      "pin": "1234",
-      "role": "user",
-      "active": false,
-      "createdAt": "2026-08-15T21:42:09.122Z"
-    },
-    {
       "id": "usr-1787036348527",
       "nome": "Test User",
       "email": "test@example.com",
@@ -4777,63 +4764,7 @@
       "createdAt": "2026-08-18T06:59:08.527Z"
     }
   ],
-  "userLogs": [
-    {
-      "id": "log-1787053110723-406",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "tab-duplicados",
-      "detalhes": null,
-      "timestamp": "2026-08-18T11:38:30.723Z"
-    },
-    {
-      "id": "log-1787052992604-209",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "tab-duplicados",
-      "detalhes": null,
-      "timestamp": "2026-08-18T11:36:32.604Z"
-    },
-    {
-      "id": "log-1787052903610-435",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "tab-duplicados",
-      "detalhes": null,
-      "timestamp": "2026-08-18T11:35:03.610Z"
-    },
-    {
-      "id": "log-1787052857785-813",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "tab-duplicados",
-      "detalhes": null,
-      "timestamp": "2026-08-18T11:34:17.785Z"
-    },
-    {
-      "id": "log-1787052782103-174",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "tab-duplicados",
-      "detalhes": null,
-      "timestamp": "2026-08-18T11:33:02.103Z"
-    }
-  ],
+  "userLogs": [],
   "orcamentos": [
     {
       "id": "orc-bcn-camiao-001",
@@ -4896,61 +4827,162 @@
       "createdAt": "2023-09-01T11:00:00.000Z"
     }
   ],
-  "ignoredDuplicates": [],
+  "ignoredDuplicates": [
+    "cli-imp-002_cli-imp-013",
+    "cli-imp-013_cli-imp-002",
+    "cli-imp-074_cli-imp-082",
+    "cli-imp-082_cli-imp-074",
+    "cli-imp-009_cli-imp-077",
+    "cli-imp-077_cli-imp-009",
+    "cli-imp-001_cli-imp-083",
+    "cli-imp-083_cli-imp-001",
+    "cli-imp-083_cli-imp-072",
+    "cli-imp-072_cli-imp-083",
+    "cli-imp-003_cli-imp-075",
+    "cli-imp-075_cli-imp-003",
+    "cli-imp-068_cli-imp-024",
+    "cli-imp-024_cli-imp-068",
+    "cli-imp-015_cli-imp-070",
+    "cli-imp-070_cli-imp-015",
+    "cli-imp-035_cli-imp-042",
+    "cli-imp-042_cli-imp-035",
+    "cli-imp-036_cli-imp-042",
+    "cli-imp-042_cli-imp-036",
+    "cli-imp-035_cli-imp-043",
+    "cli-imp-043_cli-imp-035",
+    "cli-imp-043_cli-imp-052",
+    "cli-imp-052_cli-imp-043",
+    "cli-imp-043_cli-imp-060",
+    "cli-imp-060_cli-imp-043",
+    "cli-imp-043_cli-imp-061",
+    "cli-imp-061_cli-imp-043",
+    "cli-imp-043_cli-imp-062",
+    "cli-imp-062_cli-imp-043",
+    "cli-imp-034_cli-imp-043",
+    "cli-imp-043_cli-imp-034",
+    "cli-imp-034_cli-imp-052",
+    "cli-imp-052_cli-imp-034",
+    "cli-imp-052_cli-imp-060",
+    "cli-imp-060_cli-imp-052",
+    "cli-imp-052_cli-imp-061",
+    "cli-imp-061_cli-imp-052",
+    "cli-imp-052_cli-imp-062",
+    "cli-imp-062_cli-imp-052",
+    "cli-imp-052_cli-imp-064",
+    "cli-imp-064_cli-imp-052",
+    "cli-1787038283893-791_cli-1787038283894-313",
+    "cli-1787038283894-313_cli-1787038283893-791",
+    "cli-1787038283893-788_cli-1787038283893-791",
+    "cli-1787038283893-791_cli-1787038283893-788",
+    "cli-1787038283893-788_cli-1787038283894-313",
+    "cli-1787038283894-313_cli-1787038283893-788",
+    "cli-1787038283894-851_cli-1787038283893-788",
+    "cli-1787038283893-788_cli-1787038283894-851",
+    "cli-1787038283894-394_cli-1787038283893-788",
+    "cli-1787038283893-788_cli-1787038283894-394",
+    "cli-1787038283894-858_cli-1787038283893-788",
+    "cli-1787038283893-788_cli-1787038283894-858",
+    "cli-1787038283893-566_cli-1787038283893-788",
+    "cli-1787038283893-788_cli-1787038283893-566",
+    "cli-1787038283894-101_cli-1787038283893-566",
+    "cli-1787038283893-566_cli-1787038283894-101",
+    "cli-1787038283893-566_cli-1787038283893-791",
+    "cli-1787038283893-791_cli-1787038283893-566",
+    "cli-1787038283893-786_cli-1787038283893-566",
+    "cli-1787038283893-566_cli-1787038283893-786",
+    "cli-1787038283893-233_cli-1787038283893-566",
+    "cli-1787038283893-566_cli-1787038283893-233",
+    "cli-1787038283894-51_cli-1787038283893-566",
+    "cli-1787038283893-566_cli-1787038283894-51",
+    "cli-1787038283894-92_cli-1787038283893-566",
+    "cli-1787038283893-566_cli-1787038283894-92",
+    "cli-1787038283894-92_cli-1787038283893-788",
+    "cli-1787038283893-788_cli-1787038283894-92",
+    "cli-1787038283894-92_cli-1787038283893-233",
+    "cli-1787038283893-233_cli-1787038283894-92",
+    "cli-1787038283894-92_cli-1787038283893-791",
+    "cli-1787038283893-791_cli-1787038283894-92",
+    "cli-1787038283894-101_cli-1787038283893-788",
+    "cli-1787038283893-788_cli-1787038283894-101",
+    "cli-1787038283894-101_cli-1787038283893-233",
+    "cli-1787038283893-233_cli-1787038283894-101",
+    "cli-1787038283893-788_cli-1787038283893-786",
+    "cli-1787038283893-786_cli-1787038283893-788",
+    "cli-1787038283894-313_cli-1787038283893-566",
+    "cli-1787038283893-566_cli-1787038283894-313",
+    "cli-1787038283893-151_cli-1787038283893-566",
+    "cli-1787038283893-566_cli-1787038283893-151",
+    "cli-1787038283894-313_cli-1787038283893-151",
+    "cli-1787038283893-151_cli-1787038283894-313",
+    "cli-1787038283894-313_cli-1787038283894-858",
+    "cli-1787038283894-858_cli-1787038283894-313",
+    "cli-1787038283893-788_cli-1787038283893-151",
+    "cli-1787038283893-151_cli-1787038283893-788",
+    "cli-1787038283893-725_cli-1787038283893-566",
+    "cli-1787038283893-566_cli-1787038283893-725",
+    "cli-1787038283894-699_cli-1787038283893-566",
+    "cli-1787038283893-566_cli-1787038283894-699",
+    "cli-1787038283893-566_cli-1787038283894-858",
+    "cli-1787038283894-858_cli-1787038283893-566",
+    "cli-1787038283894-858_cli-1787038283893-725",
+    "cli-1787038283893-725_cli-1787038283894-858",
+    "cli-1787038283893-566_cli-1787038283894-394",
+    "cli-1787038283894-394_cli-1787038283893-566",
+    "cli-1787038283894-51_cli-1787038283893-725",
+    "cli-1787038283893-725_cli-1787038283894-51",
+    "cli-1787038283894-41_cli-1787038283893-566",
+    "cli-1787038283893-566_cli-1787038283894-41",
+    "cli-1787038283894-208_cli-1787038283893-566",
+    "cli-1787038283893-566_cli-1787038283894-208",
+    "cli-1787038283894-699_cli-1787038283893-725",
+    "cli-1787038283893-725_cli-1787038283894-699",
+    "cli-1787038283893-614_cli-1787038283893-566",
+    "cli-1787038283893-566_cli-1787038283893-614",
+    "cli-1787038283894-394_cli-1787038283893-725",
+    "cli-1787038283893-725_cli-1787038283894-394",
+    "cli-1787044627790-53_cli-1787038283893-566",
+    "cli-1787038283893-566_cli-1787044627790-53",
+    "cli-1787038283894-503_cli-1787044627790-53",
+    "cli-1787044627790-53_cli-1787038283894-503",
+    "cli-1787038283894-503_cli-1787038283893-566",
+    "cli-1787038283893-566_cli-1787038283894-503",
+    "cli-1787038283894-876_cli-1787044627790-53",
+    "cli-1787044627790-53_cli-1787038283894-876",
+    "cli-1787038283894-503_cli-1787038283893-725",
+    "cli-1787038283893-725_cli-1787038283894-503",
+    "cli-1787038283894-503_cli-1787038283893-788",
+    "cli-1787038283893-788_cli-1787038283894-503",
+    "cli-1787038283894-41_cli-1787044627790-53",
+    "cli-1787044627790-53_cli-1787038283894-41",
+    "cli-1787038283893-614_cli-1787044627790-53",
+    "cli-1787044627790-53_cli-1787038283893-614",
+    "cli-1787038283893-788_cli-1787044627790-53",
+    "cli-1787044627790-53_cli-1787038283893-788",
+    "cli-1787038283893-725_cli-1787044627790-53",
+    "cli-1787044627790-53_cli-1787038283893-725",
+    "cli-1787038283894-503_cli-1787038283893-151",
+    "cli-1787038283893-151_cli-1787038283894-503",
+    "cli-1787038283894-503_cli-1787038283893-614",
+    "cli-1787038283893-614_cli-1787038283894-503",
+    "cli-1787038283894-503_cli-1787038283894-313",
+    "cli-1787038283894-313_cli-1787038283894-503",
+    {
+      "type": "cli-1787050401189-194",
+      "key": "cli-1787038283893-566:::undefined",
+      "id1": "cli-1787038283893-566",
+      "ignoredAt": "2026-08-18T11:01:24.180Z",
+      "ignoredBy": "Sistema"
+    }
+  ],
   "activityHistory": [
     {
-      "id": "act-1787053305150-qfyj",
+      "id": "act-1787053625153-6emu",
       "userId": "usr-admin-001",
       "action": "DUPLICATE_MERGE",
-      "entity": "contactos",
-      "entityId": "con-1785515106421-857",
-      "details": "Fusão de 2 registos duplicados em \"Paulo\". 0 vínculos reatribuídos com sucesso.",
-      "timestamp": "2026-08-18T11:41:45.150Z"
-    },
-    {
-      "id": "act-1787053108252-fcwm",
-      "userId": "usr-admin-001",
-      "action": "DUPLICATE_MERGE",
-      "entity": "contactos",
-      "entityId": "con-imp-027",
-      "details": "Fusão de 2 registos duplicados em \"mail\". 0 vínculos reatribuídos com sucesso.",
-      "timestamp": "2026-08-18T11:38:28.252Z"
-    },
-    {
-      "id": "act-1787052989832-h708",
-      "userId": "usr-admin-001",
-      "action": "DUPLICATE_MERGE",
-      "entity": "contactos",
-      "entityId": "con-imp-011",
-      "details": "Fusão de 2 registos duplicados em \"Miguel\". 0 vínculos reatribuídos com sucesso.",
-      "timestamp": "2026-08-18T11:36:29.832Z"
-    },
-    {
-      "id": "act-1787052900108-2t7e",
-      "userId": "usr-admin-001",
-      "action": "DUPLICATE_MERGE",
-      "entity": "contactos",
-      "entityId": "con-imp-009",
-      "details": "Fusão de 2 registos duplicados em \"Pedro\". 0 vínculos reatribuídos com sucesso.",
-      "timestamp": "2026-08-18T11:35:00.108Z"
-    },
-    {
-      "id": "act-1787052854927-le1v",
-      "userId": "usr-admin-001",
-      "action": "DUPLICATE_MERGE",
-      "entity": "contactos",
-      "entityId": "con-imp-004",
-      "details": "Fusão de 2 registos duplicados em \"Diogo\". 0 vínculos reatribuídos com sucesso.",
-      "timestamp": "2026-08-18T11:34:14.927Z"
-    },
-    {
-      "id": "act-1787052779326-6pwc",
-      "userId": "usr-admin-001",
-      "action": "DUPLICATE_MERGE",
-      "entity": "contactos",
-      "entityId": "con-imp-002",
-      "details": "Fusão de 3 registos duplicados em \"Joao\". 0 vínculos reatribuídos com sucesso.",
-      "timestamp": "2026-08-18T11:32:59.327Z"
+      "entity": "clientes",
+      "entityId": "cli-imp-009",
+      "details": "Fusão de 2 registos duplicados em \"NOS, SGPS, S.A.\". 0 vínculos reatribuídos com sucesso.",
+      "timestamp": "2026-08-18T11:47:05.153Z"
     }
   ],
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
@@ -5099,7 +5131,8 @@
       "cli-imp-075",
       "cli-imp-024",
       "cli-imp-083",
-      "cli-imp-074"
+      "cli-imp-074",
+      "cli-imp-077"
     ],
     "contactos": [
       "con-imp-059",
@@ -5158,6 +5191,7 @@
       "con-imp-093",
       "con-imp-094",
       "con-1787049428085-902",
+      "con-imp-011",
       "con-imp-118",
       "con-imp-133",
       "con-imp-134",
