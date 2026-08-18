@@ -3777,19 +3777,6 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "con-imp-130",
-      "clienteId": "cli-imp-073",
-      "nome": "Diogo",
-      "apelido": "Sousa",
-      "cargo": "Diretor de Comunicação",
-      "telefone": "+351 217 242 500",
-      "telemovel": "",
-      "email": "galp@galp.com",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
-    },
-    {
       "id": "con-imp-131",
       "clienteId": "cli-imp-082",
       "nome": "Mafalda",
@@ -4838,7 +4825,19 @@
       "createdAt": "2026-08-18T06:59:08.527Z"
     }
   ],
-  "userLogs": [],
+  "userLogs": [
+    {
+      "id": "log-1787052782103-174",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "tab-duplicados",
+      "detalhes": null,
+      "timestamp": "2026-08-18T11:33:02.103Z"
+    }
+  ],
   "orcamentos": [
     {
       "id": "orc-bcn-camiao-001",
@@ -4903,6 +4902,15 @@
   ],
   "ignoredDuplicates": [],
   "activityHistory": [
+    {
+      "id": "act-1787052854927-le1v",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_MERGE",
+      "entity": "contactos",
+      "entityId": "con-imp-004",
+      "details": "Fusão de 2 registos duplicados em \"Diogo\". 0 vínculos reatribuídos com sucesso.",
+      "timestamp": "2026-08-18T11:34:14.927Z"
+    },
     {
       "id": "act-1787052779326-6pwc",
       "userId": "usr-admin-001",
@@ -5120,7 +5128,8 @@
       "con-1787049428085-902",
       "con-imp-118",
       "con-imp-133",
-      "con-imp-134"
+      "con-imp-134",
+      "con-imp-130"
     ],
     "projetos": [],
     "interacoes": [
