@@ -3225,19 +3225,6 @@
       "subTabIndex": 0
     },
     {
-      "id": "con-imp-035",
-      "clienteId": "cli-imp-009",
-      "nome": "Luis",
-      "apelido": "Costa",
-      "cargo": "Head of Product Marketing",
-      "telefone": "+351 21 782 47 00",
-      "telemovel": "",
-      "email": "joao.ceriz@nos.pt",
-      "notas": "Temas: telecomunicaciones, televisión, internet, telefonía móvil, entretenimiento",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
-    },
-    {
       "id": "con-imp-037",
       "clienteId": "cli-imp-011",
       "nome": "António",
@@ -4735,6 +4722,17 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787053659094-118",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "tab-duplicados",
+      "detalhes": null,
+      "timestamp": "2026-08-18T11:47:39.094Z"
+    },
+    {
       "id": "log-1787053649184-547",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -4956,6 +4954,15 @@
     }
   ],
   "activityHistory": [
+    {
+      "id": "act-1787053681341-fg29",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_MERGE",
+      "entity": "contactos",
+      "entityId": "con-imp-033",
+      "details": "Fusão de 2 registos duplicados em \"Joao\". 0 vínculos reatribuídos com sucesso.",
+      "timestamp": "2026-08-18T11:48:01.341Z"
+    },
     {
       "id": "act-1787053656518-z1dj",
       "userId": "usr-admin-001",
@@ -5191,7 +5198,8 @@
       "con-imp-036",
       "con-imp-026",
       "con-1786989137440-465",
-      "con-imp-020"
+      "con-imp-020",
+      "con-imp-035"
     ],
     "projetos": [],
     "interacoes": [
