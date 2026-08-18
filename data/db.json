@@ -1918,42 +1918,6 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "cli-imp-031",
-      "tipoCliente": "Estatal",
-      "ministerio": "MINISTÉRIO DA SAÚDE / Direção-Geral",
-      "secretariaEstado": "Direção-Geral",
-      "nome": "MINISTÉRIO DA SAÚDE / Direção-Geral",
-      "contribuinte": "500000544",
-      "direcao1": "Alameda D. Afonso Henriques, 45, 1049-005 Lisboa - Portugal",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1049-005",
-      "localidade": "Lisboa",
-      "telefone": "+351 21 843 05 00",
-      "telemovel": "",
-      "email": "geral@dgs.min-saude.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "cli-imp-032",
-      "tipoCliente": "Estatal",
-      "ministerio": "MINISTÉRIO DA SAÚDE / Secretaria-Geral",
-      "secretariaEstado": "Secretaria-Geral",
-      "nome": "MINISTÉRIO DA SAÚDE / Secretaria-Geral",
-      "contribuinte": "500000561",
-      "direcao1": "Avenida João Crisóstomo n.º 9, 1º, 1049-062 Lisboa",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1049-062",
-      "localidade": "Lisboa",
-      "telefone": "+351 21 798 42 00",
-      "telemovel": "",
-      "email": "sg@sg.min-saude.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
       "id": "cli-imp-047",
       "tipoCliente": "Estatal",
       "ministerio": "MINISTÉRIO DO TRABALHO, SOLIDARIEDADE E SEGURANÇA SOCIAL",
@@ -2008,42 +1972,6 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "cli-imp-052",
-      "tipoCliente": "Estatal",
-      "ministerio": "MINISTÉRIO DAS INFRAESTRUTURAS E HABITAÇÃO",
-      "secretariaEstado": "Ministro",
-      "nome": "MINISTÉRIO DAS INFRAESTRUTURAS E HABITAÇÃO",
-      "contribuinte": "500000901",
-      "direcao1": "Palácio MINISTÉRIO DAS INFRAESTRUTURAS E HABITAÇÃO",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1000-001",
-      "localidade": "Lisboa",
-      "telefone": "+351 213 927 600",
-      "telemovel": "",
-      "email": "gabinete.mih@mih.gov.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "cli-imp-053",
-      "tipoCliente": "Estatal",
-      "ministerio": "MINISTÉRIO DAS INFRAESTRUTURAS E HABITAÇÃO / Secretaria de Estado das Infraestruturas",
-      "secretariaEstado": "Secretaria de Estado das Infraestruturas",
-      "nome": "MINISTÉRIO DAS INFRAESTRUTURAS E HABITAÇÃO / Secretaria de Estado das Infraestruturas",
-      "contribuinte": "500000918",
-      "direcao1": "Palácio MINISTÉRIO DAS INFRAESTRUTURAS E HABITAÇÃO / Secretaria de Estado das Infraestruturas",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1000-001",
-      "localidade": "Lisboa",
-      "telefone": "gabinete.seinf@mih.gov.pt",
-      "telemovel": "",
-      "email": "Campus XXI, Avenida João XXI, 63 1000-300 LISBOA",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
       "id": "cli-imp-058",
       "tipoCliente": "Estatal",
       "ministerio": "MINISTÉRIO DOS ASSUNTOS PARLAMENTARES",
@@ -2095,24 +2023,6 @@
       "telefone": "+351 213 946 000",
       "telemovel": "",
       "email": "gabinete.senec@mne.gov.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "cli-imp-067",
-      "tipoCliente": "Estatal",
-      "ministerio": "MINISTÉRIO DAS FINANÇAS",
-      "secretariaEstado": "Ministro",
-      "nome": "MINISTÉRIO DAS FINANÇAS",
-      "contribuinte": "500001156",
-      "direcao1": "Avenida Infante Dom Henrique, 1 1149-009 LISBOA",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1149-009",
-      "localidade": "Lisboa",
-      "telefone": "+351 218 816 800",
-      "telemovel": "",
-      "email": "gabinete.ministro@mf.gov.pt",
       "createdAt": "2026-07-31T16:30:00.000Z"
     }
   ],
@@ -3138,30 +3048,6 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "con-imp-057",
-      "clienteId": "cli-imp-031",
-      "nome": "Rita",
-      "apelido": "Sá Machado",
-      "cargo": "Dirección general",
-      "telefone": "+351 21 843 05 00",
-      "telemovel": "",
-      "email": "geral@dgs.min-saude.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "con-imp-058",
-      "clienteId": "cli-imp-032",
-      "nome": "Ana",
-      "apelido": "Pedroso",
-      "cargo": "Secretaría general",
-      "telefone": "+351 21 798 42 00",
-      "telemovel": "",
-      "email": "sg@sg.min-saude.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
       "id": "con-imp-073",
       "clienteId": "cli-imp-047",
       "nome": "Maria",
@@ -3210,66 +3096,6 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "con-imp-081",
-      "clienteId": "cli-imp-052",
-      "nome": "Miguel",
-      "apelido": "Pinto Luz",
-      "cargo": "Ministro",
-      "telefone": "gabinete.mih@mih.gov.pt",
-      "telemovel": "",
-      "email": "Campus XXI, Avenida João XXI, 63 1000-300 LISBOA",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "con-imp-082",
-      "clienteId": "cli-imp-052",
-      "nome": "Gustavo",
-      "apelido": "Madeira",
-      "cargo": "Chefe de Gabinete",
-      "telefone": "gabinete.mih@mih.gov.pt",
-      "telemovel": "",
-      "email": "Campus XXI, Avenida João XXI, 63 1000-300 LISBOA",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "con-imp-083",
-      "clienteId": "cli-imp-053",
-      "nome": "Hugo",
-      "apelido": "Espírito Santo",
-      "cargo": "Secretaria del estado de infraestructura",
-      "telefone": "gabinete.seinf@mih.gov.pt",
-      "telemovel": "",
-      "email": "Campus XXI, Avenida João XXI, 63 1000-300 LISBOA",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "con-imp-084",
-      "clienteId": "cli-imp-053",
-      "nome": "Joao",
-      "apelido": "Pedro Coutinho",
-      "cargo": "Chefe de Gabinete - Secretaria del estado de infraestructura",
-      "telefone": "gabinete.seinf@mih.gov.pt",
-      "telemovel": "",
-      "email": "Campus XXI, Avenida João XXI, 63 1000-300 LISBOA",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "con-imp-085",
-      "clienteId": "cli-imp-052",
-      "nome": "Instituto",
-      "apelido": "de vivienda y rehabilitación urbana",
-      "cargo": "Instituto de vivienda y rehabilitación urbana",
-      "telefone": "+351 217 231 500",
-      "telemovel": "",
-      "email": "geral@ihru.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
       "id": "con-imp-093",
       "clienteId": "cli-imp-058",
       "nome": "Carlos",
@@ -3314,18 +3140,6 @@
       "telefone": "+351 213 946 000",
       "telemovel": "",
       "email": "gabinete.senec@mne.gov.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "con-imp-110",
-      "clienteId": "cli-imp-067",
-      "nome": "Joaquim",
-      "apelido": "Miranda Sarmento",
-      "cargo": "Ministro",
-      "telefone": "+351 218 816 800",
-      "telemovel": "",
-      "email": "gabinete.ministro@mf.gov.pt",
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z"
     }
@@ -3429,6 +3243,102 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1787035462672-931",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"MINISTÉRIO DAS INFRAESTRUTURAS E HABITAÇÃO / Secretaria de Estado das Infraestruturas\" (NIF: 500000918) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "MINISTÉRIO DAS INFRAESTRUTURAS E HABITAÇÃO / Secretaria de Estado das Infraestruturas",
+        "contribuinte": "500000918",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T06:44:22.672Z"
+    },
+    {
+      "id": "log-1787035462220-989",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-18T06:44:22.220Z"
+    },
+    {
+      "id": "log-1787035462147-848",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"MINISTÉRIO DAS INFRAESTRUTURAS E HABITAÇÃO\" (NIF: 500000901) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "MINISTÉRIO DAS INFRAESTRUTURAS E HABITAÇÃO",
+        "contribuinte": "500000901",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T06:44:22.147Z"
+    },
+    {
+      "id": "log-1787035461601-682",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"MINISTÉRIO DAS FINANÇAS\" (NIF: 500001156) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "MINISTÉRIO DAS FINANÇAS",
+        "contribuinte": "500001156",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T06:44:21.601Z"
+    },
+    {
+      "id": "log-1787035461147-498",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"MINISTÉRIO DA SAÚDE / Secretaria-Geral\" (NIF: 500000561) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "MINISTÉRIO DA SAÚDE / Secretaria-Geral",
+        "contribuinte": "500000561",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T06:44:21.147Z"
+    },
+    {
+      "id": "log-1787035460593-14",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"MINISTÉRIO DA SAÚDE / Direção-Geral\" (NIF: 500000544) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "MINISTÉRIO DA SAÚDE / Direção-Geral",
+        "contribuinte": "500000544",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T06:44:20.593Z"
+    },
     {
       "id": "log-1787035460026-927",
       "usuarioId": "usr-admin-001",
@@ -3998,7 +3908,12 @@
       "cli-imp-059",
       "cli-imp-060",
       "cli-imp-061",
-      "cli-imp-030"
+      "cli-imp-030",
+      "cli-imp-031",
+      "cli-imp-032",
+      "cli-imp-067",
+      "cli-imp-052",
+      "cli-imp-053"
     ],
     "contactos": [
       "con-imp-059",
@@ -4039,7 +3954,15 @@
       "con-imp-098",
       "con-imp-099",
       "con-imp-100",
-      "con-imp-056"
+      "con-imp-056",
+      "con-imp-057",
+      "con-imp-058",
+      "con-imp-110",
+      "con-imp-081",
+      "con-imp-082",
+      "con-imp-085",
+      "con-imp-083",
+      "con-imp-084"
     ],
     "projetos": [],
     "interacoes": [],
