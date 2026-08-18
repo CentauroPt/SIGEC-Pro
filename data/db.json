@@ -3066,18 +3066,6 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "con-imp-020",
-      "clienteId": "cli-imp-006",
-      "nome": "Antonio",
-      "apelido": "Redondo",
-      "cargo": "CEO",
-      "telefone": "+351 265 709 000",
-      "telemovel": "",
-      "email": "antonio.redondo@thenavigatorcompany.com",
-      "notas": "Temas: pasta de celulosa, papel, silvicultura, sostenibilidad, bioindustria",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
       "id": "con-imp-021",
       "clienteId": "cli-imp-007",
       "nome": "Bruno",
@@ -4745,7 +4733,19 @@
       "createdAt": "2026-08-18T06:59:08.527Z"
     }
   ],
-  "userLogs": [],
+  "userLogs": [
+    {
+      "id": "log-1787053649184-547",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "tab-duplicados",
+      "detalhes": null,
+      "timestamp": "2026-08-18T11:47:29.184Z"
+    }
+  ],
   "orcamentos": [
     {
       "id": "orc-bcn-camiao-001",
@@ -4956,6 +4956,15 @@
     }
   ],
   "activityHistory": [
+    {
+      "id": "act-1787053656518-z1dj",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_MERGE",
+      "entity": "contactos",
+      "entityId": "con-imp-019",
+      "details": "Fusão de 2 registos duplicados em \"Antonio\". 0 vínculos reatribuídos com sucesso.",
+      "timestamp": "2026-08-18T11:47:36.518Z"
+    },
     {
       "id": "act-1787053646834-gui5",
       "userId": "usr-admin-001",
@@ -5181,7 +5190,8 @@
       "con-imp-121",
       "con-imp-036",
       "con-imp-026",
-      "con-1786989137440-465"
+      "con-1786989137440-465",
+      "con-imp-020"
     ],
     "projetos": [],
     "interacoes": [
