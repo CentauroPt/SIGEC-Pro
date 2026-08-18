@@ -1936,24 +1936,6 @@
       "createdAt": "2026-08-18T07:24:08.336Z"
     },
     {
-      "id": "cli-1787037848336-17",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da saúde",
-      "secretariaEstado": "Direção Geral",
-      "nome": "Direção Geral",
-      "contribuinte": "",
-      "direcao1": "Aameda D. Afonso Henriques",
-      "direcao2": "",
-      "numero": "45",
-      "andar": "",
-      "codigoPostal": "1049-005",
-      "localidade": "Lisboa",
-      "telefone": "+351 21 843 05 00",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:24:08.336Z"
-    },
-    {
       "id": "cli-1787037848336-362",
       "tipoCliente": "Estatal",
       "ministerio": "Ministério da saúde",
@@ -1967,24 +1949,6 @@
       "codigoPostal": "1049-062",
       "localidade": "Lisboa",
       "telefone": "+351 21 330 51 00",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:24:08.336Z"
-    },
-    {
-      "id": "cli-1787037848336-724",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério do Ambiente e Energia",
-      "secretariaEstado": "Direção Geral da DGEG",
-      "nome": "Direção Geral da DGEG",
-      "contribuinte": "",
-      "direcao1": "Av. 5 de Outubro",
-      "direcao2": "",
-      "numero": "208",
-      "andar": "",
-      "codigoPostal": "1069-203",
-      "localidade": "Lisboa",
-      "telefone": "+351 217 922 700 / 800",
       "telemovel": "",
       "email": "",
       "createdAt": "2026-08-18T07:24:08.336Z"
@@ -2044,24 +2008,6 @@
       "createdAt": "2026-08-18T07:24:08.337Z"
     },
     {
-      "id": "cli-1787037848337-619",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da Agricultura e Mar",
-      "secretariaEstado": "Direção Geral Agricultura e Desenvolvimento Rural",
-      "nome": "Direção Geral Agricultura e Desenvolvimento Rural",
-      "contribuinte": "",
-      "direcao1": "Avenida Afonso Costa",
-      "direcao2": "",
-      "numero": "3",
-      "andar": "",
-      "codigoPostal": "1949-002",
-      "localidade": "Lisboa",
-      "telefone": "+351 218 443 000",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:24:08.337Z"
-    },
-    {
       "id": "cli-1787037848337-428",
       "tipoCliente": "Estatal",
       "ministerio": "Ministério da Cultura, Juventude e desporto",
@@ -2111,24 +2057,6 @@
       "codigoPostal": "1000-300",
       "localidade": "LISBOA",
       "telefone": "+351 213 927 600",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:24:08.337Z"
-    },
-    {
-      "id": "cli-1787037848337-372",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da Educação, Ciência e Inovação",
-      "secretariaEstado": "Direção Geral de Educação",
-      "nome": "Direção Geral de Educação",
-      "contribuinte": "",
-      "direcao1": "Avenida 24 de Julho",
-      "direcao2": "",
-      "numero": "140",
-      "andar": "",
-      "codigoPostal": "1399-025",
-      "localidade": "Lisboa",
-      "telefone": "+351 218 430 500",
       "telemovel": "",
       "email": "",
       "createdAt": "2026-08-18T07:24:08.337Z"
@@ -2224,24 +2152,6 @@
       "createdAt": "2026-08-18T07:24:08.337Z"
     },
     {
-      "id": "cli-1787037848337-855",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da Defesa Nacional",
-      "secretariaEstado": "",
-      "nome": "Cliente Importado",
-      "contribuinte": "",
-      "direcao1": "Avenida da Ilha da Madeira",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1400-204",
-      "localidade": "LISBOA",
-      "telefone": "+351 213 034 500",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:24:08.337Z"
-    },
-    {
       "id": "cli-1787037848337-964",
       "tipoCliente": "Estatal",
       "ministerio": "Ministério da Defesa Nacional",
@@ -2255,42 +2165,6 @@
       "codigoPostal": "1400-204",
       "localidade": "Lisboa",
       "telefone": "+351 21 303 85 00",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:24:08.337Z"
-    },
-    {
-      "id": "cli-1787037848337-991",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério de Assuntos Parlamentares",
-      "secretariaEstado": "",
-      "nome": "Cliente Importado",
-      "contribuinte": "",
-      "direcao1": "Palácio de São Bento",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1249-068",
-      "localidade": "LISBOA",
-      "telefone": "+351 213 920 500",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:24:08.337Z"
-    },
-    {
-      "id": "cli-1787037848337-866",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da Reforma do Estado",
-      "secretariaEstado": "",
-      "nome": "Cliente Importado",
-      "contribuinte": "",
-      "direcao1": "Avenida João XXI",
-      "direcao2": "Campus XXI",
-      "numero": "63",
-      "andar": "",
-      "codigoPostal": "1000-300",
-      "localidade": "LISBOA",
-      "telefone": "+351 213 245 400",
       "telemovel": "",
       "email": "",
       "createdAt": "2026-08-18T07:24:08.337Z"
@@ -2332,24 +2206,6 @@
       "createdAt": "2026-08-18T07:24:08.337Z"
     },
     {
-      "id": "cli-1787037848337-239",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da Economia e da Coesão Territorial",
-      "secretariaEstado": "",
-      "nome": "Cliente Importado",
-      "contribuinte": "",
-      "direcao1": "Avenida João XXI",
-      "direcao2": "Campus XXI",
-      "numero": "63",
-      "andar": "",
-      "codigoPostal": "1000-300",
-      "localidade": "LISBOA",
-      "telefone": "+351 213 927 600",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:24:08.337Z"
-    },
-    {
       "id": "cli-1787037848337-235",
       "tipoCliente": "Estatal",
       "ministerio": "Ministério da Economia e da Coesão Territorial",
@@ -2363,24 +2219,6 @@
       "codigoPostal": "1000-300",
       "localidade": "LISBOA",
       "telefone": "+351 213 245 400",
-      "telemovel": "",
-      "email": "",
-      "createdAt": "2026-08-18T07:24:08.337Z"
-    },
-    {
-      "id": "cli-1787037848337-568",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério da Presidência",
-      "secretariaEstado": "",
-      "nome": "Cliente Importado",
-      "contribuinte": "",
-      "direcao1": "Avenida João XXI",
-      "direcao2": "Campus XXI",
-      "numero": "63",
-      "andar": "",
-      "codigoPostal": "1000-300",
-      "localidade": "LISBOA",
-      "telefone": "+351 213 927 600",
       "telemovel": "",
       "email": "",
       "createdAt": "2026-08-18T07:24:08.337Z"
@@ -3540,6 +3378,170 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787038114246-33",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Direção Geral de Educação\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Direção Geral de Educação",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:28:34.246Z"
+    },
+    {
+      "id": "log-1787038113683-971",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-18T07:28:33.683Z"
+    },
+    {
+      "id": "log-1787038113646-472",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Direção Geral da DGEG\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Direção Geral da DGEG",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:28:33.646Z"
+    },
+    {
+      "id": "log-1787038113365-338",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Direção Geral Agricultura e Desenvolvimento Rural\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Direção Geral Agricultura e Desenvolvimento Rural",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:28:33.365Z"
+    },
+    {
+      "id": "log-1787038113094-354",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Direção Geral\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Direção Geral",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:28:33.094Z"
+    },
+    {
+      "id": "log-1787038112781-241",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Cliente Importado\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Cliente Importado",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:28:32.781Z"
+    },
+    {
+      "id": "log-1787038112446-849",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Cliente Importado\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Cliente Importado",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:28:32.446Z"
+    },
+    {
+      "id": "log-1787038112111-996",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Cliente Importado\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Cliente Importado",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:28:32.111Z"
+    },
+    {
+      "id": "log-1787038111736-748",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Cliente Importado\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Cliente Importado",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:28:31.736Z"
+    },
+    {
+      "id": "log-1787038111422-617",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Cliente Importado\" (NIF: ) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Cliente Importado",
+        "contribuinte": "",
+        "tipoCliente": "Estatal"
+      },
+      "timestamp": "2026-08-18T07:28:31.422Z"
+    },
+    {
       "id": "log-1787038111039-638",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -3760,7 +3762,16 @@
       "cli-1787037848337-350",
       "cli-1787037848337-233",
       "cli-1787037848337-339",
-      "cli-1787037848337-521"
+      "cli-1787037848337-521",
+      "cli-1787037848337-855",
+      "cli-1787037848337-991",
+      "cli-1787037848337-866",
+      "cli-1787037848337-239",
+      "cli-1787037848337-568",
+      "cli-1787037848336-17",
+      "cli-1787037848337-619",
+      "cli-1787037848336-724",
+      "cli-1787037848337-372"
     ],
     "contactos": [
       "con-imp-059",
