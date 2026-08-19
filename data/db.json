@@ -1540,25 +1540,6 @@
       "pais": ""
     },
     {
-      "id": "cli-imp-001",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "EDP",
-      "contribuinte": "500000034",
-      "direcao1": "Avenida 24 de Julho, n.º 12, 1249-300 Lisboa, Portugal",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1249-300",
-      "localidade": "Lisboa",
-      "telefone": "+351 210 012 500",
-      "telemovel": "",
-      "email": "rui.cabrita@edp.com",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "orcamentos": []
-    },
-    {
       "id": "cli-imp-073",
       "tipoCliente": "Privado",
       "ministerio": "",
@@ -4544,6 +4525,34 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787138957188-671",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"EDP\" (NIF: 500000034) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "EDP",
+        "contribuinte": "500000034",
+        "tipoCliente": "Privado"
+      },
+      "timestamp": "2026-08-19T11:29:17.188Z"
+    },
+    {
+      "id": "log-1787138939571-598",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-19T11:28:59.571Z"
+    },
+    {
       "id": "log-1787137678281-257",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -4818,7 +4827,8 @@
       "cli-imp-083",
       "cli-imp-074",
       "cli-imp-077",
-      "cli-imp-002"
+      "cli-imp-002",
+      "cli-imp-001"
     ],
     "contactos": [
       "con-imp-059",
