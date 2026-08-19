@@ -5134,6 +5134,22 @@ function renderProjectPageMainGrid() {
     projectsList.forEach(p => {
       const client = db.clientes.find(c => c.id === p.clienteId);
       const stateBadgeClass = getProjectStateBadgeClass(p.estado);
+      const isEstatalClient = client && client.tipoCliente === 'Estatal';
+      let sepBadge = '';
+      if (isEstatalClient && Array.isArray(client.separadores)) {
+        let sepTitle = '';
+        if (p.separadorId) {
+          const sObj = client.separadores.find(s => s.id === p.separadorId || `sep_${s.id}` === p.separadorId);
+          if (sObj) sepTitle = getSeparadorTitle(sObj);
+        }
+        if (!sepTitle && p.subTabIndex !== undefined && p.subTabIndex !== null && client.separadores[p.subTabIndex]) {
+          sepTitle = getSeparadorTitle(client.separadores[p.subTabIndex]);
+        }
+        if (sepTitle) {
+          sepBadge = `<span class="badge badge-amber" style="font-size:0.72rem; margin-top:3px; display:inline-flex; align-items:center; gap:0.25rem;"><i class="fa-solid fa-folder-tree"></i> ${escapeHtml(sepTitle)}</span>`;
+        }
+      }
+
       html += `
         <tr style="border-bottom:1px solid #e2e8f0; cursor:pointer;" onclick="loadProjectIntoForm('${p.id}')">
           <td style="padding:0.75rem 1rem; font-weight:700; color:#1e293b;">
@@ -5143,7 +5159,10 @@ function renderProjectPageMainGrid() {
             </div>
           </td>
           <td style="padding:0.75rem 1rem; color:#475569;">${escapeHtml(p.tipo || '-')}</td>
-          <td style="padding:0.75rem 1rem; color:#334155; font-weight:500;">${escapeHtml(client ? client.nome : '-')}</td>
+          <td style="padding:0.75rem 1rem; color:#334155; font-weight:500;">
+            <div>${escapeHtml(client ? client.nome : '-')}</div>
+            ${sepBadge}
+          </td>
           <td style="padding:0.75rem 1rem; color:#475569;">${escapeHtml([p.viatura, p.matricula].filter(Boolean).join(' - ') || '-')}</td>
           <td style="padding:0.75rem 1rem; color:#475569; white-space:nowrap;">${escapeHtml(p.dataInicio || '')} a ${escapeHtml(p.dataFim || '')}</td>
           <td style="padding:0.75rem 1rem;"><span class="badge ${stateBadgeClass}">${escapeHtml(p.estado || '')}</span></td>
@@ -5170,6 +5189,21 @@ function renderProjectPageMainGrid() {
       const client = db.clientes.find(c => c.id === p.clienteId);
       const clientName = client ? client.nome : 'Sem cliente';
       const stateBadgeClass = getProjectStateBadgeClass(p.estado);
+      const isEstatalClient = client && client.tipoCliente === 'Estatal';
+      let sepBadge = '';
+      if (isEstatalClient && Array.isArray(client.separadores)) {
+        let sepTitle = '';
+        if (p.separadorId) {
+          const sObj = client.separadores.find(s => s.id === p.separadorId || `sep_${s.id}` === p.separadorId);
+          if (sObj) sepTitle = getSeparadorTitle(sObj);
+        }
+        if (!sepTitle && p.subTabIndex !== undefined && p.subTabIndex !== null && client.separadores[p.subTabIndex]) {
+          sepTitle = getSeparadorTitle(client.separadores[p.subTabIndex]);
+        }
+        if (sepTitle) {
+          sepBadge = `<span class="badge badge-amber" style="font-size:0.72rem; display:inline-flex; align-items:center; gap:0.25rem;"><i class="fa-solid fa-folder-tree"></i> ${escapeHtml(sepTitle)}</span>`;
+        }
+      }
 
       const card = document.createElement('div');
       card.className = 'contact-card';
@@ -5190,6 +5224,7 @@ function renderProjectPageMainGrid() {
         <div style="margin-bottom: 0.35rem; display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap;">
           <span class="badge ${stateBadgeClass}" style="font-size:0.72rem;">${escapeHtml(p.estado || 'Em Curso')}</span>
           ${p.tipo ? `<span class="badge badge-gray" style="font-size:0.72rem;">${escapeHtml(p.tipo)}</span>` : ''}
+          ${sepBadge}
         </div>
         <div class="contact-name" style="font-size: 1rem; color: #1e3a8a;">${escapeHtml(p.nome)}</div>
         <div class="contact-detail" style="font-weight: 600; color: var(--primary-blue);"><i class="fa-solid fa-building"></i> ${escapeHtml(clientName)}</div>
@@ -7291,35 +7326,128 @@ function updateClientProjectOptions() {
   }
 }
 
-function handleProjectClientSelectChange() {
-  const clientId = document.getElementById('projectClienteId').value;
+function handleProjectClientSelectChange(targetSeparadorId = null) {
+  const clientId = document.getElementById('projectClienteId')?.value;
+  const sepGroup = document.getElementById('projectEstatalSeparadorGroup');
+  const sepSelect = document.getElementById('projectSeparadorId');
+
+  if (!clientId) {
+    if (sepGroup) sepGroup.style.display = 'none';
+    if (sepSelect) {
+      sepSelect.innerHTML = '<option value="">-- Selecione o Separador --</option>';
+      sepSelect.required = false;
+      sepSelect.value = '';
+    }
+    updateProjectContactsDropdown(null, false);
+    return;
+  }
+
+  const client = (db.clientes || []).find(c => String(c.id || '').trim() === String(clientId || '').trim());
+  const isEstatal = client && client.tipoCliente === 'Estatal';
+
+  if (isEstatal && Array.isArray(client.separadores) && client.separadores.length > 0) {
+    if (sepGroup) sepGroup.style.display = 'block';
+    if (sepSelect) {
+      sepSelect.required = true;
+      sepSelect.innerHTML = '<option value="">-- Selecione o Separador --</option>';
+      client.separadores.forEach((sep, idx) => {
+        const opt = document.createElement('option');
+        const sepId = sep.id || `sep_${idx}`;
+        opt.value = sepId;
+        opt.dataset.index = idx;
+        const title = getSeparadorTitle(sep) || `Separador ${idx + 1}`;
+        opt.textContent = `${idx + 1}. ${title}`;
+        sepSelect.appendChild(opt);
+      });
+
+      if (targetSeparadorId) {
+        sepSelect.value = targetSeparadorId;
+      } else if (window._pendingNewProjectSeparador && String(window._pendingNewProjectSeparador.clientId).trim() === String(clientId).trim()) {
+        if (window._pendingNewProjectSeparador.separadorId) {
+          sepSelect.value = window._pendingNewProjectSeparador.separadorId;
+        } else if (window._pendingNewProjectSeparador.subTabIndex !== undefined && client.separadores[window._pendingNewProjectSeparador.subTabIndex]) {
+          sepSelect.value = client.separadores[window._pendingNewProjectSeparador.subTabIndex].id || `sep_${window._pendingNewProjectSeparador.subTabIndex}`;
+        }
+      }
+
+      if (!sepSelect.value && sepSelect.options.length > 1) {
+        sepSelect.selectedIndex = 1;
+      }
+    }
+  } else {
+    if (sepGroup) sepGroup.style.display = 'none';
+    if (sepSelect) {
+      sepSelect.required = false;
+      sepSelect.innerHTML = '<option value="">-- Selecione o Separador --</option>';
+      sepSelect.value = '';
+    }
+  }
+
+  updateProjectContactsDropdown(client, isEstatal);
+}
+
+function handleProjectSeparadorChange() {
+  const clientId = document.getElementById('projectClienteId')?.value;
+  if (!clientId) return;
+  const client = (db.clientes || []).find(c => String(c.id || '').trim() === String(clientId || '').trim());
+  const isEstatal = client && client.tipoCliente === 'Estatal';
+  updateProjectContactsDropdown(client, isEstatal);
+}
+
+function updateProjectContactsDropdown(client, isEstatal, prev1 = null, prev2 = null) {
   const c1Select = document.getElementById('projectContacto1');
   const c2Select = document.getElementById('projectContacto2');
+  if (!c1Select || !c2Select) return;
 
-  const prev1 = c1Select.value;
-  const prev2 = c2Select.value;
+  const currentVal1 = prev1 !== null ? prev1 : c1Select.value;
+  const currentVal2 = prev2 !== null ? prev2 : c2Select.value;
 
   c1Select.innerHTML = '<option value="">-- Selecione Contacto --</option>';
   c2Select.innerHTML = '<option value="">-- Opcional / Selecione --</option>';
 
-  if (!clientId) return;
+  if (!client) return;
 
-  const clientContacts = db.contactos.filter(c => c.clienteId === clientId);
+  const sepSelect = document.getElementById('projectSeparadorId');
+  const sepGroup = document.getElementById('projectEstatalSeparadorGroup');
+  const isSepVisible = sepGroup && sepGroup.style.display !== 'none';
+  const selectedSepId = (isEstatal && isSepVisible && sepSelect) ? sepSelect.value : null;
+  const selectedSepOpt = sepSelect && sepSelect.selectedOptions && sepSelect.selectedOptions[0];
+  const selectedSepIndex = selectedSepOpt ? selectedSepOpt.dataset.index : null;
 
-  clientContacts.forEach(con => {
+  let allClientContacts = (db.contactos || []).filter(c => String(c.clienteId || '').trim() === String(client.id || '').trim());
+  let filteredContacts = allClientContacts;
+
+  if (isEstatal && selectedSepId) {
+    const matched = allClientContacts.filter(con => {
+      if (con.separadorId && con.separadorId === selectedSepId) return true;
+      if (selectedSepIndex !== null && selectedSepIndex !== undefined && con.subTabIndex !== undefined && con.subTabIndex !== null && con.subTabIndex !== '') {
+        return Number(con.subTabIndex) === Number(selectedSepIndex);
+      }
+      return false;
+    });
+    if (matched.length > 0) {
+      filteredContacts = matched;
+    }
+  }
+
+  filteredContacts.forEach(con => {
     const opt1 = document.createElement('option');
     opt1.value = con.id;
-    opt1.textContent = `${con.nome} ${con.apelido} (${con.cargo})`;
+    opt1.textContent = `${con.nome || ''} ${con.apelido || ''} (${con.cargo || 'Sem cargo'})`.trim();
     c1Select.appendChild(opt1);
 
     const opt2 = document.createElement('option');
     opt2.value = con.id;
-    opt2.textContent = `${con.nome} ${con.apelido} (${con.cargo})`;
+    opt2.textContent = `${con.nome || ''} ${con.apelido || ''} (${con.cargo || 'Sem cargo'})`.trim();
     c2Select.appendChild(opt2);
   });
 
-  if (prev1) c1Select.value = prev1;
-  if (prev2) c2Select.value = prev2;
+  if (currentVal1 && Array.from(c1Select.options).some(o => o.value === currentVal1)) {
+    c1Select.value = currentVal1;
+  }
+  if (currentVal2 && Array.from(c2Select.options).some(o => o.value === currentVal2)) {
+    c2Select.value = currentVal2;
+  }
 }
 
 function openProjectModal() {
@@ -7349,6 +7477,16 @@ function resetProjectForm(skipConfirm = false) {
   document.getElementById('btnDeleteProject').style.display = 'none';
   const btnDupReset = document.getElementById('btnDuplicateProject');
   if (btnDupReset) btnDupReset.style.display = 'none';
+
+  const sepGroup = document.getElementById('projectEstatalSeparadorGroup');
+  if (sepGroup) sepGroup.style.display = 'none';
+  const sepSelect = document.getElementById('projectSeparadorId');
+  if (sepSelect) {
+    sepSelect.innerHTML = '<option value="">-- Selecione o Separador --</option>';
+    sepSelect.value = '';
+    sepSelect.required = false;
+  }
+
   updateClientProjectOptions();
   renderProjectInteractionsGrid([]);
   renderProjectOrcamentosGrid(null);
@@ -7400,7 +7538,21 @@ function loadProjectIntoForm(projectId, skipDirtyCheck = false, skipTabSwitch = 
   
   updateClientProjectOptions();
   document.getElementById('projectClienteId').value = project.clienteId || '';
-  handleProjectClientSelectChange();
+  handleProjectClientSelectChange(project.separadorId || null);
+
+  const client = (db.clientes || []).find(c => String(c.id || '').trim() === String(project.clienteId || '').trim());
+  if (client && client.tipoCliente === 'Estatal' && Array.isArray(client.separadores)) {
+    const sepSelect = document.getElementById('projectSeparadorId');
+    if (sepSelect) {
+      if (project.separadorId) {
+        sepSelect.value = project.separadorId;
+      } else if (project.subTabIndex !== undefined && project.subTabIndex !== null && client.separadores[project.subTabIndex]) {
+        const targetSep = client.separadores[project.subTabIndex];
+        sepSelect.value = targetSep.id || `sep_${project.subTabIndex}`;
+      }
+      handleProjectSeparadorChange();
+    }
+  }
 
   document.getElementById('projectContacto1').value = project.contacto1Id || '';
   document.getElementById('projectContacto2').value = project.contacto2Id || '';
@@ -7444,13 +7596,35 @@ function saveProject(e) {
   const viatura = document.getElementById('projectViatura').value.trim();
   const matricula = document.getElementById('projectMatricula').value.trim().toUpperCase();
 
-  let separadorId = existingIndex >= 0 ? db.projetos[existingIndex].separadorId : null;
-  let subTabIndex = existingIndex >= 0 ? db.projetos[existingIndex].subTabIndex : null;
-  if (window._pendingNewProjectSeparador && window._pendingNewProjectSeparador.clientId === clienteId) {
+  const client = (db.clientes || []).find(c => String(c.id || '').trim() === String(clienteId || '').trim());
+  const isEstatal = client && client.tipoCliente === 'Estatal';
+
+  let separadorId = null;
+  let subTabIndex = null;
+
+  if (isEstatal && Array.isArray(client.separadores)) {
+    const sepSelect = document.getElementById('projectSeparadorId');
+    if (sepSelect && sepSelect.value) {
+      separadorId = sepSelect.value;
+      const opt = sepSelect.selectedOptions && sepSelect.selectedOptions[0];
+      if (opt && opt.dataset.index !== undefined) {
+        subTabIndex = Number(opt.dataset.index);
+      } else {
+        const foundIdx = client.separadores.findIndex(s => (s.id && s.id === separadorId) || `sep_${s.id}` === separadorId);
+        subTabIndex = foundIdx >= 0 ? foundIdx : 0;
+      }
+    }
+  }
+
+  if (separadorId === null && window._pendingNewProjectSeparador && String(window._pendingNewProjectSeparador.clientId).trim() === String(clienteId).trim()) {
     separadorId = window._pendingNewProjectSeparador.separadorId;
     subTabIndex = window._pendingNewProjectSeparador.subTabIndex;
-    window._pendingNewProjectSeparador = null;
   }
+  if (separadorId === null && existingIndex >= 0) {
+    separadorId = db.projetos[existingIndex].separadorId;
+    subTabIndex = db.projetos[existingIndex].subTabIndex;
+  }
+  window._pendingNewProjectSeparador = null;
 
   const projObj = {
     id,

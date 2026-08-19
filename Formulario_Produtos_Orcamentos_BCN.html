@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orçamentação e Especificação de Veículos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --primary-light: #e0f2fe;
+      --navy: #0f172a;
+      --navy-light: #1e293b;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --border-focus: #38bdf8;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --success: #16a34a;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
+      color: #ffffff;
+      padding: 2rem 2.5rem;
+      position: relative;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .header-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.65rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .header-badge {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      padding: 0.35rem 0.85rem;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .header-input {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #ffffff;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      min-width: 260px;
+    }
+    .header-input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.25);
+      border-color: #ffffff;
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+    }
+
+    .header-input-badge {
+      background: rgba(255, 255, 255, 0.25);
+      border: 1px dashed rgba(255, 255, 255, 0.7);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 0.82rem;
+      font-family: inherit;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      width: 70px;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    .header-input-badge:focus {
+      outline: none;
+      border-style: solid;
+      background: rgba(255, 255, 255, 0.35);
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+    }
+
+    .header-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+      color: #e2e8f0;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      padding-top: 1rem;
+      align-items: center;
+    }
+
+    .header-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* CONTROLS BAR */
+    .actions-bar {
+      background: #f1f5f9;
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: var(--radius);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: #ffffff;
+    }
+    .btn-success:hover {
+      background: #15803d;
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      color: var(--text-main);
+      border-color: #cbd5e1;
+    }
+    .btn-secondary:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+    }
+
+    .total-box {
+      background: #ffffff;
+      border: 1.5px solid #0284c7;
+      padding: 0.45rem 1.25rem;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--navy);
+      box-shadow: 0 2px 4px rgba(2, 132, 199, 0.08);
+    }
+
+    .total-value {
+      font-size: 1.25rem;
+      color: #0284c7;
+      font-weight: 800;
+    }
+
+    /* FORM CONTENT */
+    .form-body {
+      padding: 2.5rem;
+    }
+
+    .topic-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .topic-header {
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .topic-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+    }
+
+    .topic-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    /* TABLE LAYOUT */
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .product-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .product-table th {
+      background: #ffffff;
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.75rem 1.25rem;
+      border-bottom: 2px solid #f1f5f9;
+    }
+
+    .product-table th.col-item {
+      width: 25%;
+    }
+    .product-table th.col-desc {
+      width: 57%;
+    }
+    .product-table th.col-price {
+      width: 18%;
+      text-align: right;
+    }
+
+    .product-table td {
+      padding: 0.75rem 1.25rem;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: middle;
+    }
+
+    .product-table tr:hover {
+      background-color: #f8fafc;
+    }
+
+    .item-label {
+      font-weight: 700;
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.92rem;
+    }
+
+    .input-desc {
+      width: 100%;
+      padding: 0.55rem 0.85rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      color: var(--text-main);
+      background-color: #ffffff;
+      transition: all 0.2s ease;
+      resize: vertical;
+      min-height: 38px;
+    }
+
+    .input-desc:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+
+    .price-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .price-symbol {
+      position: absolute;
+      right: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+      pointer-events: none;
+    }
+
+    .input-price {
+      width: 100%;
+      max-width: 160px;
+      padding: 0.55rem 2rem 0.55rem 0.85rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--navy);
+      text-align: right;
+      background-color: #ffffff;
+      transition: all 0.2s ease;
+    }
+
+    .input-price:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+      background-color: #f0fdf4;
+    }
+
+    /* FOOTER */
+    .footer {
+      background: #f8fafc;
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        background: #ffffff;
+      }
+      .actions-bar {
+        display: none;
+      }
+      .container {
+        box-shadow: none;
+        border: none;
+        max-width: 100%;
+      }
+      .topic-card {
+        page-break-inside: avoid;
+        border: 1px solid #ccc;
+        margin-bottom: 1.5rem;
+      }
+      .input-desc, .input-price {
+        border: none;
+        padding: 0;
+        background: transparent;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-top">
+        <h1 class="header-title">
+          <i class="fa-solid fa-truck-ramp-box"></i> Orçamentação e Especificação de Veículos
+        </h1>
+        <div class="header-badge">
+          <i class="fa-solid fa-file-signature"></i> Orçamento <input type="text" id="headerRefCliente" list="clientesRefDatalist" class="header-input-badge" value="BCN" placeholder="Cliente" title="Nome do Cliente / Referência" oninput="syncClientFromRef(this.value)"> / alegría-activity
+          <datalist id="clientesRefDatalist">
+            <option value="BCN">
+            <option value="EDP">
+            <option value="GALP">
+          </datalist>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div class="header-meta-item">
+          <label for="headerCliente" style="color: #e2e8f0; font-weight: 500;">Cliente:</label>
+          <input type="text" id="headerCliente" list="clientesDatalist" class="header-input" value="BCN (Banco Caboverdiano de Negócios)" placeholder="Selecione ou introduza o Cliente..." oninput="syncRefFromClient(this.value)">
+          <datalist id="clientesDatalist">
+            <option value="BCN (Banco Caboverdiano de Negócios)">
+            <option value="EDP">
+            <option value="GALP">
+          </datalist>
+        </div>
+        <div class="header-meta-item">
+          <label for="headerFabricante" style="color: #e2e8f0; font-weight: 500;">Fabricante / Transformador:</label>
+          <input type="text" id="headerFabricante" class="header-input" value="alegría-activity, S.L." placeholder="Fabricante">
+        </div>
+        <div class="header-meta-item" style="flex: 1 1 300px;">
+          <label for="headerAmbito" style="color: #e2e8f0; font-weight: 500;">Âmbito / Estado:</label>
+          <select id="headerAmbito" class="header-input" style="min-width: 220px; max-width: 320px; background: rgba(15, 23, 42, 0.45); color: #ffffff; cursor: pointer;">
+            <option value="Aguarda Orçamento" selected>Aguarda Orçamento</option>
+            <option value="Aguarda decisão">Aguarda decisão</option>
+            <option value="Em Curso">Em Curso</option>
+            <option value="Concluído">Concluído</option>
+            <option value="Cancelado">Cancelado</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <!-- ACTIONS AND TOTAL BAR -->
+    <div class="actions-bar">
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <button type="button" class="btn btn-primary" onclick="window.print()">
+          <i class="fa-solid fa-print"></i> Imprimir / Gerar PDF
+        </button>
+        <button type="button" class="btn btn-word" onclick="generateAndExportWordBudget()" style="background: #2b579a; color: #ffffff; border-color: #1e3f73; font-weight: 600;" title="Redigir e descarregar documento oficial do Orçamento em formato Word">
+          <i class="fa-solid fa-file-word"></i> Imprimir para Word
+        </button>
+      </div>
+
+      <div class="total-box">
+        <span><i class="fa-solid fa-calculator" style="color: #0284c7;"></i> PREÇO TOTAL:</span>
+        <span class="total-value" id="grandTotalDisplay">0,00 €</span>
+      </div>
+    </div>
+
+    <!-- MAIN FORM BODY -->
+    <form id="vehicleBudgetForm" class="form-body" onsubmit="event.preventDefault();">
+
+      <!-- TÓPICO 1: VEÍCULOS BASE E MECÂNICA -->
+      <div class="topic-card">
+        <div class="topic-header">
+          <span class="topic-num">1</span>
+          <h2 class="topic-title">Veículos Base e Mecânica</h2>
+        </div>
+        <div class="table-responsive">
+          <table class="product-table">
+            <thead>
+              <tr>
+                <th class="col-item">Equipamento / Componente</th>
+                <th class="col-desc">Especificação Técnica</th>
+                <th class="col-price">Preço Estimado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-tag"></i> Marca e Modelo</td>
+                <td><input type="text" class="input-desc" value="IVECO Eurocargo (Camião 12T) / IVECO Daily (Furgão 5T)"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-truck"></i> Tipo de Veículo</td>
+                <td><input type="text" class="input-desc" value="Camião rígido de 12 Toneladas (PMA 12.000 kg) / Furgão com rodado duplo (PMA até 5.200 kg)"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-gas-pump"></i> Motorização</td>
+                <td><input type="text" class="input-desc" value="Diesel Euro III, 4 tempos, refrigeração a água, mínimo 4 cilindros em linha"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-gauge-high"></i> Cilindrada e Potência</td>
+                <td><input type="text" class="input-desc" value="Mínimo 2.900 cm³ | Potência Mínima: 220 CV (Camião) / 140 CV (Furgão)"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-microchip"></i> Injeção</td>
+                <td><input type="text" class="input-desc" value="Injeção de alta pressão gerida eletronicamente com tecnologia common-rail"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-angles-down"></i> Suspensão Traseira</td>
+                <td><input type="text" class="input-desc" value="Suspensão pneumática traseira (Camião) / Suspensão mecânica traseira (Furgão)"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-circle-dot"></i> Sistema de Travagem</td>
+                <td><input type="text" class="input-desc" value="Travões de disco nas 4 rodas com sistemas integrados de segurança na travagem"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-oil-can"></i> Depósito de Combustível</td>
+                <td><input type="text" class="input-desc" value="Capacidade mínima: 110 litros (Camião) / 60 litros (Furgão)"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-snowflake"></i> Conforto de Cabina</td>
+                <td><input type="text" class="input-desc" value="Ar condicionado de cabina, direção assistida, volante regulável em altura e inclinação"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-radio"></i> Equipamento Multimédia</td>
+                <td><input type="text" class="input-desc" value="Sistema de som na cabina com RÁDIO, CD, MP3, USB e altifalantes integrados"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-shield"></i> Segurança na Condução</td>
+                <td><input type="text" class="input-desc" value="Avisador acústico de marcha-atrás e cortinas enroláveis nos vidros dianteiros"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TÓPICO 2: CARROÇARIA, ACESSIBILIDADE E EXTERIOR -->
+      <div class="topic-card">
+        <div class="topic-header">
+          <span class="topic-num">2</span>
+          <h2 class="topic-title">Carroçaria, Acessibilidade e Exterior</h2>
+        </div>
+        <div class="table-responsive">
+          <table class="product-table">
+            <thead>
+              <tr>
+                <th class="col-item">Componente Exterior</th>
+                <th class="col-desc">Descrição e Especificação</th>
+                <th class="col-price">Preço Estimado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-cube"></i> Carroçaria e Caixa por Medida</td>
+                <td><input type="text" class="input-desc" value="Fabricação estrutural da caixa e adaptação por medida nas instalações da alegría-activity em Espanha"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-bars"></i> Estore / Persiana de Segurança Exterior</td>
+                <td><input type="text" class="input-desc" value="Sistema de estore/persiana de segurança exterior para proteção reforçada da entrada lateral"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-door-open"></i> Porta Interior</td>
+                <td><input type="text" class="input-desc" value="Porta interior envidraçada em caixilharia de alumínio e vidro de segurança"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-stairs"></i> Escada de Acesso</td>
+                <td><input type="text" class="input-desc" value="Escada exterior com corrimãos de montagem manual para acesso confortável de clientes"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-wheelchair"></i> (Opcional de Acesso)</td>
+                <td><input type="text" class="input-desc" value="Rampa desdobrável para substituição alternativa da escada e acessibilidade facilitada"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-umbrella"></i> Toldo Exterior</td>
+                <td><input type="text" class="input-desc" value="Toldo retrátil incorporado em toda a extensão lateral de acesso para abrigo de sol e chuva"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-palette"></i> Decoração e Imagem</td>
+                <td><input type="text" class="input-desc" value="Pintura de base e aplicação integral/parcial de vinil exterior com os logótipos e imagem institucional do BCN"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-lightbulb"></i> Iluminação Externa</td>
+                <td><input type="text" class="input-desc" value="Projetores LED exteriores para funcionamento em horário noturno e áreas de baixa visibilidade"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TÓPICO 3: ISOLAMENTO TÉRMICO E REVESTIMENTOS INTERIORES -->
+      <div class="topic-card">
+        <div class="topic-header">
+          <span class="topic-num">3</span>
+          <h2 class="topic-title">Isolamento Térmico e Revestimentos Interiores</h2>
+        </div>
+        <div class="table-responsive">
+          <table class="product-table">
+            <thead>
+              <tr>
+                <th class="col-item">Revestimento / Isolamento</th>
+                <th class="col-desc">Especificação e Material</th>
+                <th class="col-price">Preço Estimado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-layer-group"></i> Isolamento Térmico das Paredes e Teto</td>
+                <td><input type="text" class="input-desc" value="Sistema multicamada com isolamento do tipo lã de rocha, poliuretano ou poliestireno (alta poupança energética)"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-border-all"></i> Revestimento de Paredes e Teto</td>
+                <td><input type="text" class="input-desc" value="Placas poliméricas da marca Alucobond® ou similar, cor branca, laváveis, de alta durabilidade e acabamento premium"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-table-cells"></i> Estrutura do Pavimento</td>
+                <td><input type="text" class="input-desc" value="Base estrutural em contraplacado / painel fenólico marítimo de elevada resistência mecânica e humidade"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-shoe-prints"></i> Revestimento do Solo</td>
+                <td><input type="text" class="input-desc" value="Pavimento vinílico de alta performance da marca Polyfloors® ou similar, antiderrapante, durável e fácil higienização"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TÓPICO 4: MOBILIÁRIO TÉCNICO E ARQUITETURA INTERIOR -->
+      <div class="topic-card">
+        <div class="topic-header">
+          <span class="topic-num">4</span>
+          <h2 class="topic-title">Mobiliário Técnico e Arquitetura Interior</h2>
+        </div>
+        <div class="table-responsive">
+          <table class="product-table">
+            <thead>
+              <tr>
+                <th class="col-item">Mobiliário / Elemento</th>
+                <th class="col-desc">Descrição Técnica e Acabamento</th>
+                <th class="col-price">Preço Estimado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-couch"></i> Placas de Mobiliário (Mesas, Balcões e Armários)</td>
+                <td><input type="text" class="input-desc" value="Móveis fabricados em contraplacado laminado ou melaminado da marca Egger® em cor a acordar"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-scroll"></i> Fecho de Armários</td>
+                <td><input type="text" class="input-desc" value="Fecho de armários através de sistema de persiana / estore de enrolar em alumínio"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-wrench"></i> Estruturas e Perfis</td>
+                <td><input type="text" class="input-desc" value="Acessórios, pés de apoio e perfis de remate realizados em alumínio anodizado e ferragens de alta qualidade"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-door-closed"></i> Divisórias Interiores</td>
+                <td><input type="text" class="input-desc" value="Divisória e porta de correr em caixilharia de alumínio e vidro de segurança para gabinete privado/reuniões"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-chair"></i> Cadeiras de Trabalho (Operadores)</td>
+                <td><input type="text" class="input-desc" value="Até 3 un. (Camião) / até 2 un. (Furgão): cadeiras de escritório giratórias com rodas, regulação em altura e apoios de braços"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-chair"></i> Cadeiras de Atendimento (Clientes)</td>
+                <td><input type="text" class="input-desc" value="Até 3 un. (Camião) / até 2 un. (Furgão): cadeiras para clientes com estética coordenada às de escritório"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-vault"></i> Cofre Forte de Segurança</td>
+                <td><input type="text" class="input-desc" value="Cofre de segurança operacional reforçado com peso aproximado de 175 kg (dimensões aprox.: 600 x 600 x 500 mm)"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-trash-can"></i> Acessórios Auxiliares</td>
+                <td><input type="text" class="input-desc" value="Caixotes de lixo integrados, bengaleiro / cabide e dispensadores auxiliares"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TÓPICO 5: CLIMATIZAÇÃO (AR CONDICIONADO) -->
+      <div class="topic-card">
+        <div class="topic-header">
+          <span class="topic-num">5</span>
+          <h2 class="topic-title">Climatização (Ar Condicionado)</h2>
+        </div>
+        <div class="table-responsive">
+          <table class="product-table">
+            <thead>
+              <tr>
+                <th class="col-item">Sistema de Climatização</th>
+                <th class="col-desc">Modelo e Especificações</th>
+                <th class="col-price">Preço Estimado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-wind"></i> Camião - Sistema Multi-Split Centralizado</td>
+                <td><input type="text" class="input-desc" value="MUNDOCLIMA modelo MUPR-12x2-H9M (A+++, Gás ecológico R32, 5.270 frig/h frio e 5.500 cal/h bomba de calor)"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-fan"></i> Camião - Unidade Exterior</td>
+                <td><input type="text" class="input-desc" value="MUNDOCLIMA modelo MUEX-18-H9.2 instalada em compartimento inferior com grelha de ventilação integrada"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-network-wired"></i> Camião - Unidades Interiores</td>
+                <td><input type="text" class="input-desc" value="Mínimo de 2 unidades interiores split MUPR-12-H9M instaladas na parte superior das paredes"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-sun"></i> Furgão - Sistema Integrado de Teto</td>
+                <td><input type="text" class="input-desc" value="Sistema de teto monobloco marca Belaire de ciclo inverso (mínimo 3 kW de potência, desumidificação e comando remoto)"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TÓPICO 6: ELETRICIDADE, ENERGIA SOLAR E AUTONOMIA -->
+      <div class="topic-card">
+        <div class="topic-header">
+          <span class="topic-num">6</span>
+          <h2 class="topic-title">Eletricidade, Energia Solar e Autonomia</h2>
+        </div>
+        <div class="table-responsive">
+          <table class="product-table">
+            <thead>
+              <tr>
+                <th class="col-item">Componente Elétrico / Solar</th>
+                <th class="col-desc">Capacidade e Marca de Referência</th>
+                <th class="col-price">Preço Estimado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-car-battery"></i> Baterias de Lítio (Acumuladores)</td>
+                <td><input type="text" class="input-desc" value="Mínimo de duas (2) baterias de lítio LiFePO4 de 12V 150 Ah (5.500 W de capacidade total)"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-bolt"></i> Inversor / Carregador Automático</td>
+                <td><input type="text" class="input-desc" value="Inversor/Carregador Automático 12V - 3.500 VA para alimentação estável de 220V em modo autónomo"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-charging-station"></i> Carregamento pelo Motor (Alternador)</td>
+                <td><input type="text" class="input-desc" value="Sistema de ligação e regulador para carregamento durante a circulação tipo Nagares 100 Ah"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-solar-panel"></i> Controlador de Carga Solar</td>
+                <td><input type="text" class="input-desc" value="Controlador de carga solar Smart de 12V e 24V com suporte até 100V para gestão de painéis fotovoltaicos"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-solar-panel"></i> Painéis Solares Fotovoltaicos</td>
+                <td><input type="text" class="input-desc" value="Painéis solares semirrígidos de 200 Wp cada (4 un. Camião / 2 a 4 un. Furgão), marcas BluGy, NDS LightSolar ou similar"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-display"></i> Monitor Digital de Gestão Elétrica</td>
+                <td><input type="text" class="input-desc" value="Monitor de controlo do sistema com visor digital para monitorização de corrente, tensão, consumo e autonomia"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-plug-circle-check"></i> Quadro Elétrico Geral</td>
+                <td><input type="text" class="input-desc" value="Quadro elétrico modular com placa de circuito impresso de proteção e sistema de verificação rápida do estado dos fusíveis"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-plug"></i> Tomada Exterior de Rede 220 V</td>
+                <td><input type="text" class="input-desc" value="Tomada exterior padrão DEFA para ligação à rede pública, devidamente estanque e protegida com tampa com fechadura"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-arrows-spin"></i> Cabo de Extensão</td>
+                <td><input type="text" class="input-desc" value="Cabo enrolável de alimentação exterior 220V com comprimento mínimo de 10 metros e secção adequada"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TÓPICO 7: REDES, INFORMÁTICA E COMUNICAÇÕES -->
+      <div class="topic-card">
+        <div class="topic-header">
+          <span class="topic-num">7</span>
+          <h2 class="topic-title">Redes, Informática e Comunicações</h2>
+        </div>
+        <div class="table-responsive">
+          <table class="product-table">
+            <thead>
+              <tr>
+                <th class="col-item">Equipamento de Rede</th>
+                <th class="col-desc">Especificação e Funcionalidade</th>
+                <th class="col-price">Preço Estimado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-wifi"></i> Router Industrial 4G / 5G</td>
+                <td><input type="text" class="input-desc" value="Fornecimento de router com ligação à Internet via cartão SIM (4G/5G) com antena exterior integrada no teto"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-network-wired"></i> Cablagem de Rede Estruturada</td>
+                <td><input type="text" class="input-desc" value="Infraestrutura completa de cablagem de dados, calhas técnicas e tomadas RJ45 para computadores e impressoras"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" placeholder="0.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TÓPICO 8: EQUIPAMENTOS OPCIONAIS -->
+      <div class="topic-card">
+        <div class="topic-header">
+          <span class="topic-num">8</span>
+          <h2 class="topic-title">Equipamentos Opcionais</h2>
+        </div>
+        <div class="table-responsive">
+          <table class="product-table">
+            <thead>
+              <tr>
+                <th class="col-item">Opcional de Sistema</th>
+                <th class="col-desc">Modelo e Detalhes Técnicos</th>
+                <th class="col-price">Preço Estimado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-arrows-up-down"></i> Pés / Patas Estabilizadoras</td>
+                <td><input type="text" class="input-desc" value="Quatro (4) patas estabilizadoras elétricas com comando sem fios de acionamento automático, marca MA-VE ou similar"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" value="5800.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-satellite-dish"></i> Antena de Comunicação por Satélite</td>
+                <td><input type="text" class="input-desc" value="Antena plana STARLINK FLAT HP de alto desempenho, fixada no teto sem necessidade de orientação, resistente a ventos ciclónicos"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" value="5950.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-gas-pump"></i> Gerador Elétrico a Gasolina Insonorizado</td>
+                <td><input type="text" class="input-desc" value="Gerador Ayerbe 8000 Invert E (7.500W, motor Kiotsu 4T 459cm³, arranque elétrico, alternador Inverter, depósito 26L, dupla insonorização)"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" value="3100.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+              <tr>
+                <td class="item-label"><i class="fa-solid fa-wheelchair"></i> Rampa de Acessibilidade</td>
+                <td><input type="text" class="input-desc" value="Rampa desdobrável de acessibilidade em alumínio com superfície antiderrapante para cadeira de rodas"></td>
+                <td><div class="price-wrapper"><input type="number" step="0.01" class="input-price" value="2450.00" oninput="calculateGrandTotal()"><span class="price-symbol">€</span></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </form>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div>
+        <strong>alegría-activity, S.L. & BCN</strong> &copy; 2026 — Especificação Técnica de Agências Móveis.
+      </div>
+      <div>
+        <i class="fa-solid fa-certificate"></i> Certificação ISO 9001:2015 Bureau Veritas
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    function calculateGrandTotal() {
+      const priceInputs = document.querySelectorAll('.input-price');
+      let total = 0;
+      priceInputs.forEach(input => {
+        const val = parseFloat(input.value);
+        if (!isNaN(val)) {
+          total += val;
+        }
+      });
+      document.getElementById('grandTotalDisplay').textContent = total.toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+      return total;
+    }
+
+    function syncRefFromClient(clientName) {
+      if (!clientName) return;
+      const refInput = document.getElementById('headerRefCliente');
+      if (refInput) {
+        const cleanRef = clientName.split(/[\s\(\[\-]/)[0] || 'Cliente';
+        refInput.value = cleanRef;
+      }
+    }
+
+    function syncClientFromRef(refName) {
+      if (!refName) return;
+      const clientInput = document.getElementById('headerCliente');
+      if (clientInput && (!clientInput.value || clientInput.value === 'Cliente' || clientInput.value === 'BCN')) {
+        clientInput.value = refName;
+      }
+    }
+
+    function populateClientLists() {
+      try {
+        let clients = [];
+        if (window.parent && window.parent.db && Array.isArray(window.parent.db.clientes)) {
+          clients = window.parent.db.clientes;
+        } else {
+          const stored = localStorage.getItem('sigec_pro_db');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            if (parsed && Array.isArray(parsed.clientes)) clients = parsed.clientes;
+          }
+        }
+
+        if (clients && clients.length > 0) {
+          const clientDl = document.getElementById('clientesDatalist');
+          const refDl = document.getElementById('clientesRefDatalist');
+          if (clientDl) {
+            clientDl.innerHTML = '';
+            refDl.innerHTML = '';
+            clients.forEach(c => {
+              const opt = document.createElement('option');
+              opt.value = c.nome;
+              clientDl.appendChild(opt);
+
+              const refOpt = document.createElement('option');
+              refOpt.value = (c.nome || '').split(/[\s\(\[\-]/)[0];
+              refDl.appendChild(refOpt);
+            });
+          }
+        }
+      } catch (e) {}
+    }
+
+    // =========================================================================
+    // REDAÇÃO E EXPORTAÇÃO AUTOMÁTICA DE ORÇAMENTO COMPLETO PARA MICROSOFT WORD
+    // ARGUMENTÁRIO COMPLETO E IDENTIDADE VISUAL OFICIAL ALEGRÍA-ACTIVITY (VERMELHO)
+    // =========================================================================
+    function generateAndExportWordBudget() {
+      const cliente = document.getElementById('headerCliente')?.value.trim() || 'Cliente';
+      const fabricante = document.getElementById('headerFabricante')?.value.trim() || 'alegría-activity, S.L.';
+      const ambito = document.getElementById('headerAmbito')?.value || 'Aguarda Orçamento';
+      const referencia = document.getElementById('headerRefCliente')?.value.trim() || 'BCN';
+      const grandTotal = calculateGrandTotal();
+      const grandTotalFormatted = grandTotal.toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+      const today = new Date();
+      const dataStr = today.toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+      // Argumentários técnicos específicos por tópico extraídos dos orçamentos reais
+      const topicArgumentaries = {
+        "1": "O fornecimento do veículo base, completamente novo, está incluído nesta proposta. Propõe-se um veículo robusto e fiável concebido para operar em quaisquer condições climatéricas e geográficas, equipado com motorização Diesel de injeção direta de alta pressão common-rail gerida eletronicamente, suspensão reforçada, direção assistida, sistemas de segurança ativa na travagem, ar condicionado de cabina e sistema áudio multimédia.",
+        "2": "A acessibilidade dos clientes e operadores é assegurada por portas de acesso dedicadas com persianas/estores de segurança exterior e portas interiores envidraçadas em alumínio. Inclui escada de acesso com corrimãos de montagem manual (ou rampa desdobrável opcional), toldo exterior em toda a extensão lateral para proteção contra sol e chuva, projetores LED exteriores para trabalho noturno e personalização integral em pintura e vinil com a imagem corporativa do cliente.",
+        "3": "Para garantir a máxima eficiência energética, conforto acústico e redução substancial das necessidades de climatização, todo o habitáculo é revestido por um sistema multicamada com isolamento térmico de alta densidade (lã de rocha, poliuretano ou poliestireno). As paredes e o teto são revestidos com placas poliméricas Alucobond® brancas de fácil higienização e elevada durabilidade, e o pavimento é construído em contraplacado fenólico marítimo com revestimento antiderrapante de alta performance Polyfloors®.",
+        "4": "O espaço interior é otimizado para reproduzir com rigor a identidade e o conforto das instalações fixas, distribuído por: Área Principal de Atendimento ao Público com postos de trabalho completos; Gabinete Privado de reuniões separado por divisória e porta de correr em alumínio e vidro com cofre de segurança reforçado de ~175 kg (600x600x500 mm); Espaço de Banco Digital para auto-serviço supervisionado; e Sala Técnica isolada. Todo o mobiliário técnico por medida é fabricado em contraplacado melaminado/laminado da conceituada marca Egger® com fechos em persianas de alumínio e perfis anodizados.",
+        "5": "O sistema de climatização em modo estacionário assegura condições térmicas ideais em qualquer estação do ano, através de equipamento de elevado rendimento energético e baixo consumo com tecnologia Inverter e bomba de calor (gás ecológico R32 / sistema de teto Belaire com função de desumidificação, filtragem avançada de ar e controlo remoto).",
+        "6": "A unidade móvel dispõe de total autonomia energética e funcionalidade elétrica permanente sem necessidade obrigatória de rede exterior. Integra um sistema triplo de carregamento gerido por inversor/carregador automático de 12V-3500VA: (a) ligação à rede pública 220V com tomada exterior estanque DEFA e cabo enrolável de 10m; (b) carregamento em andamento pelo alternador do motor com sistema Nagares 100Ah; e (c) geração autónoma contínua através de painéis solares fotovoltaicos semirrígidos de 200Wp com controlador Smart e acumuladores de lítio LiFePO4 de 5.500W com monitor digital de autonomia.",
+        "7": "Infraestrutura completa de conectividade e telecomunicações empresariais com router industrial 4G/5G com ranhura SIM e antena exterior de teto de alto ganho, cablagem de rede estruturada categoria superior, tomadas de dados RJ45 e tomadas elétricas protegidas para integração imediata de postos de trabalho e impressoras.",
+        "8": "Equipamentos opcionais propostos para maximizar a estabilidade, alcance e autonomia operacional em cenários exigentes: Patas niveladoras elétricas com comando sem fios MA-VE; Antena de satélite de alto desempenho STARLINK FLAT HP para ligação de alta velocidade em qualquer ponto geográfico com encriptação de dados de ponta a ponta; e Gerador elétrico a gasolina insonorizado Ayerbe 8000 Invert E (7.500W, motor Kiotsu 4T 459cm³ e dupla insonorização acústica)."
+      };
+
+      // Geração de cada tópico em blocos/tabelas visivelmente separados com tema vermelho oficial
+      let topicTablesHtml = '';
+      const topicCards = document.querySelectorAll('.topic-card');
+      
+      topicCards.forEach(card => {
+        const topicTitle = card.querySelector('.topic-title')?.innerText.trim() || '';
+        const topicNum = card.querySelector('.topic-num')?.innerText.trim() || '';
+        const topicArg = topicArgumentaries[topicNum] || 'Especificações e componentes selecionados para o projeto segundo os requisitos operacionais acordados.';
+
+        let topicRowsHtml = '';
+        const rows = card.querySelectorAll('.product-table tbody tr');
+        rows.forEach((tr, idx) => {
+          const item = tr.querySelector('.item-label')?.innerText.trim() || '';
+          const desc = tr.querySelector('.input-desc')?.value.trim() || '';
+          const priceVal = parseFloat(tr.querySelector('.input-price')?.value);
+          const priceText = !isNaN(priceVal) && priceVal > 0 
+            ? priceVal.toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €' 
+            : 'Incluído';
+          const bgCol = idx % 2 === 0 ? '#ffffff' : '#fdf8f8';
+
+          topicRowsHtml += `
+            <tr style="background-color: ${bgCol};">
+              <td style="padding: 6pt 10pt; font-weight: bold; color: #111827; width: 30%; border: 1px solid #e5e7eb; vertical-align: top;">
+                ${item}
+              </td>
+              <td style="padding: 6pt 10pt; color: #374151; width: 50%; border: 1px solid #e5e7eb; vertical-align: top;">
+                ${desc}
+              </td>
+              <td style="padding: 6pt 10pt; text-align: right; font-weight: bold; color: #c8102e; width: 20%; border: 1px solid #e5e7eb; vertical-align: top;">
+                ${priceText}
+              </td>
+            </tr>
+          `;
+        });
+
+        // Bloco individual do tópico com argumento descritivo e tabela separada
+        topicTablesHtml += `
+          <!-- BLOCO DO TÓPICO ${topicNum} -->
+          <div style="margin-top: 18pt; margin-bottom: 6pt; page-break-inside: avoid;">
+            <div style="background-color: #fff5f5; border-left: 4pt solid #c8102e; padding: 5pt 10pt; margin-bottom: 6pt;">
+              <h3 style="color: #c8102e; font-size: 11.5pt; margin: 0; font-weight: bold;">
+                ${topicNum}. ${topicTitle}
+              </h3>
+            </div>
+            <p style="font-size: 10pt; color: #4b5563; margin-bottom: 6pt; text-align: justify; line-height: 1.4;">
+              ${topicArg}
+            </p>
+            <table style="width: 100%; border-collapse: collapse; border: 1.5pt solid #c8102e; margin-bottom: 4pt;">
+              <thead>
+                <tr style="background-color: #c8102e; color: #ffffff;">
+                  <th style="padding: 6pt 10pt; text-align: left; width: 30%; font-size: 9.5pt; font-weight: bold; border-right: 1px solid #b91c1c;">Componente / Equipamento</th>
+                  <th style="padding: 6pt 10pt; text-align: left; width: 50%; font-size: 9.5pt; font-weight: bold; border-right: 1px solid #b91c1c;">Especificação Técnica e Acabamentos</th>
+                  <th style="padding: 6pt 10pt; text-align: right; width: 20%; font-size: 9.5pt; font-weight: bold;">Valor</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${topicRowsHtml}
+              </tbody>
+            </table>
+          </div>
+          <!-- Espaçamento de separação nítido entre tópicos -->
+          <div style="height: 14pt;"></div>
+        `;
+      });
+
+      // Template oficial Word compatível no formato oficial da alegría-activity
+      const wordHtml = `
+        <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+        <head>
+          <meta charset='utf-8'>
+          <title>Orçamento ${referencia} - ${fabricante}</title>
+          <style>
+            @page {
+              size: A4 portrait;
+              margin: 20mm 15mm 20mm 15mm;
+            }
+            body {
+              font-family: Arial, Helvetica, sans-serif;
+              font-size: 9.5pt;
+              line-height: 1.45;
+              color: #000000;
+            }
+            h1 {
+              font-size: 18pt;
+              color: #c8102e;
+              margin-bottom: 4px;
+              font-weight: bold;
+            }
+            h2 {
+              font-size: 13pt;
+              color: #c8102e;
+              border-bottom: 1.5pt solid #c8102e;
+              padding-bottom: 4px;
+              margin-top: 20pt;
+              margin-bottom: 8pt;
+              font-weight: bold;
+            }
+            h3 {
+              font-size: 11.5pt;
+              color: #c8102e;
+              margin-top: 10pt;
+              margin-bottom: 4pt;
+              font-weight: bold;
+            }
+            p {
+              margin-bottom: 8pt;
+              text-align: justify;
+            }
+            .header-table {
+              width: 100%;
+              border-collapse: collapse;
+              margin-bottom: 15pt;
+              background-color: #fffafa;
+              border: 1.5pt solid #c8102e;
+            }
+            .header-table td {
+              padding: 8pt 12pt;
+            }
+            .total-box-table {
+              width: 100%;
+              border-collapse: collapse;
+              margin-top: 16pt;
+              margin-bottom: 18pt;
+              border: 2pt solid #c8102e;
+            }
+            .total-box-table td {
+              background-color: #fef2f2;
+              font-size: 13pt;
+              font-weight: bold;
+              color: #991b1b;
+              padding: 12pt 14pt;
+            }
+            .footer-notes {
+              background-color: #fafafa;
+              border: 1px solid #e5e7eb;
+              padding: 10pt;
+              font-size: 9.5pt;
+              color: #4b5563;
+              margin-top: 15pt;
+            }
+          </style>
+        </head>
+        <body>
+
+          <!-- CABEÇALHO INSTITUCIONAL ALEGRÍA-ACTIVITY -->
+          <table style="width: 100%; margin-bottom: 12pt; border-bottom: 1.5pt solid #c8102e; padding-bottom: 8pt;">
+            <tr>
+              <td>
+                <div style="font-size: 22pt; font-weight: bold; color: #c8102e; letter-spacing: -0.5px;">alegría-activity</div>
+                <div style="font-size: 9pt; color: #6b7280;">Especialistas em Design e Transformação de Unidades Móveis</div>
+              </td>
+              <td style="text-align: right; vertical-align: bottom;">
+                <div style="font-size: 11pt; font-weight: bold; color: #c8102e;">Proposta / Orçamento: ${referencia}</div>
+                <div style="font-size: 9pt; color: #6b7280;">Data: ${dataStr} | Versão 1.0</div>
+                <div style="font-size: 9pt; color: #c8102e; font-weight: bold;">Estado: ${ambito}</div>
+              </td>
+            </tr>
+          </table>
+
+          <!-- QUADRO DE IDENTIFICAÇÃO DO PROJETO E CLIENTE -->
+          <table class="header-table">
+            <tr>
+              <td style="width: 60%; vertical-align: top;">
+                <div style="color: #c8102e; font-weight: bold; font-size: 10pt;">Cliente:</div>
+                <div style="font-size: 13pt; font-weight: bold; color: #111827; margin-top: 2pt;">${cliente}</div>
+                <div style="margin-top: 6pt;"><strong style="color: #c8102e;">Projeto:</strong> PROJETO DE AGÊNCIA MÓVEL SOBRE MEDIDA</div>
+                <div style="font-size: 9.5pt; color: #4b5563; margin-top: 2pt;">Design personalizado e produção «chave na mão», com base num veículo novo incluído na proposta.</div>
+              </td>
+              <td style="width: 40%; text-align: right; vertical-align: top;">
+                <div style="color: #c8102e; font-weight: bold; font-size: 10pt;">Fabricante / Transformador:</div>
+                <div style="font-weight: bold; color: #111827;">${fabricante}</div>
+                <div style="margin-top: 4pt; font-size: 9pt; color: #4b5563;">Certificação: ISO 9001:2015 Bureau Veritas</div>
+                <div style="font-size: 9pt; color: #4b5563;">Instalações: Espanha / Portugal</div>
+              </td>
+            </tr>
+          </table>
+
+          <!-- NOTA DE EXPERIÊNCIA COMPROVADA -->
+          <div style="background-color: #f8fafc; border-left: 3pt solid #64748b; padding: 6pt 10pt; margin-bottom: 12pt; font-size: 9.5pt; color: #475569;">
+            <em>Este orçamento baseia-se na nossa sólida experiência em projetos semelhantes de unidades e agências bancárias móveis sobre veículo, realizados para prestigiadas entidades e clientes institucionais africanos e europeus como a SGBS (Société Générale de Banques au Sénégal), BCB (Banque Commerciale du Burkina), Société Générale - Benin ou BMCE, entre outros.</em>
+          </div>
+
+          <!-- 1. DESCRIÇÃO DOS TRABALHOS -->
+          <h2>Descrição dos trabalhos:</h2>
+          <p>
+            A presente proposta contempla o <strong>design personalizado, fornecimento e instalação de diferentes dispositivos e mobiliário, bem como todas as operações de adaptação e transformação técnica</strong> necessárias para a conversão de um veículo novo numa <strong>Unidade / Agência Móvel</strong> que preste serviços operacionais e financeiros de excelência à população residente em qualquer território a que o veículo possa aceder.
+          </p>
+          <p>
+            O objetivo principal desta unidade móvel será chegar e instalar-se com máxima facilidade em qualquer localidade do país, tanto em zonas rurais como em meios mais urbanos, dispondo de plena capacidade para desenvolver a sua atividade junto de todos os clientes em <strong>ótimas condições técnicas de alimentação elétrica autónoma, climatização de alta eficiência, conectividade de dados de alta velocidade, segurança física, habitabilidade e acessibilidade confortável</strong>.
+          </p>
+          <p>
+            Esta proposta contempla o fornecimento do veículo base novo, a construção da carroçaria e caixa por medida, a adaptação e isolamento interior, a produção de mobiliário técnico específico, a instalação de infraestruturas elétricas e a integração de dispositivos fornecidos pelo cliente, através da nossa experiente equipa técnica nas nossas instalações em Espanha. Ficam incluídos o transporte e a entrega no destino final acordado.
+          </p>
+
+          <!-- 2. ESPECIFICAÇÃO TÉCNICA E ARGUMENTÁRIO POR TÓPICOS -->
+          <h2>Especificações Técnicas e Materiais por Tópico:</h2>
+          <p>Abaixo detalham-se os produtos, componentes, tecnologias e materiais selecionados, com a respetiva justificação técnica e orçamentação individualizada:</p>
+
+          ${topicTablesHtml}
+
+          <!-- 3. AVALIAÇÃO ECONÓMICA -->
+          <h2>Avaliação económica:</h2>
+          <table class="total-box-table">
+            <tr>
+              <td style="text-align: left; text-transform: uppercase;">
+                VALOR TOTAL GLOBAL DO INVESTIMENTO (S/ IVA):
+              </td>
+              <td style="text-align: right; font-size: 16pt;">
+                ${grandTotalFormatted}
+              </td>
+            </tr>
+          </table>
+
+          <!-- 4. PRAZO DE ENTREGA, GARANTIA E CONDIÇÕES COMERCIAIS -->
+          <h2>Prazo de entrega, Garantia e Condições:</h2>
+          <table style="width: 100%; border-collapse: collapse; margin-top: 8pt;">
+            <tr>
+              <td style="padding: 6pt 10pt; vertical-align: top; width: 50%;">
+                <div style="text-align: left; font-weight: bold; color: #c8102e; font-size: 11pt; margin-bottom: 3pt;">• Prazo de entrega:</div>
+                <p style="text-align: justify; margin-top: 0; margin-bottom: 10pt; line-height: 1.4;">Máximo: 4 meses após a aprovação formal do orçamento e disponibilização do veículo base pelo fabricante (com disponibilidade imediata de veículos semelhantes para início imediato da produção).</p>
+                <div style="text-align: left; font-weight: bold; color: #c8102e; font-size: 11pt; margin-bottom: 3pt;">• Garantia:</div>
+                <p style="text-align: justify; margin-top: 0; margin-bottom: 10pt; line-height: 1.4;">Garantia técnica dos equipamentos e dispositivos durante o tempo estipulado por cada fabricante (normalmente 2 anos) e garantia de um (1) ano sobre todos os trabalhos de transformação e instalação técnica executados por nossa parte.</p>
+              </td>
+              <td style="padding: 6pt 10pt; vertical-align: top; width: 50%;">
+                <div style="text-align: left; font-weight: bold; color: #c8102e; font-size: 11pt; margin-bottom: 3pt;">• Validade da proposta:</div>
+                <p style="text-align: justify; margin-top: 0; margin-bottom: 10pt; line-height: 1.4;">O presente orçamento tem uma validade de 2 (dois) meses a contar da data de emissão.</p>
+                <div style="text-align: left; font-weight: bold; color: #c8102e; font-size: 11pt; margin-bottom: 3pt;">• Trâmites e Transporte:</div>
+                <p style="text-align: justify; margin-top: 0; margin-bottom: 10pt; line-height: 1.4;">Inclui trâmites de transferência para o cliente e transporte/entrega assegurado no porto ou localidade de destino final.</p>
+              </td>
+            </tr>
+          </table>
+
+          <div class="footer-notes">
+            <div style="text-align: left; font-weight: bold; color: #c8102e; margin-bottom: 4pt;">Notas:</div>
+            <ul style="margin-top: 4pt; margin-bottom: 0; padding-left: 15pt; line-height: 1.45; text-align: justify;">
+              <li>Os orçamentos apresentados não incluem o I.V.A. correspondente.</li>
+              <li>Não inclui equipamento interior específico do cliente não definido nesta proposta.</li>
+              <li>Não inclui qualquer serviço de mobilidade, seguros de circulação ou combustível pós-entrega.</li>
+              <li>Produção e processos auditados e certificados de acordo com os requisitos da Norma <strong>ISO 9001:2015 Bureau Veritas</strong>.</li>
+            </ul>
+          </div>
+
+          <!-- ASSINATURA E CONTACTOS OFICIAIS ALEGRÍA-ACTIVITY -->
+          <table style="width: 100%; margin-top: 25pt; border-collapse: collapse;">
+            <tr>
+              <td style="width: 50%; vertical-align: top;">
+                <div style="font-size: 13pt; font-weight: bold; color: #c8102e;">alegría activity, S.L.</div>
+                <div style="color: #374151; margin-top: 3pt;"><strong>Pessoa de contacto:</strong> José Centurio</div>
+                <div style="color: #374151;"><strong>Tel.:</strong> +351 934 146 505</div>
+                <div style="color: #c8102e; font-size: 9pt; margin-top: 2pt;">www.alegria-activity.com</div>
+              </td>
+              <td style="width: 50%; text-align: right; vertical-align: bottom;">
+                <div style="border-top: 1.5pt solid #c8102e; width: 230px; display: inline-block; padding-top: 5pt; text-align: center; color: #4b5563; font-size: 9pt; font-weight: bold;">
+                  Assinatura e Carimbo Oficial
+                </div>
+              </td>
+            </tr>
+          </table>
+
+          <!-- RODAPÉ ESTILO OFICIAL -->
+          <div style="margin-top: 20pt; text-align: center; font-size: 8.5pt; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 6pt;">
+            alegría activity, S.L. — Vitoria-Gasteiz, Espanha | Proposta Técnica e Comercial Chave na Mão
+          </div>
+
+        </body>
+        </html>
+      `;
+
+      // Exportação direta como ficheiro .doc
+      const blob = new Blob(['\ufeff' + wordHtml], { type: 'application/msword;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      const safeFilename = 'Orcamento_' + (referencia || 'Veiculos').replace(/[^a-zA-Z0-9_-]/g, '_') + '_' + today.toISOString().slice(0,10) + '.doc';
+      a.download = safeFilename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+
+    // Função para Carregar Orçamento Específico de um Projeto (Furgão, Camião, SmartBus, CCDR-N, etc.)
+    window.loadProjectBudget = function(projData) {
+      if (!projData) return;
+      
+      const setVal = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined && val !== null) el.value = val; };
+      
+      if (projData.cliente) setVal('headerCliente', projData.cliente);
+      if (projData.estado) setVal('headerAmbito', projData.estado);
+      if (projData.referencia) setVal('headerRefCliente', projData.referencia);
+      
+      const nomeLower = (projData.nome || '').toLowerCase();
+      const viatLower = (projData.tipoVeiculo || projData.viatura || '').toLowerCase();
+      const projId = (projData.id || '').toLowerCase();
+      
+      const isFurgao = nomeLower.includes('furg') || viatLower.includes('furg') || viatLower.includes('daily') || viatLower.includes('5000') || projId.includes('furgao');
+      const isCamiao = nomeLower.includes('cami') || viatLower.includes('cami') || viatLower.includes('eurocargo') || viatLower.includes('12000') || projId.includes('camiao');
+      const isSmartbus = nomeLower.includes('smartbus') || nomeLower.includes('huawei') || projId.includes('camp-001') || projId.includes('huawei');
+      const isNorte2040 = nomeLower.includes('2040') || nomeLower.includes('ccdr') || projId.includes('estrat-2040') || projId.includes('norte-2040');
+
+      const descInputs = document.querySelectorAll('.input-desc');
+      const priceInputs = document.querySelectorAll('.input-price');
+
+      // Limpar preços anteriores
+      priceInputs.forEach(inp => inp.value = '');
+
+      if (isFurgao) {
+        if (descInputs[0]) descInputs[0].value = 'IVECO Daily (Furgão 5T - Rodado Duplo)';
+        if (descInputs[1]) descInputs[1].value = 'Furgão com rodado duplo (PMA até 5.200 kg)';
+        if (descInputs[2]) descInputs[2].value = 'Diesel Euro III, 4 tempos, refrigeração a água, mín. 140 CV';
+        if (descInputs[3]) descInputs[3].value = 'Mínimo 2.900 cm³ | Potência Mínima: 140 CV';
+        if (descInputs[5]) descInputs[5].value = 'Suspensão mecânica traseira com feixe de molas reforçado';
+        if (descInputs[7]) descInputs[7].value = 'Capacidade mínima: 60 litros';
+        if (descInputs[18]) descInputs[18].value = 'Até 2 un. de cadeiras de escritório giratórias com regulação em altura';
+        if (descInputs[19]) descInputs[19].value = 'Até 2 un. de cadeiras para clientes com acabamento coordenado';
+        if (descInputs[22]) descInputs[22].value = 'N/A (veículo furgão compacto)';
+        if (descInputs[23]) descInputs[23].value = 'N/A (veículo furgão compacto)';
+        if (descInputs[24]) descInputs[24].value = 'N/A (veículo furgão compacto)';
+        if (descInputs[25]) descInputs[25].value = 'Sistema de teto monobloco marca Belaire de ciclo inverso (3 kW de potência, desumidificação e comando remoto)';
+        
+        // Atribuir preços do Furgão (Total: 98.420,00 €)
+        if (priceInputs[0]) priceInputs[0].value = (38500.00).toFixed(2);
+        if (priceInputs[11]) priceInputs[11].value = (24800.00).toFixed(2);
+        if (priceInputs[16]) priceInputs[16].value = (14200.00).toFixed(2);
+        if (priceInputs[25]) priceInputs[25].value = (4850.00).toFixed(2);
+        if (priceInputs[26]) priceInputs[26].value = (7920.00).toFixed(2);
+        if (priceInputs[32]) priceInputs[32].value = (4150.00).toFixed(2);
+        if (priceInputs[37]) priceInputs[37].value = (4000.00).toFixed(2);
+      } else if (isCamiao) {
+        if (descInputs[0]) descInputs[0].value = 'IVECO Eurocargo (Camião 12T - PMA 12.000 kg)';
+        if (descInputs[1]) descInputs[1].value = 'Camião rígido de 12 Toneladas (PMA 12.000 kg)';
+        if (descInputs[2]) descInputs[2].value = 'Diesel Euro III, 4 tempos, refrigeração a água, mín. 220 CV';
+        if (descInputs[3]) descInputs[3].value = 'Mínimo 5.880 cm³ | Potência Mínima: 220 CV';
+        if (descInputs[5]) descInputs[5].value = 'Suspensão pneumática traseira com regulação de nível';
+        if (descInputs[7]) descInputs[7].value = 'Capacidade mínima: 110 litros';
+        if (descInputs[18]) descInputs[18].value = 'Até 3 un. de cadeiras de escritório giratórias com rodas, regulação em altura';
+        if (descInputs[19]) descInputs[19].value = 'Até 3 un. de cadeiras para clientes com estética coordenada às de escritório';
+        if (descInputs[22]) descInputs[22].value = 'MUNDOCLIMA modelo MUPR-12x2-H9M (A+++, Gás ecológico R32, 5.270 frig/h frio e 5.500 cal/h bomba de calor)';
+        if (descInputs[23]) descInputs[23].value = 'MUNDOCLIMA modelo MUEX-18-H9.2 instalada em compartimento inferior com grelha de ventilação integrada';
+        if (descInputs[24]) descInputs[24].value = 'Mínimo de 2 unidades interiores split MUPR-12-H9M instaladas na parte superior das paredes';
+        if (descInputs[25]) descInputs[25].value = 'N/A (veículo camião com Multi-Split)';
+
+        // Atribuir preços do Camião (Total: 149.650,00 €)
+        if (priceInputs[0]) priceInputs[0].value = (58200.00).toFixed(2);
+        if (priceInputs[11]) priceInputs[11].value = (36500.00).toFixed(2);
+        if (priceInputs[16]) priceInputs[16].value = (19800.00).toFixed(2);
+        if (priceInputs[22]) priceInputs[22].value = (7850.00).toFixed(2);
+        if (priceInputs[26]) priceInputs[26].value = (12400.00).toFixed(2);
+        if (priceInputs[32]) priceInputs[32].value = (8900.00).toFixed(2);
+        if (priceInputs[37]) priceInputs[37].value = (6000.00).toFixed(2);
+      } else if (isSmartbus) {
+        if (descInputs[0]) descInputs[0].value = 'Bus extraível 13,80m (99-HB-22)';
+        if (descInputs[1]) descInputs[1].value = 'Unidade Móvel de Demonstração Tecnológica 5G e Exposição';
+        if (priceInputs[0]) priceInputs[0].value = (75000.00).toFixed(2);
+        if (priceInputs[11]) priceInputs[11].value = (48000.00).toFixed(2);
+        if (priceInputs[16]) priceInputs[16].value = (28000.00).toFixed(2);
+        if (priceInputs[22]) priceInputs[22].value = (14000.00).toFixed(2);
+        if (priceInputs[26]) priceInputs[26].value = (20000.00).toFixed(2);
+      } else if (isNorte2040) {
+        if (descInputs[0]) descInputs[0].value = 'Semirreboque Extensível 13,80m (L-1277-AD / CC-99-XX)';
+        if (descInputs[1]) descInputs[1].value = 'Semirreboque com expansão lateral para conferências e atendimento';
+        if (priceInputs[0]) priceInputs[0].value = (85000.00).toFixed(2);
+        if (priceInputs[11]) priceInputs[11].value = (55000.00).toFixed(2);
+        if (priceInputs[16]) priceInputs[16].value = (32000.00).toFixed(2);
+        if (priceInputs[22]) priceInputs[22].value = (18000.00).toFixed(2);
+        if (priceInputs[26]) priceInputs[26].value = (20000.00).toFixed(2);
+      } else {
+        // Outro veículo personalizado
+        if (priceInputs[0]) priceInputs[0].value = ((projData.valorTotal || 125000.00) * 0.45).toFixed(2);
+        if (priceInputs[11]) priceInputs[11].value = ((projData.valorTotal || 125000.00) * 0.25).toFixed(2);
+        if (priceInputs[16]) priceInputs[16].value = ((projData.valorTotal || 125000.00) * 0.15).toFixed(2);
+        if (priceInputs[22]) priceInputs[22].value = ((projData.valorTotal || 125000.00) * 0.08).toFixed(2);
+        if (priceInputs[26]) priceInputs[26].value = ((projData.valorTotal || 125000.00) * 0.07).toFixed(2);
+      }
+
+      calculateGrandTotal();
+    };
+
+    // Inicializar carregamento de listas dinâmicas e cálculo do total
+    window.addEventListener('DOMContentLoaded', () => {
+      populateClientLists();
+      
+      // Ler parâmetros da URL e localStorage
+      const urlParams = new URLSearchParams(window.location.search);
+      let storageData = null;
+      try {
+        const raw = localStorage.getItem('sigec_pro_current_budget_project');
+        if (raw) storageData = JSON.parse(raw);
+      } catch (e) {}
+
+      const projId = urlParams.get('projId') || (storageData ? storageData.id : null);
+      const tipo = urlParams.get('tipo') || (storageData ? storageData.tipoVeiculo : null);
+      const cliente = urlParams.get('cliente') || (storageData ? storageData.cliente : null);
+      const nome = urlParams.get('nome') || (storageData ? storageData.nome : null);
+      const ref = urlParams.get('ref') || (storageData ? storageData.referencia : null);
+      const estado = urlParams.get('estado') || (storageData ? storageData.estado : null);
+
+      if (projId || tipo || cliente || nome) {
+        window.loadProjectBudget({
+          id: projId,
+          tipoVeiculo: tipo,
+          cliente: cliente,
+          nome: nome,
+          referencia: ref,
+          estado: estado,
+          valorTotal: storageData ? storageData.valorTotal : undefined
+        });
+      } else {
+        // Padrão Camião
+        window.loadProjectBudget({
+          id: 'proj-bcn-camiao',
+          nome: 'Unidade Móvel Bancária - Camião',
+          cliente: 'BCN (Banco Caboverdiano de Negócios)',
+          referencia: 'BCN-CAM-12T-2026',
+          estado: 'Orçamentado'
+        });
+      }
+    });
+  </script>
+</body>
+</html>
