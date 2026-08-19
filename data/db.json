@@ -58,7 +58,7 @@
       "tipoCliente": "Fundação",
       "ministerio": "",
       "secretariaEstado": "",
-      "nome": "Fundação Jeronimo Martins",
+      "nome": "Fundação Jerónimo Martins",
       "contribuinte": "500000187",
       "direcao1": "Rua Actor António Silva",
       "direcao2": "",
@@ -569,9 +569,9 @@
       "secretariaEstado": "",
       "nome": "EDP - Energias de Portugal, S.A.",
       "contribuinte": "500001241",
-      "direcao1": "Avenida 24 de Julho, 12, 1249-300 Lisboa",
+      "direcao1": "Avenida 24 de Julho",
       "direcao2": "",
-      "numero": "",
+      "numero": "12",
       "andar": "",
       "codigoPostal": "1249-300",
       "localidade": "Lisboa",
@@ -4038,16 +4038,18 @@
     },
     {
       "id": "con-1787049428085-253",
-      "clienteId": "Ministério de Reforma de Estado",
+      "clienteId": "cli-1787038283894-699",
       "tratamento": "",
-      "nome": "Gonçalo Saraiva Matias",
-      "apelido": "",
+      "nome": "Gonçalo",
+      "apelido": "Saraiva Matias",
       "cargo": "Ministro",
       "departamento": "",
       "telefone": "",
       "telemovel": "",
-      "email": "gabinete.Ministro@mare.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "email": "gabinete.ministro@mare.gov.pt",
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "subTabIndex": 0,
+      "notas": ""
     },
     {
       "id": "con-1787049428085-735",
@@ -4451,6 +4453,36 @@
       "data": "2026-07-30T12:18",
       "descricao": "Reunião online com a secretaria de estado da digitalização. Falamos de unidades que pudessem ser utilizadas para promover a Digitalização. Ficamos de enviar informação (Revu)",
       "createdAt": "2026-08-19T10:36:06.269Z"
+    },
+    {
+      "id": "int-1787139402836-465",
+      "clienteId": "cli-imp-072",
+      "data": "2026-07-21T10:36",
+      "descricao": "Enviado email a António Almeida, com a apresentação. Foi enviado também email a Rui Cabrita.",
+      "createdAt": "2026-08-19T11:36:42.836Z"
+    },
+    {
+      "id": "cpi-1787139555344-702",
+      "contactoId": "con-imp-001",
+      "data": "2026-06-26T13:26",
+      "descricao": "Enviado email de apresentação .",
+      "createdAt": "2026-08-19T11:39:15.344Z"
+    },
+    {
+      "id": "int-1787139788626-704",
+      "clienteId": "cli-imp-073",
+      "separadorId": null,
+      "subTabIndex": null,
+      "data": "2026-06-29T15:22",
+      "descricao": "Enviado email de apresentação. Os emails enviados foram para o geral. Voltar a enviar para os emails individuais.",
+      "createdAt": "2026-08-19T11:43:08.626Z"
+    },
+    {
+      "id": "int-1787139926194-516",
+      "clienteId": "cli-imp-004",
+      "data": "2026-07-21T10:25",
+      "descricao": "Enviado email para Rita Lopes e também para Inês Alberto.",
+      "createdAt": "2026-08-19T11:45:26.194Z"
     }
   ],
   "interacoesProjetos": [],
@@ -4525,43 +4557,20 @@
   ],
   "userLogs": [
     {
-      "id": "log-1787138957188-671",
+      "id": "log-1787140544305-570",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Eliminação de Cliente",
-      "descricao": "Cliente \"EDP\" (NIF: 500000034) eliminado da base de dados.",
-      "pagina": "Clientes",
+      "tipoAcao": "Início de Sessão",
+      "descricao": "Acesso autorizado efetuado por José Centúrio.",
+      "pagina": "Dashboard / Início",
       "detalhes": {
-        "acao": "Eliminação",
-        "ficha": "Cliente",
-        "nome": "EDP",
-        "contribuinte": "500000034",
-        "tipoCliente": "Privado"
+        "utilizador": "José Centúrio",
+        "email": "jmcenturio@alegria-activity.com",
+        "cargo": "Administrador do Sistema",
+        "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-19T11:29:17.188Z"
-    },
-    {
-      "id": "log-1787138939571-598",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Clientes",
-      "detalhes": null,
-      "timestamp": "2026-08-19T11:28:59.571Z"
-    },
-    {
-      "id": "log-1787137678281-257",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-19T11:07:58.281Z"
+      "timestamp": "2026-08-19T11:55:44.305Z"
     }
   ],
   "orcamentos": [
@@ -4676,6 +4685,20 @@
       "key": "cli-1787050401189-194:::undefined",
       "id1": "cli-1787050401189-194",
       "ignoredAt": "2026-08-19T10:36:14.103Z",
+      "ignoredBy": "Sistema"
+    },
+    {
+      "type": "cli-imp-073",
+      "key": "cli-1787050401189-194:::undefined",
+      "id1": "cli-1787050401189-194",
+      "ignoredAt": "2026-08-19T11:41:28.630Z",
+      "ignoredBy": "Sistema"
+    },
+    {
+      "type": "cli-imp-073",
+      "key": "cli-1787038283893-566:::undefined",
+      "id1": "cli-1787038283893-566",
+      "ignoredAt": "2026-08-19T11:43:15.577Z",
       "ignoredBy": "Sistema"
     }
   ],
