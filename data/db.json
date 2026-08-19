@@ -3049,7 +3049,7 @@
     {
       "id": "con-1787049428085-932",
       "clienteId": "cli-1787038283894-101",
-      "subTabIndex": 0,
+      "subTabIndex": 1,
       "nome": "Hugo Espírito Santo",
       "apelido": "",
       "cargo": "Secretária de Estado das Infraestruturas",
@@ -3712,6 +3712,17 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787140921695-978",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-19T12:02:01.695Z"
+    },
+    {
       "id": "log-1787140171666-537",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -4032,6 +4043,13 @@
       "key": "cli-1787038283893-566:::undefined",
       "id1": "cli-1787038283893-566",
       "ignoredAt": "2026-08-19T11:43:15.577Z",
+      "ignoredBy": "Sistema"
+    },
+    {
+      "type": "cli-1787038283894-101",
+      "key": "cli-1787050401189-194:::undefined",
+      "id1": "cli-1787050401189-194",
+      "ignoredAt": "2026-08-19T12:02:31.297Z",
       "ignoredBy": "Sistema"
     }
   ],
