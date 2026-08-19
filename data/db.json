@@ -1556,201 +1556,7 @@
       "telemovel": "",
       "email": "rui.cabrita@edp.com",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "orcamentos": [
-        {
-          "id": "orc-1786833050377",
-          "numero": "ORC-2026-001",
-          "referencia": "EDP-2026",
-          "clienteId": "cli-imp-001",
-          "clienteNome": "EDP",
-          "data": "2026-08-15",
-          "ambito": "Em Orçamento",
-          "fabricante": "alegría-activity, S.L.",
-          "total": 149650,
-          "items": [
-            {
-              "capituloNum": "1",
-              "capituloTitulo": "CHASSI E DIMENSÕES DO VEÍCULO",
-              "linhas": [
-                {
-                  "itemLabel": "Marca e Modelo Base",
-                  "desc": "IVECO Eurocargo (Camião 12T - PMA 12.000 kg)",
-                  "price": 58200
-                },
-                {
-                  "itemLabel": "Tipo de Veículo e PMA",
-                  "desc": "Camião rígido de 12 Toneladas (PMA 12.000 kg)",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Motorização e Combustível",
-                  "desc": "Diesel Euro III, 4 tempos, refrigeração a água, mín. 220 CV",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Cilindrada e Potência",
-                  "desc": "Mínimo 5.880 cm³ | Potência Mínima: 220 CV",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Caixa de Velocidades",
-                  "desc": "Manual de 6 velocidades à frente + marcha-atrás",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Suspensão e Travões",
-                  "desc": "Suspensão pneumática traseira com regulação de nível e ABS",
-                  "price": 0
-                }
-              ]
-            },
-            {
-              "capituloNum": "2",
-              "capituloTitulo": "PORTAS, ACESSOS E EXTERIOR",
-              "linhas": [
-                {
-                  "itemLabel": "Portas de Acesso Principal",
-                  "desc": "Porta de segurança exterior com persiana de alumínio e porta interior envidraçada",
-                  "price": 36500
-                },
-                {
-                  "itemLabel": "Escadas e Acessibilidade",
-                  "desc": "Escada exterior com corrimãos de montagem manual para acesso confortável de clientes",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Toldo Exterior Lateral",
-                  "desc": "Toldo de proteção contra intempéries em toda a extensão lateral da zona de acesso",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Iluminação Exterior",
-                  "desc": "Projetores LED de alta luminosidade integrados para trabalho noturno",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Pintura e Imagem Corporativa",
-                  "desc": "Personalização integral em pintura e vinil de alta durabilidade com a identidade do cliente",
-                  "price": 0
-                }
-              ]
-            },
-            {
-              "capituloNum": "3",
-              "capituloTitulo": "ISOLAMENTO TÉRMICO E REVESTIMENTOS",
-              "linhas": [
-                {
-                  "itemLabel": "Isolamento Térmico e Acústico",
-                  "desc": "Sistema multicamada com lã de rocha e poliuretano de alta densidade",
-                  "price": 19800
-                },
-                {
-                  "itemLabel": "Revestimento de Paredes e Teto",
-                  "desc": "Painéis Alucobond® brancos de fácil higienização e elevada durabilidade",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Pavimento Técnico e Vinílico",
-                  "desc": "Contraplacado fenólico marítimo com piso antiderrapante Polyfloors®",
-                  "price": 0
-                }
-              ]
-            },
-            {
-              "capituloNum": "4",
-              "capituloTitulo": "DIVISÓRIAS, MOBILIÁRIO E ESPAÇO INTERIOR",
-              "linhas": [
-                {
-                  "itemLabel": "Postos de Atendimento",
-                  "desc": "Bancadas de atendimento personalizadas em melamina Egger® com passa-cabos",
-                  "price": 7850
-                },
-                {
-                  "itemLabel": "Cadeiras de Operador e Clientes",
-                  "desc": "Até 3 un. cadeiras giratórias ergonómicas + 3 un. cadeiras fixas de clientes",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Cofre de Segurança Reforçado",
-                  "desc": "Cofre de segurança ~175 kg (600x600x500 mm) ancorado à estrutura do chassi",
-                  "price": 0
-                }
-              ]
-            },
-            {
-              "capituloNum": "5",
-              "capituloTitulo": "CLIMATIZAÇÃO E VENTILAÇÃO",
-              "linhas": [
-                {
-                  "itemLabel": "Sistema Ar Condicionado Multi-Split",
-                  "desc": "MUNDOCLIMA MUPR-12x2-H9M (A+++, Gás R32, 5.270 frig/h frio e 5.500 cal/h calor)",
-                  "price": 12400
-                },
-                {
-                  "itemLabel": "Ventilação e Renovação de Ar",
-                  "desc": "Grelhas de ventilação dinâmica com extratores elétricos para renovação forçada",
-                  "price": 0
-                }
-              ]
-            },
-            {
-              "capituloNum": "6",
-              "capituloTitulo": "INSTALAÇÃO ELÉTRICA, ENERGIA E ILUMINAÇÃO",
-              "linhas": [
-                {
-                  "itemLabel": "Quadro Elétrico e Proteções",
-                  "desc": "Quadro elétrico com diferenciais e disjuntores magnetotérmicos Schneider®",
-                  "price": 8900
-                },
-                {
-                  "itemLabel": "Sistema de Baterias e Inversor",
-                  "desc": "Inversor/Carregador Victron Energy 3kVA com baterias de ciclo profundo",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Tomadas 230V e USB",
-                  "desc": "Rede de tomadas Schuko 230V e portas USB de carregamento rápido",
-                  "price": 0
-                }
-              ]
-            },
-            {
-              "capituloNum": "7",
-              "capituloTitulo": "INSTALAÇÃO DE ÁGUAS E SANITÁRIOS",
-              "linhas": [
-                {
-                  "itemLabel": "Depósitos de Água e Bomba",
-                  "desc": "Depósitos de água potável (50L) e águas residuais com bomba de pressão 12V",
-                  "price": 6000
-                },
-                {
-                  "itemLabel": "Lavatório Inox e Torneira",
-                  "desc": "Lavatório em aço inoxidável com torneira automática e dispensadores",
-                  "price": 0
-                }
-              ]
-            },
-            {
-              "capituloNum": "8",
-              "capituloTitulo": "EQUIPAMENTO TÉCNICO E SEGURANÇA ADICIONAL",
-              "linhas": [
-                {
-                  "itemLabel": "Rede Informática e Wi-Fi",
-                  "desc": "Router 4G/5G industrial com antenas exteriores de alto ganho e switch Gigabit",
-                  "price": 0
-                },
-                {
-                  "itemLabel": "Extintores e Segurança",
-                  "desc": "Extintores ABC de 6kg, manta ignífuga e kit de primeiros socorros homologado",
-                  "price": 0
-                }
-              ]
-            }
-          ],
-          "createdAt": "2026-08-15T22:30:50.377Z",
-          "updatedAt": "2026-08-15T22:30:50.377Z"
-        }
-      ]
+      "orcamentos": []
     },
     {
       "id": "cli-imp-073",
@@ -4736,7 +4542,19 @@
       "createdAt": "2026-08-18T06:59:08.527Z"
     }
   ],
-  "userLogs": [],
+  "userLogs": [
+    {
+      "id": "log-1787137678281-257",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-19T11:07:58.281Z"
+    }
+  ],
   "orcamentos": [
     {
       "id": "orc-bcn-camiao-001",
@@ -5077,6 +4895,8 @@
       "int-1787045375532-710"
     ],
     "interacoesProjetos": [],
-    "orcamentos": []
+    "orcamentos": [
+      "orc-1786833050377"
+    ]
   }
 }
