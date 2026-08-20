@@ -1,6 +1,26 @@
 {
   "clientes": [
     {
+      "id": "cli-1787223652146-540",
+      "tipoCliente": "Privado",
+      "ministerio": "",
+      "secretariaEstado": "",
+      "nome": "Portugal Fresh",
+      "contribuinte": "000000000",
+      "direcao1": "Estação Fruteira, Alcafache-Gare",
+      "direcao2": "",
+      "numero": "",
+      "andar": "",
+      "codigoPostal": "3530-310",
+      "localidade": "Moimenta De Maceira Dão",
+      "pais": "Portugal",
+      "telefone": "",
+      "telemovel": "",
+      "email": "info@portugalfresh.org",
+      "notas": "Frutas, legumes, flores",
+      "createdAt": "2026-08-20T11:00:52.147Z"
+    },
+    {
       "id": "cli-1787220780995-314",
       "tipoCliente": "Privado",
       "ministerio": "",
@@ -445,7 +465,8 @@
       "telemovel": "",
       "email": "hello@joseneves.org",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "pais": "Portugal"
+      "pais": "Portugal",
+      "notas": "Temas: ampliar el acceso a la educación, promover las competencias para el futuro y facilitar decisiones informadas sobre formación y empleo"
     },
     {
       "id": "cli-imp-025",
@@ -460,30 +481,12 @@
       "andar": "",
       "codigoPostal": "3050-224",
       "localidade": "Luso",
-      "telefone": "231 937 401 / 231 937 / 929",
+      "telefone": "+351 231 937 401 / 231 937 / 929",
       "telemovel": "",
       "email": "geral@fundacaoluso.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "pais": "Portugal"
-    },
-    {
-      "id": "cli-imp-026",
-      "tipoCliente": "Fundação",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "Fundação Aga Khan Portugal",
-      "contribuinte": "500000459",
-      "direcao1": "Av. Lusíada",
-      "direcao2": "",
-      "numero": "10",
-      "andar": "",
-      "codigoPostal": "1600-150",
-      "localidade": "Lisboa",
       "pais": "Portugal",
-      "telefone": "+351 217 229 000",
-      "telemovel": "",
-      "email": "akfportugal@akdn.org",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "notas": "Temas: Promoción de estilos de vida saludables. Educación sobre hidratación. Alimentación equilibrada. Salud pública. Educación ambiental."
     },
     {
       "id": "cli-imp-027",
@@ -502,7 +505,8 @@
       "telemovel": "",
       "email": "fundacaomontepio@montepio.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "pais": "Portugal"
+      "pais": "Portugal",
+      "notas": "Temas: educación económica y financiera a través de programas de ciudadanía, ahorro y consumo responsable."
     },
     {
       "id": "cli-imp-028",
@@ -521,7 +525,8 @@
       "telemovel": "",
       "email": "info@foriente.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "pais": "Portugal"
+      "pais": "Portugal",
+      "notas": "Temas: Cultura, educación, cooperación internacional"
     },
     {
       "id": "cli-imp-029",
@@ -540,7 +545,8 @@
       "telemovel": "",
       "email": "fundacao@fmestrecasais.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "pais": "Portugal"
+      "pais": "Portugal",
+      "notas": "Temas: Educación, sostenibilidad, acción social"
     },
     {
       "id": "cli-imp-068",
@@ -559,7 +565,8 @@
       "telemovel": "",
       "email": "serralves@serralves.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "pais": "Portugal"
+      "pais": "Portugal",
+      "notas": "Temas: culture, fostering environmental awareness a través del arte"
     },
     {
       "id": "cli-imp-069",
@@ -1598,9 +1605,9 @@
     },
     {
       "id": "cli-imp-073",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
+      "tipoCliente": "Estatal",
+      "ministerio": "Fundação Aga Khan Portugal",
+      "secretariaEstado": "Fundação Aga Khan Portugal, Fundação Aga Khan Portugal",
       "nome": "Fundação Aga Khan Portugal",
       "contribuinte": "500000459",
       "direcao1": "Av. Lusíada",
@@ -1613,7 +1620,43 @@
       "telefone": "+351 217 229 000",
       "telemovel": "",
       "email": "akfportugal@akdn.org",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "notas": "Nutrición infantil. Salud materno-infantil. Educación para familias. Bienestar comunitario.",
+      "separadores": [
+        {
+          "id": "sep-1787222680031-548",
+          "tipoSeparador": "Fundação Aga Khan Portugal",
+          "nomePersonalizado": "",
+          "nome": "Fundação Aga Khan Portugal",
+          "contribuinte": "500000459",
+          "direcao1": "Av. Lusíada",
+          "direcao2": "",
+          "numero": "10",
+          "andar": "",
+          "codigoPostal": "1600-150",
+          "localidade": "Lisboa",
+          "telefone": "+351 217 229 000",
+          "telemovel": "",
+          "email": "akfportugal@akdn.org",
+          "notas": "Nutrición infantil. Salud materno-infantil. Educación para familias. Bienestar comunitario.\n"
+        },
+        {
+          "id": "sep-1787222680031-43",
+          "tipoSeparador": "Fundação Aga Khan Portugal",
+          "nomePersonalizado": "",
+          "nome": "Fundação Aga Khan Portugal",
+          "contribuinte": "500000459",
+          "direcao1": "Av. Lusíada",
+          "direcao2": "",
+          "numero": "10",
+          "andar": "",
+          "codigoPostal": "1600-150",
+          "localidade": "Lisboa",
+          "telefone": "+351 217 229 000",
+          "telemovel": "",
+          "email": "akfportugal@akdn.org"
+        }
+      ]
     },
     {
       "id": "cli-1787038283893-566",
@@ -2646,6 +2689,25 @@
       "telemovel": "",
       "email": "",
       "createdAt": "2026-07-31T16:08:49.444Z"
+    },
+    {
+      "id": "cli-imp-026",
+      "tipoCliente": "Fundação",
+      "ministerio": "",
+      "secretariaEstado": "",
+      "nome": "Fundação Aga Khan Portugal",
+      "contribuinte": "500000459",
+      "direcao1": "Av. Lusíada",
+      "direcao2": "",
+      "numero": "10",
+      "andar": "",
+      "codigoPostal": "1600-150",
+      "localidade": "Lisboa",
+      "pais": "Portugal",
+      "telefone": "+351 217 229 000",
+      "telemovel": "",
+      "email": "akfportugal@akdn.org",
+      "createdAt": "2026-07-31T16:30:00.000Z"
     }
   ],
   "contactos": [
@@ -2703,54 +2765,54 @@
     },
     {
       "id": "con-imp-005",
-      "clienteId": "cli-imp-073",
+      "clienteId": "cli-1787208572192-719",
       "nome": "Pedro",
       "apelido": "Marques Pereira",
       "cargo": "Comunicación Corporativa",
       "telefone": "+351 217 242 500",
       "telemovel": "",
       "email": "pedromp@galp.com",
-      "notas": "Temas: energía, petróleo, gas natural, electricidad, biocombustibles, transición energética, descarbonización",
+      "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 0
     },
     {
       "id": "con-imp-006",
-      "clienteId": "cli-imp-073",
+      "clienteId": "cli-1787208572192-719",
       "nome": "Gonçalo",
       "apelido": "Venâncio",
       "cargo": "Comunicación Corporativa",
       "telefone": "+351 217 242 500",
       "telemovel": "",
       "email": "goncalo.venancio@galp.com",
-      "notas": "Temas: energía, petróleo, gas natural, electricidad, biocombustibles, transición energética, descarbonización",
+      "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 0
     },
     {
       "id": "con-imp-007",
-      "clienteId": "cli-imp-073",
+      "clienteId": "cli-1787208572192-719",
       "nome": "Carlos",
       "apelido": "Relancio",
       "cargo": "Renewable Energy Director",
       "telefone": "+351 217 242 500",
       "telemovel": "",
       "email": "carlos.relancio@galp.com",
-      "notas": "Temas: energía, petróleo, gas natural, electricidad, biocombustibles, transición energética, descarbonización",
+      "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 0
     },
     {
       "id": "con-imp-008",
-      "clienteId": "cli-imp-073",
+      "clienteId": "cli-1787208572192-719",
       "subTabIndex": 0,
       "nome": "Gustavo",
-      "apelido": "Sa",
+      "apelido": "Sá",
       "cargo": "Events Planner & Business Partner",
       "telefone": "+351 217 242 500",
       "telemovel": "",
       "email": "gustavo.sa@galp.com",
-      "notas": "Temas: energía, petróleo, gas natural, electricidad, biocombustibles, transición energética, descarbonización",
+      "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
@@ -3187,8 +3249,9 @@
       "telefone": "",
       "telemovel": "",
       "email": "hello@joseneves.org",
-      "notas": "Temas: ampliar el acceso a la educación, promover las competencias para el futuro y facilitar decisiones informadas sobre formación y empleo",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "notas": "",
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-imp-050",
@@ -3199,7 +3262,7 @@
       "telefone": "+351 226 156 500",
       "telemovel": "",
       "email": "serralves@serralves.pt",
-      "notas": "Temas: culture, fostering environmental awareness a través del arte",
+      "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 0
     },
@@ -3212,20 +3275,22 @@
       "telefone": "231 937 401 / 231 937 / 929",
       "telemovel": "",
       "email": "geral@fundacaoluso.pt",
-      "notas": "Temas: Promoción de estilos de vida saludables. Educación sobre hidratación. Alimentación equilibrada. Salud pública. Educación ambiental.",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "notas": "",
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-imp-052",
-      "clienteId": "cli-imp-026",
+      "clienteId": "cli-imp-073",
       "nome": "Mohamed",
       "apelido": "Azzim",
       "cargo": "Presidente",
       "telefone": "+351 217 229 000",
       "telemovel": "",
       "email": "akfportugal@akdn.org",
-      "notas": "Temas: Nutrición infantil. Salud maternoinfantil. Educación para familias. Bienestar comunitario.",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "notas": "",
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-imp-053",
@@ -3236,20 +3301,22 @@
       "telefone": "+351 213 249 290",
       "telemovel": "",
       "email": "fundacaomontepio@montepio.pt",
-      "notas": "Temas: educación económica y financiera a través de programas de ciudadanía, ahorro y consumo responsable.",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "notas": "",
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-imp-054",
       "clienteId": "cli-imp-028",
-      "nome": "Carlos",
-      "apelido": "Augusto Pulido Valente Monjardino",
+      "nome": "Carlos Augusto",
+      "apelido": "Pulido Valente Monjardino",
       "cargo": "Presidente",
       "telefone": "+351 213 585 200",
       "telemovel": "",
       "email": "info@foriente.pt",
-      "notas": "Temas: Cultura, educación, cooperación internacional",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "notas": "",
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-imp-055",
@@ -3260,8 +3327,9 @@
       "telefone": "",
       "telemovel": "",
       "email": "fundacao@fmestrecasais.pt",
-      "notas": "Temas: Educación, sostenibilidad, acción social",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "notas": "",
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-imp-111",
@@ -3294,11 +3362,12 @@
       "nome": "Carina",
       "apelido": "Bastos",
       "cargo": "Diretora de Comunicação, Marketing e Mecenato",
-      "telefone": "226156500",
+      "telefone": "+351 226 15 65 00",
       "telemovel": "",
       "email": "serralves@serralves.pt",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-imp-114",
@@ -4460,6 +4529,19 @@
       "email": "nicole.antunes@fea.pt",
       "notas": "",
       "createdAt": "2026-08-20T10:26:29.050Z"
+    },
+    {
+      "id": "con-1787223753515-9",
+      "clienteId": "cli-1787223652146-540",
+      "subTabIndex": 0,
+      "nome": "Gonçalo",
+      "apelido": "Santos Andrade",
+      "cargo": "Presidente",
+      "telefone": "",
+      "telemovel": "",
+      "email": "",
+      "notas": "",
+      "createdAt": "2026-08-20T11:02:33.515Z"
     }
   ],
   "projetos": [
@@ -4913,6 +4995,58 @@
       "data": "2026-07-13T12:06",
       "descricao": "Enviado email de apresentação",
       "createdAt": "2026-08-20T10:38:49.912Z"
+    },
+    {
+      "id": "int-1787222435112-661",
+      "clienteId": "cli-imp-023",
+      "separadorId": null,
+      "subTabIndex": null,
+      "data": "2026-07-13T12:06",
+      "descricao": "Enviado email de apresentação",
+      "createdAt": "2026-08-20T10:40:35.112Z"
+    },
+    {
+      "id": "int-1787222630711-763",
+      "clienteId": "cli-imp-025",
+      "separadorId": null,
+      "subTabIndex": null,
+      "data": "2026-07-13T12:06",
+      "descricao": "Enviado email de apresentação",
+      "createdAt": "2026-08-20T10:43:50.712Z"
+    },
+    {
+      "id": "cpi-1787223134602-357",
+      "contactoId": "con-imp-054",
+      "data": "2026-07-13T12:25",
+      "descricao": "Enviado email de apresentação",
+      "createdAt": "2026-08-20T10:52:14.602Z"
+    },
+    {
+      "id": "int-1787223164561-124",
+      "clienteId": "cli-imp-028",
+      "separadorId": null,
+      "subTabIndex": null,
+      "data": "2026-07-13T12:06",
+      "descricao": "Enviado email de apresentação",
+      "createdAt": "2026-08-20T10:52:44.561Z"
+    },
+    {
+      "id": "int-1787223368744-642",
+      "clienteId": "cli-imp-029",
+      "separadorId": null,
+      "subTabIndex": null,
+      "data": "2026-07-10T12:06",
+      "descricao": "Enviado email de apresentação",
+      "createdAt": "2026-08-20T10:56:08.744Z"
+    },
+    {
+      "id": "int-1787224734775-186",
+      "clienteId": "cli-1787220780995-314",
+      "separadorId": null,
+      "subTabIndex": null,
+      "data": "2026-07-27T13:16",
+      "descricao": "Email enviado a Ângela Mónica Rosa, por indicação do Presidente da Fundação",
+      "createdAt": "2026-08-20T11:18:54.775Z"
     }
   ],
   "interacoesProjetos": [],
@@ -4927,25 +5061,6 @@
       "createdAt": "2026-08-10T09:45:00.000Z"
     },
     {
-      "id": "usr-1786830129122",
-      "nome": "antonio",
-      "email": "antonio@antonio.es",
-      "cargo": "Teste",
-      "pin": "0000",
-      "role": "user",
-      "active": true,
-      "createdAt": "2026-08-15T21:42:09.122Z"
-    },
-    {
-      "id": "usr-1786381890691",
-      "nome": "teste",
-      "email": "jjota26@gmail.com",
-      "cargo": "teste",
-      "pin": "1234",
-      "role": "user",
-      "createdAt": "2026-08-10T17:11:30.691Z"
-    },
-    {
       "id": "usr-1786532040835",
       "nome": "Test User",
       "email": "test@test.com",
@@ -4953,26 +5068,6 @@
       "pin": "1234",
       "role": "user",
       "createdAt": "2026-08-12T10:54:00.835Z"
-    },
-    {
-      "id": "usr-1786749064522",
-      "nome": "Test User",
-      "email": "test@empresa.com",
-      "cargo": "Tester",
-      "pin": "J*cen*1971",
-      "role": "user",
-      "active": false,
-      "createdAt": "2026-08-14T23:11:04.522Z"
-    },
-    {
-      "id": "usr-1786751212893",
-      "nome": "Vasco",
-      "email": "vasco@sigec.pt",
-      "cargo": "Administrador",
-      "pin": "1971",
-      "role": "user",
-      "active": false,
-      "createdAt": "2026-08-14T23:46:52.893Z"
     },
     {
       "id": "usr-1787036348527",
@@ -4987,436 +5082,64 @@
   ],
   "userLogs": [
     {
-      "id": "log-1787222098345-773",
+      "id": "log-1787224853664-346",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Belmiro de Azevedo\" (NIF: 500000374) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Belmiro de Azevedo",
-        "contribuinte": "500000374",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas nos campos principais"
-          }
-        ]
-      },
-      "timestamp": "2026-08-20T10:34:58.345Z"
+      "tipoAcao": "Gestão de Utilizadores",
+      "descricao": "Utilizador Test User (test@empresa.com) eliminado do sistema.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-20T11:20:53.664Z"
     },
     {
-      "id": "log-1787222062689-409",
+      "id": "log-1787224849271-461",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Manuel António da Mota\" (NIF: 500000391) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Manuel António da Mota",
-        "contribuinte": "500000391",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Notas",
-            "anterior": "(vazio)",
-            "novo": "Temas: integrated development of communities through initiatives in social development, education, culture, and environmental sustainability"
-          }
-        ]
-      },
-      "timestamp": "2026-08-20T10:34:22.689Z"
+      "tipoAcao": "Gestão de Utilizadores",
+      "descricao": "Utilizador Vasco (vasco@sigec.pt) eliminado do sistema.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-20T11:20:49.271Z"
     },
     {
-      "id": "log-1787222006889-334",
+      "id": "log-1787224827721-38",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Belmiro de Azevedo\" (NIF: 500000374) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Belmiro de Azevedo",
-        "contribuinte": "500000374",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas nos campos principais"
-          }
-        ]
-      },
-      "timestamp": "2026-08-20T10:33:26.889Z"
+      "tipoAcao": "Gestão de Utilizadores",
+      "descricao": "Utilizador teste (jjota26@gmail.com) eliminado do sistema.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-20T11:20:27.721Z"
     },
     {
-      "id": "log-1787221918098-272",
+      "id": "log-1787224825429-590",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Belmiro de Azevedo\" (NIF: 500000374) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Belmiro de Azevedo",
-        "contribuinte": "500000374",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Notas",
-            "anterior": "(vazio)",
-            "novo": "Temas: education, social solidarity, and environmental sustainability"
-          }
-        ]
-      },
-      "timestamp": "2026-08-20T10:31:58.098Z"
+      "tipoAcao": "Gestão de Utilizadores",
+      "descricao": "Utilizador antonio (antonio@antonio.es) eliminado do sistema.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-20T11:20:25.429Z"
     },
     {
-      "id": "log-1787221873353-696",
+      "id": "log-1787224592649-183",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Altice Portugal\" (NIF: 500000357) atualizada.",
-      "pagina": "Clientes",
+      "tipoAcao": "Início de Sessão",
+      "descricao": "Acesso autorizado efetuado por José Centúrio.",
+      "pagina": "Dashboard / Início",
       "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Altice Portugal",
-        "contribuinte": "500000357",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Notas",
-            "anterior": "(vazio)",
-            "novo": "Temas: innovación, la inclusión social y el acceso al conocimiento mediante la tecnología"
-          }
-        ]
+        "utilizador": "José Centúrio",
+        "email": "jmcenturio@alegria-activity.com",
+        "cargo": "Administrador do Sistema",
+        "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-20T10:31:13.353Z"
-    },
-    {
-      "id": "log-1787221123814-342",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Ilídio Pinho\" (NIF: 500000323) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Ilídio Pinho",
-        "contribuinte": "500000323",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas nos campos principais"
-          }
-        ]
-      },
-      "timestamp": "2026-08-20T10:18:43.814Z"
-    },
-    {
-      "id": "log-1787220324906-623",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Ageas\" (NIF: 500000306) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Ageas",
-        "contribuinte": "500000306",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas nos campos principais"
-          }
-        ]
-      },
-      "timestamp": "2026-08-20T10:05:24.906Z"
-    },
-    {
-      "id": "log-1787220104121-294",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Ageas\" (NIF: 500000306) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Ageas",
-        "contribuinte": "500000306",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Notas",
-            "anterior": "(vazio)",
-            "novo": "Temas: saúde, envelhecimento, exclusão social"
-          }
-        ]
-      },
-      "timestamp": "2026-08-20T10:01:44.121Z"
-    },
-    {
-      "id": "log-1787219838545-425",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação EDP\" (NIF: 500000289) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação EDP",
-        "contribuinte": "500000289",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Notas",
-            "anterior": "(vazio)",
-            "novo": "Temas: Culture, social innovation, and science related to energy"
-          }
-        ]
-      },
-      "timestamp": "2026-08-20T09:57:18.545Z"
-    },
-    {
-      "id": "log-1787219592766-362",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Millennium BCP\" (NIF: 500001207) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Millennium BCP",
-        "contribuinte": "500001207",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas nos campos principais"
-          }
-        ]
-      },
-      "timestamp": "2026-08-20T09:53:12.766Z"
-    },
-    {
-      "id": "log-1787219549751-30",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Millennium BCP\" (NIF: 500001207) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Millennium BCP",
-        "contribuinte": "500001207",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Notas",
-            "anterior": "(vazio)",
-            "novo": "Apoyo a iniciativas de interés cultural, científico y social"
-          }
-        ]
-      },
-      "timestamp": "2026-08-20T09:52:29.751Z"
-    },
-    {
-      "id": "log-1787219198055-798",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação António Cupertino da Miranda\" (NIF: 500000255) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação António Cupertino da Miranda",
-        "contribuinte": "500000255",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas nos campos principais"
-          }
-        ]
-      },
-      "timestamp": "2026-08-20T09:46:38.055Z"
-    },
-    {
-      "id": "log-1787219134675-111",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Galp\" (NIF: 500000238) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Galp",
-        "contribuinte": "500000238",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas nos campos principais"
-          }
-        ]
-      },
-      "timestamp": "2026-08-20T09:45:34.675Z"
-    },
-    {
-      "id": "log-1787219086043-696",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Galp\" (NIF: 500000238) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Galp",
-        "contribuinte": "500000238",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Email",
-            "anterior": "fundacao@galp.com",
-            "novo": "fundacaogalp@galp.com"
-          }
-        ]
-      },
-      "timestamp": "2026-08-20T09:44:46.043Z"
-    },
-    {
-      "id": "log-1787218806024-203",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Vodafone Portugal\" (NIF: 500000221) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Vodafone Portugal",
-        "contribuinte": "500000221",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas nos campos principais"
-          }
-        ]
-      },
-      "timestamp": "2026-08-20T09:40:06.024Z"
-    },
-    {
-      "id": "log-1787218778865-671",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Vodafone Portugal\" (NIF: 500000221) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Vodafone Portugal",
-        "contribuinte": "500000221",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Notas",
-            "anterior": "(vazio)",
-            "novo": "Temas: educación digital, inclusión social, innovación tecnológica, salud, accesibilidad, respuesta a emergencias y sostenibilidad,"
-          }
-        ]
-      },
-      "timestamp": "2026-08-20T09:39:38.865Z"
-    },
-    {
-      "id": "log-1787218666404-840",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Calouste Gulbenkian\" (NIF: 500000204) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Calouste Gulbenkian",
-        "contribuinte": "500000204",
-        "tipoCliente": "Fundação",
-        "camposAlterados": [
-          {
-            "campo": "Notas",
-            "anterior": "(vazio)",
-            "novo": "Educación, cultura, salud, ciencia, innovación social, sostenibilidad, acción climática y cooperación internacional"
-          }
-        ]
-      },
-      "timestamp": "2026-08-20T09:37:46.404Z"
-    },
-    {
-      "id": "log-1787217904139-983",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"NOS, SGPS, S.A.\" (NIF: 500000170) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "NOS, SGPS, S.A.",
-        "contribuinte": "500000170",
-        "tipoCliente": "Privado",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas nos campos principais"
-          }
-        ]
-      },
-      "timestamp": "2026-08-20T09:25:04.139Z"
+      "timestamp": "2026-08-20T11:16:32.649Z"
     }
   ],
   "orcamentos": [
@@ -5643,6 +5366,20 @@
       "key": "cli-1787038283893-566:::undefined",
       "id1": "cli-1787038283893-566",
       "ignoredAt": "2026-08-20T10:16:01.099Z",
+      "ignoredBy": "Sistema"
+    },
+    {
+      "type": "cli-1787223652146-540",
+      "key": "cli-1787220780995-314:::undefined",
+      "id1": "cli-1787220780995-314",
+      "ignoredAt": "2026-08-20T11:00:56.674Z",
+      "ignoredBy": "Sistema"
+    },
+    {
+      "type": "cli-1787220780995-314",
+      "key": "cli-1787223652146-540:::undefined",
+      "id1": "cli-1787223652146-540",
+      "ignoredAt": "2026-08-20T11:19:06.481Z",
       "ignoredBy": "Sistema"
     }
   ],
