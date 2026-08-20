@@ -1,6 +1,25 @@
 {
   "clientes": [
     {
+      "id": "cli-1787208572192-719",
+      "tipoCliente": "Privado",
+      "ministerio": "",
+      "secretariaEstado": "",
+      "nome": "Galp Energia, SGPS, S.A.",
+      "contribuinte": "000000000",
+      "direcao1": "Avenida da Índia",
+      "direcao2": "",
+      "numero": "8",
+      "andar": "",
+      "codigoPostal": "1349-065",
+      "localidade": "Lisboa",
+      "pais": "Portugal",
+      "telefone": "+351 217 242 500",
+      "telemovel": "",
+      "email": "galp@galp.pt",
+      "createdAt": "2026-08-20T06:49:32.192Z"
+    },
+    {
       "id": "cli-1787050401189-194",
       "tipoCliente": "Estatal",
       "ministerio": "Ministério da Presidência",
@@ -2558,18 +2577,19 @@
       "tipoCliente": "Privado",
       "ministerio": "",
       "secretariaEstado": "",
-      "nome": "JERONIMO MARTINS",
+      "nome": "JERÓNIMO MARTINS",
       "contribuinte": "500000068",
-      "direcao1": "Rua Actor António Silva, n.º 7, 1649-033 Lisboa, Portugal",
+      "direcao1": "Rua Actor António Silva",
       "direcao2": "",
-      "numero": "",
+      "numero": "7",
       "andar": "",
       "codigoPostal": "1649-033",
       "localidade": "Lisboa",
       "telefone": "+351 217 532 000",
       "telemovel": "",
       "email": "comunicacao@jeronimo-martins.com",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "pais": "Portugal"
     },
     {
       "id": "cli-1785514129444-833",
@@ -2632,7 +2652,7 @@
     },
     {
       "id": "con-imp-004",
-      "clienteId": "cli-imp-073",
+      "clienteId": "cli-1787208572192-719",
       "nome": "Diogo",
       "apelido": "Sousa",
       "cargo": "Comunicación Corporativa",
@@ -2696,21 +2716,8 @@
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
-      "id": "con-imp-009",
-      "clienteId": "cli-imp-075",
-      "nome": "Pedro",
-      "apelido": "Rio",
-      "cargo": "Media Relations",
-      "telefone": "+351 217 532 000",
-      "telemovel": "",
-      "email": "comunicacao@jeronimo-martins.com",
-      "notas": "Temas: distribución alimentaria, supermercados, comercio minorista, agroalimentación",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
-    },
-    {
       "id": "con-imp-010",
-      "clienteId": "cli-imp-075",
+      "clienteId": "cli-imp-003",
       "subTabIndex": 0,
       "nome": "Duarte",
       "apelido": "Gaspar",
@@ -3295,7 +3302,7 @@
     },
     {
       "id": "con-imp-119",
-      "clienteId": "cli-imp-073",
+      "clienteId": "cli-1787208572192-719",
       "nome": "Rute",
       "apelido": "Gonçalves",
       "cargo": "Diretora de Marca, Marketing e Conveniência",
@@ -4246,6 +4253,32 @@
       "email": "daniel.paiva@huawei.com",
       "notas": "",
       "createdAt": "2026-08-04T06:51:35.654Z"
+    },
+    {
+      "id": "con-1787209259602-763",
+      "clienteId": "cli-imp-003",
+      "subTabIndex": 0,
+      "nome": "Pedro",
+      "apelido": "Rio",
+      "cargo": "Responsável de Relações con los Media",
+      "telefone": "+351 217 532 000",
+      "telemovel": "",
+      "email": "comunicacao@jeronimo-martins.com",
+      "notas": "",
+      "createdAt": "2026-08-20T07:00:59.602Z"
+    },
+    {
+      "id": "con-1787209295713-151",
+      "clienteId": "cli-imp-003",
+      "subTabIndex": 0,
+      "nome": "Pedo",
+      "apelido": "Rio",
+      "cargo": "Responsável de Relações con los Media",
+      "telefone": "+351 217 532 000",
+      "telemovel": "",
+      "email": "comunicacao@jeronimo-martins.com",
+      "notas": "",
+      "createdAt": "2026-08-20T07:01:35.713Z"
     }
   ],
   "projetos": [
@@ -4446,6 +4479,31 @@
       "data": "2026-07-21T10:25",
       "descricao": "Enviado email para Rita Lopes e também para Inês Alberto.",
       "createdAt": "2026-08-19T11:45:26.194Z"
+    },
+    {
+      "id": "int-1787208850710-673",
+      "clienteId": "cli-1787208572192-719",
+      "separadorId": null,
+      "subTabIndex": null,
+      "data": "2026-06-29T08:43",
+      "descricao": "Enviado email de apresentação da empresa.",
+      "createdAt": "2026-08-20T06:54:10.710Z"
+    },
+    {
+      "id": "int-1787209041367-69",
+      "clienteId": "cli-imp-003",
+      "separadorId": null,
+      "subTabIndex": null,
+      "data": "2026-07-01T08:43",
+      "descricao": "Enviado email de apresentação",
+      "createdAt": "2026-08-20T06:57:21.367Z"
+    },
+    {
+      "id": "cpi-1787209854165-174",
+      "contactoId": "con-imp-010",
+      "data": "2026-07-01T09:01",
+      "descricao": "Enviado email de apresentação",
+      "createdAt": "2026-08-20T07:10:54.165Z"
     }
   ],
   "interacoesProjetos": [],
@@ -4518,41 +4576,7 @@
       "createdAt": "2026-08-18T06:59:08.527Z"
     }
   ],
-  "userLogs": [
-    {
-      "id": "log-1787207996819-921",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Eliminação de Cliente",
-      "descricao": "Cliente \"Altice Portugal (Altice Labs)\" (NIF: 500001377) eliminado da base de dados.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Eliminação",
-        "ficha": "Cliente",
-        "nome": "Altice Portugal (Altice Labs)",
-        "contribuinte": "500001377",
-        "tipoCliente": "Privado"
-      },
-      "timestamp": "2026-08-20T06:39:56.819Z"
-    },
-    {
-      "id": "log-1787207947321-917",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Início de Sessão",
-      "descricao": "Acesso autorizado efetuado por José Centúrio.",
-      "pagina": "Dashboard / Início",
-      "detalhes": {
-        "utilizador": "José Centúrio",
-        "email": "jmcenturio@alegria-activity.com",
-        "cargo": "Administrador do Sistema",
-        "dispositivo": "Computador"
-      },
-      "timestamp": "2026-08-20T06:39:07.321Z"
-    }
-  ],
+  "userLogs": [],
   "orcamentos": [
     {
       "id": "orc-bcn-camiao-001",
@@ -4773,6 +4797,27 @@
       "key": "cli-1787050401189-194:::undefined",
       "id1": "cli-1787050401189-194",
       "ignoredAt": "2026-08-18T20:56:53.436Z",
+      "ignoredBy": "Sistema"
+    },
+    {
+      "type": "cli-1787208572192-719",
+      "key": "cli-1787050401189-194:::undefined",
+      "id1": "cli-1787050401189-194",
+      "ignoredAt": "2026-08-20T06:49:37.184Z",
+      "ignoredBy": "Sistema"
+    },
+    {
+      "type": "cli-1787208572192-719",
+      "key": "cli-imp-013:::undefined",
+      "id1": "cli-imp-013",
+      "ignoredAt": "2026-08-20T06:54:20.807Z",
+      "ignoredBy": "Sistema"
+    },
+    {
+      "type": "cli-1787208572192-719",
+      "key": "cli-1787038283893-566:::undefined",
+      "id1": "cli-1787038283893-566",
+      "ignoredAt": "2026-08-20T06:54:45.253Z",
       "ignoredBy": "Sistema"
     }
   ],
@@ -4997,7 +5042,8 @@
       "con-imp-020",
       "con-imp-035",
       "con-1785515478798-243",
-      "con-1787049428085-374"
+      "con-1787049428085-374",
+      "con-imp-009"
     ],
     "projetos": [],
     "interacoes": [
