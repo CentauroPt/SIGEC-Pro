@@ -107,7 +107,8 @@
       "telefone": "+351 215 002 000",
       "telemovel": "",
       "email": "sara.s.cosme@meo.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "pais": ""
     },
     {
       "id": "cli-imp-006",
@@ -125,7 +126,8 @@
       "telefone": "+351 265 709 000",
       "telemovel": "",
       "email": "carla.porto@thenavigatorcompany.com",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "pais": "Portugal"
     },
     {
       "id": "cli-imp-007",
@@ -134,15 +136,17 @@
       "secretariaEstado": "",
       "nome": "REN",
       "contribuinte": "500000136",
-      "direcao1": "Avenida dos Estados Unidos da América, 55, 1749-061 Lisboa, Portugal",
+      "direcao1": "Avenida dos Estados Unidos da América",
       "direcao2": "",
-      "numero": "",
+      "numero": "55",
       "andar": "",
       "codigoPostal": "1749-061",
       "localidade": "Lisboa",
+      "pais": "Portugal",
       "telefone": "+351 210 013 500",
       "telemovel": "",
-      "email": "bruno.silva@ren.pt",
+      "email": "comunicacao@ren.pt",
+      "notas": "energía, electricidad, gas natural, transmisión de energía, sostenibilidad",
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
@@ -150,17 +154,19 @@
       "tipoCliente": "Privado",
       "ministerio": "",
       "secretariaEstado": "",
-      "nome": "MOTA ENGIL",
+      "nome": "Mota Engil",
       "contribuinte": "500000153",
-      "direcao1": "Rua do Rego Lameiro, nº 38, 4300-454 Porto, Portugal",
+      "direcao1": "Rua do Rego Lameiro",
       "direcao2": "",
-      "numero": "",
+      "numero": "38",
       "andar": "",
       "codigoPostal": "4300-454",
       "localidade": "Porto",
+      "pais": "Portugal",
       "telefone": "+351 225 190 300",
       "telemovel": "",
       "email": "mota-engil@mota-engil.com",
+      "notas": "construcción, infraestructuras, ingeniería, gestión de residuos, concesiones de transporte",
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
@@ -2769,12 +2775,13 @@
       "clienteId": "cli-imp-005",
       "nome": "Ana",
       "apelido": "Guimaraes",
-      "cargo": "Head of Sponsorships and Events",
+      "cargo": "Direção de Comunicação Corporativa e Relações Institucionais",
       "telefone": "+351 215 002 000",
       "telemovel": "",
       "email": "ana-v-guimaraes@telecom.pt",
       "notas": "Temas: telecomunicaciones, internet, televisión, telefonía móvil, tecnología",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-imp-016",
@@ -2797,7 +2804,7 @@
       "telefone": "+351 265 709 000",
       "telemovel": "",
       "email": "carla.porto@thenavigatorcompany.com",
-      "notas": "Temas: pasta de celulosa, papel, silvicultura, sostenibilidad, bioindustria",
+      "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 0
     },
@@ -2810,8 +2817,9 @@
       "telefone": "+351 265 709 000",
       "telemovel": "",
       "email": "catarina.alvarez@thenavigatorcompany.com",
-      "notas": "Temas: pasta de celulosa, papel, silvicultura, sostenibilidad, bioindustria",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "notas": "",
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-imp-019",
@@ -2822,79 +2830,73 @@
       "telefone": "+351 265 709 000",
       "telemovel": "",
       "email": "antonio.soares@thenavigatorcompany.com",
-      "notas": "Temas: pasta de celulosa, papel, silvicultura, sostenibilidad, bioindustria",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "notas": "",
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-imp-021",
       "clienteId": "cli-imp-007",
+      "subTabIndex": 0,
       "nome": "Bruno",
       "apelido": "Silva",
       "cargo": "Deputy Director - Communications and Sustainability",
       "telefone": "+351 210 013 500",
       "telemovel": "",
       "email": "bruno.silva@ren.pt",
-      "notas": "Temas: energía, electricidad, gas natural, transmisión de energía, sostenibilidad",
+      "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
       "id": "con-imp-022",
       "clienteId": "cli-imp-007",
+      "subTabIndex": 0,
       "nome": "Margarida",
       "apelido": "Ferreirinha",
       "cargo": "Sustainability and Communications Director@REN",
       "telefone": "+351 210 013 500",
       "telemovel": "",
       "email": "margarida.ferreirinha@ren.pt",
-      "notas": "Temas: energía, electricidad, gas natural, transmisión de energía, sostenibilidad",
+      "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
       "id": "con-imp-023",
       "clienteId": "cli-imp-007",
+      "subTabIndex": 0,
       "nome": "Ronaldo",
       "apelido": "Bernardo",
       "cargo": "Product Management and Agility Coordinator at REN",
       "telefone": "+351 210 013 500",
       "telemovel": "",
       "email": "ronaldo.bernardo@ren.pt",
-      "notas": "Temas: energía, electricidad, gas natural, transmisión de energía, sostenibilidad",
+      "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
       "id": "con-imp-024",
       "clienteId": "cli-imp-007",
+      "subTabIndex": 0,
       "nome": "Pedro",
       "apelido": "Calisto",
       "cargo": "Deputy Head of Business Development and M&A@REN",
       "telefone": "+351 210 013 500",
       "telemovel": "",
       "email": "pedro.calisto@ren.pt",
-      "notas": "Temas: energía, electricidad, gas natural, transmisión de energía, sostenibilidad",
+      "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
       "id": "con-imp-025",
       "clienteId": "cli-imp-007",
+      "subTabIndex": 0,
       "nome": "Raquel",
       "apelido": "Costa",
       "cargo": "Head of Innovation at REN",
       "telefone": "+351 210 013 500",
       "telemovel": "",
       "email": "raquel.costa@ren.pt",
-      "notas": "Temas: energía, electricidad, gas natural, transmisión de energía, sostenibilidad",
-      "createdAt": "2026-07-31T16:30:00.000Z"
-    },
-    {
-      "id": "con-imp-027",
-      "clienteId": "cli-imp-008",
-      "nome": "mail",
-      "apelido": "general",
-      "cargo": "mail general",
-      "telefone": "+351 225 190 300",
-      "telemovel": "",
-      "email": "geral@mota-engil.pt",
-      "notas": "Temas: construcción, infraestructuras, ingeniería, gestión de residuos, concesiones de transporte",
+      "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
@@ -4224,11 +4226,12 @@
       "nome": "Inês",
       "apelido": "Alberto",
       "cargo": "Project Operacional Manager",
-      "telefone": "",
+      "telefone": "+351 217 526 100",
       "telemovel": "",
       "email": "ines.alberto@fundacao-jeronimomartins.com",
       "notas": "",
-      "createdAt": "2026-08-03T11:06:35.298Z"
+      "createdAt": "2026-08-03T11:06:35.298Z",
+      "subTabIndex": 0
     },
     {
       "id": "con-1785825214404-496",
@@ -4287,11 +4290,37 @@
       "nome": "Miguel",
       "apelido": "Herdade",
       "cargo": "Diretor",
-      "telefone": "",
+      "telefone": "+351 217 526 100",
       "telemovel": "",
       "email": "miguel.herdade@fundacao-jeronimomartins.com",
       "notas": "",
       "createdAt": "2026-08-20T07:18:12.461Z"
+    },
+    {
+      "id": "con-1787211155795-660",
+      "clienteId": "cli-imp-004",
+      "subTabIndex": 0,
+      "nome": "Rita",
+      "apelido": "Lopes",
+      "cargo": "Senior Project Manager",
+      "telefone": "+351 217 526 100",
+      "telemovel": "",
+      "email": "rita.lopes@fundacao-jeronimomartins.com",
+      "notas": "",
+      "createdAt": "2026-08-20T07:32:35.795Z"
+    },
+    {
+      "id": "con-1787212244055-667",
+      "clienteId": "cli-imp-006",
+      "subTabIndex": 0,
+      "nome": "António",
+      "apelido": "Redondo",
+      "cargo": "CEO",
+      "telefone": "",
+      "telemovel": "",
+      "email": "antonio.redondo@thenavigatorcompany.com",
+      "notas": "",
+      "createdAt": "2026-08-20T07:50:44.055Z"
     }
   ],
   "projetos": [
@@ -4531,6 +4560,94 @@
       "data": "2026-07-01T09:16",
       "descricao": "Enviado email de apresentação",
       "createdAt": "2026-08-20T07:18:29.669Z"
+    },
+    {
+      "id": "cpi-1787211161393-702",
+      "contactoId": "con-1787211155795-660",
+      "data": "2026-07-21T09:31",
+      "descricao": "Enviado email de apresentação",
+      "createdAt": "2026-08-20T07:32:41.393Z"
+    },
+    {
+      "id": "int-1787211415866-107",
+      "clienteId": "cli-imp-005",
+      "data": "2026-06-30T09:29",
+      "descricao": "Enviado email de apresentação.",
+      "createdAt": "2026-08-20T07:36:55.866Z"
+    },
+    {
+      "id": "int-1787211467052-337",
+      "clienteId": "cli-imp-005",
+      "data": "2026-07-01T09:29",
+      "descricao": "Responde:\n\"Agradeço a partilha de informação que mereceu a nossa melhor atenção.\nEntraremos em contacto, caso surja alguma oportunidade.\"",
+      "createdAt": "2026-08-20T07:37:47.052Z"
+    },
+    {
+      "id": "cpi-1787212752094-659",
+      "contactoId": "con-imp-017",
+      "data": "2026-06-30T09:49",
+      "descricao": "Enviado email de apresentação",
+      "createdAt": "2026-08-20T07:59:12.094Z"
+    },
+    {
+      "id": "cpi-1787212758465-839",
+      "contactoId": "con-imp-018",
+      "data": "2026-06-30T09:49",
+      "descricao": "Enviado email de apresentação",
+      "createdAt": "2026-08-20T07:59:18.465Z"
+    },
+    {
+      "id": "cpi-1787212822963-760",
+      "contactoId": "con-1787212244055-667",
+      "data": "2026-06-30T09:49",
+      "descricao": "Enviado email de apresentação",
+      "createdAt": "2026-08-20T08:00:22.963Z"
+    },
+    {
+      "id": "int-1787212829044-396",
+      "clienteId": "cli-imp-006",
+      "separadorId": null,
+      "subTabIndex": null,
+      "data": "2026-06-30T09:46",
+      "descricao": "Enviado email de apresentação",
+      "createdAt": "2026-08-20T08:00:29.044Z"
+    },
+    {
+      "id": "int-1787215537410-677",
+      "clienteId": "cli-imp-007",
+      "separadorId": null,
+      "subTabIndex": null,
+      "data": "2026-07-01T10:29",
+      "descricao": "Enviado email de apresentação",
+      "createdAt": "2026-08-20T08:45:37.410Z"
+    },
+    {
+      "id": "cpi-1787215569065-510",
+      "contactoId": "con-imp-021",
+      "data": "2026-07-01T10:43",
+      "descricao": "Enviado email de apresentação",
+      "createdAt": "2026-08-20T08:46:09.065Z"
+    },
+    {
+      "id": "cpi-1787215584233-194",
+      "contactoId": "con-imp-022",
+      "data": "2026-07-01T10:43",
+      "descricao": "Enviado email de apresentação",
+      "createdAt": "2026-08-20T08:46:24.233Z"
+    },
+    {
+      "id": "cpi-1787215605279-906",
+      "contactoId": "con-imp-023",
+      "data": "2026-07-01T10:43",
+      "descricao": "Enviado email de apresentação",
+      "createdAt": "2026-08-20T08:46:45.279Z"
+    },
+    {
+      "id": "cpi-1787215628336-2",
+      "contactoId": "con-imp-025",
+      "data": "2026-07-01T10:43",
+      "descricao": "Enviado email de apresentação",
+      "createdAt": "2026-08-20T08:47:08.336Z"
     }
   ],
   "interacoesProjetos": [],
@@ -4605,98 +4722,104 @@
   ],
   "userLogs": [
     {
-      "id": "log-1787210180717-544",
+      "id": "log-1787215891947-543",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
       "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Jeronimo Martins\" (NIF: 500000187) atualizada.",
+      "descricao": "Ficha do cliente \"Mota Engil\" (NIF: 500000153) atualizada.",
       "pagina": "Clientes",
       "detalhes": {
         "acao": "Edição",
         "ficha": "Cliente",
-        "nome": "Fundação Jeronimo Martins",
-        "contribuinte": "500000187",
-        "tipoCliente": "Fundação",
+        "nome": "Mota Engil",
+        "contribuinte": "500000153",
+        "tipoCliente": "Privado",
         "camposAlterados": [
           {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas nos campos principais"
+            "campo": "Nome",
+            "anterior": "MOTA ENGIL",
+            "novo": "Mota Engil"
+          },
+          {
+            "campo": "Morada",
+            "anterior": "Rua do Rego Lameiro, nº 38, 4300-454 Porto, Portugal",
+            "novo": "Rua do Rego Lameiro"
           }
         ]
       },
-      "timestamp": "2026-08-20T07:16:20.718Z"
+      "timestamp": "2026-08-20T08:51:31.947Z"
     },
     {
-      "id": "log-1787210046881-206",
+      "id": "log-1787215736754-883",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-20T07:14:06.881Z"
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"MOTA ENGIL\" (NIF: 500000153) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "MOTA ENGIL",
+        "contribuinte": "500000153",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "País",
+            "anterior": "(vazio)",
+            "novo": "Portugal"
+          },
+          {
+            "campo": "Notas",
+            "anterior": "(vazio)",
+            "novo": "construcción, infraestructuras, ingeniería, gestión de residuos, concesiones de transporte"
+          }
+        ]
+      },
+      "timestamp": "2026-08-20T08:48:56.754Z"
     },
     {
-      "id": "log-1787209984161-388",
+      "id": "log-1787215631320-142",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-20T07:13:04.161Z"
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"REN\" (NIF: 500000136) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "REN",
+        "contribuinte": "500000136",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Email",
+            "anterior": "bruno.silva@ren.pt",
+            "novo": "comunicacao@ren.pt"
+          },
+          {
+            "campo": "Morada",
+            "anterior": "Avenida dos Estados Unidos da América, 55, 1749-061 Lisboa, Portugal",
+            "novo": "Avenida dos Estados Unidos da América"
+          },
+          {
+            "campo": "País",
+            "anterior": "(vazio)",
+            "novo": "Portugal"
+          },
+          {
+            "campo": "Notas",
+            "anterior": "(vazio)",
+            "novo": "energía, electricidad, gas natural, transmisión de energía, sostenibilidad"
+          }
+        ]
+      },
+      "timestamp": "2026-08-20T08:47:11.320Z"
     }
   ],
   "orcamentos": [
-    {
-      "id": "orc-bcn-camiao-001",
-      "referencia": "BCN-CAM-12T-2026",
-      "nome": "Agência Bancária Móvel sobre Camião 12T",
-      "cliente": "BCN (Banco Caboverdiano de Negócios)",
-      "tipoVeiculo": "Camião Rígido 12 Toneladas (IVECO Eurocargo)",
-      "valorTotal": 149650,
-      "estado": "Adjudicado",
-      "origem": "Feito",
-      "dataEmissao": "2026-08-12",
-      "validade": "2026-10-12",
-      "prazoEntrega": "4 meses",
-      "descricao": "Design e produção chave na mão de agência bancária móvel sobre camião 12t, com gabinete privado, cofre 175kg, 4 painéis solares, baterias de lítio e ar condicionado Mundoclima.",
-      "createdAt": "2026-08-12T10:00:00.000Z"
-    },
-    {
-      "id": "orc-bcn-furgao-002",
-      "referencia": "BCN-FUR-DAILY-2026",
-      "nome": "Agência Bancária Móvel sobre Furgão IVECO Daily",
-      "cliente": "BCN (Banco Caboverdiano de Negócios)",
-      "tipoVeiculo": "Furgão IVECO Daily Rodado Duplo H3",
-      "valorTotal": 98420,
-      "estado": "Não adjudicado",
-      "origem": "Feito",
-      "dataEmissao": "2026-08-10",
-      "validade": "2026-10-10",
-      "prazoEntrega": "4 meses",
-      "descricao": "Transformação de furgão em unidade móvel compacta, com ar condicionado de teto Belaire, energia solar, inversor 3500VA e mobiliário técnico Egger®.",
-      "createdAt": "2026-08-10T14:30:00.000Z"
-    },
-    {
-      "id": "orc-huawei-bus-003",
-      "referencia": "HUAWEI-SMARTBUS-2023",
-      "nome": "Huawei SmartBus Tecnológico",
-      "cliente": "Huawei Technologies Portugal",
-      "tipoVeiculo": "Bus extraível 13,80m (99-HB-22)",
-      "valorTotal": 185000,
-      "estado": "Adjudicado",
-      "origem": "Carregado",
-      "dataEmissao": "2023-09-15",
-      "validade": "2023-11-15",
-      "prazoEntrega": "3 meses",
-      "descricao": "Unidade móvel de demonstração tecnológica 5G com sala de exposições interativa, climatização e conectividade por satélite.",
-      "createdAt": "2023-09-15T09:00:00.000Z"
-    },
     {
       "id": "orc-norte-2040-004",
       "referencia": "CCDRN-NORTE2040-2023",
@@ -5117,7 +5240,8 @@
       "con-imp-035",
       "con-1785515478798-243",
       "con-1787049428085-374",
-      "con-imp-009"
+      "con-imp-009",
+      "con-imp-027"
     ],
     "projetos": [],
     "interacoes": [
