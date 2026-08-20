@@ -4279,6 +4279,19 @@
       "email": "comunicacao@jeronimo-martins.com",
       "notas": "",
       "createdAt": "2026-08-20T07:01:35.713Z"
+    },
+    {
+      "id": "con-1787210292461-454",
+      "clienteId": "cli-imp-004",
+      "subTabIndex": 0,
+      "nome": "Miguel",
+      "apelido": "Herdade",
+      "cargo": "Diretor",
+      "telefone": "",
+      "telemovel": "",
+      "email": "miguel.herdade@fundacao-jeronimomartins.com",
+      "notas": "",
+      "createdAt": "2026-08-20T07:18:12.461Z"
     }
   ],
   "projetos": [
@@ -4504,6 +4517,20 @@
       "data": "2026-07-01T09:01",
       "descricao": "Enviado email de apresentação",
       "createdAt": "2026-08-20T07:10:54.165Z"
+    },
+    {
+      "id": "cpi-1787210126029-44",
+      "contactoId": "con-imp-010",
+      "data": "2026-08-20T09:14",
+      "descricao": "Enviado email de apresentação",
+      "createdAt": "2026-08-20T07:15:26.029Z"
+    },
+    {
+      "id": "cpi-1787210309669-171",
+      "contactoId": "con-1787210292461-454",
+      "data": "2026-07-01T09:16",
+      "descricao": "Enviado email de apresentação",
+      "createdAt": "2026-08-20T07:18:29.669Z"
     }
   ],
   "interacoesProjetos": [],
@@ -4577,6 +4604,41 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1787210180717-544",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Jeronimo Martins\" (NIF: 500000187) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Jeronimo Martins",
+        "contribuinte": "500000187",
+        "tipoCliente": "Fundação",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-20T07:16:20.718Z"
+    },
+    {
+      "id": "log-1787210046881-206",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-20T07:14:06.881Z"
+    },
     {
       "id": "log-1787209984161-388",
       "usuarioId": "usr-admin-001",
@@ -5059,7 +5121,8 @@
     ],
     "projetos": [],
     "interacoes": [
-      "int-1787045375532-710"
+      "int-1787045375532-710",
+      "int-1787210357662-44"
     ],
     "interacoesProjetos": [],
     "orcamentos": [
