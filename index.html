@@ -560,12 +560,29 @@
         </button>
       </div>
 
-      <!-- Seção Principal do Dashboard: Projetos Recentes -->
-      <div class="dashboard-sections-grid">
+      <!-- Seção Principal do Dashboard: Acompanhamento de Clientes e Projetos -->
+      <div class="dashboard-sections-grid" style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <!-- Quadro 1: Acompanhamento de Clientes -->
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">
-              <i class="fa-solid fa-clock-rotate-left"></i> Projetos em Acompanhamento
+              <i class="fa-solid fa-users-viewfinder"></i> Acompanhamento de Clientes
+            </h3>
+            <button class="btn btn-secondary" onclick="switchTab('tab-clientes')"
+              style="font-size: 0.82rem; padding: 0.35rem 0.75rem;">
+              Ver Todos <i class="fa-solid fa-arrow-right" style="margin-left: 4px;"></i>
+            </button>
+          </div>
+          <div id="dashClientTrackingContainer" class="dash-projects-scroll-container">
+            <!-- Clientes renderizados via JS -->
+          </div>
+        </div>
+
+        <!-- Quadro 2: Acompanhamento de Projetos -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i class="fa-solid fa-clock-rotate-left"></i> Acompanhamento de Projetos
             </h3>
             <button class="btn btn-secondary" onclick="switchTab('tab-projetos')"
               style="font-size: 0.82rem; padding: 0.35rem 0.75rem;">
@@ -2198,18 +2215,18 @@
                 Restaure e instale um ficheiro de atualização (ex: <code>SIGEC_V1.7.3.json</code>) para atualizar ou
                 recuperar o software do sistema. Os seus dados atuais são <strong>100% preservados</strong>.
               </p>
-              <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                 <input type="file" id="systemUpdateImportInput" accept=".json"
                   onchange="handleSystemUpdateFileSelect(event)" style="display:none;">
-                <button type="button" class="btn btn-primary" onclick="checkAndInstallUpdate(false)"
-                  style="flex: 1.5; justify-content: center; background: #0284c7; border-color: #0284c7; font-weight: 600;"
-                  title="Restaurar a versão mais recente a partir da pasta 'Atualização' do servidor GitHub ou carregar ficheiro">
-                  <i class="fa-solid fa-cloud-arrow-down"></i> Restaurar Atualização
-                </button>
-                <button type="button" class="btn btn-secondary" onclick="generateUpdatePackage()"
-                  style="justify-content: center; background: #e0f2fe; color: #0369a1; border-color: #bae6fd; font-weight: 600;"
+                <button type="button" class="btn btn-primary" onclick="generateUpdatePackage()"
+                  style="flex: 1.2; justify-content: center;"
                   title="Gerar Pacote .json de Atualização de Software e guardar na pasta 'Atualização' do servidor GitHub">
                   <i class="fa-solid fa-file-code"></i> Gerar Pacote
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="checkAndInstallUpdate(false)"
+                  style="flex: 1; justify-content: center;"
+                  title="Procurar a versão mais recente na pasta 'Atualização' do servidor GitHub ou carregar ficheiro a partir do computador">
+                  <i class="fa-solid fa-upload"></i> Restaurar Atualização
                 </button>
               </div>
             </div>
@@ -2683,6 +2700,13 @@
                 <label for="clientEmail">Email</label>
                 <input type="email" id="clientEmail" class="form-control" placeholder="contacto@empresa.pt">
               </div>
+
+              <!-- Campo de Notas com Barra de Deslocação Vertical -->
+              <div class="form-group col-12">
+                <label for="clientNotas">Notas</label>
+                <textarea id="clientNotas" class="form-control notes-textarea"
+                  placeholder="Escreva observações ou notas sobre este cliente..."></textarea>
+              </div>
             </div>
           </div>
 
@@ -2692,10 +2716,17 @@
               <h3 class="embedded-title">
                 <i class="fa-solid fa-users"></i> Pessoas de Contacto (Pessoas que trabalham nesta empresa)
               </h3>
-              <button type="button" class="btn btn-secondary" onclick="openContactModalForNew()"
-                style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">
-                <i class="fa-solid fa-user-plus"></i> Novo Contacto
-              </button>
+              <div style="display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap;">
+                <button type="button" class="btn btn-secondary" onclick="openAttachExistingContactModal()"
+                  style="padding: 0.35rem 0.75rem; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.35rem;"
+                  title="Adicionar contacto escolhendo da lista de contactos existentes">
+                  <i class="fa-solid fa-address-book" style="color: #10b981;"></i> Associar Contacto Existente
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="openContactModalForNew()"
+                  style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">
+                  <i class="fa-solid fa-user-plus"></i> Novo Contacto
+                </button>
+              </div>
             </div>
 
             <div id="clientContactsGrid" class="contacts-grid">
@@ -2705,9 +2736,18 @@
 
           <!-- Secção Integrada de Registo de Contactos Realizados / Interações -->
           <div class="embedded-section">
-            <div class="embedded-header">
-              <h3 class="embedded-title">
-                <i class="fa-solid fa-phone-volume"></i> Registo de Contactos Realizados com este Cliente
+            <div class="embedded-header"
+              style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+              <h3 class="embedded-title" style="display: inline-flex; align-items: center; gap: 0.5rem; margin: 0;">
+                <i class="fa-solid fa-phone-volume"></i>
+                <span>Registo de Contactos Realizados com este Cliente</span>
+                <button type="button" id="btnSortClientInteractions" class="btn-sort-toggle"
+                  onclick="toggleClientInteractionsSort()" title="Alternar ordem das datas: Mais recente / Mais antigo"
+                  style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; padding: 2px 8px; font-size: 0.78rem; font-weight: 600; color: #1e3a8a; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); margin-left: 0.25rem;">
+                  <i class="fa-solid fa-arrow-down-wide-short" id="iconSortClientInteractions"
+                    style="color: #2563eb;"></i>
+                  <span id="textSortClientInteractions" style="font-size: 0.76rem;">Mais recente</span>
+                </button>
               </h3>
             </div>
 
@@ -2877,9 +2917,19 @@
 
           <!-- Secção Integrada de Registo de Contactos Realizados com este Contacto -->
           <div class="embedded-section">
-            <div class="embedded-header">
-              <h3 class="embedded-title">
-                <i class="fa-solid fa-phone-volume"></i> Registo de Contactos Realizados com este Contacto
+            <div class="embedded-header"
+              style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+              <h3 class="embedded-title" style="display: inline-flex; align-items: center; gap: 0.5rem; margin: 0;">
+                <i class="fa-solid fa-phone-volume"></i>
+                <span>Registo de Contactos Realizados com este Contacto</span>
+                <button type="button" id="btnSortContactInteractions" class="btn-sort-toggle"
+                  onclick="toggleContactPersonInteractionsSort()"
+                  title="Alternar ordem das datas: Mais recente / Mais antigo"
+                  style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; padding: 2px 8px; font-size: 0.78rem; font-weight: 600; color: #1e3a8a; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); margin-left: 0.25rem;">
+                  <i class="fa-solid fa-arrow-down-wide-short" id="iconSortContactInteractions"
+                    style="color: #2563eb;"></i>
+                  <span id="textSortContactInteractions" style="font-size: 0.76rem;">Mais recente</span>
+                </button>
               </h3>
             </div>
 
@@ -3138,10 +3188,21 @@
 
           <!-- Secção Integrada de Registo de Contactos / Notas do Projeto -->
           <div class="embedded-section">
-            <div class="embedded-header">
-              <h3 class="embedded-title">
+            <div class="embedded-header"
+              style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+              <h3 class="embedded-title" style="margin: 0;">
                 <i class="fa-solid fa-phone-volume"></i> Registo de Contactos / Notas do Projeto
               </h3>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <button type="button" id="btnSortProjectInteractions" class="btn-sort-toggle"
+                  onclick="toggleProjectInteractionsSort()"
+                  title="Inverter ordem cronológica (Mais recente / Mais antigo)"
+                  style="display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.35rem 0.75rem; font-size: 0.8rem; font-weight: 600; color: #1e3a8a; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                  <i id="iconSortProjectInteractions" class="fa-solid fa-arrow-down-wide-short"
+                    style="color: #2563eb; font-size: 0.9rem;"></i>
+                  <span id="textSortProjectInteractions">Mais recente</span>
+                </button>
+              </div>
             </div>
 
             <!-- Formulário em Linha: Campo de Data + Campo em frente de Escrita Livre Auto-expansível -->
@@ -3669,6 +3730,79 @@
     </div>
   </div>
 
+  <!-- MODAL DE ESCOLHA E ASSOCIAÇÃO DE CONTACTO EXISTENTE AO CLIENTE -->
+  <div id="attachExistingContactModal" class="modal-overlay" style="z-index: 100060;">
+    <div class="modal-window"
+      style="max-width: 700px; width: 95%; max-height: 90vh; display: flex; flex-direction: column; padding: 1.5rem;">
+      <div class="modal-header" style="background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);">
+        <h3 class="modal-title"
+          style="color: #ffffff; font-size: 1.05rem; display: flex; align-items: center; gap: 0.55rem;">
+          <i class="fa-solid fa-address-book" style="color: #34d399;"></i> Escolher / Associar Contacto Existente
+        </h3>
+        <button class="action-icon-btn" onclick="closeAttachExistingContactModal()"
+          style="color: #ffffff; font-size: 1.2rem;" title="Fechar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body" style="padding: 1.25rem 0; overflow-y: auto; flex: 1;">
+        <!-- Informação do Cliente de Destino -->
+        <div
+          style="background: #eff6ff; border: 1.5px solid #bfdbfe; padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+          <div>
+            <div
+              style="font-size: 0.75rem; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
+              Cliente Atual de Destino:</div>
+            <div id="attachModalClientName" style="font-size: 1rem; font-weight: 700; color: #1e3a8a;">-</div>
+          </div>
+          <div id="attachModalSubTabGroup" style="display: none; min-width: 200px;">
+            <label for="attachModalSubTabIndex"
+              style="font-size: 0.78rem; font-weight: 700; color: #1e3a8a; display: block; margin-bottom: 0.25rem;">Separador
+              / Organismo:</label>
+            <select id="attachModalSubTabIndex" class="form-control"
+              style="width: 100%; padding: 0.4rem 0.6rem; font-size: 0.85rem; border: 1.5px solid #93c5fd; border-radius: 6px;">
+              <!-- Opções de separador -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Opção: Modo de Atribuição (Mudar Cliente vs Duplicar/Criar Cópia) -->
+        <div
+          style="display: flex; gap: 1.25rem; align-items: center; margin-bottom: 1rem; padding: 0.5rem 0.75rem; background: #f8fafc; border-radius: 6px; border: 1px solid #e2e8f0; font-size: 0.84rem; flex-wrap: wrap;">
+          <label
+            style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; color: #334155; font-weight: 500; margin: 0;">
+            <input type="radio" name="attachContactMode" value="move" checked style="accent-color: #2563eb;">
+            <span><strong>Mudar contacto</strong> para este cliente</span>
+          </label>
+          <label
+            style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; color: #334155; font-weight: 500; margin: 0;">
+            <input type="radio" name="attachContactMode" value="copy" style="accent-color: #2563eb;">
+            <span><strong>Duplicar contacto</strong> (mantém cópia no cliente original)</span>
+          </label>
+        </div>
+
+        <!-- Barra de Pesquisa de Contactos -->
+        <div style="position: relative; margin-bottom: 1rem;">
+          <i class="fa-solid fa-search"
+            style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.9rem;"></i>
+          <input type="text" id="attachExistingContactSearch" class="form-control"
+            placeholder="Pesquisar contacto por nome, apelido, cargo, empresa atual, email, telefone..."
+            style="padding-left: 2.5rem; font-size: 0.9rem;" oninput="renderAttachExistingContactList()">
+        </div>
+
+        <!-- Lista de Contactos -->
+        <div id="attachExistingContactList"
+          style="max-height: 360px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; padding-right: 2px;">
+          <!-- Itens renderizados dinamicamente -->
+        </div>
+      </div>
+
+      <div class="modal-footer" style="justify-content: flex-end; padding-top: 0.85rem; border-top: 1px solid #e2e8f0;">
+        <button type="button" class="btn btn-close" onclick="closeAttachExistingContactModal()">Fechar</button>
+      </div>
+    </div>
+  </div>
+
 
 
   <!-- Modal para Mover Contacto entre Separadores Estatais -->
@@ -3892,7 +4026,7 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- Main JavaScript App -->
-  <script src="app.js?v=20260810_v18"></script>
+  <script src="app.js?v=20260821_v21"></script>
   <!-- Duplicates Management Engine -->
   <script src="duplicatesManager.js?v=20260818_v1"></script>
 
@@ -4066,6 +4200,18 @@
 
       if (typeof currentSubTabContactIndex !== 'undefined') currentSubTabContactIndex = null;
 
+      if (typeof checkAndHandleDuplicates === 'function') {
+        var isDup = checkAndHandleDuplicates('contacto', contactObj, id, function (finalId) {
+          if (typeof closeContactModal === 'function') closeContactModal();
+          if (typeof currentClientId !== 'undefined' && currentClientId && typeof refreshClientSubLists === 'function') refreshClientSubLists(currentClientId);
+          if (selectedClienteId && selectedClienteId !== (typeof currentClientId !== 'undefined' ? currentClientId : '') && typeof refreshClientSubLists === 'function') refreshClientSubLists(selectedClienteId);
+          if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
+          if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
+          if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
+        });
+        if (isDup) return;
+      }
+
       if (existingIndex >= 0) {
         db.contactos[existingIndex] = contactObj;
         if (typeof showToast === 'function') showToast('Contacto atualizado com sucesso!');
@@ -4184,37 +4330,97 @@
     </div>
   </div>
 
-  <!-- MODAL DE CONFIRMAÇÃO DE NOVA ATUALIZAÇÃO DETETADA -->
-  <div id="updateConfirmationModal" class="modal-overlay" style="z-index: 9999;">
-    <div class="modal-window" style="max-width: 520px; padding: 1.75rem; text-align: center;">
-      <div
-        style="width: 60px; height: 60px; border-radius: 50%; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.25rem auto; border: 2px solid #bae6fd;">
-        <i class="fa-solid fa-cloud-arrow-down"></i>
+  <!-- MODAL DE INSPEÇÃO E CONFIRMAÇÃO DE RESTAURO DE ATUALIZAÇÃO (GITHUB / LOCAL) -->
+  <div id="updateConfirmationModal" class="modal-overlay" style="z-index: 99999;">
+    <div class="modal-window" style="max-width: 560px; padding: 1.75rem; border-radius: 16px;">
+      <div style="text-align: center; margin-bottom: 1.25rem;">
+        <div
+          style="width: 64px; height: 64px; border-radius: 50%; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 0.75rem auto; border: 2px solid #bae6fd; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15);">
+          <i class="fa-solid fa-cloud-arrow-down"></i>
+        </div>
+        <h3 style="color: #0f172a; font-size: 1.3rem; margin: 0 0 0.35rem 0; font-weight: 700;">Restauro de Atualização
+          de Software</h3>
+        <span id="updateRestoreSourceBadge"
+          style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 999px; background: #dcfce7; color: #15803d; font-size: 0.78rem; font-weight: 600; border: 1px solid #86efac;">
+          <i class="fa-solid fa-cloud-check"></i> Servidor GitHub (Pasta Atualização)
+        </span>
       </div>
 
-      <h3 style="color: #0369a1; font-size: 1.3rem; margin-bottom: 0.75rem; font-weight: 700;">Nova Atualização
-        Detetada!</h3>
-
+      <!-- Detalhes do Ficheiro de Atualização -->
       <div
-        style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.25rem;">
-        <p style="color: #334155; font-size: 0.92rem; margin-bottom: 0.4rem;">Foi encontrada uma nova versão disponível
-          na pasta <strong>Atualizações</strong>:</p>
-        <strong id="newDetectedVersionName"
-          style="font-size: 1.25rem; color: #0284c7; letter-spacing: 0.5px;">SIGEC_V1.1</strong>
+        style="background: #f8fafc; border: 1px solid var(--soft-blue-border); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
+        <div
+          style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-size: 0.85rem;">
+          <span style="color: var(--text-muted);"><i class="fa-solid fa-file-code"
+              style="color: #0284c7; margin-right: 4px;"></i> Ficheiro:</span>
+          <strong id="updateRestoreFileName"
+            style="color: #0f172a; font-family: monospace; font-size: 0.88rem; word-break: break-all;">SIGEC_V1.7.3.json</strong>
+        </div>
+        <div
+          style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-size: 0.85rem;">
+          <span style="color: var(--text-muted);"><i class="fa-solid fa-tag"
+              style="color: #0284c7; margin-right: 4px;"></i> Versão / Pacote:</span>
+          <strong id="updateRestoreFileVersion"
+            style="color: #0284c7; font-size: 0.95rem; letter-spacing: 0.5px;">SIGEC_V1.7.3</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;">
+          <span style="color: var(--text-muted);"><i class="fa-solid fa-calendar-clock"
+              style="color: #0284c7; margin-right: 4px;"></i> Data / Hora do Pacote:</span>
+          <strong id="updateRestoreFileDate" style="color: #334155;">--</strong>
+        </div>
       </div>
 
-      <p style="font-size: 0.95rem; color: var(--navy-dark); font-weight: 600; margin-bottom: 1.5rem;">
-        Deseja proceder à instalação desta atualização agora?
+      <!-- Grelha de Componentes de Software -->
+      <div style="margin-bottom: 1.25rem;">
+        <div
+          style="font-size: 0.82rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">
+          <i class="fa-solid fa-cubes" style="color: #0284c7;"></i> Conteúdo do Pacote de Software:
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem;">
+          <div
+            style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.6rem 0.8rem; display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.82rem; color: #475569;"><i class="fa-solid fa-code"
+                style="color: var(--primary-blue); width: 16px;"></i> Componentes:</span>
+            <strong id="updateCountComponents" style="font-size: 1rem; color: #1e3a8a;">Completo</strong>
+          </div>
+          <div
+            style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.6rem 0.8rem; display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.82rem; color: #475569;"><i class="fa-solid fa-layer-group"
+                style="color: var(--primary-blue); width: 16px;"></i> Tipo:</span>
+            <strong id="updateCountModules" style="font-size: 0.82rem; color: #0284c7;">Software SIGEC-Pro</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alerta de Segurança e Proteção Integral de Dados (AGENTS.md) -->
+      <div
+        style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1.25rem; display: flex; align-items: flex-start; gap: 0.6rem;">
+        <i class="fa-solid fa-shield-check" style="color: #15803d; font-size: 1.1rem; margin-top: 2px;"></i>
+        <div style="font-size: 0.8rem; color: #166534; line-height: 1.4;">
+          <strong>Preservação Integral de Dados e Utilizadores:</strong> Todos os seus Clientes, Contactos, Projetos,
+          Interações, Utilizadores e PINs existentes no sistema são <strong>100% mantidos e preservados</strong> sem
+          qualquer alteração.
+        </div>
+      </div>
+
+      <p style="font-size: 0.92rem; color: #1e293b; font-weight: 600; text-align: center; margin-bottom: 1.25rem;">
+        Deseja proceder com a instalação desta atualização agora?
       </p>
 
-      <div style="display: flex; gap: 1rem; justify-content: center;">
-        <button type="button" class="btn" onclick="resolveSystemUpdateConfirm(false)"
-          style="flex: 1; padding: 0.75rem 1.25rem; background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; font-weight: 600; justify-content: center;">
-          <i class="fa-solid fa-xmark"></i> Não
+      <!-- Botões de Ação -->
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center;">
+        <button type="button" class="btn" onclick="closeUpdateConfirmationModal()"
+          style="flex: 1; padding: 0.65rem 1rem; background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; font-weight: 600; justify-content: center;">
+          <i class="fa-solid fa-xmark"></i> Cancelar
         </button>
-        <button type="button" class="btn" onclick="resolveSystemUpdateConfirm(true)"
-          style="flex: 1; padding: 0.75rem 1.25rem; background: #0284c7; color: #ffffff; border: none; font-weight: 600; justify-content: center; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);">
-          <i class="fa-solid fa-check"></i> Sim
+        <button type="button" class="btn" onclick="triggerLocalUpdateFileSelect()"
+          style="padding: 0.65rem 1rem; background: #ffffff; color: #0284c7; border: 1px solid #bae6fd; font-weight: 600; justify-content: center;"
+          title="Escolher outro ficheiro de atualização .json do computador">
+          <i class="fa-solid fa-folder-open"></i> Do Computador...
+        </button>
+        <button type="button" class="btn btn-primary" onclick="resolveSystemUpdateConfirm(true)"
+          style="flex: 1.3; padding: 0.65rem 1.25rem; background: #0284c7; color: #ffffff; border: none; font-weight: 600; justify-content: center; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);">
+          <i class="fa-solid fa-check"></i> Sim, Instalar Atualização
         </button>
       </div>
     </div>
@@ -4544,9 +4750,6 @@
     </div>
   </div>
 
-  <!-- Application Logic & Scripts -->
-  <script src="duplicatesManager.js"></script>
-  <script src="app.js"></script>
 </body>
 
 </html>
