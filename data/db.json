@@ -2634,11 +2634,12 @@
       "andar": "",
       "codigoPostal": "1649-033",
       "localidade": "Lisboa",
+      "pais": "Portugal",
       "telefone": "+351 217 532 000",
       "telemovel": "",
       "email": "comunicacao@jeronimo-martins.com",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "pais": "Portugal"
+      "notas": "",
+      "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
       "id": "cli-1785514129444-833",
@@ -4725,13 +4726,6 @@
       "createdAt": "2026-08-20T07:10:54.165Z"
     },
     {
-      "id": "cpi-1787210126029-44",
-      "contactoId": "con-imp-010",
-      "data": "2026-08-20T09:14",
-      "descricao": "Enviado email de apresentação",
-      "createdAt": "2026-08-20T07:15:26.029Z"
-    },
-    {
       "id": "cpi-1787210309669-171",
       "contactoId": "con-1787210292461-454",
       "data": "2026-07-01T09:16",
@@ -5003,6 +4997,13 @@
       "data": "2026-07-27T13:16",
       "descricao": "Email enviado a Ângela Mónica Rosa, por indicação do Presidente da Fundação",
       "createdAt": "2026-08-20T11:18:54.775Z"
+    },
+    {
+      "id": "cpi-1787336083136-771",
+      "contactoId": "con-1787209259602-763",
+      "data": "2026-07-10T20:12",
+      "descricao": "Enviado email de apresentação",
+      "createdAt": "2026-08-21T18:14:43.136Z"
     }
   ],
   "interacoesProjetos": [],
@@ -5075,7 +5076,43 @@
       "createdAt": "2026-08-14T23:46:52.893Z"
     }
   ],
-  "userLogs": [],
+  "userLogs": [
+    {
+      "id": "log-1787335957507-992",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"JERÓNIMO MARTINS\" (NIF: 500000068) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "JERÓNIMO MARTINS",
+        "contribuinte": "500000068",
+        "tipoCliente": "Privado",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-21T18:12:37.507Z"
+    },
+    {
+      "id": "log-1787335925330-725",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-21T18:12:05.330Z"
+    }
+  ],
   "orcamentos": [
     {
       "id": "orc-norte-2040-004",
@@ -5617,7 +5654,8 @@
     "interacoes": [
       "int-1787045375532-710",
       "int-1787210357662-44",
-      "int-1787222173351-216"
+      "int-1787222173351-216",
+      "cpi-1787210126029-44"
     ],
     "interacoesProjetos": [],
     "orcamentos": [
