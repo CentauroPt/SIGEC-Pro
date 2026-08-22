@@ -5105,25 +5105,6 @@
       "active": true
     },
     {
-      "id": "usr-1786532040835",
-      "nome": "Test User",
-      "email": "test@test.com",
-      "cargo": "Admin",
-      "pin": "1234",
-      "role": "user",
-      "createdAt": "2026-08-12T10:54:00.835Z"
-    },
-    {
-      "id": "usr-1786830129122",
-      "nome": "antonio",
-      "email": "antonio@antonio.es",
-      "cargo": "Teste",
-      "pin": "1234",
-      "role": "user",
-      "active": false,
-      "createdAt": "2026-08-15T21:42:09.122Z"
-    },
-    {
       "id": "usr-1786381890691",
       "nome": "teste",
       "email": "jjota26@gmail.com",
@@ -5187,6 +5168,39 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1787393039768-766",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T10:03:59.768Z"
+    },
+    {
+      "id": "log-1787393039695-782",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Gestão de Utilizadores",
+      "descricao": "Utilizador antonio (antonio@antonio.es) eliminado do sistema.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T10:03:59.695Z"
+    },
+    {
+      "id": "log-1787393038484-215",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Gestão de Utilizadores",
+      "descricao": "Utilizador Test User (test@test.com) eliminado do sistema.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T10:03:58.484Z"
+    },
     {
       "id": "log-1787393036464-849",
       "usuarioId": "usr-admin-001",
@@ -5513,7 +5527,9 @@
       "orc-1786833050377"
     ],
     "usuarios": [
-      "usr-1787036348527"
+      "usr-1787036348527",
+      "usr-1786532040835",
+      "usr-1786830129122"
     ]
   }
 }
