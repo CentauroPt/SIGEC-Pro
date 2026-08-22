@@ -5175,53 +5175,20 @@
   ],
   "userLogs": [
     {
-      "id": "log-1787381997152-869",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Ficha do Utilizador",
-      "descricao": "Dados de registo e PIN do utilizador Francisco atualizados pelo Administrador.",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-22T06:59:57.152Z"
-    },
-    {
-      "id": "log-1787381991945-390",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Ficha do Utilizador",
-      "descricao": "Dados de registo e PIN do utilizador Francisco atualizados pelo Administrador.",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-22T06:59:51.945Z"
-    },
-    {
-      "id": "log-1787381983852-217",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Ficha do Utilizador",
-      "descricao": "Ficha do utilizador Francisco aberta após autenticação de Administrador.",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-22T06:59:43.852Z"
-    },
-    {
-      "id": "log-1787381970126-232",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "id": "log-1787382023548-7",
+      "usuarioId": "usr-1787381168601",
+      "usuarioNome": "Francisco",
+      "usuarioEmail": "Francisco@francisco.es",
       "tipoAcao": "Início de Sessão",
-      "descricao": "Acesso autorizado efetuado por José Centúrio.",
+      "descricao": "Acesso autorizado efetuado por Francisco.",
       "pagina": "Dashboard / Início",
       "detalhes": {
-        "utilizador": "José Centúrio",
-        "email": "jmcenturio@alegria-activity.com",
-        "cargo": "Administrador do Sistema",
+        "utilizador": "Francisco",
+        "email": "Francisco@francisco.es",
+        "cargo": "Comercial",
         "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-22T06:59:30.126Z"
+      "timestamp": "2026-08-22T07:00:23.548Z"
     }
   ],
   "orcamentos": [
