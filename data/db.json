@@ -18,7 +18,10 @@
       "telemovel": "",
       "email": "comunicacao@jeronimo-martins.com",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-004",
@@ -37,7 +40,10 @@
       "telefone": "+351 217 526 100",
       "telemovel": "",
       "email": "miguel.herdade@fundacao-jeronimomartins.com",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-005",
@@ -56,7 +62,10 @@
       "telemovel": "",
       "email": "sara.s.cosme@meo.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "pais": ""
+      "pais": "",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-006",
@@ -75,7 +84,10 @@
       "telemovel": "",
       "email": "carla.porto@thenavigatorcompany.com",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "pais": "Portugal"
+      "pais": "Portugal",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-007",
@@ -95,7 +107,10 @@
       "email": "comunicacao@ren.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": "Portugal",
-      "notas": "energía, electricidad, gas natural, transmisión de energía, sostenibilidad"
+      "notas": "energía, electricidad, gas natural, transmisión de energía, sostenibilidad",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-008",
@@ -115,7 +130,10 @@
       "email": "mota-engil@mota-engil.com",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": "Portugal",
-      "notas": "geral@mota-engil.pt\nconstrucción, infraestructuras, ingeniería, gestión de residuos, concesiones de transporte"
+      "notas": "geral@mota-engil.pt\nconstrucción, infraestructuras, ingeniería, gestión de residuos, concesiones de transporte",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-011",
@@ -135,7 +153,10 @@
       "email": "info@gulbenkian.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": "Portugal",
-      "notas": "Educación, cultura, salud, ciencia, innovación social, sostenibilidad, acción climática y cooperación internacional"
+      "notas": "Educación, cultura, salud, ciencia, innovación social, sostenibilidad, acción climática y cooperación internacional",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-012",
@@ -155,7 +176,10 @@
       "email": "fundacao@vodafone.com",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": "Portugal",
-      "notas": "Temas: educación digital, inclusión social, innovación tecnológica, salud, accesibilidad, respuesta a emergencias y sostenibilidad,"
+      "notas": "Temas: educación digital, inclusión social, innovación tecnológica, salud, accesibilidad, respuesta a emergencias y sostenibilidad,",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-014",
@@ -175,7 +199,10 @@
       "email": "geral@facm.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": "Portugal",
-      "notas": ""
+      "notas": "",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-016",
@@ -195,7 +222,10 @@
       "email": "fundacaoedp@edp.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": "Portugal",
-      "notas": "Temas: Culture, social innovation, and science related to energy"
+      "notas": "Temas: Culture, social innovation, and science related to energy",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-017",
@@ -215,7 +245,10 @@
       "email": "fundacao@ageas.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": "Portugal",
-      "notas": "Temas: saúde, envelhecimento, exclusão social"
+      "notas": "Temas: saúde, envelhecimento, exclusão social",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-018",
@@ -235,7 +268,10 @@
       "email": "fundacaoip@fundacaoip.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": "Portugal",
-      "notas": ""
+      "notas": "",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-019",
@@ -254,7 +290,10 @@
       "telemovel": "",
       "email": "geral@fea.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "pais": "Portugal"
+      "pais": "Portugal",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-020",
@@ -274,7 +313,10 @@
       "email": "fundacao@altice.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": "Portugal",
-      "notas": "Temas: innovación, la inclusión social y el acceso al conocimiento mediante la tecnología"
+      "notas": "Temas: innovación, la inclusión social y el acceso al conocimiento mediante la tecnología",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-021",
@@ -294,7 +336,10 @@
       "email": "geral@fba.org.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": "Portugal",
-      "notas": "Temas: education, social solidarity, and environmental sustainability"
+      "notas": "Temas: education, social solidarity, and environmental sustainability",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-022",
@@ -314,7 +359,10 @@
       "email": "geral@fmam.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": "Portugal",
-      "notas": "Temas: integrated development of communities through initiatives in social development, education, culture, and environmental sustainability"
+      "notas": "Temas: integrated development of communities through initiatives in social development, education, culture, and environmental sustainability",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-023",
@@ -334,7 +382,10 @@
       "email": "hello@joseneves.org",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": "Portugal",
-      "notas": "Temas: ampliar el acceso a la educación, promover las competencias para el futuro y facilitar decisiones informadas sobre formación y empleo"
+      "notas": "Temas: ampliar el acceso a la educación, promover las competencias para el futuro y facilitar decisiones informadas sobre formación y empleo",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-025",
@@ -354,7 +405,10 @@
       "email": "geral@fundacaoluso.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": "Portugal",
-      "notas": "Temas: Promoción de estilos de vida saludables. Educación sobre hidratación. Alimentación equilibrada. Salud pública. Educación ambiental."
+      "notas": "Temas: Promoción de estilos de vida saludables. Educación sobre hidratación. Alimentación equilibrada. Salud pública. Educación ambiental.",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-026",
@@ -374,7 +428,10 @@
       "telemovel": "",
       "email": "akfportugal@akdn.org",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "notas": ""
+      "notas": "",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-027",
@@ -394,7 +451,10 @@
       "email": "fundacaomontepio@montepio.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": "Portugal",
-      "notas": "Temas: educación económica y financiera a través de programas de ciudadanía, ahorro y consumo responsable."
+      "notas": "Temas: educación económica y financiera a través de programas de ciudadanía, ahorro y consumo responsable.",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-028",
@@ -414,7 +474,10 @@
       "email": "info@foriente.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": "Portugal",
-      "notas": "Temas: Cultura, educación, cooperación internacional"
+      "notas": "Temas: Cultura, educación, cooperación internacional",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-029",
@@ -434,7 +497,10 @@
       "email": "fundacao@fmestrecasais.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": "Portugal",
-      "notas": "Temas: Educación, sostenibilidad, acción social"
+      "notas": "Temas: Educación, sostenibilidad, acción social",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-069",
@@ -453,7 +519,10 @@
       "telemovel": "",
       "email": "info@fundacaochampalimaud.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "pais": "Portugal"
+      "pais": "Portugal",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-070",
@@ -473,7 +542,10 @@
       "telemovel": "",
       "email": "fundacao@millenniumbcp.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "notas": "Apoyo a iniciativas de interés cultural, científico y social"
+      "notas": "Apoyo a iniciativas de interés cultural, científico y social",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-071",
@@ -492,7 +564,10 @@
       "telemovel": "",
       "email": "ffms@ffms.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "pais": "Portugal"
+      "pais": "Portugal",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-072",
@@ -1341,7 +1416,10 @@
           "createdAt": "2026-08-16T00:23:46.583Z",
           "updatedAt": "2026-08-16T00:23:46.583Z"
         }
-      ]
+      ],
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-073",
@@ -1361,7 +1439,10 @@
       "telemovel": "",
       "email": "galp@galp.com",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "notas": "AGEAS Seguros - https://www.grupoageas.pt/media/1877/ageas-logo.png?\nMEDIS - https://www.grupoageas.pt/media/1013/medis.\nSeguro Diretos - https://www.grupoageas.pt/media/2764/segurodirectosd.png?png?\nOcidental - https://www.grupoageas.pt/media/2763/ocidentalsd.png?\nAGEAS Pensões - https://www.grupoageas.pt/media/2804/ageaspensoes-logo.png?"
+      "notas": "AGEAS Seguros - https://www.grupoageas.pt/media/1877/ageas-logo.png?\nMEDIS - https://www.grupoageas.pt/media/1013/medis.\nSeguro Diretos - https://www.grupoageas.pt/media/2764/segurodirectosd.png?png?\nOcidental - https://www.grupoageas.pt/media/2763/ocidentalsd.png?\nAGEAS Pensões - https://www.grupoageas.pt/media/2804/ageaspensoes-logo.png?",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-076",
@@ -1381,7 +1462,11 @@
       "email": "media@altice.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": "",
-      "notas": ""
+      "notas": "",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "cli-imp-078",
@@ -1399,7 +1484,10 @@
       "telefone": "210471616",
       "telemovel": "",
       "email": "informacao@ctt.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-079",
@@ -1417,7 +1505,10 @@
       "telefone": "217948800",
       "telemovel": "",
       "email": "apoiocliente@fidelidade.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-081",
@@ -1435,7 +1526,10 @@
       "telefone": "219737000",
       "telemovel": "",
       "email": "geral.pt@omexom.com",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-082",
@@ -1471,7 +1565,10 @@
           "email": "comunicacao@sonae.pt"
         }
       ],
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-085",
@@ -1491,7 +1588,11 @@
       "email": "contacto@bcn.cv",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": "",
-      "notas": ""
+      "notas": "",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "cli-1785514129444-833",
@@ -1509,7 +1610,10 @@
       "telefone": "+351 217 828 400",
       "telemovel": "",
       "email": "",
-      "createdAt": "2026-07-31T16:08:49.444Z"
+      "createdAt": "2026-07-31T16:08:49.444Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-1786604620361-357",
@@ -1527,7 +1631,12 @@
       "telefone": "(+238) 260 46 60",
       "telemovel": "",
       "email": "bca@bca.cv",
-      "createdAt": "2026-08-13T07:03:40.361Z"
+      "createdAt": "2026-08-13T07:03:40.361Z",
+      "pais": "Cabo Verde",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "cli-1787223652146-540",
@@ -1547,7 +1656,10 @@
       "telemovel": "",
       "email": "info@portugalfresh.org",
       "notas": "Frutas, legumes, flores",
-      "createdAt": "2026-08-20T11:00:52.147Z"
+      "createdAt": "2026-08-20T11:00:52.147Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-1787220780995-314",
@@ -1567,7 +1679,10 @@
       "telemovel": "",
       "email": "imprensa@ageas.pt",
       "notas": "AGEAS Seguros - https://www.grupoageas.pt/media/1877/ageas-logo.png?\nMEDIS - https://www.grupoageas.pt/media/1013/medis.\nSeguro Diretos - https://www.grupoageas.pt/media/2764/segurodirectosd.png?png?\nOcidental - https://www.grupoageas.pt/media/2763/ocidentalsd.png?\nAGEAS Pensões - https://www.grupoageas.pt/media/2804/ageaspensoes-logo.png?",
-      "createdAt": "2026-08-20T10:13:00.997Z"
+      "createdAt": "2026-08-20T10:13:00.997Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-1787208572192-719",
@@ -1586,7 +1701,10 @@
       "telefone": "+351 217 242 500",
       "telemovel": "",
       "email": "galp@galp.pt",
-      "createdAt": "2026-08-20T06:49:32.192Z"
+      "createdAt": "2026-08-20T06:49:32.192Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-1787050401189-194",
@@ -1639,7 +1757,10 @@
           "email": "ama@ama.gov.pt"
         }
       ],
-      "createdAt": "2026-08-18T10:53:21.189Z"
+      "createdAt": "2026-08-18T10:53:21.189Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-009",
@@ -1659,7 +1780,10 @@
       "telemovel": "",
       "email": "ines.s.pina@nos.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "notas": ""
+      "notas": "",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-imp-013",
@@ -1679,7 +1803,11 @@
       "email": "fundacaogalp@galp.com",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": "Portugal",
-      "notas": "Temas: Transición energética, acción climática, sostenibilidad, educación, innovación social, biodiversidad y apoyo a comunidades vulnerables"
+      "notas": "Temas: Transición energética, acción climática, sostenibilidad, educación, innovación social, biodiversidad y apoyo a comunidades vulnerables",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "cli-imp-068",
@@ -1699,7 +1827,10 @@
       "email": "serralves@serralves.pt",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "pais": "Portugal",
-      "notas": "Temas: culture, fostering environmental awareness a través del arte"
+      "notas": "Temas: culture, fostering environmental awareness a través del arte",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-1787038283893-566",
@@ -1787,7 +1918,10 @@
           "email": ""
         }
       ],
-      "createdAt": "2026-08-18T07:31:23.893Z"
+      "createdAt": "2026-08-18T07:31:23.893Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-1787038283893-725",
@@ -1858,7 +1992,10 @@
           "email": ""
         }
       ],
-      "createdAt": "2026-08-18T07:31:23.893Z"
+      "createdAt": "2026-08-18T07:31:23.893Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-1787038283893-788",
@@ -1946,7 +2083,10 @@
           "email": ""
         }
       ],
-      "createdAt": "2026-08-18T07:31:23.893Z"
+      "createdAt": "2026-08-18T07:31:23.893Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-1787038283893-151",
@@ -2017,7 +2157,10 @@
           "email": ""
         }
       ],
-      "createdAt": "2026-08-18T07:31:23.893Z"
+      "createdAt": "2026-08-18T07:31:23.893Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-1787038283893-614",
@@ -2088,7 +2231,10 @@
           "telemovel": "",
           "email": ""
         }
-      ]
+      ],
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-1787038283894-313",
@@ -2158,7 +2304,10 @@
           "email": ""
         }
       ],
-      "createdAt": "2026-08-18T07:31:23.894Z"
+      "createdAt": "2026-08-18T07:31:23.894Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-1787038283894-208",
@@ -2304,7 +2453,10 @@
           "telemovel": "",
           "email": ""
         }
-      ]
+      ],
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-1787038283894-101",
@@ -2375,7 +2527,10 @@
         }
       ],
       "createdAt": "2026-08-18T07:31:23.894Z",
-      "notas": ""
+      "notas": "",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-1787038283894-51",
@@ -2429,7 +2584,10 @@
           "email": ""
         }
       ],
-      "createdAt": "2026-08-18T07:31:23.894Z"
+      "createdAt": "2026-08-18T07:31:23.894Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-1787038283894-394",
@@ -2483,7 +2641,10 @@
           "email": ""
         }
       ],
-      "createdAt": "2026-08-18T07:31:23.894Z"
+      "createdAt": "2026-08-18T07:31:23.894Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-1787038283894-699",
@@ -2554,7 +2715,10 @@
           "email": ""
         }
       ],
-      "createdAt": "2026-08-18T07:31:23.894Z"
+      "createdAt": "2026-08-18T07:31:23.894Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-1787038283894-876",
@@ -2608,7 +2772,10 @@
           "telemovel": "",
           "email": ""
         }
-      ]
+      ],
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-1787038283894-503",
@@ -2679,7 +2846,10 @@
           "pais": "Portugal"
         }
       ],
-      "createdAt": "2026-08-18T07:31:23.894Z"
+      "createdAt": "2026-08-18T07:31:23.894Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     }
   ],
   "contactos": [
@@ -2694,7 +2864,9 @@
       "telemovel": "",
       "email": "rui.cabrita@edp.com",
       "notas": "Temas: energía, electricidad, gas natural, energías renovables, descarbonización",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-002",
@@ -2707,7 +2879,9 @@
       "email": "joao.parreira@edp.com",
       "notas": "Temas: energía, electricidad, gas natural, energías renovables, descarbonización",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-003",
@@ -2720,7 +2894,9 @@
       "email": "catarina.barradas@edp.com",
       "notas": "Temas: energía, electricidad, gas natural, energías renovables, descarbonización",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-004",
@@ -2733,7 +2909,9 @@
       "email": "diogo.sousa@galp.com",
       "notas": "Temas: energía, petróleo, gas natural, electricidad, biocombustibles, transición energética, descarbonización",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-005",
@@ -2746,7 +2924,9 @@
       "email": "pedromp@galp.com",
       "notas": "Temas: energía, petróleo, gas natural, electricidad, biocombustibles, transición energética, descarbonización",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-006",
@@ -2759,7 +2939,9 @@
       "email": "goncalo.venancio@galp.com",
       "notas": "Temas: energía, petróleo, gas natural, electricidad, biocombustibles, transición energética, descarbonización",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-007",
@@ -2772,7 +2954,9 @@
       "email": "carlos.relancio@galp.com",
       "notas": "Temas: energía, petróleo, gas natural, electricidad, biocombustibles, transición energética, descarbonización",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-008",
@@ -2785,7 +2969,9 @@
       "telemovel": "",
       "email": "gustavo.sa@galp.com",
       "notas": "Temas: energía, petróleo, gas natural, electricidad, biocombustibles, transición energética, descarbonización",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-010",
@@ -2798,7 +2984,9 @@
       "telemovel": "",
       "email": "duarte.gaspar@jeronimo-martins.pt",
       "notas": "Temas: distribución alimentaria, supermercados, comercio minorista, agroalimentación",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-012",
@@ -2810,7 +2998,9 @@
       "telemovel": "",
       "email": "sara.s.cosme@meo.pt",
       "notas": "Temas: telecomunicaciones, internet, televisión, telefonía móvil, tecnología",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-013",
@@ -2822,7 +3012,9 @@
       "telemovel": "",
       "email": "marcelo.c.prazeres@meo.pt",
       "notas": "Temas: telecomunicaciones, internet, televisión, telefonía móvil, tecnología",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-014",
@@ -2834,7 +3026,9 @@
       "telemovel": "",
       "email": "francisco.m.chaves@meo.pt",
       "notas": "Temas: telecomunicaciones, internet, televisión, telefonía móvil, tecnología",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-015",
@@ -2847,7 +3041,9 @@
       "email": "ana-v-guimaraes@telecom.pt",
       "notas": "Temas: telecomunicaciones, internet, televisión, telefonía móvil, tecnología",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-016",
@@ -2859,7 +3055,9 @@
       "telemovel": "",
       "email": "luis.s.martins@meo.pt",
       "notas": "Temas: telecomunicaciones, internet, televisión, telefonía móvil, tecnología",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-017",
@@ -2872,7 +3070,9 @@
       "email": "carla.porto@thenavigatorcompany.com",
       "notas": "Temas: pasta de celulosa, papel, silvicultura, sostenibilidad, bioindustria",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-018",
@@ -2885,7 +3085,9 @@
       "email": "catarina.alvarez@thenavigatorcompany.com",
       "notas": "Temas: pasta de celulosa, papel, silvicultura, sostenibilidad, bioindustria",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-019",
@@ -2898,7 +3100,9 @@
       "email": "antonio.soares@thenavigatorcompany.com",
       "notas": "Temas: pasta de celulosa, papel, silvicultura, sostenibilidad, bioindustria",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-021",
@@ -2911,7 +3115,9 @@
       "email": "bruno.silva@ren.pt",
       "notas": "Temas: energía, electricidad, gas natural, transmisión de energía, sostenibilidad",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-022",
@@ -2924,7 +3130,9 @@
       "email": "margarida.ferreirinha@ren.pt",
       "notas": "Temas: energía, electricidad, gas natural, transmisión de energía, sostenibilidad",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-023",
@@ -2937,7 +3145,9 @@
       "email": "ronaldo.bernardo@ren.pt",
       "notas": "Temas: energía, electricidad, gas natural, transmisión de energía, sostenibilidad",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-024",
@@ -2950,7 +3160,9 @@
       "email": "pedro.calisto@ren.pt",
       "notas": "Temas: energía, electricidad, gas natural, transmisión de energía, sostenibilidad",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-025",
@@ -2963,7 +3175,9 @@
       "email": "raquel.costa@ren.pt",
       "notas": "Temas: energía, electricidad, gas natural, transmisión de energía, sostenibilidad",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-028",
@@ -2976,7 +3190,9 @@
       "email": "luissilva@mota-engil.pt",
       "notas": "Temas: construcción, infraestructuras, ingeniería, gestión de residuos, concesiones de transporte",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-029",
@@ -2989,7 +3205,9 @@
       "email": "ana.loureiro@mota-engil.pt",
       "notas": "Temas: construcción, infraestructuras, ingeniería, gestión de residuos, concesiones de transporte",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-030",
@@ -3002,7 +3220,9 @@
       "email": "pedro.calem@mota-engil.pt",
       "notas": "Temas: construcción, infraestructuras, ingeniería, gestión de residuos, concesiones de transporte",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-031",
@@ -3015,7 +3235,9 @@
       "email": "jose.araujo@mota-engil.pt",
       "notas": "Temas: construcción, infraestructuras, ingeniería, gestión de residuos, concesiones de transporte",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-032",
@@ -3028,7 +3250,9 @@
       "telemovel": "",
       "email": "ines.s.pina@nos.pt",
       "notas": "Temas: telecomunicaciones, televisión, internet, telefonía móvil, entretenimiento",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-033",
@@ -3041,7 +3265,9 @@
       "telemovel": "",
       "email": "joao.ceriz@nos.pt",
       "notas": "Temas: telecomunicaciones, televisión, internet, telefonía móvil, entretenimiento",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-034",
@@ -3054,7 +3280,9 @@
       "telemovel": "",
       "email": "goncalo.soliveira@nos.pt",
       "notas": "Temas: telecomunicaciones, televisión, internet, telefonía móvil, entretenimiento",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-037",
@@ -3067,7 +3295,9 @@
       "email": "info@gulbenkian.pt",
       "notas": "Temas: educación, cultura, salud, ciencia, innovación social, sostenibilidad, acción climática y cooperación internacional",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-038",
@@ -3080,7 +3310,9 @@
       "email": "fundacao@vodafone.com",
       "notas": "Temas: educación digital, inclusión social, innovación tecnológica, salud, accesibilidad, respuesta a emergencias y sostenibilidad,",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-039",
@@ -3093,7 +3325,10 @@
       "email": "fundacao@galp.com",
       "notas": "Temas: Transición energética, acción climática, sostenibilidad, educación, innovación social, biodiversidad y apoyo a comunidades vulnerables",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-imp-040",
@@ -3106,7 +3341,9 @@
       "email": "geral@facm.pt",
       "notas": "Temas: educación financiera",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-041",
@@ -3119,7 +3356,9 @@
       "email": "fundacao@millenniumbcp.pt",
       "notas": "Temas: apoyo a iniciativas de interés cultural, científico y social",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-042",
@@ -3132,7 +3371,9 @@
       "email": "fundacaoedp@edp.pt",
       "notas": "Temas: Culture, social innovation, and science related to energy",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-043",
@@ -3145,7 +3386,9 @@
       "email": "fundacao@ageas.pt",
       "notas": "Temas: salud, envejecimiento, exclusion social",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-044",
@@ -3158,7 +3401,9 @@
       "email": "fundacaoip@fundacaoip.pt",
       "notas": "Temas: ciencia, la tecnología, la educación, la cultura y el desarrollo humano",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-045",
@@ -3171,7 +3416,9 @@
       "email": "geral@fea.pt",
       "notas": "Temas: cultura, educación, acción social, voluntariado y desarrollo regional",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-046",
@@ -3184,7 +3431,9 @@
       "email": "fundacao@altice.pt",
       "notas": "Temas: innovación, la inclusión social y el acceso al conocimiento mediante la tecnología",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-047",
@@ -3197,7 +3446,9 @@
       "email": "geral@fba.org.pt",
       "notas": "Temas: education, social solidarity, and environmental sustainability",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-048",
@@ -3210,7 +3461,9 @@
       "email": "geral@fmam.pt",
       "notas": "Temas: integrated development of communities through initiatives in social development, education, culture, and environmental sustainability",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-049",
@@ -3223,7 +3476,9 @@
       "email": "hello@joseneves.org",
       "notas": "Temas: ampliar el acceso a la educación, promover las competencias para el futuro y facilitar decisiones informadas sobre formación y empleo",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-050",
@@ -3236,7 +3491,9 @@
       "telemovel": "",
       "email": "serralves@serralves.pt",
       "notas": "Temas: culture, fostering environmental awareness a través del arte",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-051",
@@ -3249,7 +3506,9 @@
       "email": "geral@fundacaoluso.pt",
       "notas": "Temas: Promoción de estilos de vida saludables. Educación sobre hidratación. Alimentación equilibrada. Salud pública. Educación ambiental.",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-052",
@@ -3262,7 +3521,9 @@
       "email": "akfportugal@akdn.org",
       "notas": "Temas: Nutrición infantil. Salud maternoinfantil. Educación para familias. Bienestar comunitario.",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-053",
@@ -3275,7 +3536,9 @@
       "email": "fundacaomontepio@montepio.pt",
       "notas": "Temas: educación económica y financiera a través de programas de ciudadanía, ahorro y consumo responsable.",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-054",
@@ -3288,7 +3551,9 @@
       "email": "info@foriente.pt",
       "notas": "Temas: Cultura, educación, cooperación internacional",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-055",
@@ -3301,7 +3566,9 @@
       "email": "fundacao@fmestrecasais.pt",
       "notas": "Temas: Educación, sostenibilidad, acción social",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-111",
@@ -3314,7 +3581,9 @@
       "email": "ecaramelo@gulbenkian.pt",
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-112",
@@ -3326,7 +3595,9 @@
       "telemovel": "",
       "email": "fundacaoedp@edp.pt",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-113",
@@ -3339,7 +3610,9 @@
       "telemovel": "",
       "email": "serralves@serralves.pt",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-114",
@@ -3351,7 +3624,9 @@
       "telemovel": "",
       "email": "info@fundacaochampalimaud.pt",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-115",
@@ -3364,7 +3639,9 @@
       "email": "fundacao@millenniumbcp.pt",
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-116",
@@ -3377,7 +3654,10 @@
       "email": "fundacaogalp@galp.com",
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-imp-117",
@@ -3389,7 +3669,9 @@
       "telemovel": "",
       "email": "ffms@ffms.pt",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-119",
@@ -3402,7 +3684,9 @@
       "email": "galp@galp.com",
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-120",
@@ -3415,7 +3699,9 @@
       "email": "comunicacao@sonae.pt",
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-122",
@@ -3428,7 +3714,10 @@
       "email": "media@altice.pt",
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-imp-123",
@@ -3441,7 +3730,9 @@
       "telemovel": "",
       "email": "secretaria.geral@nos.pt",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-124",
@@ -3453,7 +3744,9 @@
       "telemovel": "",
       "email": "informacao@ctt.pt",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-125",
@@ -3465,7 +3758,9 @@
       "telemovel": "",
       "email": "apoiocliente@fidelidade.pt",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-126",
@@ -3477,7 +3772,9 @@
       "telemovel": "",
       "email": "edponservices@edp.com",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-127",
@@ -3490,7 +3787,10 @@
       "telemovel": "",
       "email": "contact@alticelabs.com",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-imp-128",
@@ -3503,7 +3803,10 @@
       "telemovel": "",
       "email": "contact@alticelabs.com",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-imp-129",
@@ -3515,7 +3818,9 @@
       "telemovel": "",
       "email": "geral.pt@omexom.com",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-131",
@@ -3528,7 +3833,9 @@
       "email": "comunicacao@sonae.pt",
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-132",
@@ -3541,7 +3848,9 @@
       "email": "edponservices@edp.com",
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-135",
@@ -3553,7 +3862,9 @@
       "telemovel": "",
       "email": "edponservices@edp.com",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-136",
@@ -3566,7 +3877,9 @@
       "telemovel": "",
       "email": "gabriela.leite@ccdr-n.pt",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-137",
@@ -3579,7 +3892,10 @@
       "email": "acoimbra@bcn.cv",
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1785514369861-598",
@@ -3591,7 +3907,9 @@
       "telemovel": "",
       "email": "diogo.madeira@huawei.com",
       "notas": "",
-      "createdAt": "2026-07-31T16:12:49.863Z"
+      "createdAt": "2026-07-31T16:12:49.863Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1785515106421-857",
@@ -3604,7 +3922,10 @@
       "email": "paulo.lima@bcn.cv",
       "notas": "",
       "createdAt": "2026-07-31T16:25:06.422Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1785755195297-108",
@@ -3617,7 +3938,9 @@
       "email": "ines.alberto@fundacao-jeronimomartins.com",
       "notas": "",
       "createdAt": "2026-08-03T11:06:35.298Z",
-      "subTabIndex": 0
+      "subTabIndex": 0,
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1785825214404-496",
@@ -3629,7 +3952,9 @@
       "telemovel": "+351 910 016 837",
       "email": "henrique.street@huawei.com",
       "notas": "",
-      "createdAt": "2026-08-04T06:33:34.405Z"
+      "createdAt": "2026-08-04T06:33:34.405Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1785826295654-612",
@@ -3641,7 +3966,9 @@
       "telemovel": "+351 964 354 106",
       "email": "daniel.paiva@huawei.com",
       "notas": "",
-      "createdAt": "2026-08-04T06:51:35.654Z"
+      "createdAt": "2026-08-04T06:51:35.654Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1786605035080-194",
@@ -3654,7 +3981,10 @@
       "telemovel": "",
       "email": "msanches@bca.cv",
       "notas": "",
-      "createdAt": "2026-08-13T07:10:35.080Z"
+      "createdAt": "2026-08-13T07:10:35.080Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787036001308-748",
@@ -3669,7 +3999,9 @@
       "notas": "",
       "createdAt": "2026-08-18T06:53:21.308Z",
       "separadorId": "sep-1786751754158-584",
-      "empresa": "Ministério da Economia e da Coesão Territorial - Ministério da Economia e da Coesão Territorial"
+      "empresa": "Ministério da Economia e da Coesão Territorial - Ministério da Economia e da Coesão Territorial",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-546",
@@ -3682,7 +4014,9 @@
       "telemovel": "",
       "email": "gabinete.ms@ms.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-378",
@@ -3695,7 +4029,9 @@
       "telemovel": "",
       "email": "geral@dgs.min-saude.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-629",
@@ -3708,7 +4044,9 @@
       "telemovel": "",
       "email": "gabinete.ses@ms.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-95",
@@ -3721,7 +4059,9 @@
       "telemovel": "",
       "email": "gabinete.maen@maen.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-799",
@@ -3734,7 +4074,9 @@
       "telemovel": "",
       "email": "geral@dgeg.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-518",
@@ -3747,7 +4089,9 @@
       "telemovel": "",
       "email": "gabinete.seen@maen.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-481",
@@ -3760,7 +4104,9 @@
       "telemovel": "",
       "email": "gabinete.seamb@maen.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-21",
@@ -3773,7 +4119,9 @@
       "telemovel": "",
       "email": "gabinete.magrim@magrim.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-920",
@@ -3786,7 +4134,9 @@
       "telemovel": "",
       "email": "gabinete.seagri@magrim.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-529",
@@ -3799,7 +4149,9 @@
       "telemovel": "",
       "email": "dgadr@dgadr.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-884",
@@ -3812,7 +4164,9 @@
       "telemovel": "",
       "email": "gabinete.mcjd@mcjd.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-992",
@@ -3825,7 +4179,9 @@
       "telemovel": "",
       "email": "gabinete.Ministro@mf.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-306",
@@ -3838,7 +4194,9 @@
       "telemovel": "",
       "email": "gabinete.sed@mcjd.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-684",
@@ -3851,7 +4209,9 @@
       "telemovel": "",
       "email": "gabinete.seaji@mcjd.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-204",
@@ -3864,7 +4224,9 @@
       "telemovel": "",
       "email": "gabinete.meci@meci.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-826",
@@ -3877,7 +4239,9 @@
       "telemovel": "",
       "email": "gabinete.simplificacao@mare.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-72",
@@ -3890,7 +4254,9 @@
       "telemovel": "",
       "email": "dge@dge.mec.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-379",
@@ -3903,7 +4269,9 @@
       "telemovel": "",
       "email": "gabinete.mtsss@mtsss.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-965",
@@ -3916,7 +4284,9 @@
       "telemovel": "",
       "email": "gabinete.seasi@mtsss.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-251",
@@ -3929,7 +4299,9 @@
       "telemovel": "",
       "email": "gabinete.seasi@mtsss.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-608",
@@ -3958,7 +4330,9 @@
       "telemovel": "",
       "email": "gabinete.mai@mai.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-609",
@@ -3971,7 +4345,9 @@
       "telemovel": "",
       "email": "gabinete.mai@mai.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-87",
@@ -3984,7 +4360,9 @@
       "telemovel": "",
       "email": "gabinete.seai@mai.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-175",
@@ -3997,7 +4375,9 @@
       "telemovel": "",
       "email": "gabinete.seai@mai.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-360",
@@ -4010,7 +4390,9 @@
       "telemovel": "",
       "email": "gabinete.mih@mih.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-386",
@@ -4023,7 +4405,9 @@
       "telemovel": "",
       "email": "gabinete.mih@mih.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-932",
@@ -4036,7 +4420,9 @@
       "telemovel": "",
       "email": "gabinete.seinf@mih.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-649",
@@ -4049,7 +4435,9 @@
       "telemovel": "",
       "email": "gabinete.seinf@mih.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-943",
@@ -4062,7 +4450,9 @@
       "telemovel": "",
       "email": "gabinete.mj@mj.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-801",
@@ -4075,7 +4465,9 @@
       "telemovel": "",
       "email": "gabinete.mj@mj.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-715",
@@ -4088,7 +4480,9 @@
       "telemovel": "",
       "email": "gabinete.sej@mj.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-422",
@@ -4101,7 +4495,9 @@
       "telemovel": "",
       "email": "gabinete.sej@mj.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-162",
@@ -4114,7 +4510,9 @@
       "telemovel": "",
       "email": "gabinete.Ministro@mdn.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-1",
@@ -4127,7 +4525,9 @@
       "telemovel": "",
       "email": "gabinete.Ministro@mdn.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-190",
@@ -4140,7 +4540,9 @@
       "telemovel": "",
       "email": "dgrdn@defesa.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-561",
@@ -4153,7 +4555,9 @@
       "telemovel": "",
       "email": "gabinete.map@map.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-370",
@@ -4166,7 +4570,9 @@
       "telemovel": "",
       "email": "gabinete.map@map.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-253",
@@ -4179,7 +4585,9 @@
       "telemovel": "",
       "email": "gabinete.Ministro@mare.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-735",
@@ -4192,7 +4600,9 @@
       "telemovel": "",
       "email": "gabinete.ministro@mare.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-580",
@@ -4207,7 +4617,9 @@
       "email": "gabinete.digitalizacao@mare.gov.pt",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "subTabIndex": 1,
-      "notas": ""
+      "notas": "",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-443",
@@ -4220,7 +4632,9 @@
       "telemovel": "",
       "email": "gabinete.digitalizacao@mare.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-527",
@@ -4233,7 +4647,9 @@
       "telemovel": "",
       "email": "gabinete.simplificacao@mare.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-380",
@@ -4246,7 +4662,9 @@
       "telemovel": "",
       "email": "gabinete.mect@mect.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-881",
@@ -4259,7 +4677,9 @@
       "telemovel": "",
       "email": "gabinete.mect@mect.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-352",
@@ -4272,7 +4692,9 @@
       "telemovel": "",
       "email": "gabinete.setcs@mect.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-425",
@@ -4285,7 +4707,9 @@
       "telemovel": "",
       "email": "gabinete.setcs@mect.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-473",
@@ -4300,7 +4724,9 @@
       "email": "gabinete.mp@mp.gov.pt",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "subTabIndex": 1,
-      "notas": ""
+      "notas": "",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-212",
@@ -4313,7 +4739,9 @@
       "telemovel": "",
       "email": "gabinete.mp@mp.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-210",
@@ -4326,7 +4754,9 @@
       "telemovel": "",
       "email": "gabinete.Ministro@mne.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-325",
@@ -4339,7 +4769,9 @@
       "telemovel": "",
       "email": "gabinete.senec@mne.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787209259602-763",
@@ -4352,7 +4784,9 @@
       "telemovel": "",
       "email": "comunicacao@jeronimo-martins.com",
       "notas": "",
-      "createdAt": "2026-08-20T07:00:59.602Z"
+      "createdAt": "2026-08-20T07:00:59.602Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787210292461-454",
@@ -4365,7 +4799,9 @@
       "telemovel": "",
       "email": "miguel.herdade@fundacao-jeronimomartins.com",
       "notas": "",
-      "createdAt": "2026-08-20T07:18:12.461Z"
+      "createdAt": "2026-08-20T07:18:12.461Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787211155795-660",
@@ -4378,7 +4814,9 @@
       "telemovel": "",
       "email": "rita.lopes@fundacao-jeronimomartins.com",
       "notas": "",
-      "createdAt": "2026-08-20T07:32:35.795Z"
+      "createdAt": "2026-08-20T07:32:35.795Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787212244055-667",
@@ -4391,7 +4829,9 @@
       "telemovel": "",
       "email": "antonio.redondo@thenavigatorcompany.com",
       "notas": "",
-      "createdAt": "2026-08-20T07:50:44.055Z"
+      "createdAt": "2026-08-20T07:50:44.055Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787217817944-195",
@@ -4404,7 +4844,9 @@
       "telemovel": "",
       "email": "luis.costa@nos.pt",
       "notas": "",
-      "createdAt": "2026-08-20T09:23:37.949Z"
+      "createdAt": "2026-08-20T09:23:37.949Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787218548447-659",
@@ -4417,7 +4859,9 @@
       "telemovel": "",
       "email": "sbarbeiro@gulbenkian.pt",
       "notas": "gestora de projetos no Programa Equidade e Sustentabilidade da Fundação Calouste Gulbenkian, nas áreas:\nOceano e Biodiversidade.",
-      "createdAt": "2026-08-20T09:35:48.447Z"
+      "createdAt": "2026-08-20T09:35:48.447Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787219831100-393",
@@ -4430,7 +4874,9 @@
       "telemovel": "",
       "email": "antonio.almeida@edpr.com",
       "notas": "",
-      "createdAt": "2026-08-20T09:57:11.100Z"
+      "createdAt": "2026-08-20T09:57:11.100Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787220906707-770",
@@ -4443,7 +4889,9 @@
       "telemovel": "",
       "email": "angela.rosario@ageas.pt",
       "notas": "",
-      "createdAt": "2026-08-20T10:15:06.707Z"
+      "createdAt": "2026-08-20T10:15:06.707Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787221499857-844",
@@ -4456,7 +4904,9 @@
       "telemovel": "",
       "email": "alexandre.barrigo@fea.pt",
       "notas": "",
-      "createdAt": "2026-08-20T10:24:59.857Z"
+      "createdAt": "2026-08-20T10:24:59.857Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787221550396-221",
@@ -4469,7 +4919,9 @@
       "telemovel": "",
       "email": "pedro.oliveira@fea.pt",
       "notas": "",
-      "createdAt": "2026-08-20T10:25:50.396Z"
+      "createdAt": "2026-08-20T10:25:50.396Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787221589050-598",
@@ -4482,7 +4934,9 @@
       "telemovel": "",
       "email": "nicole.antunes@fea.pt",
       "notas": "",
-      "createdAt": "2026-08-20T10:26:29.050Z"
+      "createdAt": "2026-08-20T10:26:29.050Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787223753515-9",
@@ -4495,7 +4949,9 @@
       "telemovel": "",
       "email": "",
       "notas": "",
-      "createdAt": "2026-08-20T11:02:33.515Z"
+      "createdAt": "2026-08-20T11:02:33.515Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     }
   ],
   "projetos": [
@@ -4517,7 +4973,9 @@
       "documents": [],
       "media": [],
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "obs": "CCDR-N (Comissão de Coordenação e Desenvolvimento Regional do Norte)"
+      "obs": "CCDR-N (Comissão de Coordenação e Desenvolvimento Regional do Norte)",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "proj-huawei-smartbus",
@@ -4536,7 +4994,9 @@
       "contacto1Id": "con-1785514369861-598",
       "contacto2Id": "con-1785825214404-496",
       "documents": [],
-      "media": []
+      "media": [],
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "proj-bcn-camiao",
@@ -4566,7 +5026,10 @@
       "documents": [],
       "media": [],
       "createdAt": "2026-07-27T09:00:00.000Z",
-      "obs": "Banco Caboverdiano de Negócios - BCN"
+      "obs": "Banco Caboverdiano de Negócios - BCN",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "proj-bcn-furgao",
@@ -4596,7 +5059,10 @@
       "documents": [],
       "media": [],
       "createdAt": "2026-07-27T09:00:00.000Z",
-      "obs": "Banco Caboverdiano de Negócios - BCN"
+      "obs": "Banco Caboverdiano de Negócios - BCN",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     }
   ],
   "interacoes": [
@@ -4614,7 +5080,9 @@
       "clienteId": "cli-imp-085",
       "data": "2026-07-27T18:34",
       "descricao": "Reunião com o administrador do banco e como diretor comercial",
-      "createdAt": "2026-07-31T16:36:16.952Z"
+      "createdAt": "2026-07-31T16:36:16.952Z",
+      "userId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "int-1785515921992-452",
@@ -5001,6 +5469,17 @@
       "data": "2026-07-10T20:12",
       "descricao": "Enviado email de apresentação",
       "createdAt": "2026-08-21T18:14:43.136Z"
+    },
+    {
+      "id": "int-1787435676084-106",
+      "clienteId": "cli-imp-085",
+      "separadorId": null,
+      "subTabIndex": null,
+      "data": "2026-08-17T23:53",
+      "descricao": "Enviado os orçamentos por email",
+      "createdAt": "2026-08-22T21:54:36.084Z",
+      "userId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     }
   ],
   "interacoesProjetos": [],
@@ -5043,151 +5522,26 @@
   ],
   "userLogs": [
     {
-      "id": "log-1787427676151-704",
+      "id": "log-1787442378899-323",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Ministério do Trabalho, Solidariedade e Segurança Social\" (NIF: 000000000) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Ministério do Trabalho, Solidariedade e Segurança Social",
-        "contribuinte": "000000000",
-        "tipoCliente": "Estatal",
-        "comercialAtribuido": "José Centúrio",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas nos campos principais"
-          }
-        ]
-      },
-      "timestamp": "2026-08-22T19:41:16.151Z"
-    },
-    {
-      "id": "log-1787427565103-752",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Ministério do Trabalho, Solidariedade e Segurança Social\" (NIF: 000000000) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Ministério do Trabalho, Solidariedade e Segurança Social",
-        "contribuinte": "000000000",
-        "tipoCliente": "Estatal",
-        "comercialAtribuido": "José Centúrio",
-        "camposAlterados": [
-          {
-            "campo": "Comercial Atribuído",
-            "anterior": "(vazio)",
-            "novo": "José Centúrio"
-          }
-        ]
-      },
-      "timestamp": "2026-08-22T19:39:25.103Z"
-    },
-    {
-      "id": "log-1787427553416-147",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Direção Geral de Segurança Social\" (NIF: 000000000) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Direção Geral de Segurança Social",
-        "contribuinte": "000000000",
-        "tipoCliente": "Estatal",
-        "comercialAtribuido": "José Centúrio",
-        "camposAlterados": [
-          {
-            "campo": "Comercial Atribuído",
-            "anterior": "(vazio)",
-            "novo": "José Centúrio"
-          }
-        ]
-      },
-      "timestamp": "2026-08-22T19:39:13.416Z"
-    },
-    {
-      "id": "log-1787427488021-582",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Dados de registo e PIN do utilizador Steve Jobs atualizados pelo Administrador.",
       "pagina": "Base de Dados",
       "detalhes": null,
-      "timestamp": "2026-08-22T19:38:08.021Z"
+      "timestamp": "2026-08-22T23:46:18.899Z"
     },
     {
-      "id": "log-1787427481349-481",
+      "id": "log-1787442374990-274",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Restauro de Backup",
-      "descricao": "Cópia de segurança \"Backup_SIGEC-Pro_22-08-2026_00-29-07.json\" restaurada (58 Clientes, 140 Contactos, 4 Projetos).",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Ficha do utilizador Steve Jobs aberta após autenticação de Administrador.",
       "pagina": "Base de Dados",
       "detalhes": null,
-      "timestamp": "2026-08-22T19:38:01.349Z"
-    },
-    {
-      "id": "log-1787427405609-573",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Direção Geral de Segurança Social\" (NIF: 000000000) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Direção Geral de Segurança Social",
-        "contribuinte": "000000000",
-        "tipoCliente": "Estatal",
-        "comercialAtribuido": "José Centúrio",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas nos campos principais"
-          }
-        ]
-      },
-      "timestamp": "2026-08-22T19:36:45.609Z"
-    },
-    {
-      "id": "log-1787427376098-823",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Direção Geral de Segurança Social\" (NIF: 000000000) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Direção Geral de Segurança Social",
-        "contribuinte": "000000000",
-        "tipoCliente": "Estatal",
-        "comercialAtribuido": "José Centúrio",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas nos campos principais"
-          }
-        ]
-      },
-      "timestamp": "2026-08-22T19:36:16.098Z"
+      "timestamp": "2026-08-22T23:46:14.990Z"
     }
   ],
   "orcamentos": [
@@ -5259,17 +5613,6 @@
       "id1": "cli-1786727373519-853",
       "ignoredAt": "2026-08-22T10:13:13.470Z",
       "ignoredBy": "Sistema"
-    }
-  ],
-  "activityHistory": [
-    {
-      "id": "act-1787429964108-qeul",
-      "userId": "usr-admin-001",
-      "action": "DUPLICATE_MERGE",
-      "entity": "clientes",
-      "entityId": "cli-imp-013",
-      "details": "Fusão de 2 registos duplicados em \"Fundação Galp\". 2 vínculos reatribuídos com sucesso.",
-      "timestamp": "2026-08-22T20:19:24.108Z"
     }
   ],
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
