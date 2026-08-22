@@ -5105,27 +5105,6 @@
       "active": true
     },
     {
-      "id": "usr-1786751212893",
-      "nome": "Vasco",
-      "email": "vasco@sigec.pt",
-      "cargo": "Administrador",
-      "pin": "1971",
-      "role": "user",
-      "active": false,
-      "createdAt": "2026-08-14T23:46:52.893Z"
-    },
-    {
-      "id": "usr-1787382171866",
-      "nome": "Marco",
-      "email": "marco@marco.es",
-      "cargo": "Administrador do Sistema",
-      "idioma": "Español",
-      "pin": "J*cen*1971",
-      "role": "user",
-      "active": true,
-      "createdAt": "2026-08-22T07:02:51.866Z"
-    },
-    {
       "id": "usr-1787388410312",
       "nome": "Steve",
       "email": "Steve@steve.com",
@@ -5149,6 +5128,39 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1787393048545-946",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Gestão de Utilizadores",
+      "descricao": "Utilizador Marco (marco@marco.es) eliminado do sistema.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T10:04:08.545Z"
+    },
+    {
+      "id": "log-1787393046086-240",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T10:04:06.086Z"
+    },
+    {
+      "id": "log-1787393045521-503",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Gestão de Utilizadores",
+      "descricao": "Utilizador Vasco (vasco@sigec.pt) eliminado do sistema.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T10:04:05.521Z"
+    },
     {
       "id": "log-1787393043193-100",
       "usuarioId": "usr-admin-001",
@@ -5545,7 +5557,9 @@
       "usr-1786532040835",
       "usr-1786830129122",
       "usr-1786381890691",
-      "usr-1786749064522"
+      "usr-1786749064522",
+      "usr-1786751212893",
+      "usr-1787382171866"
     ]
   }
 }
