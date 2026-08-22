@@ -5175,7 +5175,7 @@
   ],
   "userLogs": [
     {
-      "id": "log-1787382023548-7",
+      "id": "log-1787382102468-631",
       "usuarioId": "usr-1787381168601",
       "usuarioNome": "Francisco",
       "usuarioEmail": "Francisco@francisco.es",
@@ -5188,7 +5188,7 @@
         "cargo": "Comercial",
         "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-22T07:00:23.548Z"
+      "timestamp": "2026-08-22T07:01:42.468Z"
     }
   ],
   "orcamentos": [
