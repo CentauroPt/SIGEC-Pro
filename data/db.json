@@ -5187,20 +5187,64 @@
   ],
   "userLogs": [
     {
-      "id": "log-1787382507345-374",
-      "usuarioId": "usr-1787382171866",
-      "usuarioNome": "Marco",
-      "usuarioEmail": "marco@marco.es",
+      "id": "log-1787382594564-237",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Dados de registo e PIN do utilizador Marco atualizados pelo Administrador.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T07:09:54.564Z"
+    },
+    {
+      "id": "log-1787382581807-705",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Ficha do utilizador Marco aberta após autenticação de Administrador.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T07:09:41.807Z"
+    },
+    {
+      "id": "log-1787382566322-418",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Dados de registo e PIN do utilizador Marco atualizados pelo Administrador.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T07:09:26.322Z"
+    },
+    {
+      "id": "log-1787382554640-675",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Ficha do utilizador Marco aberta após autenticação de Administrador.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T07:09:14.640Z"
+    },
+    {
+      "id": "log-1787382537745-492",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
       "tipoAcao": "Início de Sessão",
-      "descricao": "Acesso autorizado efetuado por Marco.",
+      "descricao": "Acesso autorizado efetuado por José Centúrio.",
       "pagina": "Dashboard / Início",
       "detalhes": {
-        "utilizador": "Marco",
-        "email": "marco@marco.es",
+        "utilizador": "José Centúrio",
+        "email": "jmcenturio@alegria-activity.com",
         "cargo": "Administrador do Sistema",
         "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-22T07:08:27.345Z"
+      "timestamp": "2026-08-22T07:08:57.746Z"
     }
   ],
   "orcamentos": [
