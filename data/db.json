@@ -5105,64 +5105,6 @@
       "active": true
     },
     {
-      "id": "usr-1786532040835",
-      "nome": "Test User",
-      "email": "test@test.com",
-      "cargo": "Admin",
-      "pin": "1234",
-      "role": "user",
-      "createdAt": "2026-08-12T10:54:00.835Z"
-    },
-    {
-      "id": "usr-1787036348527",
-      "nome": "Test User",
-      "email": "test@example.com",
-      "cargo": "Developer",
-      "pin": "1234",
-      "role": "user",
-      "active": false,
-      "createdAt": "2026-08-18T06:59:08.527Z"
-    },
-    {
-      "id": "usr-1786830129122",
-      "nome": "antonio",
-      "email": "antonio@antonio.es",
-      "cargo": "Teste",
-      "pin": "1234",
-      "role": "user",
-      "active": false,
-      "createdAt": "2026-08-15T21:42:09.122Z"
-    },
-    {
-      "id": "usr-1786381890691",
-      "nome": "teste",
-      "email": "jjota26@gmail.com",
-      "cargo": "teste",
-      "pin": "1234",
-      "role": "user",
-      "createdAt": "2026-08-10T17:11:30.691Z"
-    },
-    {
-      "id": "usr-1786749064522",
-      "nome": "Test User",
-      "email": "test@empresa.com",
-      "cargo": "Tester",
-      "pin": "J*cen*1971",
-      "role": "user",
-      "active": false,
-      "createdAt": "2026-08-14T23:11:04.522Z"
-    },
-    {
-      "id": "usr-1786751212893",
-      "nome": "Vasco",
-      "email": "vasco@sigec.pt",
-      "cargo": "Administrador",
-      "pin": "1971",
-      "role": "user",
-      "active": false,
-      "createdAt": "2026-08-14T23:46:52.893Z"
-    },
-    {
       "id": "usr-1787381168601",
       "nome": "Francisco",
       "email": "Francisco@francisco.es",
@@ -5172,46 +5114,140 @@
       "role": "user",
       "active": true,
       "createdAt": "2026-08-22T06:46:08.601Z"
-    },
-    {
-      "id": "usr-1787382171866",
-      "nome": "Marco",
-      "email": "marco@marco.es",
-      "cargo": "Administrador do Sistema",
-      "idioma": "Español",
-      "pin": "J*cen*1971",
-      "role": "user",
-      "active": true,
-      "createdAt": "2026-08-22T07:02:51.866Z"
-    },
-    {
-      "id": "usr-1787388410312",
-      "nome": "Steve",
-      "email": "Steve@steve.com",
-      "cargo": "Comercial",
-      "idioma": "English",
-      "pin": "J*cen*1971",
-      "role": "user",
-      "active": true,
-      "createdAt": "2026-08-22T08:46:50.312Z"
     }
   ],
   "userLogs": [
     {
-      "id": "log-1787393093952-924",
-      "usuarioId": "usr-1787388410312",
-      "usuarioNome": "Steve",
-      "usuarioEmail": "Steve@steve.com",
-      "tipoAcao": "Início de Sessão",
-      "descricao": "Acesso autorizado efetuado por Steve.",
-      "pagina": "Dashboard / Início",
-      "detalhes": {
-        "utilizador": "Steve",
-        "email": "Steve@steve.com",
-        "cargo": "Comercial",
-        "dispositivo": "Computador"
-      },
-      "timestamp": "2026-08-22T10:04:53.952Z"
+      "id": "log-1787393126676-449",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Gestão de Utilizadores",
+      "descricao": "Utilizador Steve (Steve@steve.com) eliminado do sistema.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T10:05:26.676Z"
+    },
+    {
+      "id": "log-1787393052201-205",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T10:04:12.201Z"
+    },
+    {
+      "id": "log-1787393048545-946",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Gestão de Utilizadores",
+      "descricao": "Utilizador Marco (marco@marco.es) eliminado do sistema.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T10:04:08.545Z"
+    },
+    {
+      "id": "log-1787393046086-240",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T10:04:06.086Z"
+    },
+    {
+      "id": "log-1787393045521-503",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Gestão de Utilizadores",
+      "descricao": "Utilizador Vasco (vasco@sigec.pt) eliminado do sistema.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T10:04:05.521Z"
+    },
+    {
+      "id": "log-1787393043193-100",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T10:04:03.193Z"
+    },
+    {
+      "id": "log-1787393043118-138",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Gestão de Utilizadores",
+      "descricao": "Utilizador Test User (test@empresa.com) eliminado do sistema.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T10:04:03.118Z"
+    },
+    {
+      "id": "log-1787393042288-192",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Gestão de Utilizadores",
+      "descricao": "Utilizador teste (jjota26@gmail.com) eliminado do sistema.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T10:04:02.288Z"
+    },
+    {
+      "id": "log-1787393039768-766",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T10:03:59.768Z"
+    },
+    {
+      "id": "log-1787393039695-782",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Gestão de Utilizadores",
+      "descricao": "Utilizador antonio (antonio@antonio.es) eliminado do sistema.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T10:03:59.695Z"
+    },
+    {
+      "id": "log-1787393038484-215",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Gestão de Utilizadores",
+      "descricao": "Utilizador Test User (test@test.com) eliminado do sistema.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T10:03:58.484Z"
+    },
+    {
+      "id": "log-1787393036464-849",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Gestão de Utilizadores",
+      "descricao": "Utilizador Test User (test@example.com) eliminado do sistema.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T10:03:56.464Z"
     }
   ],
   "orcamentos": [
@@ -5526,6 +5562,16 @@
     "interacoesProjetos": [],
     "orcamentos": [
       "orc-1786833050377"
+    ],
+    "usuarios": [
+      "usr-1787036348527",
+      "usr-1786532040835",
+      "usr-1786830129122",
+      "usr-1786381890691",
+      "usr-1786749064522",
+      "usr-1786751212893",
+      "usr-1787382171866",
+      "usr-1787388410312"
     ]
   }
 }
