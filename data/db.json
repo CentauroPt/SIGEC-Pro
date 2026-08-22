@@ -5187,7 +5187,7 @@
   ],
   "userLogs": [
     {
-      "id": "log-1787382297131-648",
+      "id": "log-1787382507345-374",
       "usuarioId": "usr-1787382171866",
       "usuarioNome": "Marco",
       "usuarioEmail": "marco@marco.es",
@@ -5200,7 +5200,7 @@
         "cargo": "Administrador do Sistema",
         "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-22T07:04:57.131Z"
+      "timestamp": "2026-08-22T07:08:27.345Z"
     }
   ],
   "orcamentos": [
