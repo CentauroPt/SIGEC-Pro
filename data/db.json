@@ -1786,28 +1786,6 @@
       "comercialAtribuidoNome": "José Centúrio"
     },
     {
-      "id": "cli-1787208572192-719",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "Galp Energia, SGPS, S.A.",
-      "contribuinte": "000000000",
-      "direcao1": "Avenida da Índia",
-      "direcao2": "",
-      "numero": "8",
-      "andar": "",
-      "codigoPostal": "1349-065",
-      "localidade": "Lisboa",
-      "pais": "Portugal",
-      "telefone": "+351 217 242 500",
-      "telemovel": "",
-      "email": "galp@galp.pt",
-      "createdAt": "2026-08-20T06:49:32.192Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio"
-    },
-    {
       "id": "cli-1787050401189-194",
       "tipoCliente": "Estatal",
       "ministerio": "Ministério da Presidência",
@@ -5230,15 +5208,6 @@
       "createdAt": "2026-08-19T11:45:26.194Z"
     },
     {
-      "id": "int-1787208850710-673",
-      "clienteId": "cli-1787208572192-719",
-      "separadorId": null,
-      "subTabIndex": null,
-      "data": "2026-06-29T08:43",
-      "descricao": "Enviado email de apresentação da empresa.",
-      "createdAt": "2026-08-20T06:54:10.710Z"
-    },
-    {
       "id": "int-1787209041367-69",
       "clienteId": "cli-imp-003",
       "separadorId": null,
@@ -5575,6 +5544,34 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787399683701-5",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Galp Energia, SGPS, S.A.\" (NIF: 000000000) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Galp Energia, SGPS, S.A.",
+        "contribuinte": "000000000",
+        "tipoCliente": "Privado"
+      },
+      "timestamp": "2026-08-22T11:54:43.701Z"
+    },
+    {
+      "id": "log-1787399648374-656",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-22T11:54:08.374Z"
+    },
+    {
       "id": "log-1787399645109-61",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -5814,7 +5811,8 @@
       "cli-imp-002",
       "cli-imp-001",
       "cli-imp-080",
-      "cli-imp-013"
+      "cli-imp-013",
+      "cli-1787208572192-719"
     ],
     "contactos": [
       "con-imp-059",
@@ -5908,7 +5906,8 @@
       "int-1787045375532-710",
       "int-1787210357662-44",
       "int-1787222173351-216",
-      "cpi-1787210126029-44"
+      "cpi-1787210126029-44",
+      "int-1787208850710-673"
     ],
     "interacoesProjetos": [],
     "orcamentos": [
