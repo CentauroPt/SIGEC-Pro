@@ -5114,16 +5114,6 @@
       "createdAt": "2026-08-12T10:54:00.835Z"
     },
     {
-      "id": "usr-1787036348527",
-      "nome": "Test User",
-      "email": "test@example.com",
-      "cargo": "Developer",
-      "pin": "1234",
-      "role": "user",
-      "active": false,
-      "createdAt": "2026-08-18T06:59:08.527Z"
-    },
-    {
       "id": "usr-1786830129122",
       "nome": "antonio",
       "email": "antonio@antonio.es",
@@ -5163,17 +5153,6 @@
       "createdAt": "2026-08-14T23:46:52.893Z"
     },
     {
-      "id": "usr-1787381168601",
-      "nome": "Francisco",
-      "email": "Francisco@francisco.es",
-      "cargo": "Comercial",
-      "idioma": "Español",
-      "pin": "J*cen*1971",
-      "role": "user",
-      "active": true,
-      "createdAt": "2026-08-22T06:46:08.601Z"
-    },
-    {
       "id": "usr-1787382171866",
       "nome": "Marco",
       "email": "marco@marco.es",
@@ -5194,9 +5173,32 @@
       "role": "user",
       "active": true,
       "createdAt": "2026-08-22T08:46:50.312Z"
+    },
+    {
+      "id": "usr-1787381168601",
+      "nome": "Francisco",
+      "email": "Francisco@francisco.es",
+      "cargo": "Comercial",
+      "idioma": "Español",
+      "pin": "J*cen*1971",
+      "role": "user",
+      "active": true,
+      "createdAt": "2026-08-22T06:46:08.601Z"
     }
   ],
-  "userLogs": [],
+  "userLogs": [
+    {
+      "id": "log-1787393036464-849",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Gestão de Utilizadores",
+      "descricao": "Utilizador Test User (test@example.com) eliminado do sistema.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T10:03:56.464Z"
+    }
+  ],
   "orcamentos": [
     {
       "id": "orc-norte-2040-004",
@@ -5509,6 +5511,9 @@
     "interacoesProjetos": [],
     "orcamentos": [
       "orc-1786833050377"
+    ],
+    "usuarios": [
+      "usr-1787036348527"
     ]
   }
 }
