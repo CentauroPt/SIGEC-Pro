@@ -1,24 +1,6 @@
 {
   "clientes": [
     {
-      "id": "cli-1786727373519-853",
-      "tipoCliente": "Fundação",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "Fundação Galp",
-      "contribuinte": "000000000",
-      "direcao1": "Rua Tomás da Fonseca",
-      "direcao2": "Torre C",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1600-209",
-      "localidade": "Lisboa",
-      "telefone": "+351 217 242 500",
-      "telemovel": "",
-      "email": "fundacao@galp.com",
-      "createdAt": "2026-08-14T17:09:33.519Z"
-    },
-    {
       "id": "cli-imp-003",
       "tipoCliente": "Privado",
       "ministerio": "",
@@ -2182,7 +2164,7 @@
       "id": "cli-1787038283894-208",
       "tipoCliente": "Estatal",
       "ministerio": "Ministério do Trabalho, Solidariedade e Segurança Social",
-      "secretariaEstado": "Ministério, Secretaria de Estado",
+      "secretariaEstado": "Ministério, Secretaria de Estado, Direção Geral, Secretaria de Estado Adjunta e da Juventude e da Igualdade",
       "nome": "Ministério do Trabalho, Solidariedade e Segurança Social",
       "contribuinte": "000000000",
       "direcao1": "Praça de Londres",
@@ -2194,7 +2176,6 @@
       "telefone": "+351 215 963 800",
       "telemovel": "",
       "email": "",
-      "createdAt": "2026-08-18T07:31:23.894Z",
       "separadores": [
         {
           "id": "sep-1787043514845-953",
@@ -2217,7 +2198,7 @@
           "id": "sep-1787043509630-756",
           "tipoSeparador": "Secretaria de Estado",
           "nomePersonalizado": "",
-          "nome": "Secretaria de Estado de Acción Social e de Inclusão",
+          "nome": "Secretaria de Estado da Ação Social e de Inclusão",
           "contribuinte": "000000000",
           "direcao1": "Praça de Londres",
           "direcao2": "",
@@ -2229,31 +2210,12 @@
           "telefone": "+351 215 963 800",
           "telemovel": "",
           "email": ""
-        }
-      ]
-    },
-    {
-      "id": "cli-1787038283894-858",
-      "tipoCliente": "Estatal",
-      "ministerio": "Ministério do Trabalho, Solidariedade e Segurança Social",
-      "secretariaEstado": "Direção Geral, Secretaria de Estado",
-      "nome": "Direção Geral de Segurança Social",
-      "contribuinte": "000000000",
-      "direcao1": "Largo do Rato",
-      "direcao2": "",
-      "numero": "1",
-      "andar": "",
-      "codigoPostal": "1269-144",
-      "localidade": "Lisboa",
-      "telefone": "+351 215 952 990",
-      "telemovel": "",
-      "email": "",
-      "separadores": [
+        },
         {
-          "id": "sep-1787038521167-632",
+          "id": "sep-1787427595663-958",
           "tipoSeparador": "Direção Geral",
           "nomePersonalizado": "",
-          "nome": "Direção Geral de Segurança Social",
+          "nome": "Direção Geral da Segurança Social",
           "contribuinte": "000000000",
           "direcao1": "Largo do Rato",
           "direcao2": "",
@@ -2267,8 +2229,8 @@
           "email": ""
         },
         {
-          "id": "sep-1787038876163-623",
-          "tipoSeparador": "Secretaria de Estado",
+          "id": "sep-1787427595663-73",
+          "tipoSeparador": "Secretaria de Estado Adjunta e da Juventude e da Igualdade",
           "nomePersonalizado": "",
           "nome": "Secretaria de Estado Adjunta e da Juventude e da Igualdade",
           "contribuinte": "000000000",
@@ -2284,7 +2246,11 @@
           "email": ""
         }
       ],
-      "createdAt": "2026-08-18T07:31:23.894Z"
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio",
+      "createdAt": "2026-08-18T07:31:23.894Z",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "cli-1787038283894-41",
@@ -3079,7 +3045,8 @@
     },
     {
       "id": "con-imp-034",
-      "clienteId": "cli-imp-077",
+      "clienteId": "cli-imp-009",
+      "subTabIndex": 1,
       "nome": "Goncalo",
       "apelido": "Oliveira",
       "cargo": "Brand & Communication Strategy",
@@ -3087,8 +3054,7 @@
       "telemovel": "",
       "email": "goncalo.soliveira@nos.pt",
       "notas": "Temas: telecomunicaciones, televisión, internet, telefonía móvil, entretenimiento",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 1
+      "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
       "id": "con-imp-037",
@@ -3118,7 +3084,7 @@
     },
     {
       "id": "con-imp-039",
-      "clienteId": "cli-1786727373519-853",
+      "clienteId": "cli-imp-013",
       "nome": "Paula",
       "apelido": "Amorim",
       "cargo": "Presidente",
@@ -3402,7 +3368,7 @@
     },
     {
       "id": "con-imp-116",
-      "clienteId": "cli-1786727373519-853",
+      "clienteId": "cli-imp-013",
       "nome": "Sandra",
       "apelido": "Aparício",
       "cargo": "Diretora Executiva",
@@ -3746,15 +3712,15 @@
     },
     {
       "id": "con-1787049428085-95",
-      "clienteId": "Ministério do Ambiente e Energia",
-      "tratamento": "",
-      "nome": "Maria da Graça Carvalho",
-      "apelido": "",
+      "clienteId": "cli-1787038283893-788",
+      "subTabIndex": 0,
+      "nome": "Maria da Graça",
+      "apelido": "Carvalho",
       "cargo": "Ministra",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.maen@maen.gov.pt",
+      "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
@@ -3785,67 +3751,67 @@
     },
     {
       "id": "con-1787049428085-481",
-      "clienteId": "Ministério do Ambiente e Energia",
-      "tratamento": "",
-      "nome": "Manuel Esteves",
-      "apelido": "",
+      "clienteId": "cli-1787038283893-788",
+      "subTabIndex": 0,
+      "nome": "Manuel c",
+      "apelido": "Esteves",
       "cargo": "Secretário de Estado de ambiente",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.seamb@maen.gov.pt",
+      "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
       "id": "con-1787049428085-21",
-      "clienteId": "Ministério da Agricultura e Mar",
-      "tratamento": "",
+      "clienteId": "cli-1787038283893-151",
+      "subTabIndex": 0,
       "nome": "Jose Manuel Fernandes",
       "apelido": "",
       "cargo": "Ministro",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.magrim@magrim.gov.pt",
+      "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
       "id": "con-1787049428085-920",
-      "clienteId": "Ministério da Agricultura e Mar",
-      "tratamento": "",
+      "clienteId": "cli-1787038283893-151",
+      "subTabIndex": 0,
       "nome": "Joao Moura",
       "apelido": "",
       "cargo": "Secretário de Estado de Agricultura",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.seagri@magrim.gov.pt",
+      "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
       "id": "con-1787049428085-529",
-      "clienteId": "Ministério da Agricultura e Mar",
-      "tratamento": "",
-      "nome": "Pedro Teixeira",
-      "apelido": "",
+      "clienteId": "cli-1787038283893-151",
+      "subTabIndex": 0,
+      "nome": "Pedro",
+      "apelido": "Teixeira",
       "cargo": "Diretor Geral da Agricultura e Desenvolvimiento Rural",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "dgadr@dgadr.pt",
+      "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
       "id": "con-1787049428085-884",
-      "clienteId": "Ministério da Cultura, Juventude e desporto",
-      "tratamento": "",
-      "nome": "Margarida Balseiro Lopes",
-      "apelido": "",
+      "clienteId": "cli-1787038283893-614",
+      "subTabIndex": 0,
+      "nome": "Margarida",
+      "apelido": "Balseiro Lopes",
       "cargo": "Ministra",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.mcjd@mcjd.gov.pt",
+      "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
@@ -3863,120 +3829,112 @@
     },
     {
       "id": "con-1787049428085-306",
-      "clienteId": "Ministério da Cultura, Juventude e desporto",
-      "tratamento": "",
-      "nome": "Pedro Dias",
-      "apelido": "",
+      "clienteId": "cli-1787038283893-614",
+      "subTabIndex": 0,
+      "nome": "Pedro",
+      "apelido": "Dias",
       "cargo": "Secretário de Estado de Desporto",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.sed@mcjd.gov.pt",
+      "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
       "id": "con-1787049428085-684",
-      "clienteId": "cli-1787050401189-194",
-      "tratamento": "",
+      "clienteId": "cli-1787038283893-614",
+      "subTabIndex": 1,
       "nome": "Carla",
       "apelido": "Rodrigues",
       "cargo": "Secretária de Estado adjunta e da juventude e da igualdade",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.seaji@mcjd.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "subTabIndex": 1,
-      "notas": ""
+      "notas": "",
+      "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
       "id": "con-1787049428085-204",
-      "clienteId": "cli-1787050401189-194",
-      "tratamento": "",
+      "clienteId": "cli-1787038283894-313",
+      "subTabIndex": 1,
       "nome": "Fernando",
       "apelido": "Alexandre",
       "cargo": "Ministro",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.meci@meci.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "subTabIndex": 1,
-      "notas": ""
+      "notas": "",
+      "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
       "id": "con-1787049428085-826",
-      "clienteId": "Ministério de Reforma de Estado",
-      "tratamento": "",
+      "clienteId": "cli-1787038283894-699",
+      "subTabIndex": 0,
       "nome": "Maria Joao Santos",
       "apelido": "",
       "cargo": "Chefe de Gabinete - Secretaria de Estado para a Simplificação",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.simplificacao@mare.gov.pt",
+      "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
       "id": "con-1787049428085-72",
-      "clienteId": "cli-1787050401189-194",
-      "tratamento": "",
+      "clienteId": "cli-1787038283894-313",
+      "subTabIndex": 1,
       "nome": "David Carlos",
       "apelido": "da Rocha Sousa",
       "cargo": "Diretor Geral da Educação",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "dge@dge.mec.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "subTabIndex": 1,
-      "notas": ""
+      "notas": "",
+      "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
       "id": "con-1787049428085-379",
-      "clienteId": "Ministério do Trabalho, Solidariedade e Segurança Social",
-      "tratamento": "",
-      "nome": "Maria do Rosário Palma Ramalho",
-      "apelido": "",
+      "clienteId": "cli-1787038283894-208",
+      "subTabIndex": 0,
+      "nome": "Maria do Rosário",
+      "apelido": "Palma Ramalho",
       "cargo": "Ministra",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.mtsss@mtsss.gov.pt",
+      "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
       "id": "con-1787049428085-965",
-      "clienteId": "cli-1787050401189-194",
-      "tratamento": "",
+      "clienteId": "cli-1787038283894-208",
+      "subTabIndex": 1,
       "nome": "Carla",
       "apelido": "Marques Mendes",
       "cargo": "Secretária de Estado de acción social e de Inclusão",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.seasi@mtsss.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "subTabIndex": 1,
-      "notas": ""
+      "notas": "",
+      "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
       "id": "con-1787049428085-251",
-      "clienteId": "Ministério do Trabalho, Solidariedade e Segurança Social",
-      "tratamento": "",
-      "nome": "Susana amas",
-      "apelido": "",
+      "clienteId": "cli-1787038283894-208",
+      "subTabIndex": 0,
+      "nome": "Susana Maria",
+      "apelido": "de Oliveira Lamas",
       "cargo": "Chefe de Gabinete - Secretaria de Estado de acción social e de Inclusão",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.seasi@mtsss.gov.pt",
+      "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
       "id": "con-1787049428085-608",
-      "clienteId": "cli-1787038283894-858",
-      "subTabIndex": 0,
+      "clienteId": "cli-1787038283894-208",
+      "subTabIndex": 2,
       "nome": "João Manuel",
       "apelido": "Grossinho Gonçalves",
       "cargo": "Diretor Geral da Segurança Social",
@@ -3984,7 +3942,10 @@
       "telemovel": "",
       "email": "dgss@seg-social.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-832",
@@ -4053,7 +4014,7 @@
     },
     {
       "id": "con-1787049428085-386",
-      "clienteId": "Ministério das Infraestruturas e Habitação",
+      "clienteId": "cli-1787038283894-101",
       "subTabIndex": 0,
       "nome": "Gustavo Madeira",
       "apelido": "",
@@ -4062,9 +4023,7 @@
       "telemovel": "",
       "email": "gabinete.mih@mih.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "tratamento": "",
-      "departamento": ""
+      "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
       "id": "con-1787049428085-932",
@@ -4107,18 +4066,16 @@
     },
     {
       "id": "con-1787049428085-801",
-      "clienteId": "cli-1787050401189-194",
-      "tratamento": "",
+      "clienteId": "cli-1787038283894-51",
+      "subTabIndex": 1,
       "nome": "Elsa",
       "apelido": "Martins",
       "cargo": "Chefe de Gabinete",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.mj@mj.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "subTabIndex": 1,
-      "notas": ""
+      "notas": "",
+      "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
       "id": "con-1787049428085-715",
@@ -4161,15 +4118,15 @@
     },
     {
       "id": "con-1787049428085-1",
-      "clienteId": "Ministério da Defesa Nacional",
-      "tratamento": "",
-      "nome": "Pedro Sardinha",
-      "apelido": "",
+      "clienteId": "cli-1787038283894-394",
+      "subTabIndex": 0,
+      "nome": "Pedro",
+      "apelido": "Sardinha",
       "cargo": "Chefe de Gabinete",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.Ministro@mdn.gov.pt",
+      "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
@@ -4188,34 +4145,32 @@
     {
       "id": "con-1787049428085-561",
       "clienteId": "cli-1787050401189-194",
-      "tratamento": "",
+      "subTabIndex": 1,
       "nome": "Carlos",
       "apelido": "Abreu Amorim",
       "cargo": "Ministro",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.map@map.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "subTabIndex": 1,
-      "notas": ""
+      "notas": "",
+      "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
       "id": "con-1787049428085-370",
-      "clienteId": "Ministério de Assuntos Parlamentares",
-      "tratamento": "",
-      "nome": "Sofia Aureliano",
-      "apelido": "",
+      "clienteId": "cli-1787050401189-194",
+      "subTabIndex": 0,
+      "nome": "Sofia",
+      "apelido": "Aureliano",
       "cargo": "Chefe de Gabinete",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.map@map.gov.pt",
+      "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
       "id": "con-1787049428085-253",
-      "clienteId": "Ministério de Reforma de Estado",
+      "clienteId": "cli-1787038283894-699",
       "subTabIndex": 0,
       "nome": "Gonçalo Saraiva Matias",
       "apelido": "",
@@ -4224,21 +4179,19 @@
       "telemovel": "",
       "email": "gabinete.Ministro@mare.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "tratamento": "",
-      "departamento": ""
+      "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
       "id": "con-1787049428085-735",
-      "clienteId": "Ministério de Reforma de Estado",
-      "tratamento": "",
-      "nome": "Pedro Rapoua",
-      "apelido": "",
+      "clienteId": "cli-1787038283894-699",
+      "subTabIndex": 0,
+      "nome": "Pedro",
+      "apelido": "Rapoua",
       "cargo": "Chefe de Gabinete",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
-      "email": "gabinete.Ministro@mare.gov.pt",
+      "email": "gabinete.ministro@mare.gov.pt",
+      "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
@@ -4258,43 +4211,41 @@
     },
     {
       "id": "con-1787049428085-443",
-      "clienteId": "cli-1787050401189-194",
-      "tratamento": "",
+      "clienteId": "cli-1787038283894-699",
+      "subTabIndex": 1,
       "nome": "Francisco",
       "apelido": "Santos",
       "cargo": "Chefe de Gabinete - Secretaria de Estado para a Digitalização",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.digitalizacao@mare.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "subTabIndex": 1,
-      "notas": ""
+      "notas": "",
+      "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
       "id": "con-1787049428085-527",
-      "clienteId": "Ministério de Reforma de Estado",
-      "tratamento": "",
-      "nome": "Paulo Magro da Luz",
-      "apelido": "",
+      "clienteId": "cli-1787038283894-699",
+      "subTabIndex": 0,
+      "nome": "Paulo",
+      "apelido": "Magro da Luz",
       "cargo": "Secretário de Estado para a Simplificação",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.simplificacao@mare.gov.pt",
+      "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
       "id": "con-1787049428085-380",
-      "clienteId": "Ministério da Economia e da Coesão Territorial",
-      "tratamento": "",
+      "clienteId": "cli-1787038283894-503",
+      "subTabIndex": 0,
       "nome": "Manuel Castro Almeida",
       "apelido": "",
       "cargo": "Ministro",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.mect@mect.gov.pt",
+      "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
@@ -4312,28 +4263,28 @@
     },
     {
       "id": "con-1787049428085-352",
-      "clienteId": "Ministério da Economia e da Coesão Territorial",
-      "tratamento": "",
+      "clienteId": "cli-1787038283894-503",
+      "subTabIndex": 0,
       "nome": "Pedro Machado",
       "apelido": "",
       "cargo": "Secretário de Estado de Turismo, Comércio e Serviços",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.setcs@mect.gov.pt",
+      "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
       "id": "con-1787049428085-425",
-      "clienteId": "Ministério da Economia e da Coesão Territorial",
-      "tratamento": "",
+      "clienteId": "cli-1787038283894-503",
+      "subTabIndex": 0,
       "nome": "Mafalda Torre",
       "apelido": "",
       "cargo": "Chefe de Gabinete - Secretaria de Estado de turismo, Comércio e Serviços",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.setcs@mect.gov.pt",
+      "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
@@ -5092,6 +5043,92 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787427676151-704",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Ministério do Trabalho, Solidariedade e Segurança Social\" (NIF: 000000000) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Ministério do Trabalho, Solidariedade e Segurança Social",
+        "contribuinte": "000000000",
+        "tipoCliente": "Estatal",
+        "comercialAtribuido": "José Centúrio",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-22T19:41:16.151Z"
+    },
+    {
+      "id": "log-1787427565103-752",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Ministério do Trabalho, Solidariedade e Segurança Social\" (NIF: 000000000) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Ministério do Trabalho, Solidariedade e Segurança Social",
+        "contribuinte": "000000000",
+        "tipoCliente": "Estatal",
+        "comercialAtribuido": "José Centúrio",
+        "camposAlterados": [
+          {
+            "campo": "Comercial Atribuído",
+            "anterior": "(vazio)",
+            "novo": "José Centúrio"
+          }
+        ]
+      },
+      "timestamp": "2026-08-22T19:39:25.103Z"
+    },
+    {
+      "id": "log-1787427553416-147",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Direção Geral de Segurança Social\" (NIF: 000000000) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Direção Geral de Segurança Social",
+        "contribuinte": "000000000",
+        "tipoCliente": "Estatal",
+        "comercialAtribuido": "José Centúrio",
+        "camposAlterados": [
+          {
+            "campo": "Comercial Atribuído",
+            "anterior": "(vazio)",
+            "novo": "José Centúrio"
+          }
+        ]
+      },
+      "timestamp": "2026-08-22T19:39:13.416Z"
+    },
+    {
+      "id": "log-1787427488021-582",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-22T19:38:08.021Z"
+    },
+    {
       "id": "log-1787427481349-481",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -5224,9 +5261,22 @@
       "ignoredBy": "Sistema"
     }
   ],
+  "activityHistory": [
+    {
+      "id": "act-1787429964108-qeul",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_MERGE",
+      "entity": "clientes",
+      "entityId": "cli-imp-013",
+      "details": "Fusão de 2 registos duplicados em \"Fundação Galp\". 2 vínculos reatribuídos com sucesso.",
+      "timestamp": "2026-08-22T20:19:24.108Z"
+    }
+  ],
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
   "_deletedRegistry": {
-    "clientes": [],
+    "clientes": [
+      "cli-1786727373519-853"
+    ],
     "contactos": [],
     "projetos": [],
     "interacoes": [],
