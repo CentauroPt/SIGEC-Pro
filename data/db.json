@@ -5175,64 +5175,20 @@
   ],
   "userLogs": [
     {
-      "id": "log-1787381214514-793",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Ficha do Utilizador",
-      "descricao": "Dados de registo e PIN do utilizador Francisco atualizados pelo Administrador.",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-22T06:46:54.514Z"
-    },
-    {
-      "id": "log-1787381210923-446",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Ficha do Utilizador",
-      "descricao": "Dados de registo e PIN do utilizador Francisco atualizados pelo Administrador.",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-22T06:46:50.923Z"
-    },
-    {
-      "id": "log-1787381202300-511",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Ficha do Utilizador",
-      "descricao": "Ficha do utilizador Francisco aberta após autenticação de Administrador.",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-22T06:46:42.300Z"
-    },
-    {
-      "id": "log-1787381183949-921",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "id": "log-1787381241090-45",
+      "usuarioId": "usr-1787381168601",
+      "usuarioNome": "Francisco",
+      "usuarioEmail": "Francisco@francisco.es",
       "tipoAcao": "Início de Sessão",
-      "descricao": "Acesso autorizado efetuado por José Centúrio.",
+      "descricao": "Acesso autorizado efetuado por Francisco.",
       "pagina": "Dashboard / Início",
       "detalhes": {
-        "utilizador": "José Centúrio",
-        "email": "jmcenturio@alegria-activity.com",
-        "cargo": "Administrador do Sistema",
+        "utilizador": "Francisco",
+        "email": "Francisco@francisco.es",
+        "cargo": "Comercial",
         "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-22T06:46:23.949Z"
-    },
-    {
-      "id": "log-1787381168662-891",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Registo de Utilizador",
-      "descricao": "Novo utilizador Francisco (Francisco@francisco.es) registado no sistema com idioma Español (Acesso pendente de ativação pelo Administrador).",
-      "pagina": "Dashboard / Início",
-      "detalhes": null,
-      "timestamp": "2026-08-22T06:46:08.662Z"
+      "timestamp": "2026-08-22T06:47:21.090Z"
     }
   ],
   "orcamentos": [
