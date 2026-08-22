@@ -5185,7 +5185,24 @@
       "createdAt": "2026-08-22T07:02:51.866Z"
     }
   ],
-  "userLogs": [],
+  "userLogs": [
+    {
+      "id": "log-1787388266518-373",
+      "usuarioId": "usr-1787382171866",
+      "usuarioNome": "Marco",
+      "usuarioEmail": "marco@marco.es",
+      "tipoAcao": "Início de Sessão",
+      "descricao": "Acesso autorizado efetuado por Marco.",
+      "pagina": "Dashboard / Início",
+      "detalhes": {
+        "utilizador": "Marco",
+        "email": "marco@marco.es",
+        "cargo": "Administrador do Sistema",
+        "dispositivo": "Computador"
+      },
+      "timestamp": "2026-08-22T08:44:26.518Z"
+    }
+  ],
   "orcamentos": [
     {
       "id": "orc-norte-2040-004",
