@@ -1451,7 +1451,7 @@
       "secretariaEstado": "",
       "nome": "Galp Energia, SGPS, S.A.",
       "contribuinte": "500001258",
-      "direcao1": "Avenida da Ãndia",
+      "direcao1": "Avenida da Índia",
       "direcao2": "",
       "numero": "8",
       "andar": "",
@@ -1460,47 +1460,12 @@
       "pais": "Portugal",
       "telefone": "217242500",
       "telemovel": "",
-      "email": "galp@galp.com",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "notas": "AGEAS Seguros - https://www.grupoageas.pt/media/1877/ageas-logo.png?\nMEDIS - https://www.grupoageas.pt/media/1013/medis.\nSeguro Diretos - https://www.grupoageas.pt/media/2764/segurodirectosd.png?png?\nOcidental - https://www.grupoageas.pt/media/2763/ocidentalsd.png?\nAGEAS Pensões - https://www.grupoageas.pt/media/2804/ageaspensoes-logo.png?",
-      "separadores": [
-        {
-          "id": "sep-1787222680031-548",
-          "tipoSeparador": "Fundação Aga Khan Portugal",
-          "nomePersonalizado": "",
-          "nome": "Fundação Aga Khan Portugal",
-          "contribuinte": "500000459",
-          "direcao1": "Av. Lusíada",
-          "direcao2": "",
-          "numero": "10",
-          "andar": "",
-          "codigoPostal": "1600-150",
-          "localidade": "Lisboa",
-          "telefone": "+351 217 229 000",
-          "telemovel": "",
-          "email": "akfportugal@akdn.org",
-          "notas": "Nutrición infantil. Salud materno-infantil. Educación para familias. Bienestar comunitario.\n"
-        },
-        {
-          "id": "sep-1787222680031-43",
-          "tipoSeparador": "Fundação Aga Khan Portugal",
-          "nomePersonalizado": "",
-          "nome": "Fundação Aga Khan Portugal",
-          "contribuinte": "500000459",
-          "direcao1": "Av. Lusíada",
-          "direcao2": "",
-          "numero": "10",
-          "andar": "",
-          "codigoPostal": "1600-150",
-          "localidade": "Lisboa",
-          "telefone": "+351 217 229 000",
-          "telemovel": "",
-          "email": "akfportugal@akdn.org"
-        }
-      ],
+      "email": "galp@galp.pt",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio"
+      "comercialAtribuidoNome": "José Centúrio",
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "cli-imp-076",
@@ -2943,7 +2908,8 @@
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 0,
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-imp-005",
@@ -2958,7 +2924,8 @@
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 0,
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-imp-006",
@@ -2973,7 +2940,8 @@
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 0,
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-imp-007",
@@ -2988,7 +2956,8 @@
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 0,
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-imp-008",
@@ -3003,7 +2972,8 @@
       "notas": "Temas: energía, petróleo, gas natural, electricidad, biocombustibles, transición energética, descarbonización",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-imp-010",
@@ -3718,7 +3688,8 @@
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 0,
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-imp-120",
@@ -5201,7 +5172,9 @@
       "subTabIndex": null,
       "data": "2026-06-29T15:22",
       "descricao": "Enviado email de apresentação. Os emails enviados foram para o geral. Voltar a enviar para os emails individuais.",
-      "createdAt": "2026-08-19T11:43:08.626Z"
+      "createdAt": "2026-08-19T11:43:08.626Z",
+      "userId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "int-1787139926194-516",
@@ -5546,6 +5519,69 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1787444625855-904",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Cópia de Segurança",
+      "descricao": "Backup de registos \"Backup_SIGEC-Pro_23-08-2026_02-23-43.json\" gerado (56 Clientes, 140 Contactos, 4 Projetos).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-23T00:23:45.855Z"
+    },
+    {
+      "id": "log-1787444592662-273",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Atualização de Software",
+      "descricao": "Pacote de atualização \"SIGEC_V2.0_23-08-2026_02h23m.json\" gerado (Apenas Software - Sem dados de registo).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-23T00:23:12.662Z"
+    },
+    {
+      "id": "log-1787443844249-909",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Galp Energia, SGPS, S.A.\" (NIF: 500001258) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Galp Energia, SGPS, S.A.",
+        "contribuinte": "500001258",
+        "tipoCliente": "Privado",
+        "comercialAtribuido": "José Centúrio",
+        "camposAlterados": [
+          {
+            "campo": "Email",
+            "anterior": "galp@galp.com",
+            "novo": "galp@galp.pt"
+          },
+          {
+            "campo": "Morada",
+            "anterior": "Avenida da Ãndia",
+            "novo": "Avenida da Índia"
+          }
+        ]
+      },
+      "timestamp": "2026-08-23T00:10:44.249Z"
+    },
+    {
+      "id": "log-1787443815562-966",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-23T00:10:15.562Z"
+    },
     {
       "id": "log-1787443812146-614",
       "usuarioId": "usr-admin-001",
