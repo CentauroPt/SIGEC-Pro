@@ -8959,6 +8959,10 @@ async function closeApplicationWithSave() {
   saveDatabase();
   clearFormDirty();
 
+  // Limpeza de sessão ao encerrar
+  sessionStorage.removeItem('sigec_pro_authenticated');
+  sessionStorage.removeItem('sigec_pro_active_user_id');
+
   const ghToken = localStorage.getItem('sigec_pro_gh_token');
   if (ghToken && typeof syncDatabaseToGitHub === 'function') {
     showToast('A sincronizar com o servidor GitHub antes de fechar...', 'info');
@@ -8990,7 +8994,20 @@ function forceCloseWindowTab() {
 }
 
 function reopenApplication() {
-  document.getElementById('closeAppOverlay').classList.remove('active');
+  const closeOverlay = document.getElementById('closeAppOverlay');
+  if (closeOverlay) closeOverlay.classList.remove('active');
+  sessionStorage.removeItem('sigec_pro_authenticated');
+  sessionStorage.removeItem('sigec_pro_active_user_id');
+  const loginOverlay = document.getElementById('loginOverlay');
+  if (loginOverlay) {
+    loginOverlay.classList.remove('hidden');
+    loginOverlay.style.display = 'flex';
+    const userInput = document.getElementById('loginUserInput');
+    if (userInput) {
+      userInput.value = '';
+      setTimeout(() => userInput.focus(), 150);
+    }
+  }
 }
 
 // ==========================================
@@ -14300,17 +14317,21 @@ function initSecurityAuthCheck() {
   renderUserManagementGrid();
   if (typeof checkPasswordResetUrlParams === 'function') checkPasswordResetUrlParams();
 
-  const isAuth = sessionStorage.getItem('sigec_pro_authenticated');
+  // Exigência obrigatória de autenticação ao abrir o programa
+  sessionStorage.removeItem('sigec_pro_authenticated');
+  sessionStorage.removeItem('sigec_pro_active_user_id');
+
   const overlay = document.getElementById('loginOverlay');
-  
-  if (isAuth === 'true') {
-    if (overlay) overlay.classList.add('hidden');
-  } else {
-    if (overlay) {
-      overlay.classList.remove('hidden');
-      const userInput = document.getElementById('loginUserInput');
-      if (userInput) setTimeout(() => userInput.focus(), 150);
+  if (overlay) {
+    overlay.classList.remove('hidden');
+    overlay.style.display = 'flex';
+    const userInput = document.getElementById('loginUserInput');
+    const pinInput = document.getElementById('loginPinInput');
+    if (userInput) {
+      userInput.value = '';
+      setTimeout(() => userInput.focus(), 150);
     }
+    if (pinInput) pinInput.value = '';
   }
 }
 
