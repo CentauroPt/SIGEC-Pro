@@ -13,13 +13,15 @@
       "andar": "",
       "codigoPostal": "1600-209",
       "localidade": "Lisboa",
+      "pais": "",
       "telefone": "+351 217 242 500",
       "telemovel": "",
       "email": "fundacao@galp.com",
-      "createdAt": "2026-08-14T17:09:33.519Z",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio"
+      "comercialAtribuidoNome": "José Centúrio",
+      "createdAt": "2026-08-14T17:09:33.519Z",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "cli-imp-003",
@@ -1716,29 +1718,6 @@
       "comercialAtribuidoNome": "José Centúrio"
     },
     {
-      "id": "cli-imp-013",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "Fundação Galp",
-      "contribuinte": "500000238",
-      "direcao1": "Rua Tomás da Fonseca, Torre C\n1600-209 Lisboa\nPortugal",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1600-209",
-      "localidade": "Lisboa",
-      "pais": "Portugal",
-      "telefone": "+351 217 242 500",
-      "telemovel": "",
-      "email": "fundacao@galp.com",
-      "notas": "Temas: Transición energética, acción climática, sostenibilidad, educación, innovación social, biodiversidad y apoyo a comunidades vulnerables",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio"
-    },
-    {
       "id": "cli-imp-068",
       "tipoCliente": "Fundação",
       "ministerio": "",
@@ -1803,28 +1782,6 @@
       "email": "imprensa@ageas.pt",
       "notas": "AGEAS Seguros - https://www.grupoageas.pt/media/1877/ageas-logo.png?\nMEDIS - https://www.grupoageas.pt/media/1013/medis.\nSeguro Diretos - https://www.grupoageas.pt/media/2764/segurodirectosd.png?png?\nOcidental - https://www.grupoageas.pt/media/2763/ocidentalsd.png?\nAGEAS Pensões - https://www.grupoageas.pt/media/2804/ageaspensoes-logo.png?",
       "createdAt": "2026-08-20T10:13:00.997Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio"
-    },
-    {
-      "id": "cli-1787208572192-719",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "Galp Energia, SGPS, S.A.",
-      "contribuinte": "000000000",
-      "direcao1": "Avenida da Índia",
-      "direcao2": "",
-      "numero": "8",
-      "andar": "",
-      "codigoPostal": "1349-065",
-      "localidade": "Lisboa",
-      "pais": "Portugal",
-      "telefone": "+351 217 242 500",
-      "telemovel": "",
-      "email": "galp@galp.pt",
-      "createdAt": "2026-08-20T06:49:32.192Z",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
       "comercialAtribuidoNome": "José Centúrio"
@@ -3402,7 +3359,8 @@
       "notas": "Temas: Transición energética, acción climática, sostenibilidad, educación, innovación social, biodiversidad y apoyo a comunidades vulnerables",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-imp-040",
@@ -3730,7 +3688,8 @@
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-imp-117",
@@ -5252,15 +5211,6 @@
       "createdAt": "2026-08-19T11:45:26.194Z"
     },
     {
-      "id": "int-1787208850710-673",
-      "clienteId": "cli-1787208572192-719",
-      "separadorId": null,
-      "subTabIndex": null,
-      "data": "2026-06-29T08:43",
-      "descricao": "Enviado email de apresentação da empresa.",
-      "createdAt": "2026-08-20T06:54:10.710Z"
-    },
-    {
       "id": "int-1787209041367-69",
       "clienteId": "cli-imp-003",
       "separadorId": null,
@@ -5595,7 +5545,77 @@
       "createdAt": "2026-08-22T10:06:38.433Z"
     }
   ],
-  "userLogs": [],
+  "userLogs": [
+    {
+      "id": "log-1787443812146-614",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Eliminação de Cliente",
+      "descricao": "Cliente \"Galp Energia, SGPS, S.A.\" (NIF: 000000000) eliminado da base de dados.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Eliminação",
+        "ficha": "Cliente",
+        "nome": "Galp Energia, SGPS, S.A.",
+        "contribuinte": "000000000",
+        "tipoCliente": "Privado"
+      },
+      "timestamp": "2026-08-23T00:10:12.146Z"
+    },
+    {
+      "id": "log-1787443760539-894",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Fundação Galp\" (NIF: 000000000) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Fundação Galp",
+        "contribuinte": "000000000",
+        "tipoCliente": "Fundação",
+        "comercialAtribuido": "José Centúrio",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-23T00:09:20.539Z"
+    },
+    {
+      "id": "log-1787443676577-97",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Atualização de Software",
+      "descricao": "Pacote de atualização \"SIGEC_V2.0_23-08-2026_02h07m.json\" gerado (Apenas Software - Sem dados de registo).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-23T00:07:56.577Z"
+    },
+    {
+      "id": "log-1787443645110-480",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Início de Sessão",
+      "descricao": "Acesso autorizado efetuado por José Centúrio.",
+      "pagina": "Dashboard / Início",
+      "detalhes": {
+        "utilizador": "José Centúrio",
+        "email": "jmcenturio@alegria-activity.com",
+        "cargo": "Administrador do Sistema",
+        "dispositivo": "Computador"
+      },
+      "timestamp": "2026-08-23T00:07:25.110Z"
+    }
+  ],
   "orcamentos": [
     {
       "id": "orc-norte-2040-004",
@@ -5665,6 +5685,17 @@
       "id1": "cli-1786727373519-853",
       "ignoredAt": "2026-08-22T10:13:13.470Z",
       "ignoredBy": "Sistema"
+    }
+  ],
+  "activityHistory": [
+    {
+      "id": "act-1787443742186",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_ONE",
+      "entity": "clientes",
+      "entityId": "cli-1786727373519-853",
+      "details": "Mantido apenas um registo (cli-1786727373519-853). Eliminados: \"Fundação Galp\".",
+      "timestamp": "2026-08-23T00:09:02.186Z"
     }
   ],
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
@@ -5817,7 +5848,9 @@
       "cli-imp-077",
       "cli-imp-002",
       "cli-imp-001",
-      "cli-imp-080"
+      "cli-imp-080",
+      "cli-imp-013",
+      "cli-1787208572192-719"
     ],
     "contactos": [
       "con-imp-059",
@@ -5911,7 +5944,8 @@
       "int-1787045375532-710",
       "int-1787210357662-44",
       "int-1787222173351-216",
-      "cpi-1787210126029-44"
+      "cpi-1787210126029-44",
+      "int-1787208850710-673"
     ],
     "interacoesProjetos": [],
     "orcamentos": [
