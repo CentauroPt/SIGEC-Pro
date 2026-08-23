@@ -5595,44 +5595,7 @@
       "createdAt": "2026-08-22T10:06:38.433Z"
     }
   ],
-  "userLogs": [
-    {
-      "id": "log-1787398521674-374",
-      "usuarioId": "usr-1787381168601",
-      "usuarioNome": "Francisco",
-      "usuarioEmail": "Francisco@francisco.es",
-      "tipoAcao": "Transferência de Cliente",
-      "descricao": "Cliente \"Altice Portugal\" transferido de Francisco para José Centúrio com todos os seus contactos, projetos, orçamentos e interações.",
-      "pagina": "Clientes",
-      "detalhes": null,
-      "timestamp": "2026-08-22T11:35:21.674Z"
-    },
-    {
-      "id": "log-1787398521654-778",
-      "usuarioId": "usr-1787381168601",
-      "usuarioNome": "Francisco",
-      "usuarioEmail": "Francisco@francisco.es",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Altice Portugal\" (NIF: 500001309) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Altice Portugal",
-        "contribuinte": "500001309",
-        "tipoCliente": "Privado",
-        "comercialAtribuido": "José Centúrio",
-        "camposAlterados": [
-          {
-            "campo": "Comercial Atribuído",
-            "anterior": "Francisco",
-            "novo": "José Centúrio"
-          }
-        ]
-      },
-      "timestamp": "2026-08-22T11:35:21.654Z"
-    }
-  ],
+  "userLogs": [],
   "orcamentos": [
     {
       "id": "orc-norte-2040-004",
