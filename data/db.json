@@ -1451,7 +1451,7 @@
       "secretariaEstado": "",
       "nome": "Galp Energia, SGPS, S.A.",
       "contribuinte": "500001258",
-      "direcao1": "Avenida da Índia",
+      "direcao1": "Avenida da Ãndia",
       "direcao2": "",
       "numero": "8",
       "andar": "",
@@ -1460,7 +1460,7 @@
       "pais": "Portugal",
       "telefone": "217242500",
       "telemovel": "",
-      "email": "galp@galp.pt",
+      "email": "galp@galp.com",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
       "comercialAtribuidoNome": "José Centúrio",
@@ -5520,123 +5520,7 @@
   ],
   "userLogs": [
     {
-      "id": "log-1787444625855-904",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Cópia de Segurança",
-      "descricao": "Backup de registos \"Backup_SIGEC-Pro_23-08-2026_02-23-43.json\" gerado (56 Clientes, 140 Contactos, 4 Projetos).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-23T00:23:45.855Z"
-    },
-    {
-      "id": "log-1787444592662-273",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Atualização de Software",
-      "descricao": "Pacote de atualização \"SIGEC_V2.0_23-08-2026_02h23m.json\" gerado (Apenas Software - Sem dados de registo).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-23T00:23:12.662Z"
-    },
-    {
-      "id": "log-1787443844249-909",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Galp Energia, SGPS, S.A.\" (NIF: 500001258) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Galp Energia, SGPS, S.A.",
-        "contribuinte": "500001258",
-        "tipoCliente": "Privado",
-        "comercialAtribuido": "José Centúrio",
-        "camposAlterados": [
-          {
-            "campo": "Email",
-            "anterior": "galp@galp.com",
-            "novo": "galp@galp.pt"
-          },
-          {
-            "campo": "Morada",
-            "anterior": "Avenida da Ãndia",
-            "novo": "Avenida da Índia"
-          }
-        ]
-      },
-      "timestamp": "2026-08-23T00:10:44.249Z"
-    },
-    {
-      "id": "log-1787443815562-966",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Clientes",
-      "detalhes": null,
-      "timestamp": "2026-08-23T00:10:15.562Z"
-    },
-    {
-      "id": "log-1787443812146-614",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Eliminação de Cliente",
-      "descricao": "Cliente \"Galp Energia, SGPS, S.A.\" (NIF: 000000000) eliminado da base de dados.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Eliminação",
-        "ficha": "Cliente",
-        "nome": "Galp Energia, SGPS, S.A.",
-        "contribuinte": "000000000",
-        "tipoCliente": "Privado"
-      },
-      "timestamp": "2026-08-23T00:10:12.146Z"
-    },
-    {
-      "id": "log-1787443760539-894",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Fundação Galp\" (NIF: 000000000) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Fundação Galp",
-        "contribuinte": "000000000",
-        "tipoCliente": "Fundação",
-        "comercialAtribuido": "José Centúrio",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas nos campos principais"
-          }
-        ]
-      },
-      "timestamp": "2026-08-23T00:09:20.539Z"
-    },
-    {
-      "id": "log-1787443676577-97",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Atualização de Software",
-      "descricao": "Pacote de atualização \"SIGEC_V2.0_23-08-2026_02h07m.json\" gerado (Apenas Software - Sem dados de registo).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-23T00:07:56.577Z"
-    },
-    {
-      "id": "log-1787443645110-480",
+      "id": "log-1787445304778-670",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
@@ -5649,7 +5533,7 @@
         "cargo": "Administrador do Sistema",
         "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-23T00:07:25.110Z"
+      "timestamp": "2026-08-23T00:35:04.778Z"
     }
   ],
   "orcamentos": [
@@ -5714,26 +5598,7 @@
       "createdAt": "2023-09-15T09:00:00.000Z"
     }
   ],
-  "ignoredDuplicates": [
-    {
-      "type": "cli-1786604620361-357",
-      "key": "cli-1786727373519-853:::undefined",
-      "id1": "cli-1786727373519-853",
-      "ignoredAt": "2026-08-22T10:13:13.470Z",
-      "ignoredBy": "Sistema"
-    }
-  ],
-  "activityHistory": [
-    {
-      "id": "act-1787443742186",
-      "userId": "usr-admin-001",
-      "action": "DUPLICATE_KEEP_ONE",
-      "entity": "clientes",
-      "entityId": "cli-1786727373519-853",
-      "details": "Mantido apenas um registo (cli-1786727373519-853). Eliminados: \"Fundação Galp\".",
-      "timestamp": "2026-08-23T00:09:02.186Z"
-    }
-  ],
+  "ignoredDuplicates": [],
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
   "_deletedRegistry": {
     "clientes": [
