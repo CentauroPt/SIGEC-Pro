@@ -202,12 +202,6 @@
     const groups = [];
     const processedIds = new Set();
 
-    // Map client names for quick context
-    const clientMap = {};
-    if (Array.isArray(clientes)) {
-      clientes.forEach(c => { clientMap[c.id] = c.nome || c.empresa || 'Cliente'; });
-    }
-
     for (let i = 0; i < contactos.length; i++) {
       const c1 = contactos[i];
       if (!c1 || !c1.id || processedIds.has(c1.id)) continue;
@@ -217,61 +211,45 @@
       let maxConfidence = 'medium';
 
       const email1 = normalizeEmail(c1.email);
-      const name1 = normalizeText(c1.nome);
-      const phone1 = normalizePhone(c1.telemovel || c1.telefone || '');
-      const clientId1 = c1.clienteId || '';
+      const fullName1 = `${c1.nome || ''} ${c1.apelido || ''}`.trim();
+      const normName1 = normalizeText(fullName1);
 
       for (let j = i + 1; j < contactos.length; j++) {
         const c2 = contactos[j];
         if (!c2 || !c2.id || processedIds.has(c2.id)) continue;
 
         const email2 = normalizeEmail(c2.email);
-        const name2 = normalizeText(c2.nome);
-        const phone2 = normalizePhone(c2.telemovel || c2.telefone || '');
-        const clientId2 = c2.clienteId || '';
+        const fullName2 = `${c2.nome || ''} ${c2.apelido || ''}`.trim();
+        const normName2 = normalizeText(fullName2);
 
         let isMatch = false;
         let reason = '';
         let confidence = 'medium';
 
-        // Regra 1: Nome Idêntico (critério principal para contactos)
-        if (name1 && name2 && name1 === name2 && name1.length >= 3) {
+        const hasSameEmail = email1 && email2 && email1 === email2 && email1.includes('@');
+        const hasSameName = normName1 && normName2 && normName1 === normName2 && normName1.length >= 2;
+        let sim = 0;
+        if (normName1 && normName2 && normName1.length >= 3 && normName2.length >= 3) {
+          sim = calculateSimilarity(normName1, normName2);
+        }
+
+        // Critérios estritos: Nome, Apelido e Correio Eletrónico (Regra 8)
+        if (hasSameName && hasSameEmail) {
           isMatch = true;
-          reason = `Nome Idêntico ("${c1.nome}")` +
-            (clientId1 && clientId2 && clientId1 === clientId2 ? ` + Mesmo Cliente (${clientMap[clientId1] || clientId1})` : '');
+          reason = `Nome e Apelido Idênticos ("${fullName1}") + Email Idêntico (${c1.email})`;
           confidence = 'high';
-        }
-        // Regra 2: Nome com Alta Similaridade (>= 0.85)
-        else if (name1 && name2 && name1.length >= 3 && name2.length >= 3) {
-          const sim = calculateSimilarity(c1.nome, c2.nome);
-          if (sim >= 0.85) {
-            isMatch = true;
-            reason = `Nome Muito Similar (${Math.round(sim * 100)}%)` +
-              (clientId1 && clientId2 && clientId1 === clientId2 ? ` + Mesmo Cliente` : '');
-            confidence = sim >= 0.92 ? 'high' : 'medium';
-          } else if (sim >= 0.70 && phone1 && phone2 && phone1 === phone2 && phone1.length >= 7) {
-            isMatch = true;
-            reason = `Nome Semelhante (${Math.round(sim * 100)}%) + Telemóvel Idêntico (${phone1})`;
-            confidence = 'high';
-          }
-        }
-        // Regra 3: Email Idêntico + nome semelhante (confirmação cruzada)
-        else if (email1 && email2 && email1 === email2 && email1.includes('@')) {
-          const sim = name1 && name2 ? calculateSimilarity(c1.nome, c2.nome) : 0;
+        } else if (hasSameName) {
           isMatch = true;
-          reason = sim >= 0.60
-            ? `Email Idêntico (${c1.email}) + Nome Semelhante`
-            : `Email Idêntico (${c1.email})`;
+          reason = `Nome e Apelido Idênticos ("${fullName1}")`;
+          confidence = 'high';
+        } else if (hasSameEmail) {
+          isMatch = true;
+          reason = `Correio Eletrónico Idêntico (${c1.email})` + (sim >= 0.60 ? ` + Nome Semelhante` : '');
           confidence = sim >= 0.70 ? 'high' : 'medium';
-        }
-        // Regra 4: Mesmo Telemóvel (mesmo número, nomes não cobertos acima)
-        else if (phone1 && phone2 && phone1 === phone2 && phone1.length >= 7) {
-          const sim = name1 && name2 ? calculateSimilarity(c1.nome, c2.nome) : 0;
-          if (sim >= 0.55 || (!name1 || !name2)) {
-            isMatch = true;
-            reason = `Telemóvel Idêntico (${phone1})` + (sim >= 0.55 ? ` + Nome Semelhante` : '');
-            confidence = 'medium';
-          }
+        } else if (sim >= 0.88) {
+          isMatch = true;
+          reason = `Nome e Apelido Muito Similares (${Math.round(sim * 100)}%): "${fullName1}" vs "${fullName2}"`;
+          confidence = sim >= 0.92 ? 'high' : 'medium';
         }
 
         if (isMatch) {
@@ -284,21 +262,22 @@
 
       if (groupMembers.length > 1) {
         processedIds.add(c1.id);
+        const bestConfidence = maxConfidence;
         groups.push({
-          id: 'dup-contact-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6),
+          id: 'grp-dup-con-' + c1.id,
           type: 'contactos',
           typeLabel: 'Contacto',
           items: groupMembers,
-          confidence: maxConfidence,
-          reasons: Array.from(new Set(matchReasons)),
-          primarySuggestedId: determineBestPrimaryRecord(groupMembers, 'contactos')
+          confidence: bestConfidence,
+          confidenceLabel: bestConfidence === 'high' ? 'Certeza Alta' : 'Certeza Média',
+          reasons: [...new Set(matchReasons)],
+          primaryId: determineBestPrimaryRecord(groupMembers, 'contactos')
         });
       }
     }
 
     return groups;
   }
-
   function scanProjectDuplicates(projetos, clientes) {
     if (!Array.isArray(projetos) || projetos.length < 2) return [];
     const groups = [];
@@ -882,8 +861,8 @@
               <button type="button"
                 onclick="keepBothDirect('${group.items.map(i=>i.id).join(',')}')"
                 style="display:flex;align-items:center;gap:5px;padding:0.38rem 0.85rem;font-size:0.82rem;font-weight:600;background:#f8fafc;color:#475569;border:1.5px solid #cbd5e1;border-radius:7px;cursor:pointer;transition:all .18s;"
-                title="Manter ambos os registos sem alterar nada">
-                <i class="fa-solid fa-copy"></i> Manter Ambos
+                title="Manter todos os registos sem alterar nada">
+                <i class="fa-solid fa-copy"></i> Manter Todos
               </button>
               <button type="button" onclick="openDuplicateActionModal('${group.id}','keepone')"
                 style="display:flex;align-items:center;gap:5px;padding:0.38rem 0.85rem;font-size:0.82rem;font-weight:600;background:#fff7ed;color:#c2410c;border:1.5px solid #fed7aa;border-radius:7px;cursor:pointer;transition:all .18s;"
@@ -1122,7 +1101,7 @@
       tabContent = `
         <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:0.9rem 1rem;margin-bottom:1.2rem;font-size:0.87rem;color:#166534;">
           <i class="fa-solid fa-copy" style="margin-right:5px;"></i>
-          <strong>Manter Ambos:</strong> Nenhum registo será alterado nem eliminado. O grupo será ignorado nas futuras análises automáticas.
+          <strong>Manter Todos:</strong> Nenhum registo será alterado nem eliminado. O grupo será ignorado nas futuras análises automáticas.
           Pode sempre rever esta decisão clicando em "Reagir" mais tarde.
         </div>
         <h4 style="margin:0 0 0.8rem 0;font-size:0.94rem;color:#1e293b;">Registos que serão mantidos sem alterações:</h4>
@@ -1131,7 +1110,7 @@
           <button type="button" onclick="closeDuplicateMergeModal()" style="padding:0.5rem 1.1rem;border:1.5px solid #cbd5e1;border-radius:7px;background:#fff;color:#475569;font-weight:600;cursor:pointer;font-size:0.9rem;">Cancelar</button>
           <button type="button" onclick="confirmExecuteKeepBoth()"
             style="padding:0.5rem 1.2rem;background:#16a34a;color:#fff;border:none;border-radius:7px;font-weight:700;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;gap:6px;">
-            <i class="fa-solid fa-copy"></i> Confirmar: Manter Ambos
+            <i class="fa-solid fa-copy"></i> Confirmar: Manter Todos
           </button>
         </div>
       `;
@@ -1150,7 +1129,7 @@
     modalBody.innerHTML = `
       <!-- Barra de opções -->
       <div style="display:flex;gap:0.5rem;margin-bottom:1.4rem;flex-wrap:wrap;">
-        ${tabBtn('keepboth','fa-copy','Manter Ambos','#16a34a')}
+        ${tabBtn('keepboth','fa-copy','Manter Todos','#16a34a')}
         ${tabBtn('keepone','fa-user-check','Manter Só Um','#dc2626')}
         ${tabBtn('merge','fa-code-merge','Fundir Registos','#4f46e5')}
       </div>
@@ -1450,7 +1429,7 @@
       </div>
       ${relHtml}
       <div style="margin-top:1.2rem;display:flex;justify-content:flex-end;gap:0.5rem;flex-wrap:wrap;">
-        <button type="button" onclick="openDuplicateActionModal('${groupId}','keepboth')" style="padding:0.45rem 0.9rem;background:#f0fdf4;color:#16a34a;border:1.5px solid #86efac;border-radius:7px;font-weight:600;cursor:pointer;font-size:0.85rem;"><i class="fa-solid fa-copy"></i> Manter Ambos</button>
+        <button type="button" onclick="openDuplicateActionModal('${groupId}','keepboth')" style="padding:0.45rem 0.9rem;background:#f0fdf4;color:#16a34a;border:1.5px solid #86efac;border-radius:7px;font-weight:600;cursor:pointer;font-size:0.85rem;"><i class="fa-solid fa-copy"></i> Manter Todos</button>
         <button type="button" onclick="openDuplicateActionModal('${groupId}','keepone')" style="padding:0.45rem 0.9rem;background:#fff7ed;color:#c2410c;border:1.5px solid #fed7aa;border-radius:7px;font-weight:600;cursor:pointer;font-size:0.85rem;"><i class="fa-solid fa-user-check"></i> Manter Só Um</button>
         <button type="button" onclick="openDuplicateActionModal('${groupId}','merge')" style="padding:0.45rem 0.9rem;background:#eef2ff;color:#3730a3;border:1.5px solid #c7d2fe;border-radius:7px;font-weight:600;cursor:pointer;font-size:0.85rem;"><i class="fa-solid fa-code-merge"></i> Fundir</button>
       </div>

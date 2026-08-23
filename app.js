@@ -3449,6 +3449,7 @@ const STORAGE_KEYS = {
   DELETED_INTERACOES: 'sigec_pro_db_deleted_interacoes_v6',
   DELETED_INTERACOES_PROJETOS: 'sigec_pro_db_deleted_interacoes_projetos_v6',
   DELETED_ORCAMENTOS: 'sigec_pro_db_deleted_orcamentos_v6',
+  DELETED_USUARIOS: 'sigec_pro_db_deleted_usuarios_v6',
   IGNORED_DUPLICATES: 'sigec_pro_ignored_duplicates'
 };
 
@@ -3458,7 +3459,8 @@ let deletedRegistry = {
   projetos: [],
   interacoes: [],
   interacoesProjetos: [],
-  orcamentos: []
+  orcamentos: [],
+  usuarios: []
 };
 
 let deletedProjectIds = [];
@@ -3481,6 +3483,7 @@ function loadDeletedRegistry() {
     deletedRegistry.interacoes = parseKey(STORAGE_KEYS.DELETED_INTERACOES);
     deletedRegistry.interacoesProjetos = parseKey(STORAGE_KEYS.DELETED_INTERACOES_PROJETOS);
     deletedRegistry.orcamentos = parseKey(STORAGE_KEYS.DELETED_ORCAMENTOS);
+    deletedRegistry.usuarios = parseKey(STORAGE_KEYS.DELETED_USUARIOS);
 
     deletedProjectIds = deletedRegistry.projetos || [];
   } catch (e) {
@@ -3496,6 +3499,7 @@ function saveDeletedRegistry() {
     safeSetStorage(STORAGE_KEYS.DELETED_INTERACOES, JSON.stringify(deletedRegistry.interacoes || []));
     safeSetStorage(STORAGE_KEYS.DELETED_INTERACOES_PROJETOS, JSON.stringify(deletedRegistry.interacoesProjetos || []));
     safeSetStorage(STORAGE_KEYS.DELETED_ORCAMENTOS, JSON.stringify(deletedRegistry.orcamentos || []));
+    safeSetStorage(STORAGE_KEYS.DELETED_USUARIOS, JSON.stringify(deletedRegistry.usuarios || []));
     deletedProjectIds = deletedRegistry.projetos || [];
   } catch (e) {
     console.error('Erro ao guardar registo de eliminados:', e);
@@ -3538,7 +3542,8 @@ function clearDeletedRegistry() {
     projetos: [],
     interacoes: [],
     interacoesProjetos: [],
-    orcamentos: []
+    orcamentos: [],
+    usuarios: []
   };
   deletedProjectIds = [];
   saveDeletedRegistry();
@@ -3580,6 +3585,9 @@ function filterAllDeletedEntities() {
   if (Array.isArray(db.orcamentos)) {
     db.orcamentos = db.orcamentos.filter(o => o && o.id && !isDeletedId('orcamentos', o.id));
   }
+  if (Array.isArray(db.usuarios)) {
+    db.usuarios = db.usuarios.filter(u => u && u.id && !isDeletedId('usuarios', u.id));
+  }
 }
 
 let db = {
@@ -3591,6 +3599,7 @@ let db = {
   usuarios: [],
   userLogs: []
 };
+if (typeof window !== 'undefined') window.db = db;
 
 let isFormDirty = false;
 
@@ -3678,6 +3687,42 @@ function loadDatabase() {
     }
 
     if (typeof ensureUsersInitialized === 'function') ensureUsersInitialized();
+
+    // Garantir que todos os registos existentes sem comercial atribuído pertencem por defeito ao José Centúrio (usr-admin-001)
+    if (Array.isArray(db.clientes)) {
+      db.clientes.forEach(c => {
+        if (c) {
+          if (!c.userId && !c.comercialAtribuidoId) {
+            c.userId = 'usr-admin-001';
+            c.comercialAtribuidoId = 'usr-admin-001';
+            c.comercialAtribuidoNome = 'José Centúrio';
+          }
+          if (typeof normalizeClientType === 'function') {
+            c.tipoCliente = normalizeClientType(c.tipoCliente);
+          }
+        }
+      });
+    }
+
+    if (Array.isArray(db.contactos)) {
+      db.contactos.forEach(con => {
+        if (con && !con.userId && !con.comercialAtribuidoId) {
+          const parentClient = (db.clientes || []).find(c => c.id === con.clienteId);
+          con.userId = parentClient ? (parentClient.comercialAtribuidoId || parentClient.userId || 'usr-admin-001') : 'usr-admin-001';
+          con.comercialAtribuidoId = con.userId;
+        }
+      });
+    }
+
+    if (Array.isArray(db.projetos)) {
+      db.projetos.forEach(p => {
+        if (p && !p.userId && !p.comercialAtribuidoId) {
+          const parentClient = (db.clientes || []).find(c => c.id === p.clienteId);
+          p.userId = parentClient ? (parentClient.comercialAtribuidoId || parentClient.userId || 'usr-admin-001') : 'usr-admin-001';
+          p.comercialAtribuidoId = p.userId;
+        }
+      });
+    }
 
     // Eliminação permanente e irreversível de quaisquer projetos fictícios antigos
     purgeGeneratedMockData();
@@ -4280,7 +4325,7 @@ async function loadDatabaseFromGitHub(silent = false) {
 
     // Incorporar registo de eliminações do servidor
     if (remoteDb._deletedRegistry && typeof remoteDb._deletedRegistry === 'object') {
-      ['clientes', 'contactos', 'projetos', 'interacoes', 'interacoesProjetos', 'orcamentos'].forEach(t => {
+      ['clientes', 'contactos', 'projetos', 'interacoes', 'interacoesProjetos', 'orcamentos', 'usuarios'].forEach(t => {
         if (Array.isArray(remoteDb._deletedRegistry[t])) {
           remoteDb._deletedRegistry[t].forEach(delId => {
             if (delId) addDeletedId(t, delId);
@@ -4366,7 +4411,7 @@ async function loadDatabaseFromGitHub(silent = false) {
 
     if (Array.isArray(remoteDb.usuarios)) {
       remoteDb.usuarios.forEach(incUser => {
-        if (!incUser || !incUser.id) return;
+        if (!incUser || !incUser.id || isDeletedId('usuarios', incUser.id)) return;
         const idx = db.usuarios.findIndex(u => u.id === incUser.id);
         if (idx >= 0) {
           db.usuarios[idx] = { ...incUser, ...db.usuarios[idx] };
@@ -4463,7 +4508,7 @@ async function autoSyncServerOnStartup() {
 
     // Incorporar registo de eliminações do servidor se existir
     if (remoteDb._deletedRegistry && typeof remoteDb._deletedRegistry === 'object') {
-      ['clientes', 'contactos', 'projetos', 'interacoes', 'interacoesProjetos', 'orcamentos'].forEach(t => {
+      ['clientes', 'contactos', 'projetos', 'interacoes', 'interacoesProjetos', 'orcamentos', 'usuarios'].forEach(t => {
         if (Array.isArray(remoteDb._deletedRegistry[t])) {
           remoteDb._deletedRegistry[t].forEach(delId => {
             if (delId) addDeletedId(t, delId);
@@ -4583,7 +4628,7 @@ async function autoSyncServerOnStartup() {
 
     if (Array.isArray(remoteDb.usuarios)) {
       remoteDb.usuarios.forEach(incUser => {
-        if (!incUser || !incUser.id) return;
+        if (!incUser || !incUser.id || isDeletedId('usuarios', incUser.id)) return;
         const idx = db.usuarios.findIndex(u => u && u.id === incUser.id);
         if (idx < 0) {
           db.usuarios.push(incUser);
@@ -4619,6 +4664,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderProjectPageMainGrid();
   renderContactPageMainGrid();
   renderHomeDashboard();
+  if (typeof populateBudgetClientsSelect === 'function') populateBudgetClientsSelect();
 
   // Sincroniza automaticamente os dados salvaguardados no Servidor GitHub ao carregar a página
   autoSyncServerOnStartup();
@@ -4652,6 +4698,30 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function switchTab(tabId) {
+  if (tabId === 'tab-database' || tabId === 'tab-configuracao') {
+    const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
+    const activeUser = (typeof db !== 'undefined' && db.usuarios) ? db.usuarios.find(u => u.id === activeUserId) : null;
+    const canAccess = typeof hasConfigAccess === 'function' ? hasConfigAccess(activeUser) : (activeUser && (activeUser.role === 'admin' || activeUser.id === 'usr-admin-001'));
+    if (!canAccess) {
+      if (typeof showToast === 'function') showToast('Acesso à Configuração restrito ao Administrador e ao Utilizador José Centúrio.', 'warning');
+      alert('Acesso Restrito:\nA página de Configuração é acessível exclusivamente ao Administrador e ao utilizador José Centúrio.');
+      tabId = 'tab-home';
+    }
+  }
+
+  if (tabId === 'tab-consultas') {
+    const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
+    const activeUser = (typeof db !== 'undefined' && db.usuarios) ? db.usuarios.find(u => u.id === activeUserId) : null;
+    const canAccessConsultas = typeof hasConsultasAccess === 'function' ? hasConsultasAccess(activeUser) : (activeUser && (activeUser.role === 'admin' || activeUser.chefia === true || activeUser.id === 'usr-admin-001'));
+    if (!canAccessConsultas) {
+      if (typeof showToast === 'function') showToast('Acesso ao separador Consultas restrito a utilizadores com perfil de Chefia.', 'warning');
+      alert('Acesso Restrito:\nO separador Consultas é acessível exclusivamente a utilizadores com permissão de Chefia ativada pelo Administrador.');
+      tabId = 'tab-home';
+    } else {
+      if (typeof populateConsultasUserSelect === 'function') populateConsultasUserSelect();
+    }
+  }
+
   if (isFormDirty) {
     if (!confirm('Existem alterações não guardadas no formulário. Deseja sair sem guardar?')) {
       return;
@@ -4683,6 +4753,7 @@ function switchTab(tabId) {
     updateClientProjectOptions();
     renderProjectPageMainGrid();
   } else if (tabId === 'tab-orcamentos') {
+    populateBudgetClientsSelect();
     populateBudgetClientsDatalist();
     populateBudgetModelPresetDatalist();
     renderSavedBudgetsList();
@@ -4712,7 +4783,7 @@ function renderContactPageMainGrid() {
   container.innerHTML = '';
 
   const query = document.getElementById('contactPageSearchQuery')?.value.trim() || '';
-  let contactsList = [...(db.contactos || [])];
+  let contactsList = getUserScopedItems([...(db.contactos || [])]);
 
   // Filtro por Separador: Todos os Contactos, Contactos Privados, Contactos Fundações, Contactos Público / Estatal
   if (currentContactFilterTab === 'privado') {
@@ -4779,6 +4850,7 @@ function renderContactPageMainGrid() {
         <table class="db-table full-width-list-table" style="width:100%; border-collapse:collapse; font-size:0.88rem;">
           <thead>
             <tr style="background-color:#e0f2fe; color:#1e3a8a;">
+              <th style="padding:0.75rem 0.5rem; text-align:center; width:110px;">Contactado</th>
               <th style="padding:0.75rem 1rem; text-align:left;">Nome do Contacto</th>
               <th style="padding:0.75rem 1rem; text-align:left;">Cliente Associado</th>
               <th style="padding:0.75rem 1rem; text-align:left;">Cargo</th>
@@ -4792,8 +4864,15 @@ function renderContactPageMainGrid() {
 
     contactsList.forEach(con => {
       const client = db.clientes.find(c => c.id === con.clienteId);
+      const isContacted = isContactContacted(con.id);
       html += `
         <tr style="border-bottom:1px solid #e2e8f0; cursor:pointer;" onclick="openContactModalForEdit('${con.id}')">
+          <td style="padding:0.75rem 0.5rem; text-align:center;" onclick="event.stopPropagation();">
+            <label style="display:inline-flex; align-items:center; justify-content:center; gap:0.35rem; cursor:pointer; margin:0;" title="${isContacted ? 'Contacto Contactado (possui registo de contactos realizados)' : 'Não Contactado (sem registo de contactos realizados)'}">
+              <input type="checkbox" ${isContacted ? 'checked' : ''} disabled style="width:17px; height:17px; accent-color:#16a34a; cursor:default;">
+              <span style="font-size:0.78rem; font-weight:700; color:${isContacted ? '#16a34a' : '#94a3b8'};">${isContacted ? 'Sim' : 'Não'}</span>
+            </label>
+          </td>
           <td style="padding:0.75rem 1rem; font-weight:700; color:#1e293b;">
             <div style="display:flex; align-items:center; gap:0.5rem;">
               <i class="fa-solid fa-user" style="color:var(--primary-blue); font-size:0.85rem;"></i>
@@ -4906,6 +4985,14 @@ function setContactFilterTab(filter) {
   renderContactPageMainGrid();
 }
 
+
+function isContactContacted(contactId) {
+  if (!contactId || !db.interacoes) return false;
+  const targetId = String(contactId).trim();
+  return (db.interacoes || []).some(i => i && String(i.contactoId || '').trim() === targetId);
+}
+window.isContactContacted = isContactContacted;
+
 function isClientContacted(clientId) {
   if (!clientId || !db.interacoes) return false;
   const targetId = String(clientId).trim();
@@ -4927,7 +5014,7 @@ function renderClientPageMainGrid() {
   container.innerHTML = '';
 
   const query = document.getElementById('clientPageSearchQuery')?.value.trim() || '';
-  let clientsList = [...(db.clientes || [])];
+  let clientsList = getUserScopedItems([...(db.clientes || [])]);
 
   // Filtro por Separador: Todos os Clientes, Clientes Privados, Fundações, Entidades Públicas / Estatal
   if (currentClientFilterTab === 'privado') {
@@ -5085,7 +5172,7 @@ function renderProjectPageMainGrid() {
   container.innerHTML = '';
 
   const query = document.getElementById('projectPageSearchQuery')?.value.trim() || '';
-  let projectsList = [...(db.projetos || [])];
+  let projectsList = getUserScopedItems([...(db.projetos || [])]);
 
   if (query) {
     const qNorm = normalizeText(query);
@@ -5258,6 +5345,20 @@ function showToast(message, type = 'success') {
 // ==========================================
 
 let currentClientId = null;
+
+function normalizeClientType(rawType) {
+  if (!rawType) return 'Privado';
+  const t = String(rawType).trim().toLowerCase();
+  if (t.includes('estat') || t.includes('state') || t.includes('étati') || t.includes('etati') || t.includes('państ') || t.includes('panst')) {
+    return 'Estatal';
+  }
+  if (t.includes('funda') || t.includes('found')) {
+    return 'Fundação';
+  }
+  return 'Privado';
+}
+window.normalizeClientType = normalizeClientType;
+
 let currentContactIdForModal = null;
 let currentInteractionIdForModal = null;
 let currentProjectSubTabIndex = null;
@@ -5724,8 +5825,51 @@ function formatCodigoPostal(input) {
   input.value = val;
 }
 
+function populateClientComercialOptions(selectedUserId = null) {
+  const select = document.getElementById('clientComercialAtribuido');
+  if (!select) return;
+
+  ensureUsersInitialized();
+  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001';
+  const users = Array.isArray(db.usuarios) ? db.usuarios : [];
+  
+  select.innerHTML = users.map(u => {
+    const isSelected = selectedUserId ? (u.id === selectedUserId) : (u.id === activeUserId);
+    const roleBadge = u.role === 'admin' ? ' (Admin)' : '';
+    return `<option value="${u.id}" ${isSelected ? 'selected' : ''}>${u.nome}${roleBadge}</option>`;
+  }).join('');
+
+  if (selectedUserId) {
+    select.value = selectedUserId;
+  } else if (!select.value && users.length > 0) {
+    select.value = activeUserId;
+  }
+}
+window.populateClientComercialOptions = populateClientComercialOptions;
+
+function getUserScopedItems(items) {
+  if (!Array.isArray(items)) return [];
+  ensureUsersInitialized();
+  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001';
+  const activeUser = (db.usuarios || []).find(u => u.id === activeUserId);
+
+  // Se o utilizador tem perfil de Administrador ou Chefia, tem acesso visual a todos os registos do sistema
+  if (activeUser && (activeUser.role === 'admin' || activeUser.chefia === true || activeUser.id === 'usr-admin-001')) {
+    return items.filter(Boolean);
+  }
+
+  return items.filter(item => {
+    if (!item) return false;
+    // Se o registo não tem comercial atribuído explicitamente, pertence por defeito ao José Centúrio (usr-admin-001)
+    const itemOwner = item.comercialAtribuidoId || item.userId || 'usr-admin-001';
+    return itemOwner === activeUserId;
+  });
+}
+window.getUserScopedItems = getUserScopedItems;
+
 function openClientModal() {
   initModalResizing();
+  populateClientComercialOptions();
   document.getElementById('clientModal')?.classList.add('active');
 }
 
@@ -5751,7 +5895,12 @@ function resetClientForm(skipConfirm = false) {
   const paisEl = document.getElementById('clientPais');
   if (paisEl) { paisEl.value = ''; paisEl.style.minWidth = ''; }
   document.getElementById('clientId').value = '';
+  const proxElReset = document.getElementById('clientProximoContacto');
+  if (proxElReset) proxElReset.value = '';
   document.getElementById('btnDeleteClient').style.display = 'none';
+
+  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001';
+  populateClientComercialOptions(activeUserId);
 
   handleTipoClienteChange();
   renderClientRelatedProjects([]);
@@ -5817,8 +5966,11 @@ function loadClientIntoForm(clientId, skipDirtyCheck = false, skipTabSwitch = fa
   localStorage.setItem('sigec_pro_last_client_id', client.id);
 
   document.getElementById('clientId').value = client.id;
-  const tipoCliente = client.tipoCliente || 'Privado';
+  const tipoCliente = normalizeClientType(client.tipoCliente);
+  client.tipoCliente = tipoCliente;
   document.getElementById('tipoCliente').value = tipoCliente;
+
+  populateClientComercialOptions(client.comercialAtribuidoId || client.userId || 'usr-admin-001');
 
   if (tipoCliente === 'Estatal') {
     document.getElementById('ministerio').value = client.ministerio || '';
@@ -5849,6 +6001,9 @@ function loadClientIntoForm(clientId, skipDirtyCheck = false, skipTabSwitch = fa
     document.getElementById('clientTelemovel').value = client.telemovel || '';
     document.getElementById('clientEmail').value = client.email || '';
   }
+
+  const proxElLoad = document.getElementById('clientProximoContacto');
+  if (proxElLoad) proxElLoad.value = client.proximoContacto || '';
 
   handleTipoClienteChange();
   document.getElementById('btnDeleteClient').style.display = 'inline-flex';
@@ -5939,6 +6094,132 @@ function refreshClientSubLists(clientId) {
   renderClientDocsGrid(targetId, relatedProjects);
 }
 
+
+async function handleUploadBudgetForClient(event) {
+  const files = Array.from(event.target.files || []);
+  if (files.length === 0) return;
+
+  const clientId = currentClientId || (document.getElementById('clientId') ? document.getElementById('clientId').value : null);
+  if (!clientId) {
+    showToast('Por favor, selecione ou guarde primeiro o cliente para associar o orçamento.', 'warning');
+    event.target.value = '';
+    return;
+  }
+
+  const client = (db.clientes || []).find(c => String(c.id || '').trim() === String(clientId || '').trim());
+  if (!client) {
+    showToast('Cliente não encontrado.', 'danger');
+    event.target.value = '';
+    return;
+  }
+
+  const isEstatal = client.tipoCliente === 'Estatal';
+  const currentActiveIdx = Number(activeEstatalSeparadorIndex || 0);
+  const currentSep = (isEstatal && Array.isArray(client.separadores) && client.separadores[currentActiveIdx]) ? client.separadores[currentActiveIdx] : null;
+  const currentSepId = currentSep ? currentSep.id : null;
+
+  for (const file of files) {
+    const fileName = file.name;
+    const isJson = fileName.toLowerCase().endsWith('.json');
+
+    if (isJson) {
+      try {
+        const text = await file.text();
+        const parsed = JSON.parse(text);
+
+        const newBudgetId = parsed.id || generateId('orc');
+        const numOrc = parsed.numeroOrcamento || parsed.numero || fileName.replace(/\.json$/i, '');
+        const dataOrc = parsed.dataOrcamento || parsed.data || new Date().toISOString().slice(0, 10);
+        const totalVal = Number(parsed.total || parsed.valorTotal || parsed.valor || 0);
+        const estadoVal = parsed.estado || 'Em avaliação';
+
+        const budgetRecord = {
+          id: newBudgetId,
+          clienteId: clientId,
+          clienteNome: client.nome || 'Cliente',
+          numeroOrcamento: numOrc,
+          dataOrcamento: dataOrc,
+          total: totalVal,
+          estado: estadoVal,
+          separadorId: currentSepId,
+          subTabIndex: currentActiveIdx,
+          tipo: 'json',
+          fileName: fileName,
+          formData: parsed.formData || parsed.data || parsed,
+          createdAt: new Date().toISOString()
+        };
+
+        if (!Array.isArray(client.orcamentos)) client.orcamentos = [];
+        const existingIdx = client.orcamentos.findIndex(b => b.id === newBudgetId);
+        if (existingIdx >= 0) {
+          client.orcamentos[existingIdx] = budgetRecord;
+        } else {
+          client.orcamentos.push(budgetRecord);
+        }
+
+        if (!Array.isArray(db.orcamentos)) db.orcamentos = [];
+        const globalIdx = db.orcamentos.findIndex(b => b.id === newBudgetId);
+        if (globalIdx >= 0) {
+          db.orcamentos[globalIdx] = budgetRecord;
+        } else {
+          db.orcamentos.push(budgetRecord);
+        }
+
+        showToast(`Orçamento "${numOrc}" carregado com sucesso!`, 'success');
+      } catch (err) {
+        console.error('Erro ao ler ficheiro JSON de orçamento:', err);
+        showToast(`Erro ao processar ficheiro ${fileName}: formato JSON inválido.`, 'danger');
+      }
+    } else {
+      // Ficheiro Documental (PDF, Word, Excel, etc.)
+      try {
+        const dataUrl = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+
+        const newBudgetId = generateId('orc-doc');
+        const docName = fileName.replace(/\.[^/.]+$/, '');
+        const budgetRecord = {
+          id: newBudgetId,
+          clienteId: clientId,
+          clienteNome: client.nome || 'Cliente',
+          numeroOrcamento: docName,
+          dataOrcamento: new Date().toISOString().slice(0, 10),
+          total: 0,
+          estado: 'Em avaliação',
+          separadorId: currentSepId,
+          subTabIndex: currentActiveIdx,
+          tipo: 'documento',
+          fileName: fileName,
+          fileType: file.type || 'application/octet-stream',
+          fileSize: file.size,
+          dataUrl: dataUrl,
+          createdAt: new Date().toISOString()
+        };
+
+        if (!Array.isArray(client.orcamentos)) client.orcamentos = [];
+        client.orcamentos.push(budgetRecord);
+
+        if (!Array.isArray(db.orcamentos)) db.orcamentos = [];
+        db.orcamentos.push(budgetRecord);
+
+        showToast(`Documento de orçamento "${fileName}" anexado com sucesso!`, 'success');
+      } catch (err) {
+        console.error('Erro ao carregar documento:', err);
+        showToast(`Erro ao carregar ${fileName}.`, 'danger');
+      }
+    }
+  }
+
+  saveDatabase();
+  renderClientBudgetsList(clientId);
+  event.target.value = '';
+}
+window.handleUploadBudgetForClient = handleUploadBudgetForClient;
+
 function renderClientBudgetsList(clientId) {
   const container = document.getElementById('clientBudgetsList');
   if (!container) return;
@@ -5991,16 +6272,40 @@ function renderClientBudgetsList(clientId) {
     chip.style.gap = '0.5rem';
 
     const formattedTotal = (parseFloat(b.total) || 0).toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+    const orcNum = b.numero || b.numeroOrcamento || b.fileName || 'ORC';
+    const orcRef = b.referencia || b.dataOrcamento || b.data || '';
+
+    let actionClick = `closeClientModal(); switchTab('tab-orcamentos'); loadSavedBudgetIntoForm('${b.id}');`;
+    let fileIcon = '<i class="fa-solid fa-file-invoice-dollar" style="color: #f59e0b;"></i>';
+    let docBtn = '';
+
+    if (b.tipo === 'documento' && b.dataUrl) {
+      actionClick = `window.open('${b.dataUrl}', '_blank')`;
+      const fn = (b.fileName || '').toLowerCase();
+      if (fn.endsWith('.pdf')) fileIcon = '<i class="fa-solid fa-file-pdf" style="color: #ef4444;"></i>';
+      else if (fn.endsWith('.xlsx') || fn.endsWith('.xls')) fileIcon = '<i class="fa-solid fa-file-excel" style="color: #10b981;"></i>';
+      else if (fn.endsWith('.docx') || fn.endsWith('.doc')) fileIcon = '<i class="fa-solid fa-file-word" style="color: #2563eb;"></i>';
+      else fileIcon = '<i class="fa-solid fa-file" style="color: #64748b;"></i>';
+
+      docBtn = `<a href="${b.dataUrl}" download="${escapeHtml(b.fileName || 'Orcamento')}" class="action-icon-btn" title="Descarregar ficheiro" onclick="event.stopPropagation();" style="padding: 0.2rem 0.45rem; border: none; background: rgba(59, 130, 246, 0.1); color: #2563eb; border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; justify-content: center; margin-right: 0.2rem;">
+        <i class="fa-solid fa-download"></i>
+      </a>`;
+    }
+
     chip.innerHTML = `
-      <div style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; flex: 1;" onclick="closeClientModal(); switchTab('tab-orcamentos'); loadSavedBudgetIntoForm('${b.id}');" title="Clique para abrir e editar este orçamento">
-        <i class="fa-solid fa-file-invoice-dollar" style="color: #f59e0b;"></i>
-        <span class="project-badge-name" style="font-weight: 700;">${escapeHtml(b.numero || 'ORC')}</span>
-        <span style="font-size: 0.8rem; color: #475569;">(${escapeHtml(b.referencia || b.data || '')})</span>
-        <span class="badge badge-amber" style="font-size: 0.72rem; margin-left: 0.35rem;">${formattedTotal}</span>
+      <div style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; flex: 1;" onclick="${actionClick}" title="${b.tipo === 'documento' ? 'Clique para abrir documento' : 'Clique para abrir e editar este orçamento'}">
+        ${fileIcon}
+        <span class="project-badge-name" style="font-weight: 700;">${escapeHtml(orcNum)}</span>
+        <span style="font-size: 0.8rem; color: #475569;">(${escapeHtml(orcRef)})</span>
+        ${b.total ? `<span class="badge badge-amber" style="font-size: 0.72rem; margin-left: 0.35rem;">${formattedTotal}</span>` : ''}
+        ${(b.estado === 'Adjudicado') ? '<span class="badge" style="background: #dcfce7; color: #15803d; font-size: 0.72rem; margin-left: 0.35rem; font-weight: 700;"><i class="fa-solid fa-check" style="margin-right:2px;"></i>Adjudicado</span>' : ((b.estado === 'Não Adjudicado') ? '<span class="badge" style="background: #fee2e2; color: #b91c1c; font-size: 0.72rem; margin-left: 0.35rem; font-weight: 700;"><i class="fa-solid fa-xmark" style="margin-right:2px;"></i>Não Adjudicado</span>' : '<span class="badge" style="background: #fef3c7; color: #d97706; font-size: 0.72rem; margin-left: 0.35rem; font-weight: 700;"><i class="fa-solid fa-hourglass-half" style="margin-right:2px;"></i>Em avaliação</span>')}
       </div>
-      <button type="button" class="action-icon-btn danger" onclick="deleteClientBudget('${clientId}', '${b.id}', event)" title="Apagar este Orçamento da Ficha do Cliente" style="padding: 0.2rem 0.45rem; border: none; background: rgba(239, 68, 68, 0.1); color: #dc2626; border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; justify-content: center;">
-        <i class="fa-solid fa-trash"></i>
-      </button>
+      <div style="display: flex; align-items: center;">
+        ${docBtn}
+        <button type="button" class="action-icon-btn danger" onclick="deleteClientBudget('${clientId}', '${b.id}', event)" title="Apagar este Orçamento da Ficha do Cliente" style="padding: 0.2rem 0.45rem; border: none; background: rgba(239, 68, 68, 0.1); color: #dc2626; border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; justify-content: center;">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
     `;
     container.appendChild(chip);
   });
@@ -6124,27 +6429,25 @@ window.deleteClientDocItem = deleteClientDocItem;
 
 function newBudgetForCurrentClient() {
   const client = (db.clientes || []).find(c => String(c.id || '').trim() === String(currentClientId || '').trim());
-  const isEstatal = client && client.tipoCliente === 'Estatal';
-  const currentActiveIdx = Number(activeEstatalSeparadorIndex || 0);
-  const currentSep = (client && Array.isArray(client.separadores) && client.separadores[currentActiveIdx]) ? client.separadores[currentActiveIdx] : null;
-  const clientName = client ? (isEstatal && currentSep && currentSep.nome ? currentSep.nome : client.nome) : '';
+  if (!client) return;
 
-  window._pendingNewBudgetSeparador = isEstatal ? {
-    clientId: client.id,
-    subTabIndex: currentActiveIdx,
-    separadorId: currentSep ? currentSep.id : null
-  } : null;
+  const isEstatal = client.tipoCliente === 'Estatal';
+  const currentActiveIdx = Number(activeEstatalSeparadorIndex || 0);
+  const currentSep = (Array.isArray(client.separadores) && client.separadores[currentActiveIdx]) ? client.separadores[currentActiveIdx] : null;
 
   closeClientModal();
   switchTab('tab-orcamentos');
-  newBudgetForm();
-  if (clientName) {
-    const cliInp = document.getElementById('budgetHeaderCliente');
-    if (cliInp) {
-      cliInp.value = clientName;
-      syncBudgetRefFromClient(clientName);
-    }
-  }
+  clearBudgetForm();
+
+  window._pendingNewBudgetSeparador = {
+    clientId: client.id,
+    subTabIndex: isEstatal ? currentActiveIdx : 0,
+    separadorId: isEstatal && currentSep ? currentSep.id : null
+  };
+  window._currentEditingBudgetId = null;
+
+  populateBudgetClientsSelect(client.id);
+  syncBudgetRefFromClient(client.nome);
 }
 window.newBudgetForCurrentClient = newBudgetForCurrentClient;
 
@@ -6375,6 +6678,14 @@ function renderClientContactsGrid(contacts) {
 function saveClient(e) {
   if (e) e.preventDefault();
 
+  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001';
+  const activeUser = (db.usuarios || []).find(u => u.id === activeUserId);
+  if (activeUser && activeUser.chefia === true && activeUser.role !== 'admin' && activeUser.id !== 'usr-admin-001') {
+    showToast('Acesso de Chefia: Tem permissão de visualização e consulta. A alteração e criação é exclusiva para Orçamentos.', 'warning');
+    alert('Acesso Restrito:\nO perfil de Chefia tem permissão de visualização e consulta de clientes.\nA criação, alteração e impressão é exclusiva para Orçamentos.');
+    return;
+  }
+
   const id = document.getElementById('clientId').value || generateId('cli');
   const tipoCliente = document.getElementById('tipoCliente').value;
   const cpRegex = /^\d{4}-\d{3}$/;
@@ -6416,6 +6727,10 @@ function saveClient(e) {
 
     const primarySep = currentEstatalSeparadores[0] || {};
     const existingIndex = db.clientes.findIndex(c => c.id === id);
+    const comercialSelect = document.getElementById('clientComercialAtribuido');
+    const comercialId = comercialSelect ? comercialSelect.value : (sessionStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001');
+    const comercialUser = (db.usuarios || []).find(u => u.id === comercialId);
+    const comercialNome = comercialUser ? comercialUser.nome : '';
 
     clientObj = {
       id,
@@ -6434,6 +6749,9 @@ function saveClient(e) {
       telemovel: (primarySep.telemovel || '').trim(),
       email: (primarySep.email || '').trim(),
       separadores: currentEstatalSeparadores,
+      userId: comercialId,
+      comercialAtribuidoId: comercialId,
+      comercialAtribuidoNome: comercialNome,
       createdAt: existingIndex >= 0 ? db.clientes[existingIndex].createdAt : new Date().toISOString()
     };
   } else {
@@ -6465,6 +6783,10 @@ function saveClient(e) {
     }
 
     const existingIndex = db.clientes.findIndex(c => c.id === id);
+    const comercialSelect = document.getElementById('clientComercialAtribuido');
+    const comercialId = comercialSelect ? comercialSelect.value : (sessionStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001');
+    const comercialUser = (db.usuarios || []).find(u => u.id === comercialId);
+    const comercialNome = comercialUser ? comercialUser.nome : '';
 
     clientObj = {
       id,
@@ -6483,6 +6805,9 @@ function saveClient(e) {
       telefone,
       telemovel,
       email,
+      userId: comercialId,
+      comercialAtribuidoId: comercialId,
+      comercialAtribuidoNome: comercialNome,
       createdAt: existingIndex >= 0 ? db.clientes[existingIndex].createdAt : new Date().toISOString()
     };
   }
@@ -6500,11 +6825,14 @@ function saveClient(e) {
 
   const existingIndex = db.clientes.findIndex(c => c.id === id);
   const clienteAnterior = existingIndex >= 0 ? { ...db.clientes[existingIndex] } : null;
+  const oldUserId = clienteAnterior ? (clienteAnterior.comercialAtribuidoId || clienteAnterior.userId) : null;
+  const targetUserId = clientObj.comercialAtribuidoId || clientObj.userId;
+  const isTransfer = oldUserId && targetUserId && (oldUserId !== targetUserId);
 
   if (existingIndex >= 0) {
     // Detetar campos alterados
     const camposAlterados = [];
-    const camposLabel = { nome: 'Nome', contribuinte: 'NIF/Contribuinte', email: 'Email', telefone: 'Telefone', telemovel: 'Telemovel', direcao1: 'Morada', codigoPostal: 'Código Postal', localidade: 'Localidade', pais: 'País', tipoCliente: 'Tipo de Cliente', ministerio: 'Ministério' };
+    const camposLabel = { nome: 'Nome', contribuinte: 'NIF/Contribuinte', email: 'Email', telefone: 'Telefone', telemovel: 'Telemovel', direcao1: 'Morada', codigoPostal: 'Código Postal', localidade: 'Localidade', pais: 'País', tipoCliente: 'Tipo de Cliente', ministerio: 'Ministério', comercialAtribuidoNome: 'Comercial Atribuído' };
     Object.keys(camposLabel).forEach(campo => {
       const valAnterior = (clienteAnterior[campo] || '').toString().trim();
       const valNovo = (clientObj[campo] || '').toString().trim();
@@ -6521,20 +6849,100 @@ function saveClient(e) {
       nome: clientObj.nome,
       contribuinte: clientObj.contribuinte,
       tipoCliente: clientObj.tipoCliente,
+      comercialAtribuido: clientObj.comercialAtribuidoNome || '',
       camposAlterados: camposAlterados.length > 0 ? camposAlterados : [{ campo: 'Ficheiro guardado', anterior: '', novo: 'Sem alterações detetadas nos campos principais' }]
     });
   } else {
     db.clientes.push(clientObj);
     showToast('Novo Cliente registado com sucesso!');
-    logUserActivity('Criação de Cliente', `Novo cliente "${clientObj.nome}" (NIF: ${clientObj.contribuinte}) registado na base de dados.`, {
+    logUserActivity('Criação de Cliente', `Novo cliente "${clientObj.nome}" (NIF: ${clientObj.contribuinte}) registado na base de dados (Comercial: ${clientObj.comercialAtribuidoNome || 'N/A'}).`, {
       acao: 'Criação',
       ficha: 'Cliente',
       nome: clientObj.nome,
       contribuinte: clientObj.contribuinte,
       tipoCliente: clientObj.tipoCliente,
+      comercialAtribuido: clientObj.comercialAtribuidoNome || '',
       email: clientObj.email || '',
       telefone: clientObj.telefone || ''
     });
+  }
+
+  // --- TRANSFERÊNCIA EM CASCATA DE TODOS OS DADOS ASSOCIADOS AO CLIENTE ---
+  if (targetUserId) {
+    // Se for transferência de utilizador (ou nova atribuição comercial), traduzir o cliente e todos os dados vinculados para o idioma do novo utilizador
+    if (isTransfer || (existingIndex < 0 && targetUserId)) {
+      if (typeof translateClientAndLinkedDataForUser === 'function') {
+        translateClientAndLinkedDataForUser(clientObj, targetUserId);
+      }
+    }
+
+    clientObj.userId = targetUserId;
+    clientObj.comercialAtribuidoId = targetUserId;
+    clientObj.createdById = targetUserId;
+
+    // 1. Atualizar todos os Contactos do cliente
+    const contactIds = new Set();
+    if (Array.isArray(db.contactos)) {
+      db.contactos.forEach(con => {
+        if (con.clienteId === id || (con.empresa && clientObj.nome && con.empresa.toLowerCase().trim() === clientObj.nome.toLowerCase().trim())) {
+          con.userId = targetUserId;
+          con.comercialAtribuidoId = targetUserId;
+          con.createdById = targetUserId;
+          if (con.id) contactIds.add(con.id);
+        }
+      });
+    }
+
+    // 2. Atualizar todos os Projetos do cliente
+    const projectIds = new Set();
+    if (Array.isArray(db.projetos)) {
+      db.projetos.forEach(p => {
+        if (p.clienteId === id || (p.cliente && clientObj.nome && p.cliente.toLowerCase().trim() === clientObj.nome.toLowerCase().trim())) {
+          p.userId = targetUserId;
+          p.comercialAtribuidoId = targetUserId;
+          p.createdById = targetUserId;
+          if (p.id) projectIds.add(p.id);
+        }
+      });
+    }
+
+    // 3. Atualizar todos os Orçamentos do cliente
+    if (Array.isArray(db.orcamentos)) {
+      db.orcamentos.forEach(b => {
+        if (b.clienteId === id || (b.cliente && clientObj.nome && b.cliente.toLowerCase().trim() === clientObj.nome.toLowerCase().trim())) {
+          b.userId = targetUserId;
+          b.comercialAtribuidoId = targetUserId;
+          b.createdById = targetUserId;
+        }
+      });
+    }
+
+    // 4. Atualizar e MANTER integralmente todas as Interações do cliente e dos seus contactos
+    if (Array.isArray(db.interacoes)) {
+      db.interacoes.forEach(it => {
+        if (it.clienteId === id || it.entidadeId === id || (it.contactoId && contactIds.has(it.contactoId))) {
+          it.userId = targetUserId;
+          it.createdById = targetUserId;
+        }
+      });
+    }
+
+    // 5. Atualizar e MANTER integralmente todas as Interações de Projetos vinculados
+    if (Array.isArray(db.interacoesProjetos)) {
+      db.interacoesProjetos.forEach(it => {
+        if (it.clienteId === id || (it.projetoId && projectIds.has(it.projetoId))) {
+          it.userId = targetUserId;
+          it.createdById = targetUserId;
+        }
+      });
+    }
+
+    // Se houve mudança de utilizador comercial, registar no histórico
+    if (isTransfer) {
+      const oldUser = (db.usuarios || []).find(u => u.id === oldUserId);
+      const oldName = oldUser ? oldUser.nome : oldUserId;
+      logUserActivity('Transferência de Cliente', `Cliente "${clientObj.nome}" transferido de ${oldName} para ${clientObj.comercialAtribuidoNome || targetUserId} com todos os seus contactos, projetos, orçamentos e interações.`);
+    }
   }
 
   currentClientId = id;
@@ -6546,6 +6954,10 @@ function saveClient(e) {
   refreshClientSubLists(id);
   closeClientModal();
   renderClientPageMainGrid();
+  renderContactPageMainGrid();
+  renderProjectPageMainGrid();
+  renderHomeDashboard();
+  renderDatabaseOverview();
 }
 
 function deleteCurrentClient() {
@@ -6739,6 +7151,14 @@ function closeContactModal() {
 
 function saveContact(e) {
   if (e) e.preventDefault();
+
+  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001';
+  const activeUser = (db.usuarios || []).find(u => u.id === activeUserId);
+  if (activeUser && activeUser.chefia === true && activeUser.role !== 'admin' && activeUser.id !== 'usr-admin-001') {
+    showToast('Acesso de Chefia: Tem permissão de visualização e consulta. A alteração e criação é exclusiva para Orçamentos.', 'warning');
+    alert('Acesso Restrito:\nO perfil de Chefia tem permissão de visualização e consulta de contactos.\nA criação, alteração e impressão é exclusiva para Orçamentos.');
+    return;
+  }
 
   const selectedClienteId = document.getElementById('contactClienteId').value || currentClientId;
   if (!selectedClienteId) {
@@ -7258,6 +7678,28 @@ function deleteInteractionInline(id) {
   }
 }
 
+function saveClientNextContactDate(newDate) {
+  if (!currentClientId) return;
+  const client = (db.clientes || []).find(c => c.id === currentClientId);
+  if (client) {
+    client.proximoContacto = newDate ? String(newDate).trim() : null;
+    saveDatabase();
+    if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
+    if (typeof renderClientPageMainGrid === 'function') renderClientPageMainGrid();
+    if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
+      syncDatabaseToGitHub(true, true).catch(() => {});
+    }
+    showToast(t('Data de próximo contacto atualizada com sucesso!'));
+  }
+}
+window.saveClientNextContactDate = saveClientNextContactDate;
+
+function openClientFromDashboard(clientId) {
+  switchTab('tab-clientes');
+  loadClientIntoForm(clientId, true, true, true);
+}
+window.openClientFromDashboard = openClientFromDashboard;
+
 function renderClientInteractionsGrid(interactions) {
   const grid = document.getElementById('clientInteractionsGrid');
   grid.innerHTML = '';
@@ -7583,6 +8025,14 @@ function refreshProjectSubLists(projectId) {
 function saveProject(e) {
   if (e) e.preventDefault();
 
+  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001';
+  const activeUser = (db.usuarios || []).find(u => u.id === activeUserId);
+  if (activeUser && activeUser.chefia === true && activeUser.role !== 'admin' && activeUser.id !== 'usr-admin-001') {
+    showToast('Acesso de Chefia: Tem permissão de visualização e consulta. A alteração e criação é exclusiva para Orçamentos.', 'warning');
+    alert('Acesso Restrito:\nO perfil de Chefia tem permissão de visualização e consulta de projetos.\nA criação, alteração e impressão é exclusiva para Orçamentos.');
+    return;
+  }
+
   const id = document.getElementById('projectId').value || generateId('proj');
   const existingIndex = db.projetos.findIndex(p => p.id === id);
   const dataInicio = document.getElementById('projectDataInicio').value;
@@ -7660,6 +8110,12 @@ function saveProject(e) {
   const projetoExistIdx = db.projetos.findIndex(p => p.id === id);
   const projetoAnterior = projetoExistIdx >= 0 ? { ...db.projetos[projetoExistIdx] } : null;
   const clienteAssoc = db.clientes.find(c => c.id === clienteId);
+  projObj.userId = clienteAssoc ? (clienteAssoc.comercialAtribuidoId || clienteAssoc.userId) : (sessionStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001');
+  projObj.comercialAtribuidoId = projObj.userId;
+  const targetUserProj = (db.usuarios || []).find(u => u.id === projObj.userId);
+  if (targetUserProj && targetUserProj.idioma && typeof translateEntityForTargetUser === 'function') {
+    translateEntityForTargetUser('projeto', projObj, targetUserProj.idioma);
+  }
 
   if (projetoExistIdx >= 0) {
     const camposAlterados = [];
@@ -8257,6 +8713,7 @@ function exportSearchResultsToExcel() {
       'Andar': c.andar || '',
       'Código Postal': c.codigoPostal,
       'Localidade': c.localidade,
+      'País': c.pais || 'Portugal',
       'Telefone': c.telefone || '',
       'Telemóvel': c.telemovel || '',
       'Email': c.email || '',
@@ -8320,13 +8777,14 @@ function exportSearchResultsToPDF() {
     let body = [];
 
     if (currentSearchCategory === 'clientes') {
-      head = [['Tipo', 'Nome / Razão Social', 'NIF', 'Código Postal', 'Localidade', 'Contacto']];
+      head = [['Tipo', 'Nome / Razão Social', 'NIF', 'Código Postal', 'Localidade', 'País', 'Contacto']];
       body = currentSearchResults.map(c => [
         c.tipoCliente,
         c.nome + (c.ministerio ? ` (${c.ministerio})` : ''),
         c.contribuinte,
         c.codigoPostal,
         c.localidade,
+        c.pais || 'Portugal',
         `${c.telemovel || c.telefone || ''}\n${c.email || ''}`
       ]);
     } else if (currentSearchCategory === 'contactos') {
@@ -8456,6 +8914,7 @@ function renderDatabaseOverview() {
     badge.textContent = `${(db.clientes || []).length} Clientes | ${(db.contactos || []).length} Contactos | ${(db.projetos || []).length} Projetos | ${((db.interacoes || []).length + (db.interacoesProjetos || []).length)} Interações`;
   }
   if (typeof renderGitHubSettingsForm === 'function') renderGitHubSettingsForm();
+  if (typeof populateBudgetClientsSelect === 'function') populateBudgetClientsSelect();
 }
 
 // ==========================================
@@ -10855,6 +11314,7 @@ function processCategoryImport(category, items) {
         andar: item.andar || '',
         codigoPostal: item.codigoPostal || item.cp || '',
         localidade: item.localidade || '',
+        pais: item.pais || 'Portugal',
         telefone: item.telefone || '',
         telemovel: item.telemovel || '',
         email: item.email || '',
@@ -10883,6 +11343,7 @@ function processCategoryImport(category, items) {
         telefone: item.telefone || '',
         telemovel: item.telemovel || '',
         email: item.email || '',
+        notas: item.notas || item.observacoes || '',
         createdAt: idx >= 0 ? db.contactos[idx].createdAt : new Date().toISOString()
       };
       if (idx >= 0) {
@@ -10911,6 +11372,7 @@ function processCategoryImport(category, items) {
         estado: item.estado || 'Aguarda Orçamento',
         viatura: item.viatura || '',
         matricula: item.matricula || '',
+        obs: item.obs || item.observacoes || item.descricao || '',
         media: idx >= 0 ? (db.projetos[idx].media || []) : (item.media || []),
         createdAt: idx >= 0 ? db.projetos[idx].createdAt : new Date().toISOString()
       };
@@ -11022,11 +11484,16 @@ function getProjectStateBadgeClass(estado) {
 function renderHomeDashboard() {
   if (!db) return;
 
+  const scopedClients = getUserScopedItems(db.clientes || []);
+  const scopedContacts = getUserScopedItems(db.contactos || []);
+  const allActiveProjs = typeof filterDeletedProjects === 'function' ? filterDeletedProjects(db.projetos || []) : (db.projetos || []);
+  const activeProjs = getUserScopedItems(allActiveProjs);
+
   // 1. Clientes KPI
-  const totalClientes = db.clientes ? db.clientes.length : 0;
-  const privCount = (db.clientes || []).filter(c => c.tipoCliente === 'Privado').length;
-  const fundCount = (db.clientes || []).filter(c => c.tipoCliente === 'Fundação').length;
-  const estCount = (db.clientes || []).filter(c => c.tipoCliente === 'Estatal').length;
+  const totalClientes = scopedClients.length;
+  const privCount = scopedClients.filter(c => c.tipoCliente === 'Privado').length;
+  const fundCount = scopedClients.filter(c => c.tipoCliente === 'Fundação').length;
+  const estCount = scopedClients.filter(c => c.tipoCliente === 'Estatal').length;
 
   document.querySelectorAll('.kpi-total-clientes').forEach(el => el.textContent = totalClientes);
   const cliBrkHtml = `
@@ -11037,13 +11504,12 @@ function renderHomeDashboard() {
   document.querySelectorAll('.kpi-clientes-breakdown').forEach(el => el.innerHTML = cliBrkHtml);
 
   // 2. Contactos KPI
-  const totalContactos = db.contactos ? db.contactos.length : 0;
+  const totalContactos = scopedContacts.length;
   document.querySelectorAll('.kpi-total-contactos').forEach(el => el.textContent = totalContactos);
   const conBrkHtml = `<span style="color: var(--text-muted); font-size: 0.8rem;"><i class="fa-solid fa-user-tie" style="margin-right: 4px;"></i>Fichas ativas</span>`;
   document.querySelectorAll('.kpi-contactos-breakdown').forEach(el => el.innerHTML = conBrkHtml);
 
   // 3. Projetos KPI
-  const activeProjs = typeof filterDeletedProjects === 'function' ? filterDeletedProjects(db.projetos || []) : (db.projetos || []);
   const totalProjetos = activeProjs.length;
   const aguardaOrcCount = activeProjs.filter(p => (p.estado || '').toLowerCase().includes('orcamento')).length;
   const aguardaDecCount = activeProjs.filter(p => (p.estado || '').toLowerCase().includes('decisao')).length;
@@ -11088,6 +11554,238 @@ function renderHomeDashboard() {
   if (elemTotFrota) elemTotFrota.textContent = totalFrota;
   const elemFrotaBrk = document.getElementById('dashKpiFrotaBreakdown');
   if (elemFrotaBrk) elemFrotaBrk.innerHTML = frotaBrkHtml;
+
+
+  // 4.5. Tabela de Acompanhamento de Clientes (Ordenados pelo Próximo Contacto mais próximo de hoje)
+  const clientTrackingContainer = document.getElementById('dashClientTrackingContainer');
+  if (clientTrackingContainer) {
+    const now = new Date();
+    const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+
+    // Ordenação (suporta ordenação por contactado / não contactado se ativada):
+    let sortedClients = [...scopedClients];
+    if (typeof dashClientsSortMode !== 'undefined' && dashClientsSortMode !== 'default') {
+      sortedClients.sort((a, b) => {
+        const isA = typeof isClientContacted === 'function' ? isClientContacted(a.id) : false;
+        const isB = typeof isClientContacted === 'function' ? isClientContacted(b.id) : false;
+        if (dashClientsSortMode === 'contacted_first') {
+          if (isA && !isB) return -1;
+          if (!isA && isB) return 1;
+        } else if (dashClientsSortMode === 'uncontacted_first') {
+          if (!isA && isB) return -1;
+          if (isA && !isB) return 1;
+        }
+        return (a.nome || '').localeCompare(b.nome || '');
+      });
+    } else {
+      sortedClients.sort((a, b) => {
+        const hasDateA = !!(a.proximoContacto && String(a.proximoContacto).trim());
+        const hasDateB = !!(b.proximoContacto && String(b.proximoContacto).trim());
+
+        if (hasDateA && hasDateB) {
+          const dateA = new Date(String(a.proximoContacto).trim() + 'T00:00:00').getTime();
+          const dateB = new Date(String(b.proximoContacto).trim() + 'T00:00:00').getTime();
+          const diffA = Math.abs(dateA - todayMidnight);
+          const diffB = Math.abs(dateB - todayMidnight);
+          if (diffA !== diffB) return diffA - diffB;
+          return dateA - dateB;
+        }
+        if (hasDateA && !hasDateB) return -1;
+        if (!hasDateA && hasDateB) return 1;
+        return (a.nome || '').localeCompare(b.nome || '');
+      });
+    }
+
+    const top20Clients = sortedClients.slice(0, 20);
+
+    if (top20Clients.length === 0) {
+      clientTrackingContainer.innerHTML = `
+        <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+          <i class="fa-solid fa-users-slash" style="font-size: 2rem; margin-bottom: 0.5rem; display: block; color: var(--border-color);"></i>
+          ${escapeHtml(t('Nenhum cliente registado.'))}
+        </div>
+      `;
+    } else {
+      let html = `
+        <table class="db-table full-width-list-table" style="width: 100%; border-collapse: collapse; font-size: 0.88rem;">
+          <thead>
+            <tr style="background-color: #e0f2fe; color: #1e3a8a;">
+              <th style="padding: 0.75rem 0.5rem; text-align: center; width: 110px;">${escapeHtml(t('Contactado'))}</th>
+              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">${escapeHtml(t('Cliente'))}</th>
+              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">${escapeHtml(t('Próximo contacto'))}</th>
+              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">${escapeHtml(t('Contacto / Telefone'))}</th>
+              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">${escapeHtml(t('Último Contacto Realizado'))}</th>
+              <th style="padding: 0.75rem 1rem; text-align: center; font-weight: 700; width: 110px;">${escapeHtml(t('Ações'))}</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      top20Clients.forEach(cli => {
+        let proxBadge = '';
+        if (cli.proximoContacto && String(cli.proximoContacto).trim()) {
+          const targetDate = new Date(String(cli.proximoContacto).trim() + 'T00:00:00');
+          const diffDays = Math.round((targetDate.getTime() - todayMidnight) / (1000 * 60 * 60 * 24));
+          const formattedDate = targetDate.toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+          if (diffDays === 0) {
+            proxBadge = `<span class="badge badge-amber" style="font-weight: 700; padding: 0.25rem 0.65rem; border-radius: 12px;"><i class="fa-solid fa-bell" style="margin-right: 4px;"></i>${escapeHtml(t('Hoje'))} (${formattedDate})</span>`;
+          } else if (diffDays < 0) {
+            proxBadge = `<span class="badge badge-danger" style="font-weight: 700; padding: 0.25rem 0.65rem; border-radius: 12px;"><i class="fa-solid fa-triangle-exclamation" style="margin-right: 4px;"></i>${escapeHtml(t('Em atraso'))} (${formattedDate})</span>`;
+          } else if (diffDays === 1) {
+            proxBadge = `<span class="badge badge-blue" style="font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 12px;"><i class="fa-regular fa-calendar-check" style="margin-right: 4px;"></i>${escapeHtml(t('Amanhã'))} (${formattedDate})</span>`;
+          } else {
+            proxBadge = `<span class="badge badge-blue" style="font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 12px;"><i class="fa-regular fa-calendar-check" style="margin-right: 4px;"></i>${formattedDate} (${escapeHtml(t('em'))} ${diffDays} ${escapeHtml(t('dias'))})</span>`;
+          }
+        } else {
+          proxBadge = `<span class="badge badge-gray" style="color: #94a3b8; font-style: italic; border-radius: 12px; padding: 0.25rem 0.65rem;">${escapeHtml(t('Sem data agendada'))}</span>`;
+        }
+
+        // Último contacto efetuado
+        const clientInteractions = (db.interacoes || [])
+          .filter(i => i.clienteId === cli.id)
+          .sort((a, b) => new Date(b.data || 0) - new Date(a.data || 0));
+
+        let lastIntStr = `<span style="color: #94a3b8; font-style: italic;">${escapeHtml(t('Sem registo prévio'))}</span>`;
+        if (clientInteractions.length > 0) {
+          const lastInt = clientInteractions[0];
+          const lastDate = lastInt.data ? new Date(lastInt.data).toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '';
+          const snippet = lastInt.descricao ? (lastInt.descricao.length > 38 ? lastInt.descricao.substring(0, 35) + '...' : lastInt.descricao) : '';
+          lastIntStr = `<span style="font-weight: 600; color: #334155;">${lastDate}</span> <span style="font-size: 0.8rem; color: #64748b;">${escapeHtml(snippet)}</span>`;
+        }
+
+        const phoneStr = cli.telemovel || cli.telefone || cli.email || '-';
+
+        const isContacted = typeof isClientContacted === 'function' ? isClientContacted(cli.id) : false;
+        html += `
+          <tr style="border-bottom: 1px solid #e2e8f0; transition: background-color 0.15s; cursor: pointer;" onclick="openClientFromDashboard('${cli.id}')" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='transparent'">
+            <td style="padding: 0.5rem; text-align: center;" onclick="event.stopPropagation();">
+              <label style="display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem; margin: 0; cursor: pointer;" title="${isContacted ? 'Cliente Contactado' : 'Não Contactado'}">
+                <input type="checkbox" ${isContacted ? 'checked' : ''} disabled style="width: 16px; height: 16px; accent-color: #16a34a; cursor: default;">
+                <span style="font-size: 0.78rem; font-weight: 700; color: ${isContacted ? '#16a34a' : '#94a3b8'};">${isContacted ? 'Sim' : 'Não'}</span>
+              </label>
+            </td>
+            <td style="padding: 0.75rem 1rem;">
+              <div style="font-weight: 700; color: #1e3a8a; font-size: 0.92rem;"><i class="fa-solid fa-folder-open" style="font-size: 0.8rem; margin-right: 4px; color: #2563eb;"></i>${escapeHtml(cli.nome || 'Cliente')}</div>
+              <div style="display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                <span class="badge badge-gray" style="background: #f1f5f9; color: #475569; border-radius: 12px; font-size: 0.75rem; padding: 0.15rem 0.5rem;">${escapeHtml(cli.tipoCliente || 'Privado')}</span>
+                ${cli.localidade ? `<span style="font-size: 0.78rem; color: #64748b;"><i class="fa-solid fa-location-dot" style="margin-right: 2px;"></i>${escapeHtml(cli.localidade)}</span>` : ''}
+              </div>
+            </td>
+            <td style="padding: 0.75rem 1rem; white-space: nowrap;">
+              ${proxBadge}
+            </td>
+            <td style="padding: 0.75rem 1rem; color: #334155; font-size: 0.85rem; white-space: nowrap;">
+              ${escapeHtml(phoneStr)}
+            </td>
+            <td style="padding: 0.75rem 1rem; font-size: 0.85rem;">
+              ${lastIntStr}
+            </td>
+            <td style="padding: 0.75rem 1rem; text-align: center; white-space: nowrap;">
+              <button type="button" class="btn btn-secondary" onclick="openClientFromDashboard('${cli.id}')" style="padding: 0.25rem 0.65rem; font-size: 0.8rem; border-radius: 12px; color: #2563eb; background: #eff6ff; border: 1px solid #bfdbfe; font-weight: 500; cursor: pointer;">
+                <i class="fa-solid fa-user-pen" style="margin-right: 4px;"></i>${escapeHtml(t('Abrir Ficha'))}
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      html += `
+          </tbody>
+        </table>
+      `;
+      clientTrackingContainer.innerHTML = html;
+    }
+  }
+
+  
+  // 4.6. Tabela de Acompanhamento de Contactos (Dashboard Menu)
+  const contactTrackingContainer = document.getElementById('dashContactTrackingContainer');
+  if (contactTrackingContainer) {
+    let sortedContacts = [...scopedContacts];
+    if (typeof dashContactsSortMode !== 'undefined' && dashContactsSortMode !== 'default') {
+      sortedContacts.sort((a, b) => {
+        const isA = typeof isContactContacted === 'function' ? isContactContacted(a.id) : false;
+        const isB = typeof isContactContacted === 'function' ? isContactContacted(b.id) : false;
+        if (dashContactsSortMode === 'contacted_first') {
+          if (isA && !isB) return -1;
+          if (!isA && isB) return 1;
+        } else if (dashContactsSortMode === 'uncontacted_first') {
+          if (!isA && isB) return -1;
+          if (isA && !isB) return 1;
+        }
+        const nameA = `${a.nome || ''} ${a.apelido || ''}`.trim();
+        const nameB = `${b.nome || ''} ${b.apelido || ''}`.trim();
+        return nameA.localeCompare(nameB);
+      });
+    }
+
+    const top20Contacts = sortedContacts.slice(0, 20);
+
+    if (top20Contacts.length === 0) {
+      contactTrackingContainer.innerHTML = `
+        <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+          <i class="fa-solid fa-user-slash" style="font-size: 2rem; margin-bottom: 0.5rem; display: block; color: var(--border-color);"></i>
+          ${escapeHtml(t('Nenhum contacto registado.'))}
+        </div>
+      `;
+    } else {
+      let cHtml = `
+        <table class="db-table" style="width: 100%; border-collapse: collapse; font-size: 0.88rem;">
+          <thead>
+            <tr style="background-color: #d1fae5; color: #065f46;">
+              <th style="padding: 0.75rem 0.5rem; text-align: center; width: 110px;">${escapeHtml(t('Contactado'))}</th>
+              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">${escapeHtml(t('Nome do Contacto'))}</th>
+              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">${escapeHtml(t('Cliente Associado'))}</th>
+              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">${escapeHtml(t('Cargo / Função'))}</th>
+              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">${escapeHtml(t('Telefone / Email'))}</th>
+              <th style="padding: 0.75rem 1rem; text-align: center; font-weight: 700;">${escapeHtml(t('Ações'))}</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      top20Contacts.forEach(con => {
+        const client = (db.clientes || []).find(c => c.id === con.clienteId);
+        const contactName = `${con.nome || ''} ${con.apelido || ''}`.trim() || 'Contacto';
+        const isContacted = typeof isContactContacted === 'function' ? isContactContacted(con.id) : false;
+        const phoneStr = con.telemovel || con.telefone || con.email || '-';
+
+        cHtml += `
+          <tr style="border-bottom: 1px solid #e2e8f0; transition: background-color 0.15s; cursor: pointer;" onclick="openContactModalForEdit('${con.id}')">
+            <td style="padding: 0.5rem; text-align: center;" onclick="event.stopPropagation();">
+              <label style="display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem; margin: 0; cursor: pointer;" title="${isContacted ? 'Contacto Contactado' : 'Não Contactado'}">
+                <input type="checkbox" ${isContacted ? 'checked' : ''} disabled style="width: 16px; height: 16px; accent-color: #16a34a; cursor: default;">
+                <span style="font-size: 0.78rem; font-weight: 700; color: ${isContacted ? '#16a34a' : '#94a3b8'};">${isContacted ? 'Sim' : 'Não'}</span>
+              </label>
+            </td>
+            <td style="padding: 0.75rem 1rem;">
+              <div style="font-weight: 700; color: #1e293b; font-size: 0.92rem;">
+                <i class="fa-solid fa-user" style="color: #059669; font-size: 0.85rem; margin-right: 4px;"></i>${escapeHtml(contactName)}
+              </div>
+            </td>
+            <td style="padding: 0.75rem 1rem; color: #1e3a8a; font-weight: 600;">
+              ${escapeHtml(client ? client.nome : '-')}
+            </td>
+            <td style="padding: 0.75rem 1rem; color: #475569;">
+              ${escapeHtml(con.cargo || '-')}
+            </td>
+            <td style="padding: 0.75rem 1rem; color: #334155; font-size: 0.85rem;">
+              ${escapeHtml(phoneStr)}
+            </td>
+            <td style="padding: 0.75rem 1rem; text-align: center; white-space: nowrap;" onclick="event.stopPropagation();">
+              <button type="button" class="btn btn-secondary" onclick="openContactModalForEdit('${con.id}')" style="padding: 0.25rem 0.65rem; font-size: 0.8rem; border-radius: 12px; color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0; font-weight: 500; cursor: pointer;">
+                <i class="fa-solid fa-pen-to-square" style="margin-right: 4px;"></i>${escapeHtml(t('Abrir Ficha'))}
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      cHtml += `</tbody></table>`;
+      contactTrackingContainer.innerHTML = cHtml;
+    }
+  }
 
   // 5. Tabela de Projetos em Acompanhamento (Aguarda Orçamento, Aguarda decisão, Em Curso)
   const recentProjContainer = document.getElementById('dashRecentProjectsContainer');
@@ -11702,45 +12400,41 @@ function ignoreDuplicatePair(id1, id2) {
 }
 
 function checkForDuplicateClient(clientObj, existingId = null) {
-  if (!db || !db.clientes) return null;
+  if (!db || !db.clientes || !clientObj || !clientObj.nome) return null;
   const nameNorm = normalizeText(clientObj.nome);
-  const nifNorm = (clientObj.contribuinte || '').trim();
-  const emailNorm = (clientObj.email || '').trim().toLowerCase();
-  const phoneNorm = (clientObj.telemovel || clientObj.telefone || '').replace(/\D/g, '');
+  if (!nameNorm || nameNorm.length < 2) return null;
 
   return db.clientes.find(c => {
+    if (!c || !c.nome) return false;
     if (existingId && (c.id === existingId || isDuplicatePairIgnored(existingId, c.id))) return false;
     if (clientObj.id && (c.id === clientObj.id || isDuplicatePairIgnored(clientObj.id, c.id))) return false;
     const cNameNorm = normalizeText(c.nome);
-    const cNifNorm = (c.contribuinte || '').trim();
-    const cEmailNorm = (c.email || '').trim().toLowerCase();
-    const cPhoneNorm = (c.telemovel || c.telefone || '').replace(/\D/g, '');
 
-    if (nifNorm && cNifNorm && nifNorm.length >= 7 && nifNorm === cNifNorm) return true;
+    // Comparação estritamente pelo Nome do Cliente (Regra 8)
     if (nameNorm && cNameNorm && nameNorm === cNameNorm) return true;
-    if (emailNorm && cEmailNorm && emailNorm.length > 3 && emailNorm === cEmailNorm) return true;
-    if (phoneNorm && cPhoneNorm && phoneNorm.length >= 9 && phoneNorm === cPhoneNorm) return true;
 
     return false;
   });
 }
 
 function checkForDuplicateContact(contactObj, existingId = null) {
-  if (!db || !db.contactos) return null;
-  const nameNorm = normalizeText(`${contactObj.nome || ''} ${contactObj.apelido || ''}`);
-  const emailNorm = (contactObj.email || '').trim().toLowerCase();
-  const phoneNorm = (contactObj.telemovel || contactObj.telefone || '').replace(/\D/g, '');
+  if (!db || !db.contactos || !contactObj) return null;
+  const nameNorm = normalizeText(`${contactObj.nome || ''} ${contactObj.apelido || ''}`.trim());
+  const emailNorm = (contactObj.email || '').toLowerCase().trim();
+
+  if ((!nameNorm || nameNorm.length < 2) && (!emailNorm || !emailNorm.includes('@'))) return null;
 
   return db.contactos.find(c => {
+    if (!c) return false;
     if (existingId && (c.id === existingId || isDuplicatePairIgnored(existingId, c.id))) return false;
     if (contactObj.id && (c.id === contactObj.id || isDuplicatePairIgnored(contactObj.id, c.id))) return false;
-    const cNameNorm = normalizeText(`${c.nome || ''} ${c.apelido || ''}`);
-    const cEmailNorm = (c.email || '').trim().toLowerCase();
-    const cPhoneNorm = (c.telemovel || c.telefone || '').replace(/\D/g, '');
+    
+    const cNameNorm = normalizeText(`${c.nome || ''} ${c.apelido || ''}`.trim());
+    const cEmailNorm = (c.email || '').toLowerCase().trim();
 
-    if (emailNorm && cEmailNorm && emailNorm.length > 3 && emailNorm === cEmailNorm) return true;
-    if (phoneNorm && cPhoneNorm && phoneNorm.length >= 9 && phoneNorm === cPhoneNorm) return true;
-    if (nameNorm && cNameNorm && nameNorm.length > 2 && nameNorm === cNameNorm) return true;
+    // Comparação estritamente por Nome, Apelido e Correio Eletrónico (Regra 8)
+    if (nameNorm && cNameNorm && nameNorm === cNameNorm) return true;
+    if (emailNorm && cEmailNorm && emailNorm === cEmailNorm && emailNorm.includes('@')) return true;
 
     return false;
   });
@@ -12422,6 +13116,28 @@ function saveTransferContact(e) {
   }
 
   contact.clienteId = targetClientId;
+  const newContactUserId = targetClient.comercialAtribuidoId || targetClient.userId || contact.userId;
+  contact.userId = newContactUserId;
+  contact.comercialAtribuidoId = newContactUserId;
+  contact.createdById = newContactUserId;
+
+  // Atualizar e MANTER integralmente todas as interações deste contacto
+  if (Array.isArray(db.interacoes)) {
+    db.interacoes.forEach(it => {
+      if (it.contactoId === contact.id) {
+        it.clienteId = targetClientId;
+        it.userId = newContactUserId;
+        it.createdById = newContactUserId;
+      }
+    });
+  }
+
+  // Traduzir a ficha de contacto para o idioma do utilizador comercial de destino
+  const targetUser = (db.usuarios || []).find(u => u.id === contact.userId);
+  if (targetUser && targetUser.idioma && typeof translateEntityForTargetUser === 'function') {
+    translateEntityForTargetUser('contacto', contact, targetUser.idioma);
+  }
+
   saveDatabase();
   closeTransferContactModal();
 
@@ -12443,22 +13159,90 @@ function saveTransferContact(e) {
 // ==========================================
 
 function initModalResizing() {
-  const modalWindows = document.querySelectorAll('.modal-window');
+  const modalWindows = document.querySelectorAll('.modal-window, .modal-card');
   
   modalWindows.forEach(win => {
-    if (win.querySelector('.modal-resize-handle')) return;
+    // 1. Handles de Redimensionamento em todas as bordas
+    if (!win.querySelector('.modal-resize-handle')) {
+      const handles = ['t', 'r', 'b', 'l', 'tl', 'tr', 'bl', 'br'];
+      handles.forEach(h => {
+        const handleDiv = document.createElement('div');
+        handleDiv.className = `modal-resize-handle handle-${h}`;
+        handleDiv.dataset.handle = h;
+        win.appendChild(handleDiv);
 
-    const handles = ['t', 'r', 'b', 'l', 'tl', 'tr', 'bl', 'br'];
-    handles.forEach(h => {
-      const handleDiv = document.createElement('div');
-      handleDiv.className = `modal-resize-handle handle-${h}`;
-      handleDiv.dataset.handle = h;
-      win.appendChild(handleDiv);
+        handleDiv.addEventListener('mousedown', (e) => startResizingModal(e, win, h));
+      });
+    }
 
-      handleDiv.addEventListener('mousedown', (e) => startResizingModal(e, win, h));
-    });
+    // 2. Arrastamento com o Rato (Drag & Drop) através da Barra de Cabeçalho
+    const header = win.querySelector('.modal-header') || win.querySelector('.card-header') || win.firstElementChild;
+    if (header && !header.dataset.dragAttached) {
+      header.dataset.dragAttached = 'true';
+      header.style.cursor = 'grab';
+      header.addEventListener('mousedown', (e) => startDraggingModal(e, win, header));
+    }
   });
 }
+window.initModalResizing = initModalResizing;
+
+function startDraggingModal(e, win, header) {
+  // Ignorar cliques em botões, links, inputs, selects, textareas e ícones de ação
+  if (e.target.closest('button, a, input, select, textarea, .action-icon-btn, .btn-close, .modal-resize-handle, .btn')) {
+    return;
+  }
+
+  e.preventDefault();
+
+  const startMouseX = e.clientX;
+  const startMouseY = e.clientY;
+  const rect = win.getBoundingClientRect();
+  const startLeft = rect.left;
+  const startTop = rect.top;
+
+  header.style.cursor = 'grabbing';
+  const origTransition = win.style.transition;
+  win.style.transition = 'none';
+
+  // Fixar posição absoluta em relação à janela do navegador para arrastamento fluido
+  win.style.position = 'fixed';
+  win.style.left = `${startLeft}px`;
+  win.style.top = `${startTop}px`;
+  win.style.margin = '0';
+  win.style.transform = 'none';
+
+  function onMouseMove(moveEvt) {
+    moveEvt.preventDefault();
+    const deltaX = moveEvt.clientX - startMouseX;
+    const deltaY = moveEvt.clientY - startMouseY;
+
+    let newLeft = startLeft + deltaX;
+    let newTop = startTop + deltaY;
+
+    // Manter a janela dentro da área visível do ecrã
+    const minLeft = -rect.width + 120;
+    const maxLeft = window.innerWidth - 120;
+    const minTop = 0;
+    const maxTop = window.innerHeight - 60;
+
+    newLeft = Math.max(minLeft, Math.min(maxLeft, newLeft));
+    newTop = Math.max(minTop, Math.min(maxTop, newTop));
+
+    win.style.left = `${newLeft}px`;
+    win.style.top = `${newTop}px`;
+  }
+
+  function onMouseUp() {
+    header.style.cursor = 'grab';
+    win.style.transition = origTransition || '';
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  }
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+}
+window.startDraggingModal = startDraggingModal;
 
 function startResizingModal(e, win, handle) {
   e.preventDefault();
@@ -12469,9 +13253,17 @@ function startResizingModal(e, win, handle) {
   const rect = win.getBoundingClientRect();
   const startWidth = rect.width;
   const startHeight = rect.height;
+  const startLeft = rect.left;
+  const startTop = rect.top;
 
   const origTransition = win.style.transition;
   win.style.transition = 'none';
+
+  win.style.position = 'fixed';
+  win.style.left = `${startLeft}px`;
+  win.style.top = `${startTop}px`;
+  win.style.margin = '0';
+  win.style.transform = 'none';
 
   function onMouseMove(moveEvt) {
     moveEvt.preventDefault();
@@ -12480,24 +13272,35 @@ function startResizingModal(e, win, handle) {
 
     let newWidth = startWidth;
     let newHeight = startHeight;
+    let newLeft = startLeft;
+    let newTop = startTop;
 
     if (handle.includes('r')) newWidth = startWidth + deltaX;
-    if (handle.includes('l')) newWidth = startWidth - deltaX;
+    if (handle.includes('l')) {
+      newWidth = startWidth - deltaX;
+      newLeft = startLeft + deltaX;
+    }
     if (handle.includes('b')) newHeight = startHeight + deltaY;
-    if (handle.includes('t')) newHeight = startHeight - deltaY;
+    if (handle.includes('t')) {
+      newHeight = startHeight - deltaY;
+      newTop = startTop + deltaY;
+    }
 
     const minW = 380;
     const maxW = window.innerWidth * 0.98;
     const minH = 250;
     const maxH = window.innerHeight * 0.96;
 
-    newWidth = Math.max(minW, Math.min(maxW, newWidth));
-    newHeight = Math.max(minH, Math.min(maxH, newHeight));
-
-    win.style.width = `${newWidth}px`;
-    win.style.maxWidth = 'none';
-    win.style.height = `${newHeight}px`;
-    win.style.maxHeight = 'none';
+    if (newWidth >= minW && newWidth <= maxW) {
+      win.style.width = `${newWidth}px`;
+      win.style.maxWidth = 'none';
+      if (handle.includes('l')) win.style.left = `${newLeft}px`;
+    }
+    if (newHeight >= minH && newHeight <= maxH) {
+      win.style.height = `${newHeight}px`;
+      win.style.maxHeight = 'none';
+      if (handle.includes('t')) win.style.top = `${newTop}px`;
+    }
   }
 
   function onMouseUp() {
@@ -12509,6 +13312,7 @@ function startResizingModal(e, win, handle) {
   document.addEventListener('mousemove', onMouseMove);
   document.addEventListener('mouseup', onMouseUp);
 }
+window.startResizingModal = startResizingModal;
 
 // ==========================================
 // 20. EXPORTAÇÃO E IMPRESSÃO DE RESULTADOS DE PESQUISA (PDF & EXCEL)
@@ -12613,14 +13417,15 @@ function exportSearchToPDF(type) {
   if (type === 'clientes') {
     const { list, query } = getFilteredClientesList();
     title = query ? `Resultados da Pesquisa de Clientes ("${query}")` : 'Lista de Clientes Registados';
-    headers = [['Tipo', 'Nome / Razão Social', 'Contribuinte (NIF)', 'Telefone / Telemóvel', 'Email', 'Localidade']];
+    headers = [['Tipo', 'Nome / Razão Social', 'Contribuinte (NIF)', 'Telefone / Telemóvel', 'Email', 'Localidade', 'País']];
     rows = list.map(c => [
       c.tipoCliente || 'Privado',
       c.nome || '-',
       c.contribuinte || '-',
       c.telemovel || c.telefone || '-',
       c.email || '-',
-      c.localidade || '-'
+      c.localidade || '-',
+      c.pais || 'Portugal'
     ]);
   } else if (type === 'contactos') {
     const { list, query } = getFilteredContactosList();
@@ -12721,7 +13526,8 @@ function exportSearchToExcel(type) {
       'Email': c.email || '',
       'Morada': c.direcao1 || '',
       'Código Postal': c.codigoPostal || '',
-      'Localidade': c.localidade || ''
+      'Localidade': c.localidade || '',
+      'País': c.pais || 'Portugal'
     }));
   } else if (type === 'contactos') {
     const { list, query } = getFilteredContactosList();
@@ -12804,11 +13610,26 @@ function updateInstalledVersionUI() {
   if (appPill) appPill.textContent = version;
 }
 
+
+function getNextSequentialVersion(lastVersionStr) {
+  const match = String(lastVersionStr || '').match(/SIGEC_V?([0-9]+(?:\.[0-9]+)*)/i) || String(lastVersionStr || '').match(/([0-9]+(?:\.[0-9]+)*)/);
+  if (!match) return 'SIGEC_V1.7.4';
+  
+  const parts = match[1].split('.').map(p => parseInt(p, 10) || 0);
+  if (parts.length === 1) {
+    parts[0] += 1;
+  } else {
+    parts[parts.length - 1] += 1;
+  }
+  return `SIGEC_V${parts.join('.')}`;
+}
+window.getNextSequentialVersion = getNextSequentialVersion;
+
 function parseVersionNumber(versionStr) {
   if (!versionStr) return 0;
-  const clean = String(versionStr).replace(/^SIGEC_V?/i, '').replace(/[^0-9.]/g, '');
-  if (!clean) return 0;
-  const parts = clean.split('.').map(p => parseInt(p, 10) || 0);
+  const match = String(versionStr).match(/SIGEC_V?([0-9]+(?:\.[0-9]+)*)/i) || String(versionStr).match(/([0-9]+(?:\.[0-9]+)*)/);
+  if (!match) return 0;
+  const parts = match[1].split('.').map(p => parseInt(p, 10) || 0);
   let weight = 0;
   for (let i = 0; i < 4; i++) {
     weight = weight * 1000 + (parts[i] || 0);
@@ -12817,12 +13638,11 @@ function parseVersionNumber(versionStr) {
 }
 
 async function generateUpdatePackage() {
-  // Obter sempre o nome do último ficheiro guardado/registado (formato SIGEC_V1.7.3)
+  // Obter a versão mais recente guardada/instalada
   let lastSavedVersion = localStorage.getItem('sigec_pro_last_generated_version') ||
                          localStorage.getItem('sigec_pro_installed_version') ||
                          'SIGEC_V1.7.3';
 
-  // Verificar nas versões registadas do sistema para obter a versão mais recente
   if (window.SIGEC_AVAILABLE_UPDATES && Array.isArray(window.SIGEC_AVAILABLE_UPDATES)) {
     let highestWeight = parseVersionNumber(lastSavedVersion);
     window.SIGEC_AVAILABLE_UPDATES.forEach(u => {
@@ -12835,58 +13655,66 @@ async function generateUpdatePackage() {
     });
   }
 
-  // Garantir estritamente o formato SIGEC_VX.X.X (ex: SIGEC_V1.7.3)
-  if (!/^SIGEC_V/i.test(lastSavedVersion)) {
-    if (/^SIGEC_/i.test(lastSavedVersion)) {
-      lastSavedVersion = lastSavedVersion.replace(/^SIGEC_/i, 'SIGEC_V');
-    } else if (/^V/i.test(lastSavedVersion)) {
-      lastSavedVersion = `SIGEC_${lastSavedVersion.toUpperCase()}`;
-    } else {
-      lastSavedVersion = `SIGEC_V${lastSavedVersion}`;
-    }
-  }
+  // Calcular a próxima versão sequencial (ex: SIGEC_V1.7.3 -> SIGEC_V1.7.4)
+  const nextVersion = getNextSequentialVersion(lastSavedVersion);
 
-  const userVer = prompt('Insira o nome da versão para o pacote de atualização de software:', lastSavedVersion);
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+
+  const timestampStr = `${day}-${month}-${year}_${hours}h${minutes}m`;
+  const defaultSuggestedName = `${nextVersion}_${timestampStr}`;
+
+  const userVer = prompt('Insira o nome da versão para o pacote de atualização de software:', defaultSuggestedName);
   if (!userVer || !userVer.trim()) {
     showToast('Geração de pacote de atualização cancelada.', 'warning');
     return;
   }
 
-  let formattedVer = userVer.trim();
-  // Formatar rigorosamente no formato SIGEC_VX.X.X
-  if (!/^SIGEC_V/i.test(formattedVer)) {
-    if (/^SIGEC_/i.test(formattedVer)) {
-      formattedVer = formattedVer.replace(/^SIGEC_/i, 'SIGEC_V');
-    } else if (/^V/i.test(formattedVer)) {
-      formattedVer = `SIGEC_${formattedVer.toUpperCase()}`;
-    } else {
-      formattedVer = `SIGEC_V${formattedVer}`;
+  let finalName = userVer.trim();
+  // Se o utilizador não colocou a extensão .json, remove se tiver para normalizar
+  finalName = finalName.replace(/\.json$/i, '');
+
+  // Extrair a versão base sem timestamp para registo de versão (ex: SIGEC_V1.7.4)
+  let baseVersion = nextVersion;
+  const matchVer = finalName.match(/^(SIGEC_V?[0-9]+(?:\.[0-9]+)*)/i);
+  if (matchVer) {
+    baseVersion = matchVer[1].toUpperCase();
+    if (!baseVersion.startsWith('SIGEC_V')) {
+      baseVersion = baseVersion.replace(/^SIGEC_/i, 'SIGEC_V');
     }
-  } else {
-    formattedVer = formattedVer.replace(/^SIGEC_V/i, 'SIGEC_V');
   }
 
-  // Guardar esta versão como o último ficheiro guardado
-  localStorage.setItem('sigec_pro_last_generated_version', formattedVer);
+  // Guardar a versão base gerada para calcular a próxima sequencialmente no futuro
+  localStorage.setItem('sigec_pro_last_generated_version', baseVersion);
+
+  const fileName = `${finalName}.json`;
+  const formattedDateTime = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 
   // REGRA ESTRITA E PERMANENTE: O pacote gerado contém EXCLUSIVAMENTE software/sistema e ZERO dados de registo das fichas
   const updatePackage = {
-    packageName: formattedVer,
-    version: formattedVer,
-    createdAt: new Date().toISOString(),
+    packageName: finalName,
+    version: baseVersion,
+    fileName: fileName,
+    createdAt: now.toISOString(),
+    dataHoraCriacao: formattedDateTime,
     system: "SIGEC-Pro",
     tipoPacote: "ATUALIZACAO_SOFTWARE_EXCLUSIVA",
-    notes: `Pacote de atualização de software ${formattedVer} - Otimização de Interface, Segurança e Funcionalidades do Sistema`,
+    notes: `Pacote de atualização de software ${baseVersion} gerado em ${formattedDateTime} - Otimização de Interface, Segurança e Funcionalidades do Sistema`,
     software: {
-      version: formattedVer,
-      releasedAt: new Date().toISOString(),
+      version: baseVersion,
+      releasedAt: now.toISOString(),
       modules: ["clientes", "contactos", "projetos", "interacoes", "estatais", "configuracao", "seguranca", "backups", "servidor_github"],
       requiresDataPreservation: true
     }
   };
 
   if (!window.SIGEC_AVAILABLE_UPDATES) window.SIGEC_AVAILABLE_UPDATES = [];
-  const existingIdx = window.SIGEC_AVAILABLE_UPDATES.findIndex(u => (u.version || u.packageName) === formattedVer);
+  const existingIdx = window.SIGEC_AVAILABLE_UPDATES.findIndex(u => (u.version || u.packageName) === baseVersion);
   if (existingIdx >= 0) {
     window.SIGEC_AVAILABLE_UPDATES[existingIdx] = updatePackage;
   } else {
@@ -12894,7 +13722,6 @@ async function generateUpdatePackage() {
   }
 
   const jsonString = JSON.stringify(updatePackage, null, 2);
-  const fileName = `${formattedVer}.json`;
 
   // 1. Download Local do Ficheiro de Atualização
   const blob = new Blob([jsonString], { type: 'application/json' });
@@ -12919,7 +13746,7 @@ async function generateUpdatePackage() {
 
     for (const folder of foldersToTry) {
       try {
-        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(folder)}/${fileName}`;
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(folder)}/${encodeURIComponent(fileName)}`;
         const authHeadersList = [
           token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`,
           `token ${token}`,
@@ -12964,6 +13791,7 @@ async function generateUpdatePackage() {
     alert(`✅ Pacote de Atualização de Software Gerado!\n\nFicheiro: ${fileName}\n\nFicheiro descarregado para o computador na pasta de transferências. Guarde-o na pasta "Atualização".\n\n🔒 Confirmação de Segurança:\nEste ficheiro contém EXCLUSIVAMENTE software do sistema.\nNÃO contém nem recolhe quaisquer dados de Clientes, Contactos ou Projetos.`);
   }
 }
+window.generateUpdatePackage = generateUpdatePackage;
 
 if (!window.SIGEC_AVAILABLE_UPDATES || window.SIGEC_AVAILABLE_UPDATES.length === 0) {
   window.SIGEC_AVAILABLE_UPDATES = [
@@ -13366,6 +14194,7 @@ function ensureUsersInitialized() {
         nome: "José Centúrio",
         email: "jmcenturio@alegria-activity.com",
         cargo: "Administrador do Sistema",
+        idioma: "Português",
         pin: adminPin,
         role: "admin",
         createdAt: "2026-08-10T09:45:00.000Z"
@@ -13380,6 +14209,9 @@ function ensureUsersInitialized() {
         primaryAdmin.nome = "José Centúrio";
         primaryAdmin.email = "jmcenturio@alegria-activity.com";
         if (!primaryAdmin.cargo) primaryAdmin.cargo = "Administrador do Sistema";
+      }
+      if (!primaryAdmin.idioma) {
+        primaryAdmin.idioma = "Português";
       }
       if (primaryAdmin.pin && primaryAdmin.pin.trim() !== '') {
         safeSetStorage('sigec_pro_security_pin', primaryAdmin.pin);
@@ -13462,6 +14294,9 @@ function getAdminPin() {
 
 function initSecurityAuthCheck() {
   ensureUsersInitialized();
+  if (typeof applyUserLanguage === 'function') {
+    applyUserLanguage();
+  }
   renderUserManagementGrid();
   if (typeof checkPasswordResetUrlParams === 'function') checkPasswordResetUrlParams();
 
@@ -13587,6 +14422,10 @@ function verifyLoginPin() {
     sessionStorage.setItem('sigec_pro_authenticated', 'true');
     sessionStorage.setItem('sigec_pro_active_user_id', matchedUser.id);
 
+    if (typeof applyUserLanguage === 'function') {
+      applyUserLanguage(matchedUser.idioma);
+    }
+
     if (errorMsg) errorMsg.style.display = 'none';
     if (userInput) userInput.value = '';
     pinInput.value = '';
@@ -13606,7 +14445,8 @@ function verifyLoginPin() {
       cargo: matchedUser.cargo || (matchedUser.role === 'admin' ? 'Administrador' : 'Utilizador'),
       dispositivo: deviceInfo
     });
-    showToast(`Acesso autorizado! Bem-vindo(a), ${matchedUser.nome}.`);
+    const welcomeMsg = typeof t === 'function' ? t('toast_welcome').replace('{name}', matchedUser.nome) : `Acesso autorizado! Bem-vindo(a), ${matchedUser.nome}.`;
+    showToast(welcomeMsg);
   } else {
     if (errorMsg) {
       errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Utilizador ou Palavra-passe incorreta. Tente novamente.';
@@ -13623,23 +14463,102 @@ function verifyLoginPin() {
 }
 window.verifyLoginPin = verifyLoginPin;
 
+let pendingPasswordMismatchSource = null;
+
+function validatePasswordStrength(password) {
+  if (!password || typeof password !== 'string') return { valid: false, message: 'Palavra-Passe inválida.' };
+  if (password.length < 8 || password.length > 12) {
+    return { valid: false, message: 'A Palavra-Passe deve ter uma extensão entre 8 e 12 dígitos/caracteres.' };
+  }
+  if (!/[A-Z]/.test(password)) {
+    return { valid: false, message: 'A Palavra-Passe deve conter pelo menos uma letra maiúscula (A-Z).' };
+  }
+  if (!/[a-z]/.test(password)) {
+    return { valid: false, message: 'A Palavra-Passe deve conter pelo menos uma letra minúscula (a-z).' };
+  }
+  if (!/[0-9]/.test(password)) {
+    return { valid: false, message: 'A Palavra-Passe deve conter pelo menos um número (0-9).' };
+  }
+  if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~`]/.test(password)) {
+    return { valid: false, message: 'A Palavra-Passe deve conter pelo menos um caráter especial (ex: !@#$%&*).' };
+  }
+  return { valid: true };
+}
+window.validatePasswordStrength = validatePasswordStrength;
+
+function showPasswordMismatchModal(source) {
+  pendingPasswordMismatchSource = source;
+  const modal = document.getElementById('passwordMismatchModal');
+  if (modal) {
+    modal.style.display = 'flex';
+    modal.classList.add('active');
+  }
+}
+window.showPasswordMismatchModal = showPasswordMismatchModal;
+
+function closePasswordMismatchModal() {
+  const modal = document.getElementById('passwordMismatchModal');
+  if (modal) {
+    modal.style.display = 'none';
+    modal.classList.remove('active');
+  }
+
+  // Apagar as palavras-passe anteriormente escritas em ambos os campos e focar no primeiro
+  if (pendingPasswordMismatchSource === 'self') {
+    const pin1 = document.getElementById('regUserPin');
+    const pin2 = document.getElementById('regUserConfirmPin');
+    if (pin1) { pin1.value = ''; pin1.focus(); }
+    if (pin2) { pin2.value = ''; }
+  } else if (pendingPasswordMismatchSource === 'cfg') {
+    const pin1 = document.getElementById('cfgRegUserPin');
+    const pin2 = document.getElementById('cfgRegUserConfirmPin');
+    if (pin1) { pin1.value = ''; pin1.focus(); }
+    if (pin2) { pin2.value = ''; }
+  } else if (pendingPasswordMismatchSource === 'profile') {
+    const pin1 = document.getElementById('profileUserPin');
+    if (pin1) { pin1.value = ''; pin1.focus(); }
+  }
+  pendingPasswordMismatchSource = null;
+}
+window.closePasswordMismatchModal = closePasswordMismatchModal;
+
 function handleUserSelfRegistration(event) {
   if (event && event.preventDefault) event.preventDefault();
 
-  const nameInput = document.getElementById('regUserName');
+  const firstNameInput = document.getElementById('regUserFirstName');
+  const lastNameInput = document.getElementById('regUserLastName');
+  const legacyNameInput = document.getElementById('regUserName');
   const emailInput = document.getElementById('regUserEmail');
   const cargoInput = document.getElementById('regUserCargo');
+  const idiomaSelect = document.getElementById('regUserIdioma');
   const pinInput = document.getElementById('regUserPin');
+  const confirmPinInput = document.getElementById('regUserConfirmPin');
 
-  if (!nameInput || !emailInput || !cargoInput || !pinInput) return;
+  const primeiroNome = firstNameInput ? firstNameInput.value.trim() : (legacyNameInput ? legacyNameInput.value.trim().split(' ')[0] : '');
+  const apelido = lastNameInput ? lastNameInput.value.trim() : (legacyNameInput ? legacyNameInput.value.trim().split(' ').slice(1).join(' ') : '');
+  const nome = `${primeiroNome} ${apelido}`.trim();
+  const email = emailInput ? emailInput.value.trim() : '';
+  const cargo = cargoInput ? cargoInput.value.trim() : '';
+  const idioma = idiomaSelect ? idiomaSelect.value : 'Português';
+  const pin = pinInput ? pinInput.value.trim() : '';
+  const confirmPin = confirmPinInput ? confirmPinInput.value.trim() : pin;
 
-  const nome = nameInput.value.trim();
-  const email = emailInput.value.trim();
-  const cargo = cargoInput.value.trim();
-  const pin = pinInput.value.trim();
+  if (!primeiroNome || !apelido || !email || !cargo || !pin) {
+    alert("Por favor, preencha todos os campos obrigatórios (Nome, Apelido, Email, Cargo e Palavra-Passe).");
+    return;
+  }
 
-  if (!nome || !email || !pin || pin.length < 3) {
-    alert("Preencha todos os campos corretamente. A palavra-passe/PIN deve ter pelo menos 3 caracteres.");
+  // 1. Verificação de Coincidência de Palavras-Passe
+  if (pin !== confirmPin) {
+    showPasswordMismatchModal('self');
+    return;
+  }
+
+  // 2. Validação de Complexidade da Palavra-Passe
+  const strength = validatePasswordStrength(pin);
+  if (!strength.valid) {
+    alert(`⚠️ Requisitos de Palavra-Passe:\n\n${strength.message}\n\nA palavra-passe deve conter entre 8 e 12 dígitos, pelo menos 1 maiúscula, 1 minúscula, 1 número e 1 caráter especial.`);
+    if (pinInput) pinInput.focus();
     return;
   }
 
@@ -13652,8 +14571,11 @@ function handleUserSelfRegistration(event) {
   const newUser = {
     id: "usr-" + Date.now(),
     nome: nome,
+    primeiroNome: primeiroNome,
+    apelido: apelido,
     email: email,
     cargo: cargo,
+    idioma: idioma,
     pin: pin,
     role: "user",
     active: false,
@@ -13663,17 +14585,39 @@ function handleUserSelfRegistration(event) {
   db.usuarios.push(newUser);
   saveDatabase();
 
-  nameInput.value = '';
-  emailInput.value = '';
-  cargoInput.value = '';
-  pinInput.value = '';
+  if (firstNameInput) firstNameInput.value = '';
+  if (lastNameInput) lastNameInput.value = '';
+  if (legacyNameInput) legacyNameInput.value = '';
+  if (emailInput) emailInput.value = '';
+  if (cargoInput) cargoInput.value = '';
+  if (idiomaSelect) idiomaSelect.value = 'Português';
+  if (pinInput) pinInput.value = '';
+  if (confirmPinInput) confirmPinInput.value = '';
 
-  logUserActivity('Registo de Utilizador', `Novo utilizador ${nome} (${email}) registado no sistema (Acesso pendente de ativação pelo Administrador).`);
-  showToast(`Registo efetuado! O acesso de ${nome} aguarda desativação do bloqueio pelo Administrador.`, 'warning');
-  alert(`✅ Registo de Utilizador Concluído!\n\nUtilizador: ${nome}\nEmail: ${email}\nCargo: ${cargo}\n\nO seu registo foi guardado no programa.\nO seu acesso encontra-se bloqueado por defeito até que o Administrador autorize a sua conta.`);
-
+  logUserActivity('Registo de Utilizador', `Novo utilizador ${nome} (${email}) registado no sistema com idioma ${idioma} (Acesso pendente de ativação pelo Administrador).`);
+  const regSuccessMsg = typeof t === 'function' ? t('toast_user_registered') : `Novo utilizador registado com sucesso! (Acesso pendente de ativação pelo Administrador).`;
+  showToast(regSuccessMsg);
+  alert(`✅ Registo Efetuado com Sucesso!\n\nO utilizador "${nome}" foi registado no sistema.\n\nO acesso encontra-se pendente de ativação pelo Administrador.`);
   toggleLoginRegisterMode(false);
 }
+
+function hasConfigAccess(user) {
+  if (!user) return false;
+  if (user.role === 'admin' || user.id === 'usr-admin-001') return true;
+  const normName = (user.nome || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+  const normEmail = (user.email || '').toLowerCase().trim();
+  if (normName.includes('jose centurio') || normEmail === 'jmcenturio@alegria-activity.com') return true;
+  return false;
+}
+window.hasConfigAccess = hasConfigAccess;
+
+function hasConsultasAccess(user) {
+  if (!user) return false;
+  if (user.role === 'admin' || user.id === 'usr-admin-001') return true;
+  if (user.chefia === true) return true;
+  return false;
+}
+window.hasConsultasAccess = hasConsultasAccess;
 
 function renderUserManagementGrid() {
   ensureUsersInitialized();
@@ -13682,17 +14626,23 @@ function renderUserManagementGrid() {
   const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
   const activeUser = db.usuarios.find(u => u.id === activeUserId);
 
-  const isAdmin = !!(activeUser && activeUser.role === 'admin');
+  const canAccess = hasConfigAccess(activeUser);
 
   if (navBtnConfig) {
-    navBtnConfig.style.display = isAdmin ? 'inline-flex' : 'none';
+    navBtnConfig.style.display = canAccess ? 'inline-flex' : 'none';
+  }
+
+  const navBtnConsultas = document.getElementById('navBtnConsultas') || document.querySelector('.nav-btn[data-tab="tab-consultas"]');
+  const canAccessConsultas = hasConsultasAccess(activeUser);
+  if (navBtnConsultas) {
+    navBtnConsultas.style.display = canAccessConsultas ? 'inline-flex' : 'none';
   }
 
   if (block) {
-    block.style.display = isAdmin ? 'block' : 'none';
+    block.style.display = canAccess ? 'block' : 'none';
   }
 
-  if (!isAdmin) {
+  if (!canAccess) {
     const configTab = document.getElementById('tab-database');
     if (configTab && configTab.classList.contains('active')) {
       if (typeof switchTab === 'function') switchTab('tab-home');
@@ -13704,13 +14654,14 @@ function renderUserManagementGrid() {
   if (!tbody) return;
 
   if (db.usuarios.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 1.5rem;">Nenhum utilizador registado.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #64748b; padding: 1.5rem;">Nenhum utilizador registado.</td></tr>`;
     return;
   }
 
   tbody.innerHTML = db.usuarios.map(u => {
     const isPrimaryAdmin = u.role === 'admin';
     const isBlocked = u.active === false;
+    const userIdioma = u.idioma || 'Português';
     const logCount = (db.userLogs || []).filter(l => l.usuarioId === u.id).length;
 
     return `
@@ -13729,10 +14680,16 @@ function renderUserManagementGrid() {
         <td style="color: #334155; font-size: 0.88rem;">${u.email}</td>
         <td style="color: #334155; font-size: 0.88rem;">${u.cargo || 'Não especificado'}</td>
         <td>
+          <span style="display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.78rem; font-weight: 600; background: #f0f9ff; color: #0284c7; border: 1px solid #bae6fd;">
+            <i class="fa-solid fa-language"></i> ${userIdioma}
+          </span>
+        </td>
+        <td>
           <div style="display: flex; gap: 0.35rem; align-items: center; flex-wrap: wrap;">
             <span style="display: inline-block; padding: 0.2rem 0.55rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: ${isPrimaryAdmin ? '#dbeafe' : '#e2e8f0'}; color: ${isPrimaryAdmin ? '#1e40af' : '#475569'};">
               ${isPrimaryAdmin ? 'Administrador' : 'Utilizador Padrão'}
             </span>
+            ${u.chefia ? `<span style="display: inline-flex; align-items: center; gap: 0.2rem; padding: 0.2rem 0.55rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #dcfce7; color: #166534; border: 1px solid #86efac;"><i class="fa-solid fa-clipboard-check"></i> Chefia</span>` : ''}
             <span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.55rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: ${isBlocked ? '#fee2e2' : '#dcfce7'}; color: ${isBlocked ? '#991b1b' : '#166534'};">
               <i class="fa-solid ${isBlocked ? 'fa-user-slash' : 'fa-user-check'}"></i> ${isBlocked ? 'Bloqueado' : 'Ativo'}
             </span>
@@ -13765,22 +14722,42 @@ function closeRegisterUserModal() {
 function handleUserRegistration(event) {
   if (event && event.preventDefault) event.preventDefault();
 
-  const nameInput = document.getElementById('cfgRegUserName');
+  const firstNameInput = document.getElementById('cfgRegUserFirstName');
+  const lastNameInput = document.getElementById('cfgRegUserLastName');
+  const legacyNameInput = document.getElementById('cfgRegUserName');
   const emailInput = document.getElementById('cfgRegUserEmail');
   const cargoInput = document.getElementById('cfgRegUserCargo');
+  const idiomaSelect = document.getElementById('cfgRegUserIdioma');
   const roleSelect = document.getElementById('cfgRegUserRole');
   const pinInput = document.getElementById('cfgRegUserPin');
+  const confirmPinInput = document.getElementById('cfgRegUserConfirmPin');
 
-  if (!nameInput || !emailInput || !cargoInput || !roleSelect || !pinInput) return;
+  const primeiroNome = firstNameInput ? firstNameInput.value.trim() : (legacyNameInput ? legacyNameInput.value.trim().split(' ')[0] : '');
+  const apelido = lastNameInput ? lastNameInput.value.trim() : (legacyNameInput ? legacyNameInput.value.trim().split(' ').slice(1).join(' ') : '');
+  const nome = `${primeiroNome} ${apelido}`.trim();
+  const email = emailInput ? emailInput.value.trim() : '';
+  const cargo = cargoInput ? cargoInput.value.trim() : '';
+  const idioma = idiomaSelect ? idiomaSelect.value : 'Português';
+  const role = roleSelect ? roleSelect.value : 'user';
+  const pin = pinInput ? pinInput.value.trim() : '';
+  const confirmPin = confirmPinInput ? confirmPinInput.value.trim() : pin;
 
-  const nome = nameInput.value.trim();
-  const email = emailInput.value.trim();
-  const cargo = cargoInput.value.trim();
-  const role = roleSelect.value;
-  const pin = pinInput.value.trim();
+  if (!primeiroNome || !apelido || !email || !cargo || !roleSelect || !pin) {
+    alert("Preencha todos os campos obrigatórios (Nome, Apelido, Email, Cargo, Perfil e Palavra-Passe).");
+    return;
+  }
 
-  if (!nome || !email || !pin || pin.length < 3) {
-    alert("Preencha todos os campos. O PIN deve ter pelo menos 3 caracteres.");
+  // 1. Verificação de Coincidência de Palavras-Passe
+  if (pin !== confirmPin) {
+    showPasswordMismatchModal('cfg');
+    return;
+  }
+
+  // 2. Validação de Complexidade da Palavra-Passe
+  const strength = validatePasswordStrength(pin);
+  if (!strength.valid) {
+    alert(`⚠️ Requisitos de Palavra-Passe:\n\n${strength.message}\n\nA palavra-passe deve conter entre 8 e 12 dígitos, pelo menos 1 maiúscula, 1 minúscula, 1 número e 1 caráter especial.`);
+    if (pinInput) pinInput.focus();
     return;
   }
 
@@ -13793,8 +14770,11 @@ function handleUserRegistration(event) {
   const newUser = {
     id: "usr-" + Date.now(),
     nome: nome,
+    primeiroNome: primeiroNome,
+    apelido: apelido,
     email: email,
     cargo: cargo,
+    idioma: idioma,
     pin: pin,
     role: role,
     active: role === 'admin' ? true : false,
@@ -13804,16 +14784,20 @@ function handleUserRegistration(event) {
   db.usuarios.push(newUser);
   saveDatabase();
 
-  nameInput.value = '';
-  emailInput.value = '';
-  cargoInput.value = '';
-  pinInput.value = '';
+  if (firstNameInput) firstNameInput.value = '';
+  if (lastNameInput) lastNameInput.value = '';
+  if (legacyNameInput) legacyNameInput.value = '';
+  if (emailInput) emailInput.value = '';
+  if (cargoInput) cargoInput.value = '';
+  if (idiomaSelect) idiomaSelect.value = 'Português';
+  if (pinInput) pinInput.value = '';
+  if (confirmPinInput) confirmPinInput.value = '';
 
   closeRegisterUserModal();
   renderUserManagementGrid();
   renderUserSelectOptions();
 
-  logUserActivity('Gestão de Utilizadores', `Utilizador ${nome} (${email}) adicionado à administração do sistema.`);
+  logUserActivity('Gestão de Utilizadores', `Utilizador ${nome} (${email}) adicionado à administração do sistema com idioma ${idioma}.`);
   showToast(`Utilizador ${nome} registado com sucesso!`);
 }
 
@@ -13865,14 +14849,22 @@ function openUserProfileModal(userId, initialTab = 'info') {
   const title = document.getElementById('userProfileModalTitle');
   const badge = document.getElementById('userProfileBadge');
 
-  if (title) title.textContent = `Ficha do Utilizador - ${user.nome}`;
-  if (badge) badge.textContent = user.role === 'admin' ? 'Administrador do Sistema' : 'Utilizador Padrão';
+  const profileTitleText = (typeof t === 'function' ? t('profile_title') : 'Ficha do Utilizador');
+  if (title) title.textContent = `${profileTitleText} - ${user.nome}`;
+  if (badge) {
+    if (user.role === 'admin') {
+      badge.textContent = (typeof t === 'function' ? t('profile_badge_admin') : 'Administrador do Sistema');
+    } else {
+      badge.textContent = (typeof t === 'function' ? t('profile_badge_user') : 'Utilizador Padrão');
+    }
+  }
 
   // Fill Tab 1 Info
   const idInput = document.getElementById('profileUserId');
   const nameInput = document.getElementById('profileUserName');
   const emailInput = document.getElementById('profileUserEmail');
   const cargoInput = document.getElementById('profileUserCargo');
+  const idiomaSelect = document.getElementById('profileUserIdioma');
   const roleSelect = document.getElementById('profileUserRole');
   const pinInput = document.getElementById('profileUserPin');
 
@@ -13880,6 +14872,7 @@ function openUserProfileModal(userId, initialTab = 'info') {
   if (nameInput) nameInput.value = user.nome || '';
   if (emailInput) emailInput.value = user.email || '';
   if (cargoInput) cargoInput.value = user.cargo || '';
+  if (idiomaSelect) idiomaSelect.value = user.idioma || 'Português';
   if (roleSelect) roleSelect.value = user.role || 'user';
   if (pinInput) pinInput.value = user.pin || '';
 
@@ -13887,6 +14880,17 @@ function openUserProfileModal(userId, initialTab = 'info') {
   if (activeCheckbox) {
     activeCheckbox.checked = (user.active !== false);
     activeCheckbox.disabled = false;
+  }
+
+  const activeUserIdForPerm = sessionStorage.getItem('sigec_pro_active_user_id');
+  const loggedInUserForPerm = db.usuarios.find(u => u.id === activeUserIdForPerm);
+  const isAdminOperator = loggedInUserForPerm && (loggedInUserForPerm.role === 'admin' || loggedInUserForPerm.id === 'usr-admin-001');
+
+  const chefiaCheckbox = document.getElementById('profileUserChefia');
+  if (chefiaCheckbox) {
+    chefiaCheckbox.checked = (user.chefia === true || user.role === 'admin');
+    // Só o Administrador pode alterar a caixa de Chefia
+    chefiaCheckbox.disabled = !isAdminOperator;
   }
 
   // Reset Date Filter to 'all'
@@ -13953,6 +14957,7 @@ function handleSaveUserProfile(event) {
   const nameInput = document.getElementById('profileUserName');
   const emailInput = document.getElementById('profileUserEmail');
   const cargoInput = document.getElementById('profileUserCargo');
+  const idiomaSelect = document.getElementById('profileUserIdioma');
   const roleSelect = document.getElementById('profileUserRole');
   const pinInput = document.getElementById('profileUserPin');
 
@@ -13962,11 +14967,12 @@ function handleSaveUserProfile(event) {
   const nome = nameInput.value.trim();
   const email = emailInput.value.trim();
   const cargo = cargoInput.value.trim();
+  const idioma = idiomaSelect ? idiomaSelect.value : 'Português';
   const role = roleSelect.value;
   const pin = pinInput.value.trim();
 
-  if (!nome || !email || !pin || pin.length < 3) {
-    alert("Preencha todos os campos. O PIN deve ter pelo menos 3 caracteres.");
+  if (!nome || !email || !pin) {
+    alert("Preencha todos os campos obrigatórios.");
     return;
   }
 
@@ -13982,13 +14988,25 @@ function handleSaveUserProfile(event) {
   const userIndex = db.usuarios.findIndex(u => u.id === userId);
   if (userIndex < 0) return;
 
-  if (db.usuarios.some((u, idx) => idx !== userIndex && u.email.toLowerCase() === email.toLowerCase())) {
+  if (pin !== db.usuarios[userIndex].pin) {
+    const strength = validatePasswordStrength(pin);
+    if (!strength.valid) {
+      alert(`⚠️ Requisitos de Palavra-Passe:\n\n${strength.message}\n\nA palavra-passe deve conter entre 8 e 12 dígitos, pelo menos 1 maiúscula, 1 minúscula, 1 número e 1 caráter especial.`);
+      if (pinInput) pinInput.focus();
+      return;
+    }
+  }
+
+  if (db.usuarios.some((u, idx) => idx !== userIndex && u && (u.email || '').toLowerCase() === email.toLowerCase())) {
     alert("Já existe outro utilizador registado com este email.");
     return;
   }
 
   const activeCheckbox = document.getElementById('profileUserActive');
   let newActiveState = activeCheckbox ? activeCheckbox.checked : (db.usuarios[userIndex].active !== false);
+
+  const chefiaCheckbox = document.getElementById('profileUserChefia');
+  let newChefiaState = chefiaCheckbox ? chefiaCheckbox.checked : (db.usuarios[userIndex].chefia === true);
 
   if (!newActiveState && (userId === "usr-admin-001" || db.usuarios[userIndex].role === 'admin')) {
     const activeAdminCount = db.usuarios.filter(u => u.role === 'admin' && u.active !== false).length;
@@ -14004,9 +15022,11 @@ function handleSaveUserProfile(event) {
     nome: nome,
     email: email,
     cargo: cargo,
+    idioma: idioma,
     role: role,
     pin: pin,
-    active: newActiveState
+    active: newActiveState,
+    chefia: newChefiaState
   };
 
   if (role === 'admin' || userId === "usr-admin-001") {
@@ -14017,8 +15037,13 @@ function handleSaveUserProfile(event) {
   renderUserManagementGrid();
   renderUserSelectOptions();
 
+  if (activeUserId === userId && typeof applyUserLanguage === 'function') {
+    applyUserLanguage(idioma);
+  }
+
   logUserActivity('Ficha do Utilizador', `Dados de registo e PIN do utilizador ${nome} atualizados pelo Administrador.`);
-  showToast(`Ficha do utilizador ${nome} atualizada com sucesso!`);
+  const updatedToast = typeof t === 'function' ? t('toast_profile_updated') : `Ficha do utilizador ${nome} atualizada com sucesso!`;
+  showToast(updatedToast);
   alert(`✅ Ficha Atualizada!\n\nOs dados de registo e o PIN do utilizador "${nome}" foram guardados no programa com sucesso.`);
 }
 
@@ -14116,13 +15141,15 @@ function handleSaveResetPasswordFromToken(event) {
   const newPin = pinInput.value.trim();
   const confirmPin = confirmInput.value.trim();
 
-  if (!newPin || newPin.length < 3) {
-    alert("O novo PIN deve ter pelo menos 3 caracteres.");
+  if (newPin !== confirmPin) {
+    showPasswordMismatchModal('reset');
     return;
   }
 
-  if (newPin !== confirmPin) {
-    alert("As palavras-passe / PINs introduzidas não coincidem.");
+  const strength = validatePasswordStrength(newPin);
+  if (!strength.valid) {
+    alert(`⚠️ Requisitos de Palavra-Passe:\n\n${strength.message}\n\nA palavra-passe deve conter entre 8 e 12 dígitos, pelo menos 1 maiúscula, 1 minúscula, 1 número e 1 caráter especial.`);
+    if (pinInput) pinInput.focus();
     return;
   }
 
@@ -14130,22 +15157,18 @@ function handleSaveResetPasswordFromToken(event) {
   const user = db.usuarios.find(u => u.id === userId);
   if (user) {
     user.pin = newPin;
-    if (user.role === 'admin') {
-      localStorage.setItem('sigec_pro_security_pin', newPin);
+    if (user.role === 'admin' || user.id === "usr-admin-001") {
+      safeSetStorage('sigec_pro_security_pin', newPin);
     }
-    saveDatabase();
+    logUserActivity('Segurança', `Palavra-passe redefinida com sucesso para o utilizador ${user.nome} (${user.email}).`);
+    alert(`✅ Palavra-Passe Redefinida!\n\nA sua nova palavra-passe foi guardada com sucesso.`);
+    closeResetPasswordModal();
 
-    logUserActivity('Segurança', `Palavra-passe / PIN do utilizador ${user.nome} redefinido via link de segurança.`);
-    showToast(`Palavra-passe do utilizador ${user.nome} redefinida com sucesso!`);
-    alert(`✅ Palavra-passe Atualizada com Sucesso!\n\nA nova palavra-passe / PIN do utilizador "${user.nome}" foi guardada no programa.`);
-  }
-
-  closeResetPasswordModal();
-
-  // Clean URL params
-  if (window.history && window.history.replaceState) {
-    const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-    window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+    // Clean URL params
+    if (window.history && window.history.replaceState) {
+      const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+      window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+    }
   }
 }
 
@@ -14327,16 +15350,26 @@ function deleteRegisteredUser(userId) {
   const user = db.usuarios.find(u => u.id === userId);
   if (!user) return;
 
-  if (user.role === 'admin') {
+  if (user.role === 'admin' || user.id === 'usr-admin-001') {
     alert("Não é possível eliminar a conta do Administrador principal.");
     return;
   }
 
   if (confirm(`Tem a certeza que deseja eliminar o utilizador "${user.nome}" (${user.email})?`)) {
+    addDeletedId('usuarios', userId);
     db.usuarios = db.usuarios.filter(u => u.id !== userId);
+    saveDeletedRegistry();
     saveDatabase();
+    
+    // Sincronizar de imediato com o GitHub se token estiver configurado
+    const ghToken = localStorage.getItem('sigec_pro_gh_token');
+    if (ghToken && typeof syncDatabaseToGitHub === 'function') {
+      syncDatabaseToGitHub(true, true);
+    }
+
     renderUserManagementGrid();
     renderUserSelectOptions();
+    if (typeof populateClientComercialOptions === 'function') populateClientComercialOptions();
 
     logUserActivity('Gestão de Utilizadores', `Utilizador ${user.nome} (${user.email}) eliminado do sistema.`);
     showToast(`Utilizador ${user.nome} eliminado com sucesso.`);
@@ -14346,6 +15379,9 @@ function deleteRegisteredUser(userId) {
 function lockApplicationScreen() {
   sessionStorage.removeItem('sigec_pro_authenticated');
   sessionStorage.removeItem('sigec_pro_active_user_id');
+
+  const navBtnConfig = document.getElementById('navBtnConfiguracao') || document.querySelector('.nav-btn[data-tab="tab-database"]');
+  if (navBtnConfig) navBtnConfig.style.display = 'none';
 
   const overlay = document.getElementById('loginOverlay');
   const errorMsg = document.getElementById('loginErrorMessage');
@@ -14871,15 +15907,24 @@ async function confirmAndExecuteBackupRestore() {
 
 function formatPostalAddressLines(target, isContact = false) {
   let linha1 = '';
+  let linha2 = '';
+  let linha3 = '';
+  let linha4 = '';
+  let linha5 = '';
+
   let dir1 = '', dir2 = '', num = '', andar = '', cp = '', loc = '', pais = '';
 
   if (isContact) {
-    // 1ª linha: A/C Nome * e Apelido
+    // 1ª linha: A/C Nome e Apelido
     const nomeCompleto = `${target.nome || ''} ${target.apelido || ''}`.trim();
     linha1 = `A/C ${nomeCompleto}`;
 
-    // Buscar informações de direção no cliente associado
-    const client = db.clientes.find(c => c.id === target.clienteId);
+    // 2ª linha: Cargo do contacto (se existir)
+    const cargo = (target.cargo || '').trim();
+    linha2 = cargo;
+
+    // Buscar informações de endereço no cliente associado
+    const client = db.clientes ? db.clientes.find(c => c.id === target.clienteId) : null;
     if (client) {
       if (client.tipoCliente === 'Estatal' && client.separadores && client.separadores.length > 0) {
         const subIdx = (target.subTabIndex !== undefined && target.subTabIndex !== null && target.subTabIndex !== '') ? Number(target.subTabIndex) : 0;
@@ -14926,7 +15971,7 @@ function formatPostalAddressLines(target, isContact = false) {
     }
   }
 
-  // Linha 2: Direção (linha 1), Direção (linha 2), Nº Andar (GARANTINDO QUE NUNCA CONTÉM CÓDIGO POSTAL)
+  // Tratamento da Morada / Direção
   if (cp) {
     const cpClean = cp.trim();
     if (cpClean) {
@@ -14935,31 +15980,45 @@ function formatPostalAddressLines(target, isContact = false) {
       dir2 = dir2.replace(new RegExp('\\b' + escCp + '\\b', 'gi'), '').trim();
     }
   }
-  // Remove qualquer padrão de código postal (ex: 1000-001 ou 1000 001) da linha de morada
   dir1 = dir1.replace(/\b\d{4}[-\s]\d{3}\b/g, '').replace(/,\s*,/g, ',').replace(/^,\s*/, '').replace(/,\s*$/, '').trim();
   dir2 = dir2.replace(/\b\d{4}[-\s]\d{3}\b/g, '').replace(/,\s*,/g, ',').replace(/^,\s*/, '').replace(/,\s*$/, '').trim();
 
-  let partsL2 = [];
-  if (dir1) partsL2.push(dir1);
-  if (dir2) partsL2.push(dir2);
+  let partsDir = [];
+  if (dir1) partsDir.push(dir1);
+  if (dir2) partsDir.push(dir2);
   let numAndar = [num, andar].filter(Boolean).join(' ');
-  if (numAndar) partsL2.push(numAndar);
-  let linha2 = partsL2.join(', ');
+  if (numAndar) partsDir.push(numAndar);
+  const moradaLinha = partsDir.join(', ');
 
-  // Linha 3: Código Postal Localidade (ÚNICO local onde o Código Postal deve estar)
-  let linha3 = [cp, loc].filter(Boolean).join(' ');
+  const cpLocLinha = [cp, loc].filter(Boolean).join(' ');
+  const paisLinha = pais;
 
-  // Linha 4: País
-  let linha4 = pais;
+  if (isContact) {
+    if (linha2) {
+      linha3 = moradaLinha;
+      linha4 = cpLocLinha;
+      linha5 = paisLinha;
+    } else {
+      linha2 = moradaLinha;
+      linha3 = cpLocLinha;
+      linha4 = paisLinha;
+      linha5 = '';
+    }
+  } else {
+    linha2 = moradaLinha;
+    linha3 = cpLocLinha;
+    linha4 = paisLinha;
+    linha5 = '';
+  }
 
-  return { linha1, linha2, linha3, linha4 };
+  return { linha1, linha2, linha3, linha4, linha5 };
 }
 
 function printClientAddressLabel(clientId) {
   let targetId = clientId || currentClientId;
   let client = null;
 
-  if (targetId) {
+  if (targetId && db.clientes) {
     client = db.clientes.find(c => c.id === targetId);
   }
 
@@ -14983,7 +16042,7 @@ function printClientAddressLabel(clientId) {
     return;
   }
 
-  const { linha1, linha2, linha3, linha4 } = formatPostalAddressLines(client, false);
+  const { linha1, linha2, linha3, linha4, linha5 } = formatPostalAddressLines(client, false);
 
   const titleEl = document.getElementById('addressLabelModalTitle');
   if (titleEl) titleEl.innerHTML = `<i class="fa-solid fa-envelope"></i> Etiqueta Postal - ${escapeHtml(linha1 || 'Cliente')}`;
@@ -14992,11 +16051,16 @@ function printClientAddressLabel(clientId) {
   const l2 = document.getElementById('labelLine2');
   const l3 = document.getElementById('labelLine3');
   const l4 = document.getElementById('labelLine4');
+  const l5 = document.getElementById('labelLine5');
 
   if (l1) l1.textContent = linha1;
   if (l2) l2.textContent = linha2;
   if (l3) l3.textContent = linha3;
   if (l4) l4.textContent = linha4;
+  if (l5) {
+    l5.textContent = linha5;
+    l5.style.display = linha5 ? 'block' : 'none';
+  }
 
   document.getElementById('addressLabelModal')?.classList.add('active');
 }
@@ -15006,7 +16070,7 @@ function printContactAddressLabel(contactId) {
   let targetId = contactId || currentContactIdForModal;
   let contact = null;
 
-  if (targetId) {
+  if (targetId && db.contactos) {
     contact = db.contactos.find(c => c.id === targetId);
   }
 
@@ -15015,6 +16079,7 @@ function printContactAddressLabel(contactId) {
       clienteId: document.getElementById('contactClienteId')?.value || currentClientId,
       nome: document.getElementById('contactNome')?.value || '',
       apelido: document.getElementById('contactApelido')?.value || '',
+      cargo: document.getElementById('contactCargo')?.value || '',
       subTabIndex: currentSubTabContactIndex !== null ? currentSubTabContactIndex : activeEstatalSeparadorIndex
     };
   }
@@ -15024,7 +16089,7 @@ function printContactAddressLabel(contactId) {
     return;
   }
 
-  const { linha1, linha2, linha3, linha4 } = formatPostalAddressLines(contact, true);
+  const { linha1, linha2, linha3, linha4, linha5 } = formatPostalAddressLines(contact, true);
 
   const titleEl = document.getElementById('addressLabelModalTitle');
   if (titleEl) titleEl.innerHTML = `<i class="fa-solid fa-envelope"></i> Etiqueta Postal - ${escapeHtml(linha1 || 'Contacto')}`;
@@ -15033,11 +16098,16 @@ function printContactAddressLabel(contactId) {
   const l2 = document.getElementById('labelLine2');
   const l3 = document.getElementById('labelLine3');
   const l4 = document.getElementById('labelLine4');
+  const l5 = document.getElementById('labelLine5');
 
   if (l1) l1.textContent = linha1;
   if (l2) l2.textContent = linha2;
   if (l3) l3.textContent = linha3;
   if (l4) l4.textContent = linha4;
+  if (l5) {
+    l5.textContent = linha5;
+    l5.style.display = linha5 ? 'block' : 'none';
+  }
 
   document.getElementById('addressLabelModal')?.classList.add('active');
 }
@@ -15053,8 +16123,9 @@ function copyAddressLabelText() {
   const line2 = document.getElementById('labelLine2')?.textContent || '';
   const line3 = document.getElementById('labelLine3')?.textContent || '';
   const line4 = document.getElementById('labelLine4')?.textContent || '';
+  const line5 = document.getElementById('labelLine5')?.textContent || '';
 
-  const fullText = [line1, line2, line3, line4].filter(Boolean).join('\n');
+  const fullText = [line1, line2, line3, line4, line5].filter(Boolean).join('\n');
   navigator.clipboard.writeText(fullText).then(() => {
     showToast('Endereço postal copiado para a área de transferência!');
   }).catch(() => {
@@ -15068,12 +16139,16 @@ function printActiveAddressLabel() {
   const line2 = document.getElementById('labelLine2')?.textContent || '';
   const line3 = document.getElementById('labelLine3')?.textContent || '';
   const line4 = document.getElementById('labelLine4')?.textContent || '';
+  const line5 = document.getElementById('labelLine5')?.textContent || '';
 
   const printWin = window.open('', '_blank', 'width=620,height=480');
   if (!printWin) {
     window.print();
     return;
   }
+
+  const lines = [line1, line2, line3, line4, line5].filter(Boolean);
+  const linesHtml = lines.map((l, i) => `<div class="line-${i + 1}">${escapeHtml(l)}</div>`).join('');
 
   printWin.document.write(`
     <!DOCTYPE html>
@@ -15109,7 +16184,7 @@ function printActiveAddressLabel() {
         .line-1 {
           font-size: 13pt;
           font-weight: bold;
-          margin-bottom: 5px;
+          margin-bottom: 4px;
           line-height: 1.35;
           color: #000000;
         }
@@ -15121,12 +16196,18 @@ function printActiveAddressLabel() {
         }
         .line-3 {
           font-size: 11pt;
+          margin-bottom: 4px;
+          line-height: 1.35;
+          color: #111111;
+        }
+        .line-4 {
+          font-size: 11pt;
           font-weight: 600;
           margin-bottom: 4px;
           line-height: 1.35;
           color: #000000;
         }
-        .line-4 {
+        .line-5 {
           font-size: 11pt;
           font-weight: bold;
           text-transform: uppercase;
@@ -15137,10 +16218,7 @@ function printActiveAddressLabel() {
     </head>
     <body>
       <div class="label-container">
-        ${line1 ? `<div class="line-1">${escapeHtml(line1)}</div>` : ''}
-        ${line2 ? `<div class="line-2">${escapeHtml(line2)}</div>` : ''}
-        ${line3 ? `<div class="line-3">${escapeHtml(line3)}</div>` : ''}
-        ${line4 ? `<div class="line-4">${escapeHtml(line4)}</div>` : ''}
+        ${linesHtml}
       </div>
       <script>
         window.onload = function() {
@@ -15177,7 +16255,6 @@ function openBulkAddressLabelsModal(type) {
       : '<i class="fa-solid fa-envelope"></i> Seleção de Etiquetas Postais - Contactos';
   }
 
-  // Obter itens base
   let list = [];
   if (currentBulkLabelType === 'clientes') {
     list = (db.clientes || []).filter(cli => {
@@ -15193,7 +16270,6 @@ function openBulkAddressLabelsModal(type) {
   }
 
   currentBulkLabelItemsCache = list;
-  // Pré-selecionar todos por defeito
   bulkLabelSelectedIds = new Set(list.map(item => item.id));
 
   renderBulkAddressLabelsList();
@@ -15223,11 +16299,10 @@ function renderBulkAddressLabelsList() {
 
   const isContact = currentBulkLabelType === 'contactos';
 
-  // Filtrar pela pesquisa
   const filteredList = (currentBulkLabelItemsCache || []).filter(item => {
     if (!searchVal) return true;
     if (isContact) {
-      const client = db.clientes.find(c => c.id === item.clienteId);
+      const client = db.clientes ? db.clientes.find(c => c.id === item.clienteId) : null;
       const clientName = client ? client.nome.toLowerCase() : '';
       return (item.nome && item.nome.toLowerCase().includes(searchVal)) ||
              (item.apelido && item.apelido.toLowerCase().includes(searchVal)) ||
@@ -15243,7 +16318,6 @@ function renderBulkAddressLabelsList() {
     }
   });
 
-  // Atualizar contadores
   const totalCount = currentBulkLabelItemsCache.length;
   const selectedCount = bulkLabelSelectedIds.size;
   if (selectedCountEl) selectedCountEl.textContent = selectedCount;
@@ -15262,11 +16336,11 @@ function renderBulkAddressLabelsList() {
 
   container.innerHTML = filteredList.map(item => {
     const isSelected = bulkLabelSelectedIds.has(item.id);
-    const { linha1, linha2, linha3, linha4 } = formatPostalAddressLines(item, isContact);
+    const { linha1, linha2, linha3, linha4, linha5 } = formatPostalAddressLines(item, isContact);
 
     let subInfo = '';
     if (isContact) {
-      const client = db.clientes.find(c => c.id === item.clienteId);
+      const client = db.clientes ? db.clientes.find(c => c.id === item.clienteId) : null;
       subInfo = client ? `<span style="color: #2563eb; font-weight: 600;">${escapeHtml(client.nome)}</span>` : '';
       if (item.cargo) subInfo += (subInfo ? ' &bull; ' : '') + escapeHtml(item.cargo);
     } else {
@@ -15276,7 +16350,7 @@ function renderBulkAddressLabelsList() {
       }
     }
 
-    const moradaResumo = [linha2, linha3, linha4].filter(Boolean).join(' | ');
+    const moradaResumo = [linha2, linha3, linha4, linha5].filter(Boolean).join(' | ');
 
     return `
       <div class="bulk-label-item-row" onclick="toggleBulkLabelItem('${item.id}', event)" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.85rem; border-radius: 6px; border: 1px solid ${isSelected ? '#93c5fd' : '#e2e8f0'}; background: ${isSelected ? '#eff6ff' : '#ffffff'}; cursor: pointer; transition: all 0.15s ease;">
@@ -15301,12 +16375,8 @@ function renderBulkAddressLabelsList() {
 }
 window.renderBulkAddressLabelsList = renderBulkAddressLabelsList;
 
-function filterBulkAddressLabelsList() {
-  renderBulkAddressLabelsList();
-}
-window.filterBulkAddressLabelsList = filterBulkAddressLabelsList;
-
 function toggleBulkLabelItem(id, event) {
+  if (event) event.stopPropagation();
   if (bulkLabelSelectedIds.has(id)) {
     bulkLabelSelectedIds.delete(id);
   } else {
@@ -15316,45 +16386,39 @@ function toggleBulkLabelItem(id, event) {
 }
 window.toggleBulkLabelItem = toggleBulkLabelItem;
 
-function toggleAllBulkLabels(selectAll) {
-  if (selectAll) {
-    currentBulkLabelItemsCache.forEach(item => bulkLabelSelectedIds.add(item.id));
+function toggleAllBulkLabelItems(select) {
+  if (select) {
+    bulkLabelSelectedIds = new Set((currentBulkLabelItemsCache || []).map(i => i.id));
   } else {
     bulkLabelSelectedIds.clear();
   }
   renderBulkAddressLabelsList();
 }
-window.toggleAllBulkLabels = toggleAllBulkLabels;
+window.toggleAllBulkLabelItems = toggleAllBulkLabelItems;
 
-function printBulkSelectedAddressLabels() {
+function generateBulkAddressLabelsPdf() {
   if (bulkLabelSelectedIds.size === 0) {
-    showToast('Por favor selecione pelo menos um destinatário para imprimir etiquetas.', 'warning');
+    showToast('Selecione pelo menos um registo para imprimir etiquetas.', 'warning');
     return;
   }
 
   const isContact = currentBulkLabelType === 'contactos';
-  const sourceList = isContact ? db.contactos : db.clientes;
-  const selectedItems = (sourceList || []).filter(item => bulkLabelSelectedIds.has(item.id));
+  const selectedItems = (currentBulkLabelItemsCache || []).filter(i => bulkLabelSelectedIds.has(i.id));
 
-  if (selectedItems.length === 0) {
-    showToast('Nenhum destinatário válido selecionado.', 'warning');
-    return;
-  }
-
-  const printWin = window.open('', '_blank', 'width=860,height=640');
+  const printWin = window.open('', '_blank', 'width=900,height=650');
   if (!printWin) {
-    alert('Por favor permita janelas de pop-up no navegador para imprimir as etiquetas.');
+    showToast('Permita popups para imprimir as etiquetas.', 'warning');
     return;
   }
 
   const labelsHtml = selectedItems.map(item => {
-    const { linha1, linha2, linha3, linha4 } = formatPostalAddressLines(item, isContact);
+    const { linha1, linha2, linha3, linha4, linha5 } = formatPostalAddressLines(item, isContact);
+    const lines = [linha1, linha2, linha3, linha4, linha5].filter(Boolean);
+    const linesInner = lines.map((l, i) => `<div class="line-${i + 1}">${escapeHtml(l)}</div>`).join('');
+
     return `
       <div class="label-box">
-        <div class="line-1">${escapeHtml(linha1)}</div>
-        ${linha2 ? `<div class="line-2">${escapeHtml(linha2)}</div>` : ''}
-        <div class="line-3">${escapeHtml(linha3)}</div>
-        <div class="line-4">${escapeHtml(linha4)}</div>
+        ${linesInner}
       </div>
     `;
   }).join('');
@@ -15404,26 +16468,33 @@ function printBulkSelectedAddressLabels() {
           }
         }
         .line-1 {
-          font-size: 11.5pt;
+          font-size: 11pt;
           font-weight: bold;
           color: #000000;
-          margin-bottom: 3px;
+          margin-bottom: 2px;
           line-height: 1.25;
         }
         .line-2 {
-          font-size: 10pt;
+          font-size: 9.5pt;
           color: #111111;
           margin-bottom: 2px;
           line-height: 1.25;
         }
         .line-3 {
-          font-size: 10pt;
+          font-size: 9.5pt;
           color: #111111;
           margin-bottom: 2px;
           line-height: 1.25;
         }
         .line-4 {
-          font-size: 10pt;
+          font-size: 9.5pt;
+          font-weight: 600;
+          color: #000000;
+          margin-bottom: 2px;
+          line-height: 1.25;
+        }
+        .line-5 {
+          font-size: 9.5pt;
           font-weight: bold;
           color: #000000;
           text-transform: uppercase;
@@ -15444,9 +16515,74 @@ function printBulkSelectedAddressLabels() {
   `);
   printWin.document.close();
 }
+window.generateBulkAddressLabelsPdf = generateBulkAddressLabelsPdf;
+window.printBulkSelectedAddressLabels = generateBulkAddressLabelsPdf;
+window.toggleAllBulkLabels = toggleAllBulkLabelItems;
+window.toggleAllBulkLabelItems = toggleAllBulkLabelItems;
+window.filterBulkAddressLabelsList = renderBulkAddressLabelsList;
+window.openBulkAddressLabelsModal = openBulkAddressLabelsModal;
+window.closeBulkAddressLabelsModal = closeBulkAddressLabelsModal;
+window.renderBulkAddressLabelsList = renderBulkAddressLabelsList;
+window.toggleBulkLabelItem = toggleBulkLabelItem;
+
 // ==========================================
 // MÓDULO DE ORÇAMENTAÇÃO (SIGEC-PRO)
 // ==========================================
+
+
+
+function getSelectedBudgetCliName() {
+  const selectEl = document.getElementById('budgetHeaderCliente');
+  if (!selectEl) return 'Cliente';
+  const val = (selectEl.value || '').trim();
+  if (!val) return 'Cliente';
+  const matched = (db.clientes || []).find(c => String(c.id).trim() === val);
+  if (matched && matched.nome) return matched.nome;
+  if (selectEl.options && selectEl.selectedIndex >= 0) {
+    const text = selectEl.options[selectEl.selectedIndex].text;
+    if (text && !text.startsWith('--')) return text;
+  }
+  return val;
+}
+window.getSelectedBudgetCliName = getSelectedBudgetCliName;
+
+function populateBudgetClientsSelect(selectedClientId = null) {
+  const select = document.getElementById('budgetHeaderCliente');
+  if (!select) return;
+  
+  let rawClients = (typeof getUserScopedItems === 'function') 
+    ? getUserScopedItems(Array.isArray(db.clientes) ? db.clientes : []) 
+    : (db.clientes || []);
+  
+  if (!rawClients || rawClients.length === 0) {
+    rawClients = db.clientes || [];
+  }
+
+  const clients = [...rawClients].filter(c => c && c.nome).sort((a, b) => (a.nome || '').localeCompare(b.nome || '', 'pt', { sensitivity: 'base' }));
+  
+  const currentVal = selectedClientId || select.value || '';
+
+  let optionsHtml = '<option value="" style="color: #64748b;">-- Selecione o Cliente --</option>';
+  clients.forEach(cli => {
+    const isSelected = currentVal ? (String(cli.id).trim() === String(currentVal).trim()) : false;
+    optionsHtml += `<option value="${cli.id}" ${isSelected ? 'selected' : ''} style="color: #0f172a;">${escapeHtml(cli.nome)}</option>`;
+  });
+  select.innerHTML = optionsHtml;
+
+  if (currentVal) {
+    select.value = currentVal;
+  }
+}
+window.populateBudgetClientsSelect = populateBudgetClientsSelect;
+
+function handleBudgetClientSelect(clientId) {
+  if (!clientId) return;
+  const client = (db.clientes || []).find(c => String(c.id).trim() === String(clientId).trim());
+  if (client) {
+    syncBudgetRefFromClient(client.nome);
+  }
+}
+window.handleBudgetClientSelect = handleBudgetClientSelect;
 
 function populateBudgetClientsDatalist() {
   const dl = document.getElementById('budgetClientsDatalist');
@@ -15459,6 +16595,27 @@ function populateBudgetClientsDatalist() {
   });
 }
 window.populateBudgetClientsDatalist = populateBudgetClientsDatalist;
+
+
+function handleBudgetClientInput(val) {
+  const hiddenId = document.getElementById('budgetHeaderClienteId');
+  const inputNorm = (typeof normalizeText === 'function' ? normalizeText(val) : (val || '').toLowerCase()).trim();
+
+  let matched = null;
+  if (inputNorm) {
+    matched = (db.clientes || []).find(c => c && (typeof normalizeText === 'function' ? normalizeText(c.nome) : (c.nome || '').toLowerCase()).trim() === inputNorm);
+    if (!matched) {
+      matched = (db.clientes || []).find(c => c && Array.isArray(c.separadores) && c.separadores.some(s => s && (typeof normalizeText === 'function' ? normalizeText(s.nome) : (s.nome || '').toLowerCase()).trim() === inputNorm));
+    }
+  }
+
+  if (hiddenId) {
+    hiddenId.value = matched ? matched.id : '';
+  }
+
+  syncBudgetRefFromClient(val);
+}
+window.handleBudgetClientInput = handleBudgetClientInput;
 
 function syncBudgetRefFromClient(clientName) {
   const refInput = document.getElementById('budgetHeaderRefCliente');
@@ -15491,16 +16648,21 @@ function recalculateBudgetTotal() {
 window.recalculateBudgetTotal = recalculateBudgetTotal;
 
 function clearBudgetForm() {
+  window._currentEditingBudgetId = null;
+  window._pendingNewBudgetSeparador = null;
   const numEl = document.getElementById('budgetHeaderNum');
   const refEl = document.getElementById('budgetHeaderRefCliente');
   const cliEl = document.getElementById('budgetHeaderCliente');
   const dataEl = document.getElementById('budgetHeaderData');
+  const estadoEl = document.getElementById('budgetHeaderEstado');
   const modelInp = document.getElementById('budgetModelPresetInput');
 
   if (numEl) numEl.value = '';
   if (refEl) refEl.value = '';
+  populateBudgetClientsSelect('');
   if (cliEl) cliEl.value = '';
   if (dataEl) dataEl.value = '';
+  if (estadoEl) estadoEl.value = 'Em avaliação';
   if (modelInp) modelInp.value = '';
 
   const descInputs = document.querySelectorAll('.budget-input-desc');
@@ -15867,23 +17029,27 @@ function addBudgetRow(btnEl) {
   const tbody = card.querySelector('tbody');
   if (!tbody) return;
 
+  const itemPlaceholder = typeof t === 'function' ? t('budget_th_item', 'Item / Componente') : 'Item / Componente';
+  const descPlaceholder = typeof t === 'function' ? t('budget_th_desc_tech', 'Descrição / Especificação Técnica') : 'Descrição / Especificação Técnica';
+  const delRowTitle = typeof t === 'function' ? t('budget_btn_del_row', 'Remover este campo') : 'Remover este campo';
+
   const tr = document.createElement('tr');
   tr.className = 'budget-dynamic-row';
   tr.innerHTML = `
     <td>
       <div class="budget-item-cell-wrap">
         <i class="fa-solid fa-circle-dot budget-item-dynamic-icon"></i>
-        <input type="text" class="budget-input-item-name" placeholder="Item / Componente" oninput="updateBudgetItemIcon(this)">
+        <input type="text" class="budget-input-item-name" placeholder="${itemPlaceholder}" oninput="updateBudgetItemIcon(this)">
       </div>
     </td>
     <td>
-      <input type="text" class="budget-input-desc" placeholder="Descrição / Especificação Técnica">
+      <input type="text" class="budget-input-desc" placeholder="${descPlaceholder}">
     </td>
     <td>
       <div class="budget-price-wrapper" style="display: flex; align-items: center; gap: 0.35rem;">
         <input type="number" step="0.01" class="budget-input-price" placeholder="0.00" oninput="recalculateBudgetTotal()">
         <span class="budget-price-symbol">€</span>
-        <button type="button" class="btn btn-sm" onclick="removeBudgetRow(this)" title="Remover este campo" style="background: none; border: none; color: #dc2626; padding: 0.2rem 0.4rem; cursor: pointer; font-size: 0.85rem;">
+        <button type="button" class="btn btn-sm" onclick="removeBudgetRow(this)" title="${delRowTitle}" style="background: none; border: none; color: #dc2626; padding: 0.2rem 0.4rem; cursor: pointer; font-size: 0.85rem;">
           <i class="fa-solid fa-trash-can"></i>
         </button>
       </div>
@@ -15912,19 +17078,29 @@ function addNewBudgetTopicCard() {
   const existingCards = container.querySelectorAll('.budget-topic-card');
   const nextNum = existingCards.length + 1;
 
+  const itemPlaceholder = typeof t === 'function' ? t('budget_th_item', 'Item / Componente') : 'Item / Componente';
+  const descPlaceholder = typeof t === 'function' ? t('budget_th_desc_tech', 'Descrição / Especificação Técnica') : 'Descrição / Especificação Técnica';
+  const priceHeader = typeof t === 'function' ? t('budget_th_price', 'Preço (€)') : 'Preço (€)';
+  const addRowTitle = typeof t === 'function' ? t('budget_btn_add_row', 'Adicionar Campo / Linha a este Quadro') : 'Adicionar Campo / Linha a este Quadro';
+  const delTopicTitle = typeof t === 'function' ? t('budget_btn_del_chapter', 'Remover este Quadro') : 'Remover este Quadro';
+  const delRowTitle = typeof t === 'function' ? t('budget_btn_del_row', 'Remover este campo') : 'Remover este campo';
+  const chapterPlaceholder = typeof t === 'function' ? t('budget_placeholder_new_chapter', 'TÍTULO DO NOVO CAPÍTULO...') : 'TÍTULO DO NOVO CAPÍTULO...';
+  const chapterPrefix = typeof t === 'function' ? (t('budget_chapter_prefix') || 'CAPÍTULO') : 'CAPÍTULO';
+  const chapterSuffix = typeof t === 'function' ? (t('budget_additional_spec') || 'ESPECIFICAÇÃO ADICIONAL') : 'ESPECIFICAÇÃO ADICIONAL';
+
   const card = document.createElement('div');
   card.className = 'budget-topic-card budget-dynamic-topic-card';
   card.innerHTML = `
     <div class="budget-topic-header">
       <div class="budget-topic-header-left">
         <div class="budget-topic-num">${nextNum}</div>
-        <input type="text" class="budget-custom-topic-title-input" placeholder="TÍTULO DO NOVO CAPÍTULO..." value="CAPÍTULO ${nextNum} - ESPECIFICAÇÃO ADICIONAL">
+        <input type="text" class="budget-custom-topic-title-input" placeholder="${chapterPlaceholder}" value="${chapterPrefix} ${nextNum} - ${chapterSuffix}">
       </div>
       <div class="budget-topic-header-actions">
-        <button type="button" class="budget-add-row-btn" onclick="addBudgetRow(this)" title="Adicionar Campo / Linha a este Quadro">
+        <button type="button" class="budget-add-row-btn" onclick="addBudgetRow(this)" title="${addRowTitle}">
           <i class="fa-solid fa-plus"></i>
         </button>
-        <button type="button" class="budget-del-topic-btn" onclick="deleteBudgetTopicCard(this)" title="Remover este Quadro">
+        <button type="button" class="budget-del-topic-btn" onclick="deleteBudgetTopicCard(this)" title="${delTopicTitle}">
           <i class="fa-solid fa-trash-can"></i>
         </button>
       </div>
@@ -15933,9 +17109,9 @@ function addNewBudgetTopicCard() {
       <table class="budget-table">
         <thead>
           <tr>
-            <th style="width: 25%;">Item / Componente</th>
-            <th style="width: 58%;">Descrição / Especificação Técnica</th>
-            <th style="width: 17%; text-align: right;">Preço (€)</th>
+            <th style="width: 25%;">${itemPlaceholder}</th>
+            <th style="width: 58%;">${descPlaceholder}</th>
+            <th style="width: 17%; text-align: right;">${priceHeader}</th>
           </tr>
         </thead>
         <tbody>
@@ -15943,17 +17119,17 @@ function addNewBudgetTopicCard() {
             <td>
               <div class="budget-item-cell-wrap">
                 <i class="fa-solid fa-circle-dot budget-item-dynamic-icon"></i>
-                <input type="text" class="budget-input-item-name" placeholder="Item / Componente" oninput="updateBudgetItemIcon(this)">
+                <input type="text" class="budget-input-item-name" placeholder="${itemPlaceholder}" oninput="updateBudgetItemIcon(this)">
               </div>
             </td>
             <td>
-              <input type="text" class="budget-input-desc" placeholder="Descrição / Especificação Técnica">
+              <input type="text" class="budget-input-desc" placeholder="${descPlaceholder}">
             </td>
             <td>
               <div class="budget-price-wrapper" style="display: flex; align-items: center; gap: 0.35rem;">
                 <input type="number" step="0.01" class="budget-input-price" placeholder="0.00" oninput="recalculateBudgetTotal()">
                 <span class="budget-price-symbol">€</span>
-                <button type="button" class="btn btn-sm" onclick="removeBudgetRow(this)" title="Remover este campo" style="background: none; border: none; color: #dc2626; padding: 0.2rem 0.4rem; cursor: pointer; font-size: 0.85rem;">
+                <button type="button" class="btn btn-sm" onclick="removeBudgetRow(this)" title="${delRowTitle}" style="background: none; border: none; color: #dc2626; padding: 0.2rem 0.4rem; cursor: pointer; font-size: 0.85rem;">
                   <i class="fa-solid fa-trash-can"></i>
                 </button>
               </div>
@@ -16024,80 +17200,94 @@ function collectBudgetFormData() {
 window.collectBudgetFormData = collectBudgetFormData;
 
 function saveGeneratedBudget() {
-  const clientNameInput = (document.getElementById('budgetHeaderCliente')?.value || '').trim();
-  if (!clientNameInput) {
-    showToast('Por favor introduza ou selecione o Nome do Cliente para guardar o orçamento.', 'warning');
-    document.getElementById('budgetHeaderCliente')?.focus();
-    return;
+  const selectEl = document.getElementById('budgetHeaderCliente');
+  let selectedVal = (selectEl?.value || '').trim();
+
+  // Localizar o cliente escolhido de forma 100% direta e precisa por ID
+  let matchedClient = (db.clientes || []).find(c => String(c.id).trim() === selectedVal);
+  if (!matchedClient && selectedVal) {
+    const normInput = (typeof normalizeText === 'function' ? normalizeText(selectedVal) : selectedVal.toLowerCase()).trim();
+    matchedClient = (db.clientes || []).find(c => (typeof normalizeText === 'function' ? normalizeText(c.nome) : (c.nome || '').toLowerCase()).trim() === normInput);
   }
 
-  // Localizar cliente em db.clientes
-  let matchedClient = (db.clientes || []).find(c => c.nome.toLowerCase() === clientNameInput.toLowerCase()) ||
-                      (db.clientes || []).find(c => c.nome.toLowerCase().includes(clientNameInput.toLowerCase())) ||
-                      (db.clientes || []).find(c => clientNameInput.toLowerCase().includes(c.nome.toLowerCase()));
+  if (!matchedClient && window._pendingNewBudgetSeparador && window._pendingNewBudgetSeparador.clientId) {
+    matchedClient = (db.clientes || []).find(c => String(c.id).trim() === String(window._pendingNewBudgetSeparador.clientId).trim());
+  }
 
   if (!matchedClient) {
-    // Se não existir, cria o cliente automaticamente para preservar o registo
-    const newCliId = 'cli-orc-' + Date.now();
-    matchedClient = {
-      id: newCliId,
-      nome: clientNameInput,
-      tipoCliente: 'Privado',
-      contribuinte: '000000000',
-      direcao1: '',
-      codigoPostal: '',
-      localidade: '',
-      telefone: '',
-      email: '',
-      orcamentos: [],
-      createdAt: new Date().toISOString()
-    };
-    db.clientes.push(matchedClient);
+    showToast('Por favor selecione um Cliente para guardar o orçamento.', 'warning');
+    selectEl?.focus();
+    return;
   }
 
   if (!Array.isArray(matchedClient.orcamentos)) {
     matchedClient.orcamentos = [];
   }
-
   if (!Array.isArray(db.orcamentos)) {
     db.orcamentos = [];
   }
 
   const numOrcamento = document.getElementById('budgetHeaderNum')?.value.trim() || ('ORC-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000));
-  const refOrcamento = document.getElementById('budgetHeaderRefCliente')?.value.trim() || clientNameInput;
+  const refOrcamento = document.getElementById('budgetHeaderRefCliente')?.value.trim() || matchedClient.nome;
   const dataOrcamento = document.getElementById('budgetHeaderData')?.value || new Date().toISOString().split('T')[0];
+  const estadoOrcamento = document.getElementById('budgetHeaderEstado')?.value || 'Em avaliação';
   const modeloBase = (document.getElementById('budgetModelPresetInput')?.value || '').trim();
   const grandTotal = calculateBudgetGrandTotal();
   const formData = collectBudgetFormData();
   const imagesData = collectBudgetImagesData();
 
-  // Verificar se já existe com mesmo ID ou criar novo
-  const budgetId = 'orc-' + Date.now();
+  const ownerUserId = (window._pendingNewBudgetProject && window._pendingNewBudgetProject.userId) || (window._pendingNewBudgetSeparador && window._pendingNewBudgetSeparador.userId) || matchedClient.comercialAtribuidoId || matchedClient.userId || sessionStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001';
+
+  let budgetId = window._currentEditingBudgetId || ('orc-' + Date.now());
+  let existingBudget = db.orcamentos.find(b => b.id === budgetId);
+
   const budgetObj = {
     id: budgetId,
     numero: numOrcamento,
     referencia: refOrcamento,
+    estado: estadoOrcamento,
     clienteId: matchedClient.id,
     clienteNome: matchedClient.nome,
+    userId: ownerUserId,
+    comercialAtribuidoId: ownerUserId,
+    createdById: ownerUserId,
+    separadorId: (window._pendingNewBudgetSeparador && window._pendingNewBudgetSeparador.separadorId) || (existingBudget && existingBudget.separadorId) || null,
+    subTabIndex: (window._pendingNewBudgetSeparador && window._pendingNewBudgetSeparador.subTabIndex !== undefined) ? window._pendingNewBudgetSeparador.subTabIndex : (existingBudget && existingBudget.subTabIndex !== undefined ? existingBudget.subTabIndex : 0),
     modeloBase: modeloBase,
     data: dataOrcamento,
     fabricante: 'alegría-activity, S.L.',
     total: grandTotal,
     items: formData,
     imagens: imagesData,
-    createdAt: new Date().toISOString(),
+    createdAt: (existingBudget && existingBudget.createdAt) || new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };
 
-  matchedClient.orcamentos.push(budgetObj);
-  db.orcamentos.push(budgetObj);
+  // 1. Guardar e atualizar no próprio cliente
+  const clientBudgetIdx = matchedClient.orcamentos.findIndex(b => b.id === budgetId);
+  if (clientBudgetIdx >= 0) {
+    matchedClient.orcamentos[clientBudgetIdx] = budgetObj;
+  } else {
+    matchedClient.orcamentos.push(budgetObj);
+  }
+
+  // 2. Guardar e atualizar na lista global de orçamentos
+  const dbBudgetIdx = db.orcamentos.findIndex(b => b.id === budgetId);
+  if (dbBudgetIdx >= 0) {
+    db.orcamentos[dbBudgetIdx] = budgetObj;
+  } else {
+    db.orcamentos.push(budgetObj);
+  }
 
   saveDatabase();
   logUserActivity('guardar_orcamento', `Guardou o Orçamento ${numOrcamento} (${grandTotal.toFixed(2)} €) para o Cliente ${matchedClient.nome}`);
 
   renderSavedBudgetsList();
   populateBudgetModelPresetDatalist();
-  showToast(`Orçamento ${numOrcamento} guardado com sucesso em Orçamentos Cliente de "${matchedClient.nome}"!`, 'success');
+  refreshClientSubLists(matchedClient.id);
+  renderClientPageMainGrid();
+
+  showToast(`Orçamento ${numOrcamento} guardado com sucesso na Ficha do Cliente "${matchedClient.nome}"!`, 'success');
 }
 window.saveGeneratedBudget = saveGeneratedBudget;
 
@@ -16107,7 +17297,7 @@ function renderSavedBudgetsList() {
   if (!container) return;
 
   // Lista dos orçamentos independentes guardados no histórico
-  let allBudgets = Array.isArray(db.orcamentos) ? [...db.orcamentos] : [];
+  let allBudgets = getUserScopedItems(Array.isArray(db.orcamentos) ? [...db.orcamentos] : []);
 
   if (countBadge) {
     countBadge.textContent = `${allBudgets.length} Orçamento${allBudgets.length === 1 ? '' : 's'}`;
@@ -16127,6 +17317,7 @@ function renderSavedBudgetsList() {
           <th style="padding: 0.65rem 0.85rem; text-align: left;">Nº Orçamento</th>
           <th style="padding: 0.65rem 0.85rem; text-align: left;">Cliente</th>
           <th style="padding: 0.65rem 0.85rem; text-align: left;">Referência</th>
+          <th style="padding: 0.65rem 0.85rem; text-align: center;">Estado</th>
           <th style="padding: 0.65rem 0.85rem; text-align: center;">Data</th>
           <th style="padding: 0.65rem 0.85rem; text-align: right;">Total (€)</th>
           <th style="padding: 0.65rem 0.85rem; text-align: center; width: 140px;">Ações</th>
@@ -16142,6 +17333,9 @@ function renderSavedBudgetsList() {
         <td style="padding: 0.65rem 0.85rem; font-weight: 700; color: #0284c7;">${escapeHtml(b.numero || 'ORC')}</td>
         <td style="padding: 0.65rem 0.85rem; font-weight: 600; color: #1e293b;">${escapeHtml(b.clienteNome || 'Cliente')}</td>
         <td style="padding: 0.65rem 0.85rem; color: #475569;">${escapeHtml(b.referencia || '-')}</td>
+        <td style="padding: 0.65rem 0.85rem; text-align: center;">
+          ${(b.estado === 'Adjudicado') ? '<span class="badge" style="background: #dcfce7; color: #15803d; font-weight: 700; font-size: 0.78rem;"><i class="fa-solid fa-check" style="margin-right:3px;"></i>Adjudicado</span>' : ((b.estado === 'Não Adjudicado') ? '<span class="badge" style="background: #fee2e2; color: #b91c1c; font-weight: 700; font-size: 0.78rem;"><i class="fa-solid fa-xmark" style="margin-right:3px;"></i>Não Adjudicado</span>' : '<span class="badge" style="background: #fef3c7; color: #d97706; font-weight: 700; font-size: 0.78rem;"><i class="fa-solid fa-hourglass-half" style="margin-right:3px;"></i>Em avaliação</span>')}
+        </td>
         <td style="padding: 0.65rem 0.85rem; text-align: center; font-size: 0.82rem; color: #64748b;">${escapeHtml(b.data || '')}</td>
         <td style="padding: 0.65rem 0.85rem; text-align: right; font-weight: 700; color: #15803d;">${formattedTotal}</td>
         <td style="padding: 0.65rem 0.85rem; text-align: center;">
@@ -16183,16 +17377,22 @@ function loadSavedBudgetIntoForm(budgetId) {
     return;
   }
 
+  window._currentEditingBudgetId = found.id;
+  window._pendingNewBudgetSeparador = { clientId: found.clienteId, separadorId: found.separadorId, subTabIndex: found.subTabIndex };
+
   const numEl = document.getElementById('budgetHeaderNum');
   const refEl = document.getElementById('budgetHeaderRefCliente');
   const cliEl = document.getElementById('budgetHeaderCliente');
   const dataEl = document.getElementById('budgetHeaderData');
   const modelInp = document.getElementById('budgetModelPresetInput');
 
+  const estadoEl = document.getElementById('budgetHeaderEstado');
   if (numEl && found.numero) numEl.value = found.numero;
   if (refEl && found.referencia) refEl.value = found.referencia;
-  if (cliEl && found.clienteNome) cliEl.value = found.clienteNome;
+  populateBudgetClientsSelect(found.clienteId);
+  if (cliEl) cliEl.value = found.clienteId || '';
   if (dataEl && found.data) dataEl.value = found.data;
+  if (estadoEl) estadoEl.value = found.estado || 'Em avaliação';
   if (modelInp) {
     modelInp.value = found.modeloBase || (found.numero ? `${found.numero} - ${found.referencia || found.clienteNome || ''}` : '');
   }
@@ -16323,12 +17523,14 @@ function deleteSavedBudget(budgetId) {
 }
 window.deleteSavedBudget = deleteSavedBudget;
 
-// Motor Contextual Inteligente e Realista de Geração de Textos da Proposta Técnica
 function generateBudgetContextualTexts(opts) {
   const cliente = opts.cliente || 'Cliente';
   const referencia = opts.referencia || 'Referência';
   const numero = opts.numero || 'ORC-2026';
   const topicsData = opts.topicsData || [];
+  const lang = (typeof normalizeLanguageName === 'function') 
+    ? normalizeLanguageName(opts.lang || (typeof getActiveUserLanguage === 'function' ? getActiveUserLanguage() : 'Português')) 
+    : 'Português';
   
   let vBaseDesc = '';
   if (topicsData[0] && topicsData[0].linhas && topicsData[0].linhas[0]) {
@@ -16338,84 +17540,185 @@ function generateBudgetContextualTexts(opts) {
 
   // 1. Deteção do Setor de Atividade Real (Sem Dados Inventados)
   let setorAtividade = 'geral';
-  let nomeSetor = 'Atendimento e Serviços de Proximidade';
-  let designacaoProjeto = 'UNIDADE MÓVEL PERSONALIZADA';
-  let subtituloServicos = 'serviços operacionais e técnicos de proximidade à população e clientes';
-  let areasInteriores = [];
-  let experienciaTexto = '';
+  let nomeSetorMap = {
+    Português: 'Unidade Móvel Personalizada «Chave na Mão»',
+    Español: 'Unidad Móvil Personalizada «Llave en Mano»',
+    English: 'Custom Turnkey Mobile Unit',
+    Français: 'Unité Mobile Personnalisée « Clé en Main »',
+    Polski: 'Indywidualna Jednostka Mobilna „Pod Klucz”'
+  };
+  let designacaoProjetoMap = {
+    Português: 'UNIDADE MÓVEL PERSONALIZADA',
+    Español: 'UNIDAD MÓVIL PERSONALIZADA',
+    English: 'CUSTOM MOBILE UNIT',
+    Français: 'UNITÉ MOBILE PERSONNALISÉE',
+    Polski: 'INDYWIDUALNA JEDNOSTKA MOBILNA'
+  };
+  let subtituloServicosMap = {
+    Português: 'serviços operacionais, técnicos e comerciais especializados no território de atuação',
+    Español: 'servicios operativos, técnicos y comerciales especializados en el territorio de actuación',
+    English: 'specialized operational, technical and commercial services in the target territory',
+    Français: "services opérationnels, techniques et commerciaux spécialisés sur le territoire d'intervention",
+    Polski: 'specjalistyczne usługi operacyjne, techniczne i handlowe na docelowym obszarze'
+  };
+  let experienciaTextoMap = {
+    Português: 'Este orçamento baseia-se na experiência consolidada da alegría-activity em unidades móveis e transformações técnicas especiais «chave na mão», com centenas de projetos entregues com sucesso na Europa e a nível internacional.',
+    Español: 'Este presupuesto se basa en la experiencia consolidada de alegría-activity en unidades móviles y transformaciones técnicas especiales «llave en mano», con cientos de proyectos entregados con éxito en Europa y a nivel internacional.',
+    English: "This proposal is based on alegría-activity's established track record in turnkey specialty mobile units and custom conversions, with hundreds of successful projects delivered across Europe and internationally.",
+    Français: "Cette proposition s'appuie sur l'expérience confirmée d'alegría-activity dans la conception d'unités mobiles et de transformations techniques « clé en main », avec des centaines de projets réussis en Europe et à l'international.",
+    Polski: 'Niniejsza wycena opiera się na ugruntowanym doświadczeniu alegría-activity w budowie specjalistycznych jednostek mobilnych „pod klucz”, z setkami zrealizowanych projektów w Europie i na świecie.'
+  };
 
   if (fullSearchText.includes('banco') || fullSearchText.includes('banc') || fullSearchText.includes('bcn') || fullSearchText.includes('financeir') || fullSearchText.includes('caixa') || fullSearchText.includes('sgbs') || fullSearchText.includes('bcb') || fullSearchText.includes('bmce') || fullSearchText.includes('crédit')) {
     setorAtividade = 'bancario';
-    nomeSetor = 'Agência Bancária Móvel';
-    designacaoProjeto = 'AGÊNCIA BANCÁRIA MÓVEL';
-    subtituloServicos = 'serviços bancários e financeiros à população e clientes';
-    areasInteriores = [
-      'Espaço principal de atendimento ao cliente, composto por postos de trabalho equipados (mesas ergonómicas, cadeiras de escritório e cadeiras para clientes), posicionado em frente à entrada lateral principal.',
-      'Espaço de atendimento privado / gabinete: área reservada com mesa e cadeiras, separada por divisória e porta de correr em alumínio e vidro para atendimento diferenciado e confidencial, incluindo cofre de segurança de 175 kg.',
-      'Espaço de Banco Digital / Autoatendimento, onde será instalado sistema digital com equipamentos para operações autónomas sob supervisão do operador.',
-      'Espaço / Sala técnica: compartimento dedicado onde se integram os quadros de controlo, sistemas de alimentação elétrica, baterias, inversor e telecomunicações.'
-    ];
-    experienciaTexto = 'Este orçamento baseia-se na nossa sólida experiência em projetos de agências bancárias móveis sobre veículo, realizados para prestigiadas entidades financeiras internacionais como a SGBS (Société Générale de Banques au Sénégal), BCB (Banque Commerciale du Burkina), Société Générale - Benin, BMCE, entre outras.';
+    nomeSetorMap = {
+      Português: 'Agência Bancária Móvel',
+      Español: 'Agencia Bancaria Móvil',
+      English: 'Mobile Bank Branch',
+      Français: 'Agence Bancaire Mobile',
+      Polski: 'Mobilna Placówka Bankowa'
+    };
+    designacaoProjetoMap = {
+      Português: 'AGÊNCIA BANCÁRIA MÓVEL',
+      Español: 'AGENCIA BANCARIA MÓVIL',
+      English: 'MOBILE BANK BRANCH',
+      Français: 'AGENCE BANCAIRE MOBILE',
+      Polski: 'MOBILNA PLACÓWKA BANKOWA'
+    };
+    subtituloServicosMap = {
+      Português: 'serviços bancários e financeiros à população e clientes',
+      Español: 'servicios bancarios y financieros a la población y clientes',
+      English: 'banking and financial services to the population and customers',
+      Français: 'services bancaires et financiers auprès de la population et des clients',
+      Polski: 'usługi bankowe i finansowe dla ludności i klientów'
+    };
+    experienciaTextoMap = {
+      Português: 'Este orçamento baseia-se na nossa sólida experiência em projetos de agências bancárias móveis sobre veículo, realizados para prestigiadas entidades financeiras internacionais como a SGBS (Société Générale de Banques au Sénégal), BCB (Banque Commerciale du Burkina), Société Générale - Benin, BMCE, entre outras.',
+      Español: 'Este presupuesto se basa en nuestra sólida experiencia en proyectos de agencias bancarias móviles sobre vehículo, realizados para prestigiosas entidades financieras internacionales como SGBS (Société Générale de Banques au Sénégal), BCB (Banque Commerciale du Burkina), Société Générale - Benin, BMCE, entre otras.',
+      English: 'This proposal draws upon our extensive expertise in custom mobile bank branch projects delivered to leading international financial institutions including SGBS (Société Générale de Banques au Sénégal), BCB (Banque Commerciale du Burkina), Société Générale - Benin, BMCE, and others.',
+      Français: "Cette proposition s'appuie sur notre solide expérience dans la réalisation d'agences bancaires mobiles sur véhicule pour de grandes institutions financières telles que la SGBS, la BCB, la Société Générale - Bénin, la BMCE, entre autres.",
+      Polski: 'Niniejsza oferta opiera się na naszym bogatym doświadczeniu w realizacji mobilnych placówek bankowych dla wiodących instytucji finansowych, takich jak SGBS, BCB, Société Générale - Benin, BMCE i innych.'
+    };
   } else if (fullSearchText.includes('edp') || fullSearchText.includes('energia') || fullSearchText.includes('eletric') || fullSearchText.includes('electric') || fullSearchText.includes('galp') || fullSearchText.includes('endesa') || fullSearchText.includes('telecom') || fullSearchText.includes('vodafone') || fullSearchText.includes('altice') || fullSearchText.includes('nos')) {
     setorAtividade = 'energia_servicos';
-    nomeSetor = 'Unidade Móvel de Atendimento ao Cliente e Serviços Comerciais';
-    designacaoProjeto = 'UNIDADE MÓVEL DE ATENDIMENTO E SERVIÇOS COMERCIAIS';
-    subtituloServicos = 'serviços comerciais, contratualização, apoio ao cliente e consultoria energética e técnica';
-    areasInteriores = [
-      'Espaço principal de receção e atendimento comercial ao cliente, com postos de trabalho informatizados, cadeiras ergonómicas e zona de espera confortável.',
-      'Gabinete de consultoria e contratos reservados, com divisória acústica em alumínio e vidro para análise técnica de contratos, eficiência energética e apoio personalizado.',
-      'Espaço de quiosque digital e demonstração interativa, com ecrãs de informação e pontos de autoatendimento para munícipes e clientes.',
-      'Sala técnica de infraestruturas: integrando os sistemas de gestão de energia, quadros elétricos de proteção, inversores e equipamentos de conectividade de dados.'
-    ];
-    experienciaTexto = 'Este orçamento baseia-se na vasta experiência da alegría-activity em unidades móveis corporativas de atendimento e serviços ao cliente, desenvolvidas com sucesso para operadores de energia, telecomunicações e grandes redes de serviços essenciais na Europa e África.';
+    nomeSetorMap = {
+      Português: 'Unidade Móvel de Atendimento ao Cliente e Serviços Comerciais',
+      Español: 'Unidad Móvil de Atención al Cliente y Servicios Comerciais',
+      English: 'Mobile Customer Service and Commercial Unit',
+      Français: "Unité Mobile d'Accueil Client et Services Commerciaux",
+      Polski: 'Mobilna Jednostka Obsługi Klienta i Usług Handlowych'
+    };
+    designacaoProjetoMap = {
+      Português: 'UNIDADE MÓVEL DE ATENDIMENTO E SERVIÇOS COMERCIAIS',
+      Español: 'UNIDAD MÓVIL DE ATENCIÓN AL CLIENTE Y SERVICIOS COMERCIALES',
+      English: 'MOBILE CUSTOMER SERVICE AND COMMERCIAL UNIT',
+      Français: "UNITÉ MOBILE D'ACCUEIL CLIENT ET SERVICES COMMERCIAUX",
+      Polski: 'MOBILNA JEDNOSTKA OBSŁUGI KLIENTA I USŁUG HANDLOWYCH'
+    };
+    subtituloServicosMap = {
+      Português: 'serviços comerciais, contratualização, apoio ao cliente e consultoria energética e técnica',
+      Español: 'servicios comerciales, contratación, atención al cliente y asesoría energética y técnica',
+      English: 'commercial services, contracting, customer support and technical and energy consultancy',
+      Français: 'services commerciaux, contractualisation, service client et conseil technique et énergétique',
+      Polski: 'usługi handlowe, zawieranie umów, obsługa klienta oraz doradztwo energetyczne i techniczne'
+    };
+    experienciaTextoMap = {
+      Português: 'Este orçamento baseia-se na vasta experiência da alegría-activity em unidades móveis corporativas de atendimento e serviços ao cliente, desenvolvidas com sucesso para operadores de energia e telecomunicações.',
+      Español: 'Este presupuesto se basa en la amplia experiencia de alegría-activity en unidades móviles corporativas de atención y servicios al cliente, desarrolladas con éxito para operadores de energía y telecomunicaciones.',
+      English: "This proposal is based on alegría-activity's extensive experience in corporate customer service mobile units, developed successfully for major utility and telecom providers.",
+      Français: "Cette proposition s'appuie sur la vaste expérience d'alegría-activity dans les unités mobiles d'accueil et de service client pour les opérateurs d'énergie et de télécommunications.",
+      Polski: 'Niniejsza wycena opiera się na bogatym doświadczeniu alegría-activity w budowie mobilnych jednostek obsługi klienta dla operatorów energii i telekomunikacji.'
+    };
   } else if (fullSearchText.includes('saude') || fullSearchText.includes('saúde') || fullSearchText.includes('hospital') || fullSearchText.includes('clinica') || fullSearchText.includes('clínica') || fullSearchText.includes('médic') || fullSearchText.includes('medic') || fullSearchText.includes('rastreio') || fullSearchText.includes('enferm') || fullSearchText.includes('vacina')) {
     setorAtividade = 'saude';
-    nomeSetor = 'Unidade Móvel de Saúde e Rastreio Clínico';
-    designacaoProjeto = 'UNIDADE MÓVEL DE SAÚDE E RASTREIO CLÍNICO';
-    subtituloServicos = 'cuidados de saúde primários, consultas médicas, vacinação e rastreios clínicos de proximidade';
-    areasInteriores = [
-      'Espaço de triagem e enfermagem, equipado com bancada clínica, lavatório cirúrgico com acionamento por pedal e postos de registo clínico.',
-      'Consultório médico reservado / gabinete de observação, separado por divisória técnica estanque, com marquesa clínica, iluminação médica regulável e mobiliário antibacteriano.',
-      'Área de receção e espera dos utentes, com controlo de acessos e materiais laváveis de alta desinfeção.',
-      'Compartimento técnico estanque para grupo de refrigeração de vacinas/amostras, quadro elétrico com isolamento hospitalar e sistemas de climatização com filtragem.'
-    ];
-    experienciaTexto = 'Este orçamento baseia-se na experiência consolidada da alegría-activity no desenvolvimento de consultórios médicos móveis, unidades de rastreio oncológico e unidades de intervenção sanitária para serviços de saúde e entidades hospitalares governamentais.';
+    nomeSetorMap = {
+      Português: 'Unidade Móvel de Saúde e Rastreio Clínico',
+      Español: 'Unidad Móvil de Salud y Detección Clínica',
+      English: 'Mobile Health and Clinical Screening Unit',
+      Français: 'Unité Mobile de Santé et Dépistage Clinique',
+      Polski: 'Mobilna Jednostka Medyczna i Badań Klinicznych'
+    };
+    designacaoProjetoMap = {
+      Português: 'UNIDADE MÓVEL DE SAÚDE E RASTREIO CLÍNICO',
+      Español: 'UNIDAD MÓVIL DE SALUD Y DETECCIÓN CLÍNICA',
+      English: 'MOBILE HEALTH AND CLINICAL SCREENING UNIT',
+      Français: 'UNITÉ MOBILE DE SANTÉ ET DÉPISTAGE CLINIQUE',
+      Polski: 'MOBILNA JEDNOSTKA MEDYCZNA I BADAŃ KLINICZNYCH'
+    };
+    subtituloServicosMap = {
+      Português: 'cuidados de saúde primários, consultas médicas, vacinação e rastreios clínicos de proximidade',
+      Español: 'atención médica primaria, consultas médicas, vacunación y detección clínica de proximidad',
+      English: 'primary healthcare, medical consultations, vaccination and proximity clinical screening',
+      Français: 'soins de santé primaires, consultations médicales, vaccination et dépistages cliniques de proximité',
+      Polski: 'podstawowa opieka zdrowotna, konsultacje lekarskie, szczepienia i badania profilaktyczne'
+    };
+    experienciaTextoMap = {
+      Português: 'Este orçamento baseia-se na experiência consolidada da alegría-activity no desenvolvimento de consultórios médicos móveis, unidades de rastreio oncológico e unidades de intervenção sanitária.',
+      Español: 'Este presupuesto se basa en la experiencia consolidada de alegría-activity en el desarrollo de consultorios médicos móviles, unidades de detección oncológica y unidades de intervención sanitaria.',
+      English: "This proposal builds on alegría-activity's extensive experience in developing mobile medical clinics, oncology screening units and mobile healthcare facilities.",
+      Français: "Cette proposition s'appuie sur l'expérience confirmée d'alegría-activity dans la conception de cabinets médicaux mobiles, d'unités de dépistage et de soins de santé.",
+      Polski: 'Wycena opiera się na doświadczeniu firmy alegría-activity w budowie mobilnych gabinetów lekarskich, jednostek diagnostyki onkologicznej i interwencji medycznej.'
+    };
   } else if (fullSearchText.includes('creactivity') || fullSearchText.includes('escola') || fullSearchText.includes('educa') || fullSearchText.includes('formação') || fullSearchText.includes('formacao') || fullSearchText.includes('tecnolog') || fullSearchText.includes('ciencia') || fullSearchText.includes('ciência') || fullSearchText.includes('roadshow') || fullSearchText.includes('smartbus') || fullSearchText.includes('5g')) {
     setorAtividade = 'formacao';
-    nomeSetor = 'Unidade Móvel Tecnológica e Sala de Formação Digital';
-    designacaoProjeto = 'UNIDADE MÓVEL TECNOLÓGICA E DE FORMAÇÃO';
-    subtituloServicos = 'ações formativas digitais, workshops pedagógicos, demonstrações interativas de tecnologia e roadshows corporativos';
-    areasInteriores = [
-      'Espaço polivalente de formação e workshops com postos de trabalho interativos, mesas modulares e equipamentos audiovisuais multimédia.',
-      'Zona de demonstração tecnológica e robótica com ecrãs digitais e estações interativas.',
-      'Posto de controlo e coordenação técnica para o formador/coordenador com sistemas centrais de som e projeção.',
-      'Sala técnica de servidores, rede Wi-Fi de alta densidade e bastidor de telecomunicações.'
-    ];
-    experienciaTexto = 'Este orçamento baseia-se no reconhecido know-how da alegría-activity na conceção e operação de frotas móveis de educação e tecnologia de grande formato, como o programa EduCaixa Creactivity da Fundação "la Caixa" e o SmartBus 5G da Huawei.';
+    nomeSetorMap = {
+      Português: 'Unidade Móvel Tecnológica e Sala de Formação Digital',
+      Español: 'Unidad Móvil Tecnológica y Aula de Formación Digital',
+      English: 'Mobile Technology and Digital Training Unit',
+      Français: 'Unité Mobile Technologique et Salle de Formation Numérique',
+      Polski: 'Mobilna Jednostka Technologiczna i Sala Szkoleniowa'
+    };
+    designacaoProjetoMap = {
+      Português: 'UNIDADE MÓVEL TECNOLÓGICA E DE FORMAÇÃO',
+      Español: 'UNIDAD MÓVIL TECNOLÓGICA Y DE FORMACIÓN',
+      English: 'MOBILE TECHNOLOGY AND DIGITAL TRAINING UNIT',
+      Français: 'UNITÉ MOBILE TECHNOLOGIQUE ET DE FORMATION',
+      Polski: 'MOBILNA JEDNOSTKA TECHNOLOGICZNA I SZKOLENIOWA'
+    };
+    subtituloServicosMap = {
+      Português: 'ações formativas digitais, workshops pedagógicos, demonstrações interativas de tecnologia e roadshows corporativos',
+      Español: 'acciones formativas digitales, talleres pedagógicos, demostraciones interactivas de tecnología y roadshows',
+      English: 'digital training programs, educational workshops, interactive tech demonstrations and corporate roadshows',
+      Français: 'actions de formation numérique, ateliers pédagogiques, démonstrations interactives et roadshows',
+      Polski: 'szkolenia cyfrowe, warsztaty edukacyjne, interaktywne pokazy technologii i roadshow'
+    };
+    experienciaTextoMap = {
+      Português: 'Este orçamento baseia-se no reconhecido know-how da alegría-activity na conceção e operação de frotas móveis de educação e tecnologia de grande formato, como o programa EduCaixa Creactivity e o SmartBus 5G da Huawei.',
+      Español: 'Este presupuesto se basa en el reconocido know-how de alegría-activity en el diseño y operación de unidades móviles de educación y tecnología como EduCaixa Creactivity o el SmartBus 5G de Huawei.',
+      English: "This proposal is supported by alegría-activity's proven know-how in high-capacity education and technology mobile fleets, such as the EduCaixa Creactivity program and Huawei's 5G SmartBus.",
+      Français: "Cette proposition repose sur le savoir-faire éprouvé d'alegría-activity dans les flottes mobiles d'éducation et de technologie grand format telles que EduCaixa Creactivity et le SmartBus 5G de Huawei.",
+      Polski: 'Oferta opiera się na sprawdzonym know-how alegría-activity w budowie wielkoformatowych jednostek edukacyjnych i technologicznych, takich jak EduCaixa Creactivity czy Huawei SmartBus 5G.'
+    };
   } else if (fullSearchText.includes('câmara') || fullSearchText.includes('camara') || fullSearchText.includes('município') || fullSearchText.includes('municipio') || fullSearchText.includes('junta') || fullSearchText.includes('ccdr') || fullSearchText.includes('governo') || fullSearchText.includes('cidadão') || fullSearchText.includes('cidadao')) {
     setorAtividade = 'institucional';
-    nomeSetor = 'Espaço Cidadão Móvel / Balcão Móvel Municipal';
-    designacaoProjeto = 'ESPAÇO CIDADÃO MÓVEL';
-    subtituloServicos = 'serviços públicos administrativos descentralizados, apoio ao munícipe e atos de cidadania de proximidade';
-    areasInteriores = [
-      'Balcão principal de atendimento ao cidadão com postos equipados para emissão de documentos e atos administrativos.',
-      'Gabinete reservado de apoio social e técnico ao munícipe com divisória acústica em vidro e alumínio.',
-      'Posto de autoatendimento digital do cidadão com terminal tátil e ligação segura aos portais da administração.',
-      'Sala técnica para comunicações encriptadas, sistema elétrico autónomo e armazenamento de arquivos.'
-    ];
-    experienciaTexto = 'Este orçamento baseia-se na sólida experiência da nossa equipa na conceção de unidades móveis de serviços públicos e balcões descentralizados para Câmaras Municipais e administrações públicas.';
-  } else {
-    setorAtividade = 'geral';
-    nomeSetor = 'Unidade Móvel Personalizada «Chave na Mão»';
-    designacaoProjeto = 'UNIDADE MÓVEL PERSONALIZADA';
-    subtituloServicos = 'serviços operacionais, técnicos e comerciais especializados no território de atuação';
-    areasInteriores = [
-      'Espaço principal de trabalho e atendimento equipado com mobiliário técnico por medida e iluminação LED regulável.',
-      'Área reservada / gabinete de trabalho separado por divisória técnica com porta de correr.',
-      'Postos modulares para integração de equipamentos específicos fornecidos pelo cliente.',
-      'Sala técnica isolada para integração de quadros elétricos, baterias de lítio e sistemas de climatização.'
-    ];
-    experienciaTexto = 'Este orçamento baseia-se na experiência consolidada da alegría-activity em engenharia de carroçaria e transformação de unidades móveis técnicas, com centenas de projetos entregues com sucesso na Europa e a nível internacional.';
+    nomeSetorMap = {
+      Português: 'Espaço Cidadão Móvel / Balcão Móvel Municipal',
+      Español: 'Espacio Ciudadano Móvil / Oficina Móvil Municipal',
+      English: 'Mobile Citizen Service Center / Municipal Mobile Desk',
+      Français: 'Espace Citoyen Mobile / Guichet Mobile Municipal',
+      Polski: 'Mobilny Punkt Obsługi Mieszkańca'
+    };
+    designacaoProjetoMap = {
+      Português: 'ESPAÇO CIDADÃO MÓVEL',
+      Español: 'ESPACIO CIUDADANO MÓVIL',
+      English: 'MOBILE CITIZEN SERVICE CENTER',
+      Français: 'ESPACE CITOYEN MOBILE',
+      Polski: 'MOBILNY PUNKT OBSŁUGI MIESZKAŃCA'
+    };
+    subtituloServicosMap = {
+      Português: 'serviços públicos administrativos descentralizados, apoio ao munícipe e atos de cidadania de proximidade',
+      Español: 'servicios públicos administrativos descentralizados, apoyo ciudadano y trámites municipales de proximidad',
+      English: 'decentralized public administrative services, citizen support and municipal proximity services',
+      Français: 'services publics administratifs décentralisés, accueil citoyen et démarches de proximité',
+      Polski: 'zdecentralizowane usługi administracji publicznej, obsługa mieszkańców i sprawy obywatelskie'
+    };
+    experienciaTextoMap = {
+      Português: 'Este orçamento baseia-se na sólida experiência da nossa equipa na conceção de unidades móveis de serviços públicos e balcões descentralizados para Câmaras Municipais e administrações públicas.',
+      Español: 'Este presupuesto se basa en la sólida experiencia de nuestro equipo en el diseño de unidades móviles de servicios públicos y oficinas descentralizadas para administraciones públicas.',
+      English: 'This proposal builds upon our extensive experience in mobile public service units and citizen service desks for municipalities and government bodies.',
+      Français: "Cette proposition s'appuie sur la solide expérience de notre équipe dans la conception d'unités mobiles de services publics et guichets décentralisés pour les collectivités territoriales.",
+      Polski: 'Wycena bazuje na bogatym doświadczeniu naszego zespołu w projektowaniu mobilnych punktów obsługi mieszkańców dla urzędów miast i gmin.'
+    };
   }
 
   // 2. Deteção e Parametrização Real do Veículo Base
@@ -16440,12 +17743,17 @@ function generateBudgetContextualTexts(opts) {
     pma: 'ATÉ 5.200 kg'
   };
   let prazoMeses = '3 a 4';
-  let climatizacaoTexto = 'Propõe-se um sistema principal de ar condicionado de instalação no teto, marca Belaire de ciclo inverso (frio/calor), com um mínimo de 3 KW de potência com função de filtragem e desumidificação do ar, controlo eletrónico e comando remoto sem fios.';
+  let sufixoVeiculo = {
+    Português: ' SOBRE FURGÃO/CARRINHA',
+    Español: ' SOBRE FURGÓN/FURGONETA',
+    English: ' ON VAN CHASSIS',
+    Français: ' SUR FOURGON',
+    Polski: ' NA BAZIE FURGONU'
+  };
 
   if (fullSearchText.includes('cami') || fullSearchText.includes('eurocargo') || fullSearchText.includes('12000') || fullSearchText.includes('12t')) {
     tipoVeiculo = 'camiao';
     veiculoNome = 'Camião Rígido 12T (IVECO Eurocargo ou equivalente)';
-    designacaoProjeto += ' SOBRE CAMIÃO';
     prazoMeses = '4';
     veiculoChassiSpecs = {
       tipo: 'Camião rígido de 12 Toneladas (PMA 12.000 kg) com caixa isotérmica carroçada por medida',
@@ -16465,47 +17773,148 @@ function generateBudgetContextualTexts(opts) {
       dimensoes: 'Comprimento total entre 8.500 e 9.000 mm | Distância entre eixos entre 4.700 e 6.900 mm',
       pma: '12.000 kg'
     };
-    climatizacaoTexto = 'Integra um sistema completo de climatização de tipo escritório, através de splits de parede colocados nas divisões, formando um sistema em conjunto com a unidade exterior instalada nos compartimentos inferiores técnicos da carroçaria. Propõe-se um sistema da marca MUNDOCLIMA modelo MUPR-12x2-H9M (ou similar de máxima eficiência energética A+++), com unidade exterior MUEX-18 e no mínimo duas unidades interiores tipo split, funcionando com gás ecológico R32, permitindo 5.270 frigorias/h de arrefecimento e 5.500 calorias/h em modo de aquecimento.';
+    sufixoVeiculo = {
+      Português: ' SOBRE CAMIÃO 12T',
+      Español: ' SOBRE CAMIÓN 12T',
+      English: ' ON 12T TRUCK CHASSIS',
+      Français: ' SUR CAMION 12T',
+      Polski: ' NA PODWOZIU CIĘŻAROWYM 12T'
+    };
   } else if (fullSearchText.includes('smartbus') || fullSearchText.includes('autocarro') || fullSearchText.includes('bus')) {
     tipoVeiculo = 'smartbus';
     veiculoNome = 'SmartBus Extraível 13,80m';
-    designacaoProjeto += ' SOBRE SMARTBUS';
     prazoMeses = '5';
-    veiculoChassiSpecs.tipo = 'Autocarro técnico de 13,80m com módulos de expansão lateral';
-    veiculoChassiSpecs.marcaModelo = 'SmartBus 13,80m com abertura lateral hidráulica';
-    veiculoChassiSpecs.pma = '18.000 kg';
+    veiculoChassiSpecs = {
+      tipo: 'Autocarro técnico de 13,80m com módulos de expansão lateral',
+      marcaModelo: 'SmartBus 13,80m com abertura lateral hidráulica',
+      alturaInterior: 'Caixa técnica com altura livre de 2.250 mm',
+      volume: 'Volumetria expandida até 60 m³',
+      rodado: 'Chassi pesado de autocarro com rodado duplo traseiro',
+      motor: 'Motor Diesel Euro VI Heavy Duty',
+      cilindrada: 'Mínima de 7.700 cm³',
+      potencia: 'Potência mínima de 300 CV',
+      transmissao: 'Caixa automática / robotizada',
+      direcao: 'Direção assistida integral',
+      travoes: 'Travões pneumáticos EBS com retardador',
+      suspensao: 'Suspensão pneumática integral autonivelante',
+      deposito: 'Mínimo 200 litros Diesel',
+      cabina: 'Cabina integrada de autocarro com postos de comando',
+      dimensoes: 'Comprimento 13.800 mm | Largura aberta até 4.500 mm',
+      pma: '18.000 kg'
+    };
+    sufixoVeiculo = {
+      Português: ' SOBRE SMARTBUS',
+      Español: ' SOBRE SMARTBUS',
+      English: ' ON SMARTBUS',
+      Français: ' SUR SMARTBUS',
+      Polski: ' NA BAZIE SMARTBUS'
+    };
   } else if (fullSearchText.includes('semirreboque') || fullSearchText.includes('2040') || fullSearchText.includes('extens')) {
     tipoVeiculo = 'semirreboque';
     veiculoNome = 'Semirreboque Extensível de Grande Capacidade';
-    designacaoProjeto += ' SOBRE SEMIRREBOQUE EXTENSÍVEL';
     prazoMeses = '5 a 6';
-    veiculoChassiSpecs.tipo = 'Semirreboque com expansão lateral dupla';
-    veiculoChassiSpecs.marcaModelo = 'Semirreboque Extensível 13,80m';
-    veiculoChassiSpecs.pma = '35.000 kg';
-  } else {
-    designacaoProjeto += ' SOBRE FURGÃO/CARRINHA';
+    veiculoChassiSpecs = {
+      tipo: 'Semirreboque com expansão lateral dupla',
+      marcaModelo: 'Semirreboque Extensível 13,80m',
+      alturaInterior: 'Caixa extensível com altura de 2.400 mm',
+      volume: 'Área útil expandida até 75 m²',
+      rodado: 'Eixos triplos de semirreboque com suspensão pneumática',
+      motor: 'N/A (Rebocado por trator)',
+      cilindrada: 'N/A',
+      potencia: 'N/A',
+      transmissao: 'N/A',
+      direcao: 'Pino de engate King-Pin normalizado',
+      travoes: 'Travões pneumáticos EBS de semirreboque',
+      suspensao: 'Suspensão pneumática com válvulas de nivelamento',
+      deposito: 'Depósito técnico para gerador',
+      cabina: 'N/A',
+      dimensoes: 'Comprimento 13.800 mm | Largura expandida 5.000 mm',
+      pma: '35.000 kg'
+    };
+    sufixoVeiculo = {
+      Português: ' SOBRE SEMIRREBOQUE EXTENSÍVEL',
+      Español: ' SOBRE SEMIRREMOLQUE EXTENSIBLE',
+      English: ' ON EXPANDABLE SEMI-TRAILER',
+      Français: ' SUR SEMI-REMORQUE EXTENSIBLE',
+      Polski: ' NA NACZEPIE ROZSUWANEJ'
+    };
   }
 
   // 3. Deteção da Geografia e País de Destino Real
-  let destinoGeografico = 'destino acordado';
+  let destinoGeograficoMap = {
+    Português: 'território nacional',
+    Español: 'territorio nacional',
+    English: 'national territory',
+    Français: 'territoire national',
+    Polski: 'terytorium kraju'
+  };
+
   if (fullSearchText.includes('cabo verde') || fullSearchText.includes('bcn') || fullSearchText.includes('praia') || fullSearchText.includes('mindelo')) {
-    destinoGeografico = 'qualquer território de todas as ilhas de Cabo Verde';
+    destinoGeograficoMap = {
+      Português: 'qualquer território de todas as ilhas de Cabo Verde',
+      Español: 'cualquier territorio de todas las islas de Cabo Verde',
+      English: 'any territory across all islands of Cape Verde',
+      Français: "tout le territoire de l'archipel du Cap-Vert",
+      Polski: 'cały obszar wysp Republiki Zielonego Przylądka'
+    };
   } else if (fullSearchText.includes('sénégal') || fullSearchText.includes('senegal') || fullSearchText.includes('sgbs') || fullSearchText.includes('dakar')) {
-    destinoGeografico = 'território do Senegal';
+    destinoGeograficoMap = {
+      Português: 'território do Senegal',
+      Español: 'territorio de Senegal',
+      English: 'Senegal territory',
+      Français: 'territoire du Sénégal',
+      Polski: 'terytorium Senegalu'
+    };
   } else if (fullSearchText.includes('burkina') || fullSearchText.includes('bcb')) {
-    destinoGeografico = 'território do Burkina Faso';
+    destinoGeograficoMap = {
+      Português: 'território do Burkina Faso',
+      Español: 'territorio de Burkina Faso',
+      English: 'Burkina Faso territory',
+      Français: 'territoire du Burkina Faso',
+      Polski: 'terytorium Burkiny Faso'
+    };
   } else if (fullSearchText.includes('benin')) {
-    destinoGeografico = 'território do Benin';
-  } else if (fullSearchText.includes('portugal') || fullSearchText.includes('edp') || fullSearchText.includes('lisboa') || fullSearchText.includes('porto')) {
-    destinoGeografico = 'território nacional';
+    destinoGeograficoMap = {
+      Português: 'território do Benin',
+      Español: 'territorio de Benín',
+      English: 'Benin territory',
+      Français: 'territoire du Bénin',
+      Polski: 'terytorium Beninu'
+    };
   }
 
+  const curNomeSetor = nomeSetorMap[lang] || nomeSetorMap['Português'];
+  const curDesignacaoProjeto = (designacaoProjetoMap[lang] || designacaoProjetoMap['Português']) + (sufixoVeiculo[lang] || sufixoVeiculo['Português']);
+  const curSubtituloServicos = subtituloServicosMap[lang] || subtituloServicosMap['Português'];
+  const curDestinoGeografico = destinoGeograficoMap[lang] || destinoGeograficoMap['Português'];
+  const curExperienciaTexto = experienciaTextoMap[lang] || experienciaTextoMap['Português'];
+
   // 4. Construção dos 3 Parágrafos Formais de Descrição dos Trabalhos
-  const descTrabalhosP1 = `A presente proposta contempla o <strong>design personalizado, fornecimento e instalação de diferentes dispositivos e mobiliário técnico, bem como todas as operações de adaptação e engenharia necessárias para a transformação de um veículo novo (${escapeHtml(veiculoChassiSpecs.marcaModelo)}) numa ${escapeHtml(nomeSetor)}</strong> integralmente adaptada para prestar ${subtituloServicos} com plena eficácia em ${destinoGeografico} a que o veículo proposto possa aceder.`;
+  let descTrabalhosP1 = '';
+  let descTrabalhosP2 = '';
+  let descTrabalhosP3 = '';
 
-  const descTrabalhosP2 = `O objetivo desta unidade móvel será chegar e instalar-se com extrema facilidade e rapidez em qualquer localidade do país, tanto em meios rurais como em meios mais urbanos da geografia nacional, dispondo de plena capacidade para realizar a sua atividade de atendimento e suporte a todos os cidadãos e clientes, em <strong>ótimas condições técnicas de alimentação e autonomia elétrica, climatização de elevado rendimento, conectividade de dados de alta velocidade, segurança estrutural, conforto acústico, excelente habitabilidade e acessibilidade segura</strong>.`;
-
-  const descTrabalhosP3 = `Esta proposta contempla o fornecimento do veículo base completamente novo, a sua transformação à medida, a produção e montagem de mobiliário técnico por medida, o isolamento termoacústico multicamada, a instalação de todas as infraestruturas técnicas (rede elétrica 220V/12V, iluminação LED, telecomunicações e climatização) e a integração rigorosa de todos os equipamentos fornecidos ou especificados pelo cliente, executados pela nossa experiente equipa técnica nas nossas instalações industriais em Espanha sob rigoroso controlo de qualidade. Ficam <strong>incluídos nesta proposta todos os trâmites de transferência, documentação de homologação e o transporte e entrega no porto ou ponto de destino acordado</strong>.`;
+  if (lang === 'Español') {
+    descTrabalhosP1 = `La presente propuesta contempla el <strong>diseño personalizado, suministro e instalación de diferentes dispositivos y mobiliario técnico, así como todas las operaciones de adaptación e ingeniería necesarias para la transformación de un vehículo nuevo (${escapeHtml(veiculoChassiSpecs.marcaModelo)}) en una ${escapeHtml(curNomeSetor)}</strong> plenamente adaptada para prestar ${curSubtituloServicos} con total eficacia en ${curDestinoGeografico} al que el vehículo propuesto pueda acceder.`;
+    descTrabalhosP2 = `El objetivo de esta unidad móvil será llegar e instalarse con extrema facilidad y rapidez en cualquier localidad del país, tanto en entornos rurales como urbanos de la geografía nacional, disponiendo de plena capacidad para desarrollar su actividad de atención y soporte a todos los ciudadanos y clientes, en <strong>óptimas condiciones técnicas de alimentación y autonomía eléctrica, climatización de alto rendimiento, conectividad de datos de alta velocidad, seguridad estructural, confort acústico, excelente habitabilidad y accesibilidad segura</strong>.`;
+    descTrabalhosP3 = `Esta propuesta contempla el suministro del vehículo base completamente nuevo, su carrozado a medida, la producción y montaje de mobiliario técnico por medida, el aislamiento termoacústico multicapa, la instalación de todas las infraestructuras técnicas (red eléctrica 220V/12V, iluminación LED, telecomunicaciones y climatización) y la integración rigurosa de todos los equipos facilitados o especificados por el cliente, ejecutados por nuestro experimentado equipo técnico en nuestras instalaciones industriales en España bajo riguroso control de calidad. Quedan <strong>incluidos en esta propuesta todos los trámites de transferencia, documentación de homologación y el transporte y entrega en el puerto o punto de destino acordado</strong>.`;
+  } else if (lang === 'English') {
+    descTrabalhosP1 = `This proposal comprises the <strong>custom engineering design, supply and installation of specialized technical furniture and equipment, as well as all adaptation operations required for converting a brand-new vehicle (${escapeHtml(veiculoChassiSpecs.marcaModelo)}) into a ${escapeHtml(curNomeSetor)}</strong> fully equipped to deliver ${curSubtituloServicos} with maximum efficiency across ${curDestinoGeografico} accessible by the proposed vehicle.`;
+    descTrabalhosP2 = `The goal of this mobile unit is to deploy rapidly and effortlessly in any location nationwide, in both rural and urban areas, providing full operational capability to serve and support citizens and customers under <strong>optimal technical conditions of power autonomy, high-performance climate control, high-speed data connectivity, structural safety, acoustic comfort, superior habitability, and safe accessibility</strong>.`;
+    descTrabalhosP3 = `This proposal encompasses the supply of the brand-new base vehicle, custom bodywork and transformation, bespoke technical furniture production and assembly, multilayer thermo-acoustic insulation, complete infrastructure deployment (220V/12V electrical systems, LED lighting, telecoms and HVAC), and strict integration of all client-specified equipment at our industrial facilities in Spain under rigorous quality standards. <strong>All transfer formalities, homologation documentation, and insured transport and delivery to the agreed port or destination are fully included</strong>.`;
+  } else if (lang === 'Français') {
+    descTrabalhosP1 = `La présente proposition comprend la <strong>conception technique sur mesure, la fourniture et l'installation de mobilier technique et d'équipements spécialisés, ainsi que toutes les opérations d'adaptation nécessaires à la transformation d'un véhicule neuf (${escapeHtml(veiculoChassiSpecs.marcaModelo)}) en une ${escapeHtml(curNomeSetor)}</strong> intégralement équipée pour assurer ${curSubtituloServicos} avec une pleine efficacité sur ${curDestinoGeografico} accessible par le véhicule.`;
+    descTrabalhosP2 = `L'objectif de cette unité mobile est d'arriver et de s'installer rapidement et en toute simplicité dans n'importe quelle localité, en milieu rural comme urbain, avec une capacité opérationnelle totale pour accueillir les usagers dans des <strong>conditions optimales d'autonomie électrique, de climatisation haute performance, de connectivité haut débit, de sécurité structurelle, de confort acoustique, d'habitabilité et d'accessibilité sécurisée</strong>.`;
+    descTrabalhosP3 = `Cette proposition couvre la fourniture du véhicule neuf de base, son carrossage sur mesure, la fabrication du mobilier technique, l'isolation thermo-acoustique multicouche, l'installation de toutes les infrastructures (réseau 220V/12V, LED, télécoms, climatisation) et l'intégration rigoureuse de tous les équipements dans nos installations industrielles en Espagne sous strict contrôle qualité. <strong>Sont inclus toutes les démarches d'immatriculation, les documents d'homologation ainsi que le transport et la livraison sécurisée au port ou point de destination convenu</strong>.`;
+  } else if (lang === 'Polski') {
+    descTrabalhosP1 = `Niniejsza oferta obejmuje <strong>indywidualny projekt techniczny, dostawę i montaż wyposażenia oraz mebli technicznych, a także wszystkie operacje adaptacyjne i inżynieryjne niezbędne do zabudowy fabrycznie nowego pojazdu (${escapeHtml(veiculoChassiSpecs.marcaModelo)}) w ${escapeHtml(curNomeSetor)}</strong> w pełni przystosowaną do świadczenia ${curSubtituloServicos} na terenie ${curDestinoGeografico}.`;
+    descTrabalhosP2 = `Celem tej jednostki mobilnej jest szybkie i bezproblemowe dotarcie oraz instalacja w dowolnej miejscowości, zarówno na obszarach wiejskich, jak i miejskich, gwarantując pełną zdolność do obsługi klientów w <strong>optymalnych warunkach zasilania i autonomii elektrycznej, wysokowydajnej klimatyzacji, szybkiej łączności danych, bezpieczeństwa konstrukcyjnego, komfortu akustycznego i bezpiecznej dostępności</strong>.`;
+    descTrabalhosP3 = `Oferta obejmuje dostawę nowego pojazdu bazowego, jego indywidualną zabudowę, produkcję i montaż mebli technicznych, wielowarstwową izolację termiczno-akustyczną, wykonanie instalacji technicznych (220V/12V, LED, telekomunikacja, klimatyzacja) oraz integrację sprzętu w naszych zakładach produkcyjnych w Hiszpanii pod ścisłą kontrolą jakości. <strong>W cenie zawarte są wszelkie formalności, dokumentacja homologacyjna oraz ubezpieczony transport i dostawa do uzgodnionego miejsca docelowego</strong>.`;
+  } else {
+    descTrabalhosP1 = `A presente proposta contempla o <strong>design personalizado, fornecimento e instalação de diferentes dispositivos e mobiliário técnico, bem como todas as operações de adaptação e engenharia necessárias para a transformação de um veículo novo (${escapeHtml(veiculoChassiSpecs.marcaModelo)}) numa ${escapeHtml(curNomeSetor)}</strong> integralmente adaptada para prestar ${curSubtituloServicos} com plena eficácia em ${curDestinoGeografico} a que o veículo proposto possa aceder.`;
+    descTrabalhosP2 = `O objetivo desta unidade móvel será chegar e instalar-se com extrema facilidade e rapidez em qualquer localidade do país, tanto em meios rurais como em meios mais urbanos da geografia nacional, dispondo de plena capacidade para realizar a sua atividade de atendimento e suporte a todos os cidadãos e clientes, em <strong>ótimas condições técnicas de alimentação e autonomia elétrica, climatização de elevado rendimento, conectividade de dados de alta velocidade, segurança estrutural, conforto acústico, excelente habitabilidade e acessibilidade segura</strong>.`;
+    descTrabalhosP3 = `Esta proposta contempla o fornecimento do veículo base completamente novo, a sua transformação à medida, a produção e montagem de mobiliário técnico por medida, o isolamento termoacústico multicamada, a instalação de todas as infraestruturas técnicas (rede elétrica 220V/12V, iluminação LED, telecomunicações e climatização) e a integração rigorosa de todos os equipamentos fornecidos ou especificados pelo cliente, executados pela nossa experiente equipa técnica nas nossas instalações industriais em Espanha sob rigoroso controlo de qualidade. Ficam <strong>incluídos nesta proposta todos os trâmites de transferência, documentação de homologação e o transporte e entrega no porto ou ponto de destino acordado</strong>.`;
+  }
 
   // 5. Geração Contextual de Memória Descritiva para Capítulos e Campos Adicionais
   const customChaptersDesc = [];
@@ -16518,28 +17927,37 @@ function generateBudgetContextualTexts(opts) {
 
     if (!isStandardTopic && filledLines.length > 0) {
       const itemsList = filledLines.map(l => `<li><strong>${escapeHtml(l.itemLabel || 'Componente')}:</strong> ${escapeHtml(l.desc || 'Conforme especificação técnica e requisitos funcionais acordados')}</li>`).join('');
+      let customIntro = `O projeto contempla a integração técnica rigorosa do capítulo <strong>${escapeHtml(topic.capituloTitulo)}</strong>, concebido à medida para satisfazer as necessidades funcionais de ${escapeHtml(cliente)}, respeitando os mais elevados padrões de qualidade da <strong>alegría-activity, S.L.</strong>:`;
+      if (lang === 'Español') {
+        customIntro = `El proyecto contempla la integración técnica rigurosa del capítulo <strong>${escapeHtml(topic.capituloTitulo)}</strong>, concebido a medida para satisfacer las necesidades funcionales de ${escapeHtml(cliente)}, respetando los más altos estándares de calidad de <strong>alegría-activity, S.L.</strong>:`;
+      } else if (lang === 'English') {
+        customIntro = `The project includes the rigorous technical integration of chapter <strong>${escapeHtml(topic.capituloTitulo)}</strong>, customized to meet the functional requirements of ${escapeHtml(cliente)}, complying with the highest quality standards of <strong>alegría-activity, S.L.</strong>:`;
+      } else if (lang === 'Français') {
+        customIntro = `Le projet comprend l'intégration technique rigoureuse du chapitre <strong>${escapeHtml(topic.capituloTitulo)}</strong>, conçu sur mesure pour répondre aux besoins fonctionnels de ${escapeHtml(cliente)}, dans le respect des normes de qualité les plus strictes de <strong>alegría-activity, S.L.</strong> : `;
+      } else if (lang === 'Polski') {
+        customIntro = `Projekt przewiduje precyzyjną integrację techniczną rozdziału <strong>${escapeHtml(topic.capituloTitulo)}</strong>, dostosowanego do indywidualnych potrzeb ${escapeHtml(cliente)}, zgodnie z najwyższymi standardami jakości firmy <strong>alegría-activity, S.L.</strong>:`;
+      }
       customChaptersDesc.push({
         num: topic.capituloNum,
         titulo: topic.capituloTitulo,
         itemsHtml: itemsList,
-        text: `O projeto contempla a integração técnica rigorosa do capítulo <strong>${escapeHtml(topic.capituloTitulo)}</strong>, concebido à medida para satisfazer as necessidades funcionais de ${escapeHtml(cliente)}, respeitando os mais elevados padrões de qualidade, homologação e conformidade industrial da <strong>alegría-activity, S.L.</strong>:`
+        text: customIntro
       });
     }
   });
 
   return {
+    lang,
     setorAtividade,
-    nomeSetor,
-    designacaoProjeto,
-    subtituloServicos,
-    areasInteriores,
-    experienciaTexto,
+    nomeSetor: curNomeSetor,
+    designacaoProjeto: curDesignacaoProjeto,
+    subtituloServicos: curSubtituloServicos,
+    experienciaTexto: curExperienciaTexto,
     tipoVeiculo,
     veiculoNome,
     veiculoChassiSpecs,
     prazoMeses,
-    climatizacaoTexto,
-    destinoGeografico,
+    destinoGeografico: curDestinoGeografico,
     descTrabalhosP1,
     descTrabalhosP2,
     descTrabalhosP3,
@@ -16548,7 +17966,51 @@ function generateBudgetContextualTexts(opts) {
 }
 
 function printBudgetPDF() {
-  const cliente = document.getElementById('budgetHeaderCliente')?.value.trim() || 'Cliente';
+  const userLang = (typeof getActiveUserLanguage === 'function') ? getActiveUserLanguage() : 'Português';
+  const docI18n = (typeof getBudgetDocumentI18n === 'function') ? getBudgetDocumentI18n(userLang) : {
+    htmlLang: 'pt',
+    docTitle: (ref, cli) => 'Proposta Técnica ' + ref + ' - ' + cli,
+    companySub: 'Design e Fabrico de Unidades Móveis Técnicas',
+    dateLabel: 'Data:',
+    clientLabel: 'Cliente:',
+    projectLabel: 'Projeto:',
+    docVersionSub: (s) => 'Design personalizado e produção «chave na mão» de uma ' + s + ', com base num veículo novo incluído na proposta. Versão 1.0.',
+    descWorksTitle: '1. Descrição dos Trabalhos:',
+    techSpecsTitle: '2. Especificações Técnicas e Orçamentação por Capítulo:',
+    thItem: 'Item / Componente',
+    thDesc: 'Descrição / Especificação Técnica',
+    thPrice: 'Preço (€)',
+    priceIncluded: 'Incluído',
+    priceOptional: 'Opcional',
+    econEvalTitle: '3. Avaliação Económica:',
+    grandTotalProposed: 'VALOR TOTAL GLOBAL PROPOSTO (S/ IVA):',
+    econDescBase: 'Veículo base novo e transformação integral «chave na mão» com instalação de mobiliário técnico, revestimentos termoacústicos, divisórias e todos os equipamentos descritos no presente caderno de encargos:',
+    econDescElectrical: 'Sistema proposto de alimentação elétrica através de baterias de lítio, inversor/carregador, alimentação a partir do alternador do veículo e painéis solares (incluídos):',
+    econDescTransfer: (dest) => 'Trâmites de transferência para o cliente, transporte e entrega assegurado em ' + dest + ':',
+    optionalHeader: 'Equipamentos Opcionais',
+    paymentTermsTitle: 'Condições de Pagamento:',
+    paymentTermsText: '50% com a adjudicação e encomenda; 40% com a chegada do veículo à fábrica; 10% com a receção e entrega final.',
+    termsConditionsTitle: '4. Prazo de Entrega, Garantia e Condições Comerciais:',
+    deliveryTimeLabel: '• Prazo de entrega:',
+    deliveryTimeText: (m) => 'Máximo: <strong>' + m + ' meses</strong> após a aprovação formal do orçamento e disponibilização do veículo base pelo fabricante.',
+    techWarrantyLabel: '• Garantia técnica:',
+    techWarrantyText: 'Garantia técnica dos equipamentos e dispositivos durante o período estipulado por cada fabricante (normalmente <strong>2 anos</strong>) e de <strong>um (1) ano</strong> para todos os trabalhos de transformação e instalação executados pela nossa parte.',
+    validityLabel: '• Validade da proposta:',
+    validityText: 'O presente orçamento tem uma <strong>validade de 2 (dois) meses</strong> a contar da respetiva data de emissão.',
+    transportLabel: '• Trâmites e Transporte:',
+    transportText: 'Inclui trâmites de transferência para o cliente e transporte/entrega assegurado no porto ou localidade de destino acordado.',
+    notesTitle: 'Notas:',
+    noteVat: 'Os orçamentos apresentados não incluem o I.V.A. correspondente.',
+    noteEquipment: 'Não inclui equipamento interior específico do cliente não definido expressamente nesta proposta.',
+    noteMobility: 'Não inclui qualquer serviço de mobilidade pós-entrega, combustível ou portagens.',
+    noteIso: 'Produção e processos industriais auditados e certificados de acordo com a Norma <strong>ISO 9001:2015 Bureau Veritas</strong>.',
+    contactPersonLabel: 'Pessoa de contacto: José Centurio',
+    signatureStamp: 'Assinatura e Carimbo Oficial',
+    pageLabel: 'Página',
+    commercialConditionsHeader: 'alegría-activity • Condições Comerciais e Certificação'
+  };
+
+  const cliente = typeof getSelectedBudgetCliName === 'function' ? getSelectedBudgetCliName() : (document.getElementById('budgetHeaderCliente')?.value.trim() || 'Cliente');
   const numero = document.getElementById('budgetHeaderNum')?.value.trim() || 'ORC-2026';
   const referencia = document.getElementById('budgetHeaderRefCliente')?.value.trim() || 'Referência';
   const data = document.getElementById('budgetHeaderData')?.value || new Date().toISOString().split('T')[0];
@@ -16557,7 +18019,7 @@ function printBudgetPDF() {
 
   const rawTopicsData = collectBudgetFormData();
   const imgs = collectBudgetImagesData();
-  const ctx = generateBudgetContextualTexts({ cliente, referencia, numero, topicsData: rawTopicsData, grandTotal });
+  const ctx = generateBudgetContextualTexts({ cliente, referencia, numero, topicsData: rawTopicsData, grandTotal, lang: userLang });
 
   // 1. Filtrar estritamente apenas os campos e capítulos preenchidos
   const topicsData = [];
@@ -16565,7 +18027,7 @@ function printBudgetPDF() {
   const optionalItems = [];
 
   rawTopicsData.forEach(topic => {
-    const isOptionalTopic = (topic.capituloTitulo || '').toLowerCase().includes('opcion');
+    const isOptionalTopic = (topic.capituloTitulo || '').toLowerCase().includes('opcion') || (topic.capituloTitulo || '').toLowerCase().includes('option');
     const filledRows = [];
 
     (topic.linhas || []).forEach(line => {
@@ -16573,6 +18035,8 @@ function printBudgetPDF() {
       if (descTrimmed !== '') {
         const isOptionalLine = isOptionalTopic ||
           (line.itemLabel || '').toLowerCase().includes('opcional') ||
+          (line.itemLabel || '').toLowerCase().includes('optional') ||
+          (line.itemLabel || '').toLowerCase().includes('optionnel') ||
           descTrimmed.toLowerCase().includes('(opcional)') ||
           descTrimmed.toLowerCase().includes('opcional:');
 
@@ -16604,39 +18068,36 @@ function printBudgetPDF() {
     }
   });
 
-  // Deteção dinâmica de presença de componentes no orçamento
-  const allFilledText = topicsData.map(t => t.capituloTitulo + ' ' + t.linhas.map(l => l.itemLabel + ' ' + l.desc).join(' ')).join(' ').toLowerCase();
-  const hasVeiculo = topicsData.some(t => (t.capituloTitulo || '').toLowerCase().includes('veículo base') || (t.capituloTitulo || '').toLowerCase().includes('veiculo'));
-  const hasAcesso = allFilledText.includes('porta') || allFilledText.includes('escada') || allFilledText.includes('acesso') || allFilledText.includes('toldo') || allFilledText.includes('janela');
-  const hasMobiliario = allFilledText.includes('mobili') || allFilledText.includes('bancada') || allFilledText.includes('armário') || allFilledText.includes('cadeira') || allFilledText.includes('balcão');
-  const hasIsolamento = allFilledText.includes('isolamento') || allFilledText.includes('pavimento') || allFilledText.includes('revestimento') || allFilledText.includes('alucobond') || allFilledText.includes('polyfloor');
-  const hasIluminacao = allFilledText.includes('ilumina') || allFilledText.includes('led');
-  const hasInformatica = allFilledText.includes('informát') || allFilledText.includes('rede') || allFilledText.includes('router') || allFilledText.includes('cablagem');
-  const hasStarlink = allFilledText.includes('starlink') || allFilledText.includes('satlink') || !!imgs.starlink1;
-  const hasSeguranca = allFilledText.includes('cofre') || allFilledText.includes('alarme') || allFilledText.includes('segurança');
-  const hasClimatizacao = allFilledText.includes('climat') || allFilledText.includes('ar condicionado') || allFilledText.includes('split') || allFilledText.includes('belaire');
-  const hasPes = allFilledText.includes('estabiliz') || allFilledText.includes('pata');
-  const hasEletrico = allFilledText.includes('elétr') || allFilledText.includes('bateria') || allFilledText.includes('painel') || allFilledText.includes('solar') || allFilledText.includes('inversor');
-  const hasGerador = allFilledText.includes('gerador') || allFilledText.includes('ayerbe') || !!imgs.gerador;
-
-  // 2. Construção da Grelha dos Capítulos (Substituindo valores individuais por 'Incluído' e mostrando apenas opcionais)
+  // 2. Construção da Grelha dos Capítulos Traduzida
   let chaptersHtml = '';
   topicsData.forEach(topic => {
     let rowsHtml = '';
+    const localizedCapTitle = (typeof SIGEC_PHRASES_MAP !== 'undefined' && SIGEC_PHRASES_MAP[topic.capituloTitulo] && SIGEC_PHRASES_MAP[topic.capituloTitulo][userLang])
+      ? SIGEC_PHRASES_MAP[topic.capituloTitulo][userLang]
+      : topic.capituloTitulo;
+
     topic.linhas.forEach(line => {
-      let priceDisplay = '<span style="color: #000000; font-weight: bold;">Incluído</span>';
+      const localizedItemLabel = (typeof SIGEC_PHRASES_MAP !== 'undefined' && SIGEC_PHRASES_MAP[line.itemLabel] && SIGEC_PHRASES_MAP[line.itemLabel][userLang])
+        ? SIGEC_PHRASES_MAP[line.itemLabel][userLang]
+        : line.itemLabel;
+
+      const localizedDesc = (line.desc && typeof SIGEC_PHRASES_MAP !== 'undefined' && SIGEC_PHRASES_MAP[line.desc] && SIGEC_PHRASES_MAP[line.desc][userLang])
+        ? SIGEC_PHRASES_MAP[line.desc][userLang]
+        : (line.desc || '-');
+
+      let priceDisplay = '<span style="color: #000000; font-weight: bold;">' + escapeHtml(docI18n.priceIncluded) + '</span>';
       if (line.isOptional) {
         if (line.price > 0) {
-          priceDisplay = `<span style="color: #b45309; font-weight: 700;">+ ${line.price.toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>`;
+          priceDisplay = '<span style="color: #b45309; font-weight: 700;">+ ' + line.price.toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €</span>';
         } else {
-          priceDisplay = '<span style="color: #64748b; font-style: italic;">Opcional</span>';
+          priceDisplay = '<span style="color: #64748b; font-style: italic;">' + escapeHtml(docI18n.priceOptional) + '</span>';
         }
       }
 
       rowsHtml += `
         <tr>
-          <td style="padding: 5px 8px; border-bottom: 1px solid #e2e8f0; font-weight: bold; width: 28%; font-size: 8.5pt;">${escapeHtml(line.itemLabel)}</td>
-          <td style="padding: 5px 8px; border-bottom: 1px solid #e2e8f0; color: #334155; font-size: 8.5pt;">${escapeHtml(line.desc || '-')}</td>
+          <td style="padding: 5px 8px; border-bottom: 1px solid #e2e8f0; font-weight: bold; width: 28%; font-size: 8.5pt;">${escapeHtml(localizedItemLabel)}</td>
+          <td style="padding: 5px 8px; border-bottom: 1px solid #e2e8f0; color: #334155; font-size: 8.5pt;">${escapeHtml(localizedDesc)}</td>
           <td style="padding: 5px 8px; border-bottom: 1px solid #e2e8f0; text-align: right; width: 16%; font-size: 8.5pt;">${priceDisplay}</td>
         </tr>
       `;
@@ -16645,7 +18106,7 @@ function printBudgetPDF() {
     chaptersHtml += `
       <div style="margin-bottom: 12px; page-break-inside: avoid;">
         <div style="background: #c8102e; color: #ffffff; padding: 5px 10px; font-weight: bold; font-size: 9.5pt; border-radius: 3px 3px 0 0;">
-          ${escapeHtml(topic.capituloNum)}. ${escapeHtml(topic.capituloTitulo)}
+          ${escapeHtml(topic.capituloNum)}. ${escapeHtml(localizedCapTitle)}
         </div>
         <table style="width: 100%; border-collapse: collapse; border: 1px solid #cbd5e1;">
           <tbody>
@@ -16664,10 +18125,10 @@ function printBudgetPDF() {
 
   printWin.document.write(`
     <!DOCTYPE html>
-    <html lang="pt">
+    <html lang="${docI18n.htmlLang}">
     <head>
       <meta charset="UTF-8">
-      <title>Proposta Técnica ${escapeHtml(referencia)} - ${escapeHtml(cliente)}</title>
+      <title>${docI18n.docTitle(escapeHtml(referencia), escapeHtml(cliente))}</title>
       <style>
         @page { size: A4 portrait; margin: 14mm 12mm 14mm 12mm; }
         body { font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 0; color: #000000; line-height: 1.45; font-size: 9.5pt; }
@@ -16693,492 +18154,161 @@ function printBudgetPDF() {
       <div class="header-box">
         <div>
           <div style="font-size: 17pt; font-weight: bold; color: #c8102e; letter-spacing: -0.5px;">alegría-activity</div>
-          <div style="font-size: 8pt; color: #64748b;">Design e Fabrico de Unidades Móveis Técnicas</div>
+          <div style="font-size: 8pt; color: #64748b;">${escapeHtml(docI18n.companySub)}</div>
         </div>
         <div style="text-align: right;">
           <div style="font-size: 12pt; font-weight: bold; color: #c8102e;">${escapeHtml(numero)}</div>
-          <div style="font-size: 8pt; color: #64748b;">Data: ${escapeHtml(data)}</div>
+          <div style="font-size: 8pt; color: #64748b;">${escapeHtml(docI18n.dateLabel)} ${escapeHtml(data)}</div>
         </div>
       </div>
 
       <div style="background: #fffafa; border: 1.5px solid #c8102e; border-radius: 6px; padding: 10px 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
         <div>
-          <div style="color: #c8102e; font-weight: bold; font-size: 8.5pt;">Cliente:</div>
+          <div style="color: #c8102e; font-weight: bold; font-size: 8.5pt;">${escapeHtml(docI18n.clientLabel)}</div>
           <div style="font-size: 12.5pt; font-weight: bold; color: #0f172a; margin-top: 1px;">${escapeHtml(cliente)}</div>
-          <div style="margin-top: 3px;"><strong style="color: #c8102e;">Projeto:</strong> ${escapeHtml(ctx.designacaoProjeto)}</div>
-          <div style="font-size: 8.2pt; color: #475569; margin-top: 2px;">Design personalizado e produção «chave na mão» de uma ${escapeHtml(ctx.nomeSetor)}, com base num veículo novo incluído na proposta. Versão 1.0.</div>
+          <div style="margin-top: 3px;"><strong style="color: #c8102e;">${escapeHtml(docI18n.projectLabel)}</strong> ${escapeHtml(ctx.designacaoProjeto)}</div>
+          <div style="font-size: 8.2pt; color: #475569; margin-top: 2px;">${docI18n.docVersionSub(escapeHtml(ctx.nomeSetor))}</div>
         </div>
         ${imgs.logoCliente ? `<div style="max-width: 140px; max-height: 55px; text-align: right;"><img src="${imgs.logoCliente}" style="max-width: 100%; max-height: 50px; object-fit: contain;"></div>` : ''}
       </div>
 
-      <h2>Descrição dos trabalhos:</h2>
+      <h2>${escapeHtml(docI18n.descWorksTitle)}</h2>
       <p>${ctx.descTrabalhosP1}</p>
       <p>${ctx.descTrabalhosP2}</p>
       <p>${ctx.descTrabalhosP3}</p>
 
       <div class="footer-bar">
         <span>alegría-activity, S.L. &bull; www.alegria-activity.com</span>
-        <span>Página 1</span>
+        <span>${escapeHtml(docI18n.pageLabel)} 1</span>
         <span>${escapeHtml(data)}</span>
       </div>
 
-      <!-- PÁGINA 2: EXPERIÊNCIA COMPROVADA & FOTOS EXTERIORES -->
+      <!-- PÁGINA 2: ESPECIFICAÇÕES TÉCNICAS E QUADROS POR CAPÍTULO -->
       <div class="page-break"></div>
       <div class="header-box">
-        <div style="font-size: 13pt; font-weight: bold; color: #c8102e;">alegría-activity &bull; Experiência Comprovada</div>
+        <div style="font-size: 13pt; font-weight: bold; color: #c8102e;">alegría-activity &bull; ${escapeHtml(docI18n.techSpecsTitle)}</div>
         <div style="font-size: 8pt; color: #64748b;">${escapeHtml(referencia)} | ${escapeHtml(cliente)}</div>
       </div>
 
-      <div style="background: #f8fafc; border-left: 3.5px solid #64748b; padding: 10px 14px; margin-bottom: 14px; font-size: 9pt; color: #334155;">
+      <div style="background: #f8fafc; border-left: 3.5px solid #c8102e; padding: 8px 12px; margin-bottom: 12px; font-size: 8.8pt; color: #334155;">
         <em>${escapeHtml(ctx.experienciaTexto)}</em>
       </div>
 
-      ${(imgs.ext1 || imgs.ext2) ? `
-        <div style="display: flex; flex-direction: column; gap: 14px; margin: 14px 0;">
-          ${imgs.ext1 ? `
-            <div class="img-block">
-              <img src="${imgs.ext1}" style="max-height: 200px;">
-              <div class="img-caption">Unidade móvel com características semelhantes à aqui proposta, fabricada e personalizada para clientes de referência.</div>
+      ${chaptersHtml}
+
+      ${ctx.customChaptersDesc && ctx.customChaptersDesc.length > 0 ? `
+        <div style="margin-top: 14px; background: #fafafa; border: 1px solid #e2e8f0; border-radius: 4px; padding: 10px 14px;">
+          ${ctx.customChaptersDesc.map(c => `
+            <div style="margin-bottom: 8px;">
+              <p style="margin-bottom: 4px;">${c.text}</p>
+              <ul style="margin: 0; padding-left: 18px;">
+                ${c.itemsHtml}
+              </ul>
             </div>
-          ` : ''}
-          ${imgs.ext2 ? `
-            <div class="img-block">
-              <img src="${imgs.ext2}" style="max-height: 200px;">
-              <div class="img-caption">Exemplo de integração exterior e acabamento corporativo sobre viatura móvel de intervenção técnica.</div>
-            </div>
-          ` : ''}
+          `).join('')}
         </div>
       ` : ''}
 
       <div class="footer-bar">
         <span>alegría-activity, S.L. &bull; www.alegria-activity.com</span>
-        <span>Página 2</span>
+        <span>${escapeHtml(docI18n.pageLabel)} 2</span>
         <span>${escapeHtml(data)}</span>
       </div>
 
-      <!-- PÁGINA 3: VEÍCULO BASE (Se constar no orçamento) -->
-      ${hasVeiculo ? `
-        <div class="page-break"></div>
-        <div class="header-box">
-          <div style="font-size: 13pt; font-weight: bold; color: #c8102e;">alegría-activity &bull; Veículo Base Proposto</div>
-          <div style="font-size: 8pt; color: #64748b;">${escapeHtml(referencia)}</div>
-        </div>
-
-        <h2>Veículo base: ${escapeHtml(ctx.veiculoNome)}</h2>
-        <p>O fornecimento do veículo base, completamente novo, está incluído neste orçamento. Propõe-se que a marca e o modelo do veículo base sejam um <strong>${escapeHtml(ctx.veiculoChassiSpecs.marcaModelo)}</strong>. Este veículo foi concebido para se adaptar com total fiabilidade às necessidades operacionais deste projeto em ${escapeHtml(ctx.destinoGeografico)}. O veículo proposto apresenta as seguintes características principais:</p>
-
-        <ul style="line-height: 1.45;">
-          <li><strong>Configuração estrutural:</strong> ${escapeHtml(ctx.veiculoChassiSpecs.tipo)}</li>
-          <li><strong>Altura útil interior:</strong> ${escapeHtml(ctx.veiculoChassiSpecs.alturaInterior)}</li>
-          <li><strong>Rodado e tração:</strong> ${escapeHtml(ctx.veiculoChassiSpecs.rodado)}</li>
-          <li><strong>Capacidade volumétrica:</strong> ${escapeHtml(ctx.veiculoChassiSpecs.volume)}</li>
-          <li><strong>Motorização:</strong> ${escapeHtml(ctx.veiculoChassiSpecs.motor)}</li>
-          <li><strong>Cilindrada e cilindros:</strong> ${escapeHtml(ctx.veiculoChassiSpecs.cilindrada)}</li>
-          <li><strong>Potência:</strong> ${escapeHtml(ctx.veiculoChassiSpecs.potencia)}</li>
-          <li><strong>Transmissão:</strong> ${escapeHtml(ctx.veiculoChassiSpecs.transmissao)}</li>
-          <li><strong>Direção:</strong> ${escapeHtml(ctx.veiculoChassiSpecs.direcao)}</li>
-          <li><strong>Travões e segurança:</strong> ${escapeHtml(ctx.veiculoChassiSpecs.travoes)}</li>
-          <li><strong>Suspensão:</strong> ${escapeHtml(ctx.veiculoChassiSpecs.suspensao)}</li>
-          <li><strong>Depósito de combustível:</strong> ${escapeHtml(ctx.veiculoChassiSpecs.deposito)}</li>
-          <li><strong>Equipamento de cabina:</strong> ${escapeHtml(ctx.veiculoChassiSpecs.cabina)}</li>
-          <li><strong>Dimensões gerais:</strong> ${escapeHtml(ctx.veiculoChassiSpecs.dimensoes)}</li>
-          <li><strong>Peso Máximo Autorizado:</strong> <span style="background: #fef08a; font-weight: bold; padding: 1px 4px;">${escapeHtml(ctx.veiculoChassiSpecs.pma)}</span></li>
-        </ul>
-
-        ${imgs.veiculo ? `
-          <div class="img-block" style="margin-top: 10px;">
-            <img src="${imgs.veiculo}" style="max-height: 170px;">
-            <div class="img-caption">Veículo base novo selecionado e homologado para o projeto (${escapeHtml(ctx.veiculoChassiSpecs.marcaModelo)}).</div>
-          </div>
-        ` : ''}
-
-        <div class="footer-bar">
-          <span>alegría-activity, S.L. &bull; www.alegria-activity.com</span>
-          <span>Página 3</span>
-          <span>${escapeHtml(data)}</span>
-        </div>
-      ` : ''}
-
-      <!-- PÁGINA 4: ACESSIBILIDADE E ACABAMENTO EXTERIOR (Se constar no orçamento) -->
-      ${hasAcesso ? `
-        <div class="page-break"></div>
-        <div class="header-box">
-          <div style="font-size: 13pt; font-weight: bold; color: #c8102e;">alegría-activity &bull; Acessibilidade e Exterior</div>
-          <div style="font-size: 8pt; color: #64748b;">${escapeHtml(referencia)}</div>
-        </div>
-
-        <h2>Acessibilidade e acabamento exterior</h2>
-        <p>O acesso dos clientes e operadores à unidade móvel poderá ser efetuado através da porta destinada a esse efeito na lateral da carroçaria do veículo. Disporá de uma escada com corrimãos de montagem manual (ou opcionalmente substituível por uma rampa desdobrável de acessibilidade). Integrará estore/persiana de segurança exterior com fecho mecânico e porta interior de alumínio envidraçada de alta durabilidade.</p>
-        <p>Integrará iluminação exterior LED perimetral para utilização da unidade móvel em horário noturno ou em condições de baixa luminosidade ambiente. Incorporará um toldo retrátil na lateral de acesso para proteção contra o sol e intempéries. Poderá incorporar janelas envidraçadas com vidros térmicos para a entrada de luz natural na unidade, nas localizações da carroçaria acordadas com o cliente.</p>
-
-        ${imgs.acesso ? `
-          <div class="img-block">
-            <img src="${imgs.acesso}" style="max-height: 190px;">
-            <div class="img-caption">Acesso lateral com escada, estore de segurança, porta envidraçada e toldo de proteção.</div>
-          </div>
-        ` : ''}
-
-        <h2>Acabamento exterior e personalização corporativa:</h2>
-        <p>Este projeto inclui a <strong>personalização total do veículo finalmente transformado através da sua pintura total ou parcial e da sua decoração integral com vinil polimérico fundido de alta resistência</strong>, segundo o manual de normas gráficas e design fornecido pela entidade contratante (<strong>${escapeHtml(cliente)}</strong>), incluindo todos os seus logótipos, grafismos e imagem institucional corporativa.</p>
-
-        <div class="footer-bar">
-          <span>alegría-activity, S.L. &bull; www.alegria-activity.com</span>
-          <span>Página 4</span>
-          <span>${escapeHtml(data)}</span>
-        </div>
-      ` : ''}
-
-      <!-- PÁGINA 5: PLANTA TÉCNICA 2D / LAYOUT (Se houver imagem ou especificação) -->
-      ${imgs.planta ? `
-        <div class="page-break"></div>
-        <div class="header-box">
-          <div style="font-size: 13pt; font-weight: bold; color: #c8102e;">alegría-activity &bull; Planta Técnica de Distribuição</div>
-          <div style="font-size: 8pt; color: #64748b;">${escapeHtml(referencia)}</div>
-        </div>
-
-        <h2>Distribuição interior e layout técnico dos espaços:</h2>
-        <p>O desenho técnico abaixo ilustra a organização dos postos de atendimento, gabinetes reservados, áreas tecnológicas e sala técnica do veículo:</p>
-
-        <div class="img-block" style="margin: 20px 0;">
-          <img src="${imgs.planta}" style="max-height: 280px; width: 100%; object-fit: contain;">
-          <div class="img-caption">Planta Técnica 2D / Desenho de Engenharia e Layout Interior Cotado.</div>
-        </div>
-
-        <div class="footer-bar">
-          <span>alegría-activity, S.L. &bull; www.alegria-activity.com</span>
-          <span>Página 5</span>
-          <span>${escapeHtml(data)}</span>
-        </div>
-      ` : ''}
-
-      <!-- PÁGINA 6 & 7: ARQUITETURA INTERIOR & MOBILIÁRIO TÉCNICO (Se constar) -->
-      ${hasMobiliario ? `
-        <div class="page-break"></div>
-        <div class="header-box">
-          <div style="font-size: 13pt; font-weight: bold; color: #c8102e;">alegría-activity &bull; Arquitetura e Mobiliário Interior</div>
-          <div style="font-size: 8pt; color: #64748b;">${escapeHtml(referencia)}</div>
-        </div>
-
-        <h2>Arquitetura interior</h2>
-        <p>O interior da carroçaria será preparado procurando reproduzir a mesma estética institucional das instalações físicas de <strong>${escapeHtml(cliente)}</strong>, com o objetivo primordial de aproveitar ao máximo o espaço útil disponível para integrar as seguintes áreas:</p>
-
-        <ul>
-          ${ctx.areasInteriores.map(a => `<li>${a}</li>`).join('')}
-        </ul>
-
-        ${imgs.mobiliario ? `
-          <div class="img-block">
-            <img src="${imgs.mobiliario}" style="max-height: 180px;">
-            <div class="img-caption">Postos de atendimento com mobiliário técnico por medida, divisórias e balcões integrados.</div>
-          </div>
-        ` : ''}
-
-        <h2>Mobiliário técnico à medida:</h2>
-        <p>Este projeto inclui todo o mobiliário técnico por medida concebido especificamente para este modelo, com o seguinte detalhe:</p>
-        <ul>
-          <li><strong>Móveis, mesas, balcões e armários:</strong> fabricados em contraplacado laminado ou melaminizado de alta densidade da marca <strong>Egger®</strong> (em acabamento e cor a acordar com o cliente).</li>
-          <li><strong>Fechos de segurança:</strong> fechos de armários através de sistema de persiana/estore de alumínio de correr suave e fecho de chave.</li>
-          <li><strong>Perfis e acessórios:</strong> pés de mesa e perfis estruturais de remate fabricados em alumínio anodizado escovado.</li>
-          <li><strong>Ferragens:</strong> corrediças e dobradiças industriais de alta resistência com fecho amortecido.</li>
-          <li><strong>Cadeiras de operador:</strong> cadeiras de escritório com rodas, dispositivo hidráulico de regulação em altura, apoios de braços ergonómicos e estofos de fácil higienização.</li>
-          <li><strong>Cadeiras de cliente:</strong> cadeiras para visitantes com estética coincidente.</li>
-          <li><strong>Elementos auxiliares:</strong> caixotes de lixo integrados, bengaleiro e organizadores de cablagem.</li>
-        </ul>
-
-        <div class="footer-bar">
-          <span>alegría-activity, S.L. &bull; www.alegria-activity.com</span>
-          <span>Página 6</span>
-          <span>${escapeHtml(data)}</span>
-        </div>
-      ` : ''}
-
-      <!-- PÁGINA 7 & 8: ISOLAMENTO, ILUMINAÇÃO, INFORMÁTICA E STARLINK (Se constar) -->
-      ${(hasIsolamento || hasIluminacao || hasInformatica || hasStarlink) ? `
-        <div class="page-break"></div>
-        <div class="header-box">
-          <div style="font-size: 13pt; font-weight: bold; color: #c8102e;">alegría-activity &bull; Revestimentos e Redes Técnicas</div>
-          <div style="font-size: 8pt; color: #64748b;">${escapeHtml(referencia)}</div>
-        </div>
-
-        ${hasIsolamento ? `
-          <h2>Isolamento e revestimentos</h2>
-          <p>O pavimento de todo o habitáculo da unidade móvel será assente sobre painel contraplacado fenólico marítimo e revestido com pavimento vinílico de alta performance da marca <strong>Polyfloors®</strong> ou similar (antiderrapante, de fácil higienização, elevada durabilidade e modelo/cor a definir pelo cliente).</p>
-          <p>As paredes laterais e o teto serão revestidos com placas de material polimérico compósito da marca <strong>Alucobond®</strong> ou similar em cor branca, proporcionando uma estética cuidada, luminosa, lavável e de grande resistência.</p>
-          <p>Para reduzir as necessidades de climatização e favorecer a poupança energética, as laterais e o teto receberão isolamento termoacústico com isolante poroso do tipo <strong>lã de rocha, poliuretano injetado ou poliestireno extrudido de alta densidade</strong>, formando uma estrutura multicamada altamente eficaz.</p>
-        ` : ''}
-
-        ${(hasIluminacao || hasInformatica || hasStarlink) ? `
-          <h2>Dispositivos e sistemas a instalar: Iluminação e Informática</h2>
-          ${hasIluminacao ? `<p><strong>Iluminação LED:</strong> A iluminação interior será assegurada por fitas e focos LED de alta luminosidade integrados no teto, com temperatura de cor otimizada para trabalho continuado. O sistema inclui ainda iluminação de emergência com blocos autónomos e iluminação exterior perimetral.</p>` : ''}
-          ${hasInformatica ? `<p><strong>Equipamento Informático e Conectividade:</strong> Inclui infraestrutura completa de cablagem de rede estruturada (cabo de dados blindado Cat. 6 e tomadas RJ45) para interligação de postos de trabalho a um bastidor/router central. Fornecimento de router de ligação à Internet 4G/5G com antena exterior de teto de alto ganho (sem cartão SIM).</p>` : ''}
-          ${hasStarlink ? `
-            <p><strong>Antena STARLINK FLAT HP (SatLink):</strong> Perante eventuais problemas de cobertura de rede terrestre nas deslocações, contempla a instalação de uma <strong>antena STARLINK FLAT HP plana de alto rendimento</strong>, fixa e ancorada diretamente ao teto da unidade móvel. Suporta calor extremo, chuvas torrenciais e ventos fortes, garantindo conectividade de dados de alta velocidade via satélite com encriptação de ponta a ponta.</p>
-            ${imgs.starlink1 ? `
-              <div class="img-block">
-                <img src="${imgs.starlink1}" style="max-height: 140px;">
-                <div class="img-caption">Antena STARLINK Flat HP de alta performance para instalação permanente no teto da viatura.</div>
-              </div>
-            ` : ''}
-          ` : ''}
-        ` : ''}
-
-        <div class="footer-bar">
-          <span>alegría-activity, S.L. &bull; www.alegria-activity.com</span>
-          <span>Página 7</span>
-          <span>${escapeHtml(data)}</span>
-        </div>
-      ` : ''}
-
-      <!-- PÁGINA 9: DISPOSITIVOS ADICIONAIS, SEGURANÇA E CLIMATIZAÇÃO (Se constar) -->
-      ${(hasSeguranca || hasClimatizacao || hasPes) ? `
-        <div class="page-break"></div>
-        <div class="header-box">
-          <div style="font-size: 13pt; font-weight: bold; color: #c8102e;">alegría-activity &bull; Climatização e Dispositivos</div>
-          <div style="font-size: 8pt; color: #64748b;">${escapeHtml(referencia)}</div>
-        </div>
-
-        <h2>Dispositivos e Equipamentos Técnicos Integrados</h2>
-        <p>Todos os dispositivos específicos da atividade de <strong>${escapeHtml(cliente)}</strong> serão integrados sob a supervisão técnica da alegría-activity, incluindo toda a infraestrutura de cablagem elétrica e de dados necessária:</p>
-
-        <ul>
-          ${hasSeguranca ? `<li><strong>Segurança:</strong> Fornecimento e fixação estrutural de um <strong>cofre forte de segurança com peso aproximado de 175 kg</strong> (dimensões aprox.: 600 mm x 600 mm x 500 mm). Infraestrutura preparada para posterior instalação pelo cliente de central de alarmes e sensores.</li>` : ''}
-          ${hasClimatizacao ? `<li><strong>Climatização:</strong> ${escapeHtml(ctx.climatizacaoTexto)}</li>` : ''}
-          ${hasPes ? `<li><strong>Patas / Pés Estabilizadores:</strong> Patas elétricas com comando sem fios de acionamento automático, para nivelar e prevenir movimentos da carroçaria quando o veículo está estacionado e em funcionamento.</li>` : ''}
-        </ul>
-
-        <div class="footer-bar">
-          <span>alegría-activity, S.L. &bull; www.alegria-activity.com</span>
-          <span>Página 8</span>
-          <span>${escapeHtml(data)}</span>
-        </div>
-      ` : ''}
-
-      <!-- PÁGINA 10 & 11: ALIMENTAÇÃO ELÉTRICA E AUTONOMIA ENERGÉTICA (Se constar) -->
-      ${hasEletrico ? `
-        <div class="page-break"></div>
-        <div class="header-box">
-          <div style="font-size: 13pt; font-weight: bold; color: #c8102e;">alegría-activity &bull; Infraestrutura Elétrica e Autonomia</div>
-          <div style="font-size: 8pt; color: #64748b;">${escapeHtml(referencia)}</div>
-        </div>
-
-        <h2>Alimentação elétrica e autonomia energética</h2>
-        <p>Em modo estacionário, quando a unidade móvel está aberta em funcionamento, o habitáculo poderá ser alimentado através de energia elétrica a 220 V fornecida a partir do exterior através de cabo externo de ligação rápida (sistema DEFA). A tomada de corrente exterior fica protegida com tampa de fechadura com chave. Fornece-se um cabo enrolável de 10 metros com secção dimensionada para suportar a carga integral de todos os equipamentos.</p>
-        <p>A distribuição elétrica interior é gerida por um <strong>quadro elétrico modular com disjuntores magnetotérmicos diferenciais independentes por fase</strong> e placa de teste de fusíveis, garantindo a proteção total dos circuitos.</p>
-        
-        <h3>Sistema de Autonomia Elétrica sem Fonte Exterior:</h3>
-        <p>A unidade móvel está concebida para <strong>manter o seu funcionamento elétrico pleno sem fornecimento elétrico exterior, incluindo o funcionamento contínuo do sistema de climatização</strong>. Para cumprir este requisito, integra um sistema autónomo composto por:</p>
-        <ul>
-          <li><strong>a) Carregamento em repouso:</strong> recarga das baterias através de ligação à rede 220V com carregador inteligente integrado.</li>
-          <li><strong>b) Carregamento em circulação:</strong> recarga em marcha através do alternador do motor do veículo com sistema separador/relé Nagares de 100 Ah.</li>
-          <li><strong>c) Carregamento fotovoltaico contínuo:</strong> recarga através de <strong>painéis solares semirrígidos fotovoltaicos instalados no teto</strong> (de 200 Wp cada, tipo BluGy / NDS LightSolar).</li>
-        </ul>
-
-        <p><strong>Dispositivos elétricos integrados:</strong> Baterias de Lítio LiFePO4 de 12V 150Ah (capacidade total superior a 5.500 W), Inversor/Carregador automático 12V-3500VA, Regulador/Controlador solar Smart de 100V e Monitor digital de controlo de estado de carga e autonomia.</p>
-
-        ${(imgs.bateria || imgs.painel) ? `
-          <div style="display: flex; gap: 10px; justify-content: center; margin: 12px 0;">
-            ${imgs.bateria ? `<div style="flex: 1; text-align: center;"><img src="${imgs.bateria}" style="max-height: 120px;"><div class="img-caption">Bateria de Lítio LiFePO4 5500W.</div></div>` : ''}
-            ${imgs.painel ? `<div style="flex: 1; text-align: center;"><img src="${imgs.painel}" style="max-height: 120px;"><div class="img-caption">Painéis solares semirrígidos no teto.</div></div>` : ''}
-          </div>
-        ` : ''}
-
-        <div class="footer-bar">
-          <span>alegría-activity, S.L. &bull; www.alegria-activity.com</span>
-          <span>Página 9</span>
-          <span>${escapeHtml(data)}</span>
-        </div>
-      ` : ''}
-
-      <!-- PÁGINA 12: GERADOR AUTÓNOMO INSONORIZADO (Se constar) -->
-      ${hasGerador ? `
-        <div class="page-break"></div>
-        <div class="header-box">
-          <div style="font-size: 13pt; font-weight: bold; color: #c8102e;">alegría-activity &bull; Gerador Autónomo (Opcional)</div>
-          <div style="font-size: 8pt; color: #64748b;">${escapeHtml(referencia)}</div>
-        </div>
-
-        <h2>Gerador autónomo de eletricidade (Opcional)</h2>
-        <p>Fornecimento e instalação de gerador autónomo de eletricidade que fornece energia ao sistema de baterias quando estas apresentem baixo nível de carga ou quando não exista alimentação exterior:</p>
-        <ul>
-          <li><strong>Marca e modelo:</strong> Ayerbe 8000 Invert E</li>
-          <li><strong>Potência máxima:</strong> 7.500 W (potência nominal 7.000 W)</li>
-          <li><strong>Sistema de arranque:</strong> Arranque elétrico com bateria própria e comando remoto</li>
-          <li><strong>Motor:</strong> Kiotsu de 4 tempos, OHV com refrigeração por ar (459 cm³)</li>
-          <li><strong>Alternador:</strong> Tipo Inverter com estabilização eletrónica de onda sinusoidal pura</li>
-          <li><strong>Insonorização:</strong> Carcaça com <strong>dupla insonorização</strong>: insonorização de fábrica e compartimento técnico suplementar com isolamento acústico à medida.</li>
-        </ul>
-
-        ${imgs.gerador ? `
-          <div class="img-block">
-            <img src="${imgs.gerador}" style="max-height: 170px;">
-            <div class="img-caption">Gerador Inverter insonorizado Ayerbe 8000 Invert E 7500W.</div>
-          </div>
-        ` : ''}
-
-        <div class="footer-bar">
-          <span>alegría-activity, S.L. &bull; www.alegria-activity.com</span>
-          <span>Página 10</span>
-          <span>${escapeHtml(data)}</span>
-        </div>
-      ` : ''}
-
-      ${(ctx.customChaptersDesc && ctx.customChaptersDesc.length > 0) ? `
-        <div class="page-break"></div>
-        <div class="header-box">
-          <div style="font-size: 13pt; font-weight: bold; color: #c8102e;">alegría-activity &bull; Especificações de Capítulos Adicionais</div>
-          <div style="font-size: 8pt; color: #64748b;">${escapeHtml(referencia)}</div>
-        </div>
-
-        <h2>Especificações Técnicas de Capítulos Adicionais e Especializados:</h2>
-        ${ctx.customChaptersDesc.map(c => `
-          <h3>${escapeHtml(c.num)}. ${escapeHtml(c.titulo)}</h3>
-          <p>${c.text}</p>
-          <ul>
-            ${c.itemsHtml}
-          </ul>
-        `).join('')}
-
-        <div class="footer-bar">
-          <span>alegría-activity, S.L. &bull; www.alegria-activity.com</span>
-          <span>Especificações Adicionais</span>
-          <span>${escapeHtml(data)}</span>
-        </div>
-      ` : ''}
-
-      <!-- PÁGINA 13: ESPECIFICAÇÕES TÉCNICAS E AVALIAÇÃO ECONÓMICA -->
+      <!-- PÁGINA 3: AVALIAÇÃO ECONÓMICA & CONDIÇÕES COMERCIAIS -->
       <div class="page-break"></div>
       <div class="header-box">
-        <div style="font-size: 13pt; font-weight: bold; color: #c8102e;">alegría-activity &bull; Orçamentação e Avaliação Económica</div>
+        <div style="font-size: 13pt; font-weight: bold; color: #c8102e;">alegría-activity &bull; ${escapeHtml(docI18n.econEvalTitle)}</div>
         <div style="font-size: 8pt; color: #64748b;">${escapeHtml(referencia)}</div>
       </div>
 
-      <h2>Especificações Técnicas por Capítulo e Componentes:</h2>
-      ${chaptersHtml}
+      <h2>${escapeHtml(docI18n.econEvalTitle)}</h2>
 
-      <h2>Avaliação económica:</h2>
-      <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 9pt; border: 1.5px solid #000000;">
-        <thead>
-          <tr style="background-color: #d9d9d9; color: #000000; border-bottom: 1.5px solid #000000;">
-            <th style="padding: 7px 10px; text-align: center; font-weight: bold; width: 80%; border-right: 1.5px solid #000000;">Descrição geral</th>
-            <th style="padding: 7px 10px; text-align: center; font-weight: bold; width: 20%;">VALOR</th>
-          </tr>
-        </thead>
+      <div style="background-color: #f2f2f2; border: 2px solid #000000; padding: 10px 14px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-weight: bold; font-size: 10.5pt; color: #000000;">
+          ${escapeHtml(docI18n.grandTotalProposed)}
+        </span>
+        <span style="font-weight: 900; font-size: 14pt; color: #000000;">
+          ${grandTotalFormatted}
+        </span>
+      </div>
+
+      <table style="width: 100%; border-collapse: collapse; border: 1.5px solid #000000; font-size: 8.8pt; margin-bottom: 14px;">
         <tbody>
           <tr style="border-bottom: 1.5px solid #000000;">
             <td style="padding: 8px 10px; border-right: 1.5px solid #000000; text-align: justify; line-height: 1.35;">
-              Fornecimento do veículo base descrito, marca e modelo <em><strong>${escapeHtml(ctx.veiculoChassiSpecs.marcaModelo)}</strong></em>, e posterior transformação por medida e adaptação «chave na mão» em ${escapeHtml(ctx.nomeSetor.toLowerCase())}, conforme descrito neste orçamento, incluindo todos os dispositivos indicados neste documento
+              ${escapeHtml(docI18n.econDescBase)}
             </td>
-            <td style="padding: 8px 10px; text-align: center; vertical-align: middle; font-weight: 500; font-size: 9.5pt;">
-              ${(baseTotal > 0 ? baseTotal.toLocaleString('pt-PT', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + ' €' : grandTotalFormatted)}
-            </td>
-          </tr>
-          <tr style="border-bottom: 1.5px solid #000000;">
-            <td style="padding: 8px 10px; border-right: 1.5px solid #000000; text-align: justify; line-height: 1.35;">
-              Decoração/aplicação de vinil exterior segundo o design fornecido pelo cliente, incluindo a aplicação integral de vinil nas duas laterais e em partes da traseira e dianteira, sobre a pintura de fundo na cor própria do veículo.
-            </td>
-            <td style="padding: 8px 10px; text-align: center; vertical-align: middle; color: #000000;">
-              incluído
+            <td style="padding: 8px 10px; text-align: center; vertical-align: middle; color: #000000; font-weight: bold; width: 18%;">
+              ${escapeHtml(docI18n.priceIncluded)}
             </td>
           </tr>
           <tr style="border-bottom: 1.5px solid #000000;">
             <td style="padding: 8px 10px; border-right: 1.5px solid #000000; text-align: justify; line-height: 1.35;">
-              Sistema proposto de alimentação elétrica através de duas (2) baterias de lítio, inversor/carregador, alimentação a partir do alternador do veículo e dos painéis solares (incluídos):
-              <ul style="margin: 5px 0 2px 18px; padding: 0; line-height: 1.4;">
-                <li>Inversor/Carregador Automático 12V-3500VA</li>
-                <li>Bateria de lítio (2 Unidades) 5500W</li>
-                <li>Monitor de Controlo</li>
-                <li>Regulador de Carga do Alternador</li>
-                <li>Placas solares semi-rígidas 12V 120W (4 Unidades) + Regulador Carga</li>
-              </ul>
+              ${escapeHtml(docI18n.econDescElectrical)}
             </td>
-            <td style="padding: 8px 10px; text-align: center; vertical-align: middle; color: #000000;">
-              incluído
+            <td style="padding: 8px 10px; text-align: center; vertical-align: middle; color: #000000; font-weight: bold;">
+              ${escapeHtml(docI18n.priceIncluded)}
             </td>
           </tr>
           <tr style="border-bottom: 1.5px solid #000000;">
             <td style="padding: 8px 10px; border-right: 1.5px solid #000000; text-align: justify; line-height: 1.35;">
-              Trâmites de transferência para o cliente, transporte para ${escapeHtml(ctx.destinoGeografico.includes('Cabo Verde') ? 'Cabo Verde (entrega no porto de chegada em Cabo Verde)' : ctx.destinoGeografico)}
+              ${docI18n.econDescTransfer(escapeHtml(ctx.destinoGeografico))}
             </td>
-            <td style="padding: 8px 10px; text-align: center; vertical-align: middle; color: #000000;">
-              incluído
+            <td style="padding: 8px 10px; text-align: center; vertical-align: middle; color: #000000; font-weight: bold;">
+              ${escapeHtml(docI18n.priceIncluded)}
             </td>
           </tr>
           ${optionalItems.length > 0 ? `
             <tr style="background-color: #d9d9d9; border-bottom: 1.5px solid #000000;">
               <td colspan="2" style="padding: 5px 10px; text-align: center; font-weight: bold; font-size: 9.5pt;">
-                Opcionais
+                ${escapeHtml(docI18n.optionalHeader)}
               </td>
             </tr>
-            ${optionalItems.map(opt => `
-              <tr style="border-bottom: 1.5px solid #000000;">
-                <td style="padding: 7px 10px; border-right: 1.5px solid #000000; text-align: left;">
-                  ${escapeHtml(opt.desc || opt.label)}
-                </td>
-                <td style="padding: 7px 10px; text-align: center; vertical-align: middle; font-weight: 500;">
-                  ${opt.price > 0 ? opt.price.toLocaleString('pt-PT', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + ' €' : 'Opcional'}
-                </td>
-              </tr>
-            `).join('')}
-          ` : `
-            <tr style="background-color: #d9d9d9; border-bottom: 1.5px solid #000000;">
-              <td colspan="2" style="padding: 5px 10px; text-align: center; font-weight: bold; font-size: 9.5pt;">
-                Opcionais
-              </td>
-            </tr>
-            <tr style="border-bottom: 1.5px solid #000000;">
-              <td style="padding: 7px 10px; border-right: 1.5px solid #000000; text-align: left;">Patas estabilizadoras do veículo marca MA-VE ou similar</td>
-              <td style="padding: 7px 10px; text-align: center; vertical-align: middle;">5.800 €</td>
-            </tr>
-            <tr style="border-bottom: 1.5px solid #000000;">
-              <td style="padding: 7px 10px; border-right: 1.5px solid #000000; text-align: left;">Fornecimento e instalação de antena Starlink Flat HP de alto desempenho</td>
-              <td style="padding: 7px 10px; text-align: center; vertical-align: middle;">5.950 €</td>
-            </tr>
-            <tr style="border-bottom: 1.5px solid #000000;">
-              <td style="padding: 7px 10px; border-right: 1.5px solid #000000; text-align: left;">Gerador <em>Ayerbe</em> 8000 Invert E</td>
-              <td style="padding: 7px 10px; text-align: center; vertical-align: middle;">3.100 €</td>
-            </tr>
-          `}
+            ${optionalItems.map(opt => {
+              const optLabel = (typeof SIGEC_PHRASES_MAP !== 'undefined' && SIGEC_PHRASES_MAP[opt.desc || opt.label] && SIGEC_PHRASES_MAP[opt.desc || opt.label][userLang])
+                ? SIGEC_PHRASES_MAP[opt.desc || opt.label][userLang]
+                : (opt.desc || opt.label);
+              return `
+                <tr style="border-bottom: 1.5px solid #000000;">
+                  <td style="padding: 7px 10px; border-right: 1.5px solid #000000; text-align: left;">
+                    ${escapeHtml(optLabel)}
+                  </td>
+                  <td style="padding: 7px 10px; text-align: center; vertical-align: middle; font-weight: 500;">
+                    ${opt.price > 0 ? opt.price.toLocaleString('pt-PT', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + ' €' : escapeHtml(docI18n.priceOptional)}
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          ` : ''}
         </tbody>
       </table>
 
-      <div class="footer-bar">
-        <span>alegría-activity, S.L. &bull; www.alegria-activity.com</span>
-        <span>Página 11</span>
-        <span>${escapeHtml(data)}</span>
-      </div>
-
-      <!-- PÁGINA 14: CONDIÇÕES COMERCIAIS, CERTIFICADO ISO & ASSINATURA -->
-      <div class="page-break"></div>
-      <div class="header-box">
-        <div style="font-size: 13pt; font-weight: bold; color: #c8102e;">alegría-activity &bull; Condições Comerciais e Certificação</div>
-        <div style="font-size: 8pt; color: #64748b;">${escapeHtml(referencia)}</div>
-      </div>
-
-      <h2>Prazo de Entrega, Garantia e Condições:</h2>
+      <h2>${escapeHtml(docI18n.termsConditionsTitle)}</h2>
       <table style="width: 100%; border-collapse: collapse; font-size: 8.8pt;">
         <tr>
           <td style="padding: 6px 10px; vertical-align: top; width: 50%;">
-            <div style="font-weight: bold; color: #c8102e; margin-bottom: 2px;">• Prazo de entrega:</div>
-            <p style="line-height: 1.4; margin-bottom: 8px;">Máximo: <strong>${escapeHtml(ctx.prazoMeses)} meses</strong> após a aprovação formal do orçamento e disponibilização do veículo base pelo fabricante.</p>
-            <div style="font-weight: bold; color: #c8102e; margin-bottom: 2px;">• Garantia técnica:</div>
-            <p style="line-height: 1.4; margin-bottom: 8px;">Garantia técnica dos equipamentos e dispositivos durante o período estipulado por cada fabricante (normalmente <strong>2 anos</strong>) e de <strong>um (1) ano</strong> para todos os trabalhos de transformação e instalação executados pela nuestra parte.</p>
+            <div style="font-weight: bold; color: #c8102e; margin-bottom: 2px;">${escapeHtml(docI18n.deliveryTimeLabel)}</div>
+            <p style="line-height: 1.4; margin-bottom: 8px;">${docI18n.deliveryTimeText(escapeHtml(ctx.prazoMeses))}</p>
+            <div style="font-weight: bold; color: #c8102e; margin-bottom: 2px;">${escapeHtml(docI18n.techWarrantyLabel)}</div>
+            <p style="line-height: 1.4; margin-bottom: 8px;">${docI18n.techWarrantyText}</p>
           </td>
           <td style="padding: 6px 10px; vertical-align: top; width: 50%;">
-            <div style="font-weight: bold; color: #c8102e; margin-bottom: 2px;">• Validade da proposta:</div>
-            <p style="line-height: 1.4; margin-bottom: 8px;">O presente orçamento tem uma <strong>validade de 2 (dois) meses</strong> a contar da respetiva data de emissão.</p>
-            <div style="font-weight: bold; color: #c8102e; margin-bottom: 2px;">• Trâmites e Transporte:</div>
-            <p style="line-height: 1.4; margin-bottom: 8px;">Inclui trâmites de transferência para o cliente e transporte/entrega assegurado no porto ou localidade de destino acordado.</p>
+            <div style="font-weight: bold; color: #c8102e; margin-bottom: 2px;">${escapeHtml(docI18n.validityLabel)}</div>
+            <p style="line-height: 1.4; margin-bottom: 8px;">${docI18n.validityText}</p>
+            <div style="font-weight: bold; color: #c8102e; margin-bottom: 2px;">${escapeHtml(docI18n.transportLabel)}</div>
+            <p style="line-height: 1.4; margin-bottom: 8px;">${docI18n.transportText}</p>
           </td>
         </tr>
       </table>
 
       <div style="background-color: #fafafa; border: 1px solid #e5e7eb; padding: 8px 12px; font-size: 8.2pt; color: #4b5563; margin-top: 8px;">
-        <div style="font-weight: bold; color: #c8102e; margin-bottom: 3px;">Notas:</div>
+        <div style="font-weight: bold; color: #c8102e; margin-bottom: 3px;">${escapeHtml(docI18n.notesTitle)}</div>
         <ul style="margin: 0; padding-left: 15pt; line-height: 1.4;">
-          <li>Os orçamentos apresentados não incluem o I.V.A. correspondente.</li>
-          <li>Não inclui equipamento interior específico do cliente não definido expressamente nesta proposta.</li>
-          <li>Não inclui qualquer serviço de mobilidade pós-entrega, combustível ou portagens.</li>
-          <li>Produção e processos industriais auditados e certificados de acordo com a Norma <strong>ISO 9001:2015 Bureau Veritas</strong>.</li>
+          <li>${docI18n.noteVat}</li>
+          <li>${docI18n.noteEquipment}</li>
+          <li>${docI18n.noteMobility}</li>
+          <li>${docI18n.noteIso}</li>
         </ul>
       </div>
 
@@ -17191,17 +18321,17 @@ function printBudgetPDF() {
       <div style="display: flex; justify-content: space-between; margin-top: 24px; border-top: 1.5px solid #c8102e; padding-top: 12px;">
         <div style="font-size: 8.8pt; color: #475569;">
           <strong style="color: #c8102e; font-size: 11pt;">alegría activity, S.L.</strong><br>
-          Pessoa de contacto: José Centurio<br>
+          ${escapeHtml(docI18n.contactPersonLabel)}<br>
           Tel.: +351 934 146 505 | www.alegria-activity.com
         </div>
         <div style="text-align: center; border-top: 1px solid #0f172a; width: 220px; font-size: 8.2pt; color: #0f172a; padding-top: 4px; align-self: flex-end;">
-          Assinatura e Carimbo Oficial
+          ${escapeHtml(docI18n.signatureStamp)}
         </div>
       </div>
 
       <div class="footer-bar">
         <span>alegría-activity, S.L. &bull; www.alegria-activity.com</span>
-        <span>Página 12</span>
+        <span>${escapeHtml(docI18n.pageLabel)} 3</span>
         <span>${escapeHtml(data)}</span>
       </div>
 
@@ -17219,7 +18349,52 @@ function printBudgetPDF() {
 window.printBudgetPDF = printBudgetPDF;
 
 function exportBudgetToWord() {
-  const cliente = document.getElementById('budgetHeaderCliente')?.value.trim() || 'Cliente';
+  const userLang = (typeof getActiveUserLanguage === 'function') ? getActiveUserLanguage() : 'Português';
+  const docI18n = (typeof getBudgetDocumentI18n === 'function') ? getBudgetDocumentI18n(userLang) : {
+    htmlLang: 'pt',
+    docTitle: (ref, cli) => 'Proposta Técnica ' + ref + ' - ' + cli,
+    companySub: 'Design e Fabrico de Unidades Móveis Técnicas',
+    dateLabel: 'Data:',
+    clientLabel: 'Cliente:',
+    projectLabel: 'Projeto:',
+    docVersionSub: (s) => 'Design personalizado e produção «chave na mão» de uma ' + s + ', com base num veículo novo incluído na proposta. Versão 1.0.',
+    descWorksTitle: '1. Descrição dos Trabalhos:',
+    techSpecsTitle: '2. Especificações Técnicas e Orçamentação por Capítulo:',
+    thItem: 'Item / Componente',
+    thDesc: 'Descrição / Especificação Técnica',
+    thPrice: 'Preço (€)',
+    priceIncluded: 'Incluído',
+    priceOptional: 'Opcional',
+    econEvalTitle: '3. Avaliação Económica:',
+    grandTotalProposed: 'VALOR TOTAL GLOBAL PROPOSTO (S/ IVA):',
+    econDescBase: 'Veículo base novo e transformação integral «chave na mão» com instalação de mobiliário técnico, revestimentos termoacústicos, divisórias e todos os equipamentos descritos no presente caderno de encargos:',
+    econDescElectrical: 'Sistema proposto de alimentação elétrica através de baterias de lítio, inversor/carregador, alimentação a partir do alternador do veículo e painéis solares (incluídos):',
+    econDescTransfer: (dest) => 'Trâmites de transferência para o cliente, transporte e entrega assegurado em ' + dest + ':',
+    optionalHeader: 'Equipamentos Opcionais',
+    paymentTermsTitle: 'Condições de Pagamento:',
+    paymentTermsText: '50% com a adjudicação e encomenda; 40% com a chegada do veículo à fábrica; 10% com a receção e entrega final.',
+    termsConditionsTitle: '4. Prazo de Entrega, Garantia e Condições Comerciais:',
+    deliveryTimeLabel: '• Prazo de entrega:',
+    deliveryTimeText: (m) => 'Máximo: <strong>' + m + ' meses</strong> após a aprovação formal do orçamento e disponibilização do veículo base pelo fabricante.',
+    techWarrantyLabel: '• Garantia técnica:',
+    techWarrantyText: 'Garantia técnica dos equipamentos e dispositivos durante o período estipulado por cada fabricante (normalmente <strong>2 anos</strong>) e de <strong>um (1) ano</strong> para todos os trabalhos de transformação e instalação executados pela nossa parte.',
+    validityLabel: '• Validade da proposta:',
+    validityText: 'O presente orçamento tem uma <strong>validade de 2 (dois) meses</strong> a contar da respetiva data de emissão.',
+    transportLabel: '• Trâmites e Transporte:',
+    transportText: 'Inclui trâmites de transferência para o cliente e transporte/entrega assegurado no porto ou localidade de destino acordado.',
+    notesTitle: 'Notas:',
+    noteVat: 'Os orçamentos apresentados não incluem o I.V.A. correspondente.',
+    noteEquipment: 'Não inclui equipamento interior específico do cliente não definido expressamente nesta proposta.',
+    noteMobility: 'Não inclui qualquer serviço de mobilidade pós-entrega, combustível ou portagens.',
+    noteIso: 'Produção e processos industriais auditados e certificados de acordo com a Norma <strong>ISO 9001:2015 Bureau Veritas</strong>.',
+    contactPersonLabel: 'Pessoa de contacto: José Centurio',
+    signatureStamp: 'Assinatura e Carimbo Oficial',
+    pageLabel: 'Página',
+    commercialConditionsHeader: 'alegría-activity • Condições Comerciais e Certificação',
+    wordExportSuccess: 'Ficheiro Word (.doc) do Orçamento exportado com sucesso!'
+  };
+
+  const cliente = typeof getSelectedBudgetCliName === 'function' ? getSelectedBudgetCliName() : (document.getElementById('budgetHeaderCliente')?.value.trim() || 'Cliente');
   const numero = document.getElementById('budgetHeaderNum')?.value.trim() || 'ORC-2026';
   const referencia = document.getElementById('budgetHeaderRefCliente')?.value.trim() || 'Referência';
   const data = document.getElementById('budgetHeaderData')?.value || new Date().toISOString().split('T')[0];
@@ -17228,7 +18403,7 @@ function exportBudgetToWord() {
 
   const rawTopicsData = collectBudgetFormData();
   const imgs = collectBudgetImagesData();
-  const ctx = generateBudgetContextualTexts({ cliente, referencia, numero, topicsData: rawTopicsData, grandTotal });
+  const ctx = generateBudgetContextualTexts({ cliente, referencia, numero, topicsData: rawTopicsData, grandTotal, lang: userLang });
 
   // 1. Filtrar estritamente apenas os campos e capítulos preenchidos
   const topicsData = [];
@@ -17236,7 +18411,7 @@ function exportBudgetToWord() {
   const optionalItems = [];
 
   rawTopicsData.forEach(topic => {
-    const isOptionalTopic = (topic.capituloTitulo || '').toLowerCase().includes('opcion');
+    const isOptionalTopic = (topic.capituloTitulo || '').toLowerCase().includes('opcion') || (topic.capituloTitulo || '').toLowerCase().includes('option');
     const filledRows = [];
 
     (topic.linhas || []).forEach(line => {
@@ -17244,6 +18419,8 @@ function exportBudgetToWord() {
       if (descTrimmed !== '') {
         const isOptionalLine = isOptionalTopic ||
           (line.itemLabel || '').toLowerCase().includes('opcional') ||
+          (line.itemLabel || '').toLowerCase().includes('optional') ||
+          (line.itemLabel || '').toLowerCase().includes('optionnel') ||
           descTrimmed.toLowerCase().includes('(opcional)') ||
           descTrimmed.toLowerCase().includes('opcional:');
 
@@ -17275,391 +18452,207 @@ function exportBudgetToWord() {
     }
   });
 
-  const allFilledText = topicsData.map(t => t.capituloTitulo + ' ' + t.linhas.map(l => l.itemLabel + ' ' + l.desc).join(' ')).join(' ').toLowerCase();
-  const hasVeiculo = topicsData.some(t => (t.capituloTitulo || '').toLowerCase().includes('veículo base') || (t.capituloTitulo || '').toLowerCase().includes('veiculo'));
-  const hasAcesso = allFilledText.includes('porta') || allFilledText.includes('escada') || allFilledText.includes('acesso') || allFilledText.includes('toldo') || allFilledText.includes('janela');
-  const hasMobiliario = allFilledText.includes('mobili') || allFilledText.includes('bancada') || allFilledText.includes('armário') || allFilledText.includes('cadeira') || allFilledText.includes('balcão');
-  const hasIsolamento = allFilledText.includes('isolamento') || allFilledText.includes('pavimento') || allFilledText.includes('revestimento') || allFilledText.includes('alucobond') || allFilledText.includes('polyfloor');
-  const hasIluminacao = allFilledText.includes('ilumina') || allFilledText.includes('led');
-  const hasInformatica = allFilledText.includes('informát') || allFilledText.includes('rede') || allFilledText.includes('router') || allFilledText.includes('cablagem');
-  const hasStarlink = allFilledText.includes('starlink') || allFilledText.includes('satlink') || !!imgs.starlink1;
-  const hasSeguranca = allFilledText.includes('cofre') || allFilledText.includes('alarme') || allFilledText.includes('segurança');
-  const hasClimatizacao = allFilledText.includes('climat') || allFilledText.includes('ar condicionado') || allFilledText.includes('split') || allFilledText.includes('belaire');
-  const hasPes = allFilledText.includes('estabiliz') || allFilledText.includes('pata');
-  const hasEletrico = allFilledText.includes('elétr') || allFilledText.includes('bateria') || allFilledText.includes('painel') || allFilledText.includes('solar') || allFilledText.includes('inversor');
-  const hasGerador = allFilledText.includes('gerador') || allFilledText.includes('ayerbe') || !!imgs.gerador;
-
+  // 2. Construção dos Capítulos para Word
   let chaptersWordHtml = '';
   topicsData.forEach(topic => {
-    let rowsWordHtml = '';
+    let rowsHtml = '';
+    const localizedCapTitle = (typeof SIGEC_PHRASES_MAP !== 'undefined' && SIGEC_PHRASES_MAP[topic.capituloTitulo] && SIGEC_PHRASES_MAP[topic.capituloTitulo][userLang])
+      ? SIGEC_PHRASES_MAP[topic.capituloTitulo][userLang]
+      : topic.capituloTitulo;
+
     topic.linhas.forEach(line => {
-      let priceDisplay = '<span style="color: #000000; font-weight: bold;">Incluído</span>';
+      const localizedItemLabel = (typeof SIGEC_PHRASES_MAP !== 'undefined' && SIGEC_PHRASES_MAP[line.itemLabel] && SIGEC_PHRASES_MAP[line.itemLabel][userLang])
+        ? SIGEC_PHRASES_MAP[line.itemLabel][userLang]
+        : line.itemLabel;
+
+      const localizedDesc = (line.desc && typeof SIGEC_PHRASES_MAP !== 'undefined' && SIGEC_PHRASES_MAP[line.desc] && SIGEC_PHRASES_MAP[line.desc][userLang])
+        ? SIGEC_PHRASES_MAP[line.desc][userLang]
+        : (line.desc || '-');
+
+      let priceDisplay = '<span style="color: #000000; font-weight: bold;">' + escapeHtml(docI18n.priceIncluded) + '</span>';
       if (line.isOptional) {
         if (line.price > 0) {
-          priceDisplay = `<span style="color: #b45309; font-weight: bold;">+ ${line.price.toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>`;
+          priceDisplay = '<span style="color: #b45309; font-weight: bold;">+ ' + line.price.toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €</span>';
         } else {
-          priceDisplay = '<span style="color: #6b7280; font-style: italic;">Opcional</span>';
+          priceDisplay = '<span style="color: #64748b; font-style: italic;">' + escapeHtml(docI18n.priceOptional) + '</span>';
         }
       }
 
-      rowsWordHtml += `
+      rowsHtml += `
         <tr>
-          <td style="padding: 5pt 8pt; border: 1px solid #d1d5db; font-weight: bold; width: 28%; font-family: Arial, sans-serif; font-size: 9.5pt;">${escapeHtml(line.itemLabel)}</td>
-          <td style="padding: 5pt 8pt; border: 1px solid #d1d5db; color: #000000; font-family: Arial, sans-serif; font-size: 9.5pt;">${escapeHtml(line.desc || '-')}</td>
-          <td style="padding: 5pt 8pt; border: 1px solid #d1d5db; text-align: right; width: 18%; font-family: Arial, sans-serif; font-size: 9.5pt;">${priceDisplay}</td>
+          <td style="padding: 5pt 7pt; border-bottom: 1pt solid #e2e8f0; font-weight: bold; width: 28%; font-size: 9pt;">${escapeHtml(localizedItemLabel)}</td>
+          <td style="padding: 5pt 7pt; border-bottom: 1pt solid #e2e8f0; color: #334155; font-size: 9pt;">${escapeHtml(localizedDesc)}</td>
+          <td style="padding: 5pt 7pt; border-bottom: 1pt solid #e2e8f0; text-align: right; width: 16%; font-size: 9pt;">${priceDisplay}</td>
         </tr>
       `;
     });
 
     chaptersWordHtml += `
-      <h3 style="background-color: #c8102e; color: #ffffff; padding: 6pt 10pt; font-family: Arial, sans-serif; font-size: 11pt; margin-top: 14pt; margin-bottom: 0;">
-        ${escapeHtml(topic.capituloNum)}. ${escapeHtml(topic.capituloTitulo)}
-      </h3>
-      <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 9.5pt; margin-bottom: 6pt;">
-        <tbody>
-          ${rowsWordHtml}
-        </tbody>
-      </table>
-      <p style="margin: 10pt 0; font-family: Arial, sans-serif; font-size: 9.5pt; line-height: 1.4;">&nbsp;</p>
+      <div style="margin-bottom: 10pt;">
+        <div style="background: #c8102e; color: #ffffff; padding: 4pt 8pt; font-weight: bold; font-size: 10pt;">
+          ${escapeHtml(topic.capituloNum)}. ${escapeHtml(localizedCapTitle)}
+        </div>
+        <table style="width: 100%; border-collapse: collapse; border: 1pt solid #cbd5e1;">
+          <tbody>
+            ${rowsHtml}
+          </tbody>
+        </table>
+      </div>
     `;
   });
 
   const wordDocContent = `
-    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
     <head>
       <meta charset="utf-8">
-      <title>Proposta Técnica ${escapeHtml(referencia)} - ${escapeHtml(cliente)}</title>
-      <!--[if gte mso 9]>
-      <xml>
-        <w:WordDocument>
-          <w:View>Print</w:View>
-          <w:Zoom>100</w:Zoom>
-          <w:DoNotOptimizeForBrowser/>
-        </w:WordDocument>
-      </xml>
-      <![endif]-->
+      <title>${docI18n.docTitle(escapeHtml(referencia), escapeHtml(cliente))}</title>
       <style>
+        @page { size: A4 portrait; margin: 20mm 15mm 20mm 15mm; }
         body { font-family: Arial, Helvetica, sans-serif; font-size: 9.5pt; color: #000000; line-height: 1.45; }
-        h1 { font-size: 16pt; color: #c8102e; font-weight: bold; margin-bottom: 4pt; font-family: Arial, sans-serif; }
-        h2 { font-size: 12pt; color: #c8102e; border-bottom: 1.5pt solid #c8102e; padding-bottom: 4pt; margin-top: 16pt; margin-bottom: 8pt; font-weight: bold; font-family: Arial, sans-serif; }
-        h3 { font-size: 11pt; color: #0f172a; font-weight: bold; margin-top: 10pt; margin-bottom: 4pt; font-family: Arial, sans-serif; }
-        p { margin-bottom: 8pt; text-align: justify; font-family: Arial, sans-serif; font-size: 9.5pt; }
-        table { border-collapse: collapse; font-family: Arial, sans-serif; font-size: 9.5pt; }
+        h1 { font-size: 15pt; color: #c8102e; margin: 0 0 4pt 0; font-weight: bold; }
+        h2 { font-size: 11pt; color: #c8102e; border-bottom: 1.5pt solid #c8102e; padding-bottom: 2pt; margin-top: 14pt; margin-bottom: 6pt; font-weight: bold; }
+        h3 { font-size: 10pt; color: #0f172a; margin-top: 10pt; margin-bottom: 4pt; font-weight: bold; }
+        p { margin-top: 0; margin-bottom: 6pt; text-align: justify; }
+        ul { margin-top: 0; margin-bottom: 6pt; padding-left: 18pt; }
+        li { margin-bottom: 3pt; }
       </style>
     </head>
-    <body style="padding: 20pt;">
-      <!-- PÁGINA 1: CABEÇALHO & DESCRIÇÃO DOS TRABALHOS -->
-      <div style="border-bottom: 2.5pt solid #c8102e; padding-bottom: 10pt; margin-bottom: 14pt;">
+    <body>
+      <table style="width: 100%; border-bottom: 2.5pt solid #c8102e; padding-bottom: 6pt; margin-bottom: 12pt;">
+        <tr>
+          <td>
+            <div style="font-size: 18pt; font-weight: bold; color: #c8102e;">alegría-activity</div>
+            <div style="font-size: 8.5pt; color: #64748b;">${escapeHtml(docI18n.companySub)}</div>
+          </td>
+          <td style="text-align: right;">
+            <div style="font-size: 12pt; font-weight: bold; color: #c8102e;">${escapeHtml(numero)}</div>
+            <div style="font-size: 8.5pt; color: #64748b;">${escapeHtml(docI18n.dateLabel)} ${escapeHtml(data)}</div>
+          </td>
+        </tr>
+      </table>
+
+      <div style="background: #fffafa; border: 1.5pt solid #c8102e; padding: 10pt 14pt; margin-bottom: 12pt;">
+        <div style="color: #c8102e; font-weight: bold; font-size: 9pt;">${escapeHtml(docI18n.clientLabel)}</div>
+        <div style="font-size: 13pt; font-weight: bold; color: #0f172a; margin-top: 1pt;">${escapeHtml(cliente)}</div>
+        <div style="margin-top: 3pt;"><strong style="color: #c8102e;">${escapeHtml(docI18n.projectLabel)}</strong> ${escapeHtml(ctx.designacaoProjeto)}</div>
+        <div style="font-size: 8.5pt; color: #475569; margin-top: 2pt;">${docI18n.docVersionSub(escapeHtml(ctx.nomeSetor))}</div>
+      </div>
+
+      <h2>${escapeHtml(docI18n.descWorksTitle)}</h2>
+      <p>${ctx.descTrabalhosP1}</p>
+      <p>${ctx.descTrabalhosP2}</p>
+      <p>${ctx.descTrabalhosP3}</p>
+
+      <h2>${escapeHtml(docI18n.techSpecsTitle)}</h2>
+      <div style="background: #f8fafc; border-left: 3.5pt solid #c8102e; padding: 8pt 12pt; margin-bottom: 10pt; font-size: 9pt; color: #334155;">
+        <em>${escapeHtml(ctx.experienciaTexto)}</em>
+      </div>
+
+      ${chaptersWordHtml}
+
+      ${ctx.customChaptersDesc && ctx.customChaptersDesc.length > 0 ? `
+        <div style="margin-top: 12pt; background: #fafafa; border: 1pt solid #e2e8f0; padding: 10pt 14pt;">
+          ${ctx.customChaptersDesc.map(c => `
+            <div style="margin-bottom: 6pt;">
+              <p style="margin-bottom: 3pt;">${c.text}</p>
+              <ul style="margin: 0; padding-left: 18pt;">
+                ${c.itemsHtml}
+              </ul>
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}
+
+      <h2>${escapeHtml(docI18n.econEvalTitle)}</h2>
+      <div style="background-color: #f2f2f2; border: 2pt solid #000000; padding: 10pt 14pt; margin-bottom: 12pt;">
         <table style="width: 100%;">
           <tr>
-            <td style="vertical-align: top;">
-              <div style="font-size: 18pt; font-weight: bold; color: #c8102e;">alegría-activity</div>
-              <div style="font-size: 9pt; color: #6b7280;">Especialistas em Design e Transformação de Unidades Móveis</div>
+            <td style="font-weight: bold; font-size: 10.5pt; color: #000000;">
+              ${escapeHtml(docI18n.grandTotalProposed)}
             </td>
-            <td style="text-align: right; vertical-align: top;">
-              <div style="font-size: 13pt; font-weight: bold; color: #c8102e;">${escapeHtml(numero)}</div>
-              <div style="font-size: 9pt; color: #6b7280;">Data: ${escapeHtml(data)}</div>
+            <td style="text-align: right; font-weight: 900; font-size: 14pt; color: #000000;">
+              ${grandTotalFormatted}
             </td>
           </tr>
         </table>
       </div>
 
-      <table style="width: 100%; border: 1.5pt solid #c8102e; background-color: #fffafa; margin-bottom: 14pt; font-size: 10pt;">
-        <tr>
-          <td style="padding: 8pt 12pt; width: 60%; vertical-align: top;">
-            <div><strong style="color: #c8102e;">Cliente:</strong> <span style="font-weight: bold; color: #111827; font-size: 12pt;">${escapeHtml(cliente)}</span></div>
-            <div style="margin-top: 4pt;"><strong style="color: #c8102e;">Projeto:</strong> ${escapeHtml(ctx.designacaoProjeto)}</div>
-            <div style="font-size: 9pt; color: #4b5563; margin-top: 2pt;">Design personalizado e produção «chave na mão» de uma ${escapeHtml(ctx.nomeSetor)}, com base num veículo novo incluído na proposta. Versão 1.0.</div>
-          </td>
-          <td style="padding: 8pt 12pt; width: 40%; vertical-align: top; text-align: right;">
-            <div><strong style="color: #c8102e;">Referência:</strong> ${escapeHtml(referencia)}</div>
-            <div style="margin-top: 4pt;"><strong>Fabricante:</strong> <span style="color: #c8102e; font-weight: bold;">alegría-activity, S.L.</span></div>
-            ${imgs.logoCliente ? `<div style="margin-top: 6pt;"><img src="${imgs.logoCliente}" style="max-height: 50pt; max-width: 120pt;"></div>` : ''}
-          </td>
-        </tr>
-      </table>
-
-      <h2>Descrição dos trabalhos:</h2>
-      <p>${ctx.descTrabalhosP1}</p>
-      <p>${ctx.descTrabalhosP2}</p>
-      <p>${ctx.descTrabalhosP3}</p>
-
-      <!-- PÁGINA 2: EXPERIÊNCIA COMPROVADA -->
-      <div style="margin-top: 16pt;">
-        <h2>Experiência Comprovada:</h2>
-        <div style="background-color: #f8fafc; border-left: 3pt solid #64748b; padding: 6pt 10pt; margin: 10pt 0; font-size: 9.5pt; color: #475569;">
-          <em>${escapeHtml(ctx.experienciaTexto)}</em>
-        </div>
-
-        ${(imgs.ext1 || imgs.ext2) ? `
-          <table style="width: 100%; margin: 12pt 0;">
-            <tr>
-              ${imgs.ext1 ? `<td style="text-align: center; width: 50%;"><img src="${imgs.ext1}" style="max-height: 140pt; max-width: 95%;"><div style="font-size: 8pt; color: #64748b;">Unidade Móvel Similar Fabricada</div></td>` : ''}
-              ${imgs.ext2 ? `<td style="text-align: center; width: 50%;"><img src="${imgs.ext2}" style="max-height: 140pt; max-width: 95%;"><div style="font-size: 8pt; color: #64748b;">Personalização Exterior e Acesso</div></td>` : ''}
-            </tr>
-          </table>
-        ` : ''}
-      </div>
-
-      <!-- PÁGINA 3: VEÍCULO BASE (Se constar) -->
-      ${hasVeiculo ? `
-        <div style="margin-top: 16pt;">
-          <h2>Veículo base: ${escapeHtml(ctx.veiculoNome)}</h2>
-          <p>O fornecimento do veículo base, completamente novo, está incluído neste orçamento. Propõe-se que a marca e o modelo do veículo base sejam um <strong>${escapeHtml(ctx.veiculoChassiSpecs.marcaModelo)}</strong>, homologado para ${escapeHtml(ctx.destinoGeografico)}:</p>
-          <ul>
-            <li><strong>Configuração:</strong> ${escapeHtml(ctx.veiculoChassiSpecs.tipo)}</li>
-            <li><strong>Dimensões e Altura interior:</strong> ${escapeHtml(ctx.veiculoChassiSpecs.alturaInterior)}</li>
-            <li><strong>Motor e Emissões:</strong> ${escapeHtml(ctx.veiculoChassiSpecs.motor)}</li>
-            <li><strong>Cilindrada e Potência:</strong> ${escapeHtml(ctx.veiculoChassiSpecs.cilindrada)} | ${escapeHtml(ctx.veiculoChassiSpecs.potencia)}</li>
-            <li><strong>Suspensão e Travões:</strong> ${escapeHtml(ctx.veiculoChassiSpecs.suspensao)} | ${escapeHtml(ctx.veiculoChassiSpecs.travoes)}</li>
-            <li><strong>Equipamento de cabina:</strong> ${escapeHtml(ctx.veiculoChassiSpecs.cabina)}</li>
-            <li><strong>Peso Máximo Autorizado:</strong> ${escapeHtml(ctx.veiculoChassiSpecs.pma)}</li>
-          </ul>
-
-          ${imgs.veiculo ? `
-            <div style="text-align: center; margin: 12pt 0;">
-              <img src="${imgs.veiculo}" style="max-height: 130pt;">
-              <div style="font-size: 8pt; color: #64748b;">Veículo base proposto para transformação</div>
-            </div>
-          ` : ''}
-        </div>
-      ` : ''}
-
-      <!-- PÁGINA 4: ACESSIBILIDADE E EXTERIOR (Se constar) -->
-      ${hasAcesso ? `
-        <div style="margin-top: 16pt;">
-          <h2>Acessibilidade e acabamento exterior:</h2>
-          <p>O acesso dos clientes e operadores é assegurado através de porta lateral com escada de montagem manual (ou rampa desdobrável opcional), estore de segurança exterior, porta interior envidraçada de alumínio, iluminação exterior perimetral LED e toldo de proteção lateral.</p>
-          <p><strong>Personalização Exterior:</strong> Pintura integral e decoração em vinil polimérico fundido de alta qualidade com logótipos e identidade corporativa de <strong>${escapeHtml(cliente)}</strong>.</p>
-
-          ${imgs.acesso ? `
-            <div style="text-align: center; margin: 12pt 0;">
-              <img src="${imgs.acesso}" style="max-height: 140pt;">
-              <div style="font-size: 8pt; color: #64748b;">Acessibilidade exterior e toldo lateral</div>
-            </div>
-          ` : ''}
-        </div>
-      ` : ''}
-
-      <!-- PÁGINA 5: PLANTA TÉCNICA (Se houver imagem) -->
-      ${imgs.planta ? `
-        <div style="margin-top: 16pt;">
-          <h2>Planta Técnica de Distribuição Interior:</h2>
-          <div style="text-align: center; margin: 14pt 0;">
-            <img src="${imgs.planta}" style="max-height: 180pt; max-width: 100%;">
-            <div style="font-size: 8pt; color: #64748b;">Planta Técnica 2D / Esquema de Layout e Distribuição Interior Cotado</div>
-          </div>
-        </div>
-      ` : ''}
-
-      <!-- PÁGINA 6 & 7: ARQUITETURA INTERIOR & MOBILIÁRIO (Se constar) -->
-      ${hasMobiliario ? `
-        <div style="margin-top: 16pt;">
-          <h2>Arquitetura interior e Mobiliário Técnico:</h2>
-          <p>O habitáculo interior reproduz a imagem e funcionalidade de <strong>${escapeHtml(cliente)}</strong> através das seguintes áreas integradas:</p>
-          <ul>
-            ${ctx.areasInteriores.map(a => `<li>${a}</li>`).join('')}
-          </ul>
-          <p><strong>Mobiliário:</strong> Mobiliário técnico em contraplacado melaminizado Egger®, fecho de armários em persiana de alumínio, perfis em alumínio anodizado, ferragens amortecidas e cadeiras giratórias ergonómicas de alta higienização.</p>
-
-          ${imgs.mobiliario ? `
-            <div style="text-align: center; margin: 12pt 0;">
-              <img src="${imgs.mobiliario}" style="max-height: 130pt;">
-              <div style="font-size: 8pt; color: #64748b;">Mobiliário técnico interior e balcões</div>
-            </div>
-          ` : ''}
-        </div>
-      ` : ''}
-
-      <!-- PÁGINA 8: ISOLAMENTO, REDES E STARLINK (Se constar) -->
-      ${(hasIsolamento || hasIluminacao || hasInformatica || hasStarlink) ? `
-        <div style="margin-top: 16pt;">
-          <h2>Isolamento, Revestimentos e Redes Técnicas:</h2>
-          ${hasIsolamento ? `<p>Pavimento fenólico marítimo com revestimento vinílico Polyfloors®, revestimento de teto e paredes em compósito Alucobond® branco e isolamento termoacústico multicamada em lã de rocha/poliuretano.</p>` : ''}
-          ${hasIluminacao ? `<p>Iluminação integral LED de alta luminosidade com blocos de emergência.</p>` : ''}
-          ${hasInformatica ? `<p>Rede de dados estruturada com router 4G/5G de antena exterior no teto.</p>` : ''}
-          ${hasStarlink ? `
-            <p><strong>Antena STARLINK FLAT HP:</strong> Antena de alto rendimento fixa no teto para conectividade satélite de alta velocidade.</p>
-            ${imgs.starlink1 ? `
-              <div style="text-align: center; margin: 12pt 0;">
-                <img src="${imgs.starlink1}" style="max-height: 120pt;">
-                <div style="font-size: 8pt; color: #64748b;">Antena STARLINK Flat HP</div>
-              </div>
-            ` : ''}
-          ` : ''}
-        </div>
-      ` : ''}
-
-      <!-- PÁGINA 9: DISPOSITIVOS E CLIMATIZAÇÃO (Se constar) -->
-      ${(hasSeguranca || hasClimatizacao || hasPes) ? `
-        <div style="margin-top: 16pt;">
-          <h2>Dispositivos e Climatização:</h2>
-          ${hasSeguranca ? `<p>Cofre forte de segurança de 175 kg (600x600x500mm) e pré-instalação de alarme.</p>` : ''}
-          ${hasClimatizacao ? `<p>Climatização de alto rendimento: ${escapeHtml(ctx.climatizacaoTexto)}</p>` : ''}
-          ${hasPes ? `<p>Patas estabilizadoras com comando automático sem fios.</p>` : ''}
-        </div>
-      ` : ''}
-
-      <!-- PÁGINA 10 & 11: ELETRICIDADE E AUTONOMIA (Se constar) -->
-      ${hasEletrico ? `
-        <div style="margin-top: 16pt;">
-          <h2>Alimentação Elétrica e Autonomia Energética:</h2>
-          <p>Ligação exterior a 220V DEFA com cabo de 10m e quadro elétrico modular com disjuntores independentes. Sistema autónomo completo composto por baterias de Lítio LiFePO4 12V 150Ah (5500W), recarregadas em marcha pelo alternador (relé Nagares 100A) e por painéis solares semirrígidos fotovoltaicos no teto.</p>
-
-          ${(imgs.bateria || imgs.painel) ? `
-            <table style="width: 100%; margin: 12pt 0;">
-              <tr>
-                ${imgs.bateria ? `<td style="text-align: center; width: 50%;"><img src="${imgs.bateria}" style="max-height: 100pt;"><div style="font-size: 8pt; color: #64748b;">Bateria de Lítio LiFePO4</div></td>` : ''}
-                ${imgs.painel ? `<td style="text-align: center; width: 50%;"><img src="${imgs.painel}" style="max-height: 100pt;"><div style="font-size: 8pt; color: #64748b;">Painéis Solares Fotovoltaicos</div></td>` : ''}
-              </tr>
-            </table>
-          ` : ''}
-        </div>
-      ` : ''}
-
-      <!-- PÁGINA 12: GERADOR AYERBE (Se constar) -->
-      ${hasGerador ? `
-        <div style="margin-top: 16pt;">
-          <h2>Gerador Insonorizado Ayerbe Invert E 7500W (Opcional):</h2>
-          <p>Gerador autónomo a gasolina com arranque elétrico, motor Kiotsu 4 tempos 459 cm³, alternador Inverter e carcaça com dupla insonorização.</p>
-          ${imgs.gerador ? `
-            <div style="text-align: center; margin: 10pt 0;">
-              <img src="${imgs.gerador}" style="max-height: 120pt;">
-            </div>
-          ` : ''}
-        </div>
-      ` : ''}
-
-      ${(ctx.customChaptersDesc && ctx.customChaptersDesc.length > 0) ? `
-        <div style="margin-top: 16pt;">
-          <h2>Especificações Técnicas de Capítulos Adicionais e Especializados:</h2>
-          ${ctx.customChaptersDesc.map(c => `
-            <h3>${escapeHtml(c.num)}. ${escapeHtml(c.titulo)}</h3>
-            <p>${c.text}</p>
-            <ul>
-              ${c.itemsHtml}
-            </ul>
-          `).join('')}
-        </div>
-      ` : ''}
-
-      <!-- PÁGINA 13: ESPECIFICAÇÕES POR CAPÍTULO & AVALIAÇÃO ECONÓMICA -->
-      <h2>Especificações Técnicas e Orçamentação por Capítulo:</h2>
-      <p style="font-size: 9.5pt; color: #4b5563; margin-bottom: 10pt;">Abaixo detalham-se os produtos, componentes e materiais selecionados para a proposta:</p>
-      ${chaptersWordHtml}
-
-      <h2>Avaliação económica:</h2>
-      <table style="width: 100%; border-collapse: collapse; margin-top: 10pt; font-size: 9.5pt; border: 1.5pt solid #000000;">
-        <thead>
-          <tr style="background-color: #d9d9d9; color: #000000; border-bottom: 1.5pt solid #000000;">
-            <th style="padding: 7pt 10pt; text-align: center; font-weight: bold; width: 80%; border-right: 1.5pt solid #000000;">Descrição geral</th>
-            <th style="padding: 7pt 10pt; text-align: center; font-weight: bold; width: 20%;">VALOR</th>
-          </tr>
-        </thead>
+      <table style="width: 100%; border-collapse: collapse; border: 1.5pt solid #000000; font-size: 9pt; margin-bottom: 14pt;">
         <tbody>
           <tr style="border-bottom: 1.5pt solid #000000;">
             <td style="padding: 8pt 10pt; border-right: 1.5pt solid #000000; text-align: justify; line-height: 1.35;">
-              Fornecimento do veículo base descrito, marca e modelo <em><strong>${escapeHtml(ctx.veiculoChassiSpecs.marcaModelo)}</strong></em>, e posterior transformação por medida e adaptação «chave na mão» em ${escapeHtml(ctx.nomeSetor.toLowerCase())}, conforme descrito neste orçamento, incluindo todos os dispositivos indicados neste documento
+              ${escapeHtml(docI18n.econDescBase)}
             </td>
-            <td style="padding: 8pt 10pt; text-align: center; vertical-align: middle; font-weight: 500; font-size: 10pt;">
-              ${(baseTotal > 0 ? baseTotal.toLocaleString('pt-PT', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + ' €' : grandTotalFormatted)}
-            </td>
-          </tr>
-          <tr style="border-bottom: 1.5pt solid #000000;">
-            <td style="padding: 8pt 10pt; border-right: 1.5pt solid #000000; text-align: justify; line-height: 1.35;">
-              Decoração/aplicação de vinil exterior segundo o design fornecido pelo cliente, incluindo a aplicação integral de vinil nas duas laterais e em partes da traseira e dianteira, sobre a pintura de fundo na cor própria do veículo.
-            </td>
-            <td style="padding: 8pt 10pt; text-align: center; vertical-align: middle; color: #000000;">
-              incluído
+            <td style="padding: 8pt 10pt; text-align: center; vertical-align: middle; color: #000000; font-weight: bold; width: 18%;">
+              ${escapeHtml(docI18n.priceIncluded)}
             </td>
           </tr>
           <tr style="border-bottom: 1.5pt solid #000000;">
             <td style="padding: 8pt 10pt; border-right: 1.5pt solid #000000; text-align: justify; line-height: 1.35;">
-              Sistema proposto de alimentação elétrica através de duas (2) baterias de lítio, inversor/carregador, alimentação a partir do alternador do veículo e dos painéis solares (incluídos):
-              <ul style="margin: 5pt 0 2pt 18pt; padding: 0; line-height: 1.4;">
-                <li>Inversor/Carregador Automático 12V-3500VA</li>
-                <li>Bateria de lítio (2 Unidades) 5500W</li>
-                <li>Monitor de Controlo</li>
-                <li>Regulador de Carga do Alternador</li>
-                <li>Placas solares semi-rígidas 12V 120W (4 Unidades) + Regulador Carga</li>
-              </ul>
+              ${escapeHtml(docI18n.econDescElectrical)}
             </td>
-            <td style="padding: 8pt 10pt; text-align: center; vertical-align: middle; color: #000000;">
-              incluído
+            <td style="padding: 8pt 10pt; text-align: center; vertical-align: middle; color: #000000; font-weight: bold;">
+              ${escapeHtml(docI18n.priceIncluded)}
             </td>
           </tr>
           <tr style="border-bottom: 1.5pt solid #000000;">
             <td style="padding: 8pt 10pt; border-right: 1.5pt solid #000000; text-align: justify; line-height: 1.35;">
-              Trâmites de transferência para o cliente, transporte para ${escapeHtml(ctx.destinoGeografico.includes('Cabo Verde') ? 'Cabo Verde (entrega no porto de chegada em Cabo Verde)' : ctx.destinoGeografico)}
+              ${docI18n.econDescTransfer(escapeHtml(ctx.destinoGeografico))}
             </td>
-            <td style="padding: 8pt 10pt; text-align: center; vertical-align: middle; color: #000000;">
-              incluído
+            <td style="padding: 8pt 10pt; text-align: center; vertical-align: middle; color: #000000; font-weight: bold;">
+              ${escapeHtml(docI18n.priceIncluded)}
             </td>
           </tr>
           ${optionalItems.length > 0 ? `
             <tr style="background-color: #d9d9d9; border-bottom: 1.5pt solid #000000;">
               <td colspan="2" style="padding: 5pt 10pt; text-align: center; font-weight: bold; font-size: 10pt;">
-                Opcionais
+                ${escapeHtml(docI18n.optionalHeader)}
               </td>
             </tr>
-            ${optionalItems.map(opt => `
-              <tr style="border-bottom: 1.5pt solid #000000;">
-                <td style="padding: 7pt 10pt; border-right: 1.5pt solid #000000; text-align: left;">
-                  ${escapeHtml(opt.desc || opt.label)}
-                </td>
-                <td style="padding: 7pt 10pt; text-align: center; vertical-align: middle; font-weight: 500;">
-                  ${opt.price > 0 ? opt.price.toLocaleString('pt-PT', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + ' €' : 'Opcional'}
-                </td>
-              </tr>
-            `).join('')}
-          ` : `
-            <tr style="background-color: #d9d9d9; border-bottom: 1.5pt solid #000000;">
-              <td colspan="2" style="padding: 5pt 10pt; text-align: center; font-weight: bold; font-size: 10pt;">
-                Opcionais
-              </td>
-            </tr>
-            <tr style="border-bottom: 1.5pt solid #000000;">
-              <td style="padding: 7pt 10pt; border-right: 1.5pt solid #000000; text-align: left;">Patas estabilizadoras do veículo marca MA-VE ou similar</td>
-              <td style="padding: 7pt 10pt; text-align: center; vertical-align: middle;">5.800 €</td>
-            </tr>
-            <tr style="border-bottom: 1.5pt solid #000000;">
-              <td style="padding: 7pt 10pt; border-right: 1.5pt solid #000000; text-align: left;">Fornecimento e instalação de antena Starlink Flat HP de alto desempenho</td>
-              <td style="padding: 7pt 10pt; text-align: center; vertical-align: middle;">5.950 €</td>
-            </tr>
-            <tr style="border-bottom: 1.5pt solid #000000;">
-              <td style="padding: 7pt 10pt; border-right: 1.5pt solid #000000; text-align: left;">Gerador <em>Ayerbe</em> 8000 Invert E</td>
-              <td style="padding: 7pt 10pt; text-align: center; vertical-align: middle;">3.100 €</td>
-            </tr>
-          `}
+            ${optionalItems.map(opt => {
+              const optLabel = (typeof SIGEC_PHRASES_MAP !== 'undefined' && SIGEC_PHRASES_MAP[opt.desc || opt.label] && SIGEC_PHRASES_MAP[opt.desc || opt.label][userLang])
+                ? SIGEC_PHRASES_MAP[opt.desc || opt.label][userLang]
+                : (opt.desc || opt.label);
+              return `
+                <tr style="border-bottom: 1.5pt solid #000000;">
+                  <td style="padding: 7pt 10pt; border-right: 1.5pt solid #000000; text-align: left;">
+                    ${escapeHtml(optLabel)}
+                  </td>
+                  <td style="padding: 7pt 10pt; text-align: center; vertical-align: middle; font-weight: 500;">
+                    ${opt.price > 0 ? opt.price.toLocaleString('pt-PT', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + ' €' : escapeHtml(docI18n.priceOptional)}
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          ` : ''}
         </tbody>
       </table>
 
-      <!-- PÁGINA 14: CONDIÇÕES COMERCIAIS & CERTIFICAÇÃO -->
-      <h2>Prazo de Entrega, Garantia e Condições Comerciais:</h2>
+      <h2>${escapeHtml(docI18n.termsConditionsTitle)}</h2>
       <table style="width: 100%; border-collapse: collapse; margin-top: 6pt; font-size: 9.5pt;">
         <tr>
           <td style="padding: 6pt 10pt; vertical-align: top; width: 50%;">
-            <div style="font-weight: bold; color: #c8102e; margin-bottom: 2pt;">• Prazo de entrega:</div>
-            <p style="line-height: 1.4; margin-bottom: 8pt;">Máximo: <strong>${escapeHtml(ctx.prazoMeses)} meses</strong> após a aprovação formal do orçamento e disponibilização do veículo base pelo fabricante.</p>
-            <div style="font-weight: bold; color: #c8102e; margin-bottom: 2pt;">• Garantia técnica:</div>
-            <p style="line-height: 1.4; margin-bottom: 8pt;">Garantia dos equipamentos e dispositivos durante o tempo estipulado por cada fabricante (normalmente <strong>2 anos</strong>) e garantia de <strong>um (1) ano</strong> sobre todos os trabalhos de transformação técnica executados por nossa parte.</p>
+            <div style="font-weight: bold; color: #c8102e; margin-bottom: 2pt;">${escapeHtml(docI18n.deliveryTimeLabel)}</div>
+            <p style="line-height: 1.4; margin-bottom: 8pt;">${docI18n.deliveryTimeText(escapeHtml(ctx.prazoMeses))}</p>
+            <div style="font-weight: bold; color: #c8102e; margin-bottom: 2pt;">${escapeHtml(docI18n.techWarrantyLabel)}</div>
+            <p style="line-height: 1.4; margin-bottom: 8pt;">${docI18n.techWarrantyText}</p>
           </td>
           <td style="padding: 6pt 10pt; vertical-align: top; width: 50%;">
-            <div style="font-weight: bold; color: #c8102e; margin-bottom: 2pt;">• Validade da proposta:</div>
-            <p style="line-height: 1.4; margin-bottom: 8pt;">O presente orçamento tem uma <strong>validade de 2 (dois) meses</strong> a contar da respetiva data de emissão.</p>
-            <div style="font-weight: bold; color: #c8102e; margin-bottom: 2pt;">• Trâmites e Transporte:</div>
-            <p style="line-height: 1.4; margin-bottom: 8pt;">Inclui trâmites de transferência para o cliente e transporte/entrega assegurado no porto ou localidade de destino acordado.</p>
+            <div style="font-weight: bold; color: #c8102e; margin-bottom: 2pt;">${escapeHtml(docI18n.validityLabel)}</div>
+            <p style="line-height: 1.4; margin-bottom: 8pt;">${docI18n.validityText}</p>
+            <div style="font-weight: bold; color: #c8102e; margin-bottom: 2pt;">${escapeHtml(docI18n.transportLabel)}</div>
+            <p style="line-height: 1.4; margin-bottom: 8pt;">${docI18n.transportText}</p>
           </td>
         </tr>
       </table>
 
       <div style="background-color: #fafafa; border: 1px solid #e5e7eb; padding: 8pt 12pt; font-size: 9pt; color: #4b5563; margin-top: 10pt;">
-        <div style="font-weight: bold; color: #c8102e; margin-bottom: 3pt;">Notas:</div>
+        <div style="font-weight: bold; color: #c8102e; margin-bottom: 3pt;">${escapeHtml(docI18n.notesTitle)}</div>
         <ul style="margin: 0; padding-left: 15pt; line-height: 1.4;">
-          <li>Os valores apresentados não incluem o IVA correspondente.</li>
-          <li>Não inclui equipamento interior específico do cliente não definido nesta proposta.</li>
-          <li>Não inclui qualquer serviço de mobilidade ou seguros pós-entrega.</li>
-          <li>Produção e processos industriais auditados e certificados de acordo com a Norma <strong>ISO 9001:2015 Bureau Veritas</strong>.</li>
+          <li>${docI18n.noteVat}</li>
+          <li>${docI18n.noteEquipment}</li>
+          <li>${docI18n.noteMobility}</li>
+          <li>${docI18n.noteIso}</li>
         </ul>
       </div>
 
@@ -17674,12 +18667,12 @@ function exportBudgetToWord() {
           <tr>
             <td style="font-size: 9pt; color: #4b5563;">
               <strong style="color: #c8102e; font-size: 10.5pt;">alegría activity, S.L.</strong><br>
-              Pessoa de contacto: José Centurio<br>
+              ${escapeHtml(docI18n.contactPersonLabel)}<br>
               Tel.: +351 934 146 505 | www.alegria-activity.com
             </td>
             <td style="text-align: right; vertical-align: bottom;">
               <div style="border-top: 1pt solid #0f172a; width: 200pt; display: inline-block; text-align: center; font-size: 8.5pt; padding-top: 3pt;">
-                Assinatura e Carimbo Oficial
+                ${escapeHtml(docI18n.signatureStamp)}
               </div>
             </td>
           </tr>
@@ -17697,13 +18690,14 @@ function exportBudgetToWord() {
   document.body.appendChild(a);
   a.click();
   a.remove();
-  showToast('Ficheiro Word (.doc) do Orçamento exportado com sucesso!', 'success');
+  showToast(docI18n.wordExportSuccess || 'Ficheiro Word (.doc) do Orçamento exportado com sucesso!', 'success');
 }
 window.exportBudgetToWord = exportBudgetToWord;
 
 // Inicialização automática dos orçamentos e do Gestor de Duplicados ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
   if (typeof populateBudgetClientsDatalist === 'function') populateBudgetClientsDatalist();
+  if (typeof populateBudgetClientsSelect === 'function') populateBudgetClientsSelect();
   if (typeof populateBudgetModelPresetDatalist === 'function') populateBudgetModelPresetDatalist();
   if (typeof renderSavedBudgetsList === 'function') renderSavedBudgetsList();
   if (typeof recalculateBudgetTotal === 'function') recalculateBudgetTotal();
@@ -17864,51 +18858,34 @@ function findDuplicateClients() {
       const c1 = clients[i];
       const c2 = clients[j];
 
+      if (!c1 || !c2 || !c1.nome || !c2.nome) continue;
       if (isDuplicatePairIgnored('clients', c1.id, c2.id)) continue;
 
-      const reasons = [];
-      let score = 0;
+      const norm1 = normalizeText(c1.nome);
+      const norm2 = normalizeText(c2.nome);
+      if (!norm1 || !norm2) continue;
 
-      // 1. NIF Exato
-      const nif1 = normalizeNifStr(c1.nif);
-      const nif2 = normalizeNifStr(c2.nif);
-      if (nif1 && nif2 && nif1 === nif2) {
-        reasons.push(`NIF idêntico: <strong>${escapeHtml(c1.nif)}</strong>`);
-        score += 100;
-      }
-
-      // 2. Email Exato
-      const email1 = normalizeDuplicateStr(c1.email);
-      const email2 = normalizeDuplicateStr(c2.email);
-      if (email1 && email2 && email1 === email2) {
-        reasons.push(`Email idêntico: <strong>${escapeHtml(c1.email)}</strong>`);
-        score += 85;
-      }
-
-      // 3. Telefone Exato
-      const tel1 = normalizePhoneStr(c1.telefone || c1.telemovel);
-      const tel2 = normalizePhoneStr(c2.telefone || c2.telemovel);
-      if (tel1 && tel2 && tel1.length >= 6 && tel1 === tel2) {
-        reasons.push(`Telefone idêntico: <strong>${escapeHtml(c1.telefone || c1.telemovel)}</strong>`);
-        score += 70;
-      }
-
-      // 4. Similaridade de Nome / Empresa
-      const simNome = calculateStringSimilarity(c1.nome || c1.empresa, c2.nome || c2.empresa);
-      if (simNome >= 0.82) {
-        const pct = Math.round(simNome * 100);
-        reasons.push(`Nome altamente similar (${pct}%): <em>"${escapeHtml(c1.nome || c1.empresa)}"</em> vs <em>"${escapeHtml(c2.nome || c2.empresa)}"</em>`);
-        score += Math.round(simNome * 80);
-      }
-
-      if (score >= 65) {
+      // Comparação estritamente pelo Nome do Cliente (Regra 8)
+      if (norm1 === norm2) {
         duplicates.push({
           type: 'clients',
           item1: c1,
           item2: c2,
-          score: Math.min(100, score),
-          reasons: reasons
+          score: 100,
+          reasons: [`Nome idêntico: <strong>"${escapeHtml(c1.nome)}"</strong>`]
         });
+      } else {
+        const simNome = calculateStringSimilarity(norm1, norm2);
+        if (simNome >= 0.88) {
+          const pct = Math.round(simNome * 100);
+          duplicates.push({
+            type: 'clients',
+            item1: c1,
+            item2: c2,
+            score: pct,
+            reasons: [`Nome altamente similar (${pct}%): <em>"${escapeHtml(c1.nome)}"</em> vs <em>"${escapeHtml(c2.nome)}"</em>`]
+          });
+        }
       }
     }
   }
@@ -17917,7 +18894,6 @@ function findDuplicateClients() {
   return duplicates;
 }
 
-// Deteção de Contactos Duplicados
 function findDuplicateContacts() {
   const contacts = db.contactos || [];
   const duplicates = [];
@@ -17927,50 +18903,58 @@ function findDuplicateContacts() {
       const c1 = contacts[i];
       const c2 = contacts[j];
 
+      if (!c1 || !c2) continue;
       if (isDuplicatePairIgnored('contacts', c1.id, c2.id)) continue;
 
-      const reasons = [];
-      let score = 0;
+      const fullName1 = `${c1.nome || ''} ${c1.apelido || ''}`.trim();
+      const fullName2 = `${c2.nome || ''} ${c2.apelido || ''}`.trim();
+      const normName1 = normalizeText(fullName1);
+      const normName2 = normalizeText(fullName2);
 
-      // 1. Email Exato
-      const email1 = normalizeDuplicateStr(c1.email);
-      const email2 = normalizeDuplicateStr(c2.email);
-      if (email1 && email2 && email1 === email2) {
-        reasons.push(`Email idêntico: <strong>${escapeHtml(c1.email)}</strong>`);
-        score += 90;
+      const email1 = (c1.email || '').toLowerCase().trim();
+      const email2 = (c2.email || '').toLowerCase().trim();
+
+      const hasSameEmail = email1 && email2 && email1 === email2 && email1.includes('@');
+      const hasSameName = normName1 && normName2 && normName1 === normName2 && normName1.length >= 2;
+
+      let sim = 0;
+      if (normName1 && normName2 && normName1.length >= 3 && normName2.length >= 3) {
+        sim = calculateStringSimilarity(normName1, normName2);
       }
 
-      // 2. Telemóvel/Telefone Exato
-      const tel1 = normalizePhoneStr(c1.telemovel || c1.telefone);
-      const tel2 = normalizePhoneStr(c2.telemovel || c2.telefone);
-      if (tel1 && tel2 && tel1.length >= 6 && tel1 === tel2) {
-        reasons.push(`Telemóvel idêntico: <strong>${escapeHtml(c1.telemovel || c1.telefone)}</strong>`);
-        score += 80;
-      }
-
-      // 3. Nome Similar no Mesmo Cliente / Empresa
-      const simNome = calculateStringSimilarity(c1.nome, c2.nome);
-      const sameClient = (c1.clienteId && c2.clienteId && String(c1.clienteId) === String(c2.clienteId)) ||
-                         (c1.empresa && c2.empresa && normalizeDuplicateStr(c1.empresa) === normalizeDuplicateStr(c2.empresa));
-
-      if (simNome >= 0.85) {
-        const pct = Math.round(simNome * 100);
-        if (sameClient) {
-          reasons.push(`Mesmo cliente e nome similar (${pct}%): <em>"${escapeHtml(c1.nome)}"</em>`);
-          score += 85;
-        } else {
-          reasons.push(`Nome altamente similar (${pct}%): <em>"${escapeHtml(c1.nome)}"</em> vs <em>"${escapeHtml(c2.nome)}"</em>`);
-          score += Math.round(simNome * 60);
-        }
-      }
-
-      if (score >= 65) {
+      // Comparação estritamente por Nome, Apelido e Correio Eletrónico (Regra 8)
+      if (hasSameName && hasSameEmail) {
         duplicates.push({
           type: 'contacts',
           item1: c1,
           item2: c2,
-          score: Math.min(100, score),
-          reasons: reasons
+          score: 100,
+          reasons: [`Nome, apelido e email idênticos: <strong>"${escapeHtml(fullName1)}"</strong> (${escapeHtml(c1.email)})`]
+        });
+      } else if (hasSameName) {
+        duplicates.push({
+          type: 'contacts',
+          item1: c1,
+          item2: c2,
+          score: 100,
+          reasons: [`Nome e apelido idênticos: <strong>"${escapeHtml(fullName1)}"</strong>`]
+        });
+      } else if (hasSameEmail) {
+        duplicates.push({
+          type: 'contacts',
+          item1: c1,
+          item2: c2,
+          score: 95,
+          reasons: [`Correio eletrónico idêntico: <strong>"${escapeHtml(c1.email)}"</strong>`]
+        });
+      } else if (sim >= 0.88) {
+        const pct = Math.round(sim * 100);
+        duplicates.push({
+          type: 'contacts',
+          item1: c1,
+          item2: c2,
+          score: pct,
+          reasons: [`Nome e apelido altamente similares (${pct}%): <em>"${escapeHtml(fullName1)}"</em> vs <em>"${escapeHtml(fullName2)}"</em>`]
         });
       }
     }
@@ -17979,8 +18963,6 @@ function findDuplicateContacts() {
   duplicates.sort((a, b) => b.score - a.score);
   return duplicates;
 }
-
-// Deteção de Projetos Duplicados
 function findDuplicateProjects() {
   const projects = db.projetos || [];
   const duplicates = [];
@@ -18149,14 +19131,16 @@ function renderDuplicatesList(type) {
         <div class="text-[10px] text-gray-400 mt-0.5">ID: ${escapeHtml(String(item2.id))}</div>
       `;
     } else if (type === 'contacts') {
+      const contactFullName1 = `${item1.nome || ''} ${item1.apelido || ''}`.trim() || 'Sem Nome';
+      const contactFullName2 = `${item2.nome || ''} ${item2.apelido || ''}`.trim() || 'Sem Nome';
       item1Display = `
-        <div class="font-bold text-gray-900">${escapeHtml(item1.nome || 'Sem Nome')}</div>
+        <div class="font-bold text-gray-900">${escapeHtml(contactFullName1)}</div>
         <div class="text-xs text-gray-500">Empresa: ${escapeHtml(item1.empresa || item1.clienteNome || 'N/A')}</div>
         <div class="text-xs text-gray-500">Email: ${escapeHtml(item1.email || 'N/A')} | Tel: ${escapeHtml(item1.telemovel || item1.telefone || 'N/A')}</div>
         <div class="text-[10px] text-gray-400 mt-0.5">ID: ${escapeHtml(String(item1.id))}</div>
       `;
       item2Display = `
-        <div class="font-bold text-gray-900">${escapeHtml(item2.nome || 'Sem Nome')}</div>
+        <div class="font-bold text-gray-900">${escapeHtml(contactFullName2)}</div>
         <div class="text-xs text-gray-500">Empresa: ${escapeHtml(item2.empresa || item2.clienteNome || 'N/A')}</div>
         <div class="text-xs text-gray-500">Email: ${escapeHtml(item2.email || 'N/A')} | Tel: ${escapeHtml(item2.telemovel || item2.telefone || 'N/A')}</div>
         <div class="text-[10px] text-gray-400 mt-0.5">ID: ${escapeHtml(String(item2.id))}</div>
@@ -18303,7 +19287,8 @@ function renderMergeComparisonView() {
     ];
   } else if (type === 'contacts') {
     fields = [
-      { key: 'nome', label: 'Nome Completo' },
+      { key: 'nome', label: 'Nome' },
+      { key: 'apelido', label: 'Apelido' },
       { key: 'cargo', label: 'Cargo / Função' },
       { key: 'departamento', label: 'Departamento' },
       { key: 'empresa', label: 'Empresa / Entidade' },
@@ -18647,3 +19632,506 @@ function exportDuplicatesReport() {
   showToast('Relatório de duplicados exportado em formato CSV!', 'success');
 }
 window.exportDuplicatesReport = exportDuplicatesReport;
+
+
+// ==========================================
+// MÓDULO DE CONSULTAS & SUPERVISÃO DE CHEFIA
+// ==========================================
+
+function populateConsultasUserSelect(selectedUserId = null) {
+  ensureUsersInitialized();
+  const selectEl = document.getElementById('consultasUserSelect');
+  if (!selectEl) return;
+
+  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001';
+  const targetSelectId = selectedUserId || selectEl.value || activeUserId;
+
+  const users = Array.isArray(db.usuarios) ? db.usuarios : [];
+  
+  selectEl.innerHTML = users.map(u => {
+    const isSelected = (u.id === targetSelectId);
+    return `<option value="${u.id}" ${isSelected ? 'selected' : ''}>${escapeHtml(u.nome)}</option>`;
+  }).join('');
+
+  if (!selectEl.value && users.length > 0) {
+    selectEl.value = users[0].id;
+  }
+
+  renderConsultasUserData(selectEl.value);
+}
+window.populateConsultasUserSelect = populateConsultasUserSelect;
+
+function renderConsultasUserData(userId) {
+  ensureUsersInitialized();
+  if (!userId) {
+    const selectEl = document.getElementById('consultasUserSelect');
+    userId = selectEl ? selectEl.value : null;
+  }
+  if (!userId && db.usuarios && db.usuarios.length > 0) {
+    userId = db.usuarios[0].id;
+  }
+
+  const activeLang = typeof getCurrentSystemLanguage === 'function' ? getCurrentSystemLanguage() : (typeof currentSystemLanguage !== 'undefined' ? currentSystemLanguage : 'Português');
+  const targetUser = (db.usuarios || []).find(u => u.id === userId) || { id: userId, nome: 'Utilizador', role: 'user' };
+
+  // Atualizar Banner de Resumo (no idioma do utilizador que faz a consulta)
+  const nameEl = document.getElementById('consultasSelectedUserName');
+  const roleEl = document.getElementById('consultasSelectedUserRoleBadge');
+  if (nameEl) nameEl.textContent = targetUser.nome;
+  if (roleEl) {
+    if (targetUser.role === 'admin') {
+      roleEl.textContent = typeof translateSystemTerm === 'function' ? translateSystemTerm('Administrador do Sistema', activeLang) : 'Administrador do Sistema';
+      roleEl.style.background = '#dbeafe';
+      roleEl.style.color = '#1e40af';
+    } else if (targetUser.chefia) {
+      roleEl.textContent = typeof translateSystemTerm === 'function' ? translateSystemTerm('Perfil de Chefia', activeLang) : 'Perfil de Chefia';
+      roleEl.style.background = '#dcfce7';
+      roleEl.style.color = '#166534';
+    } else {
+      roleEl.textContent = typeof translateSystemTerm === 'function' ? translateSystemTerm('Utilizador Comercial', activeLang) : 'Utilizador Comercial';
+      roleEl.style.background = '#f1f5f9';
+      roleEl.style.color = '#475569';
+    }
+  }
+
+  // Filtrar Registos pertencentes ao utilizador selecionado
+  let userClients = (db.clientes || []).filter(c => {
+    if (!c) return false;
+    const owner = c.comercialAtribuidoId || c.userId || 'usr-admin-001';
+    return owner === userId;
+  });
+
+  if (typeof consultasClientsSortMode !== 'undefined' && consultasClientsSortMode !== 'default') {
+    userClients.sort((a, b) => {
+      const isA = typeof isClientContacted === 'function' ? isClientContacted(a.id) : false;
+      const isB = typeof isClientContacted === 'function' ? isClientContacted(b.id) : false;
+      if (consultasClientsSortMode === 'contacted_first') {
+        if (isA && !isB) return -1;
+        if (!isA && isB) return 1;
+      } else if (consultasClientsSortMode === 'uncontacted_first') {
+        if (!isA && isB) return -1;
+        if (isA && !isB) return 1;
+      }
+      return (a.nome || '').localeCompare(b.nome || '');
+    });
+  }
+
+  let userContacts = (db.contactos || []).filter(con => {
+    if (!con) return false;
+    const client = (db.clientes || []).find(c => c.id === con.clienteId);
+    const owner = con.comercialAtribuidoId || con.userId || (client ? (client.comercialAtribuidoId || client.userId || 'usr-admin-001') : 'usr-admin-001');
+    return owner === userId;
+  });
+
+  if (typeof consultasContactsSortMode !== 'undefined' && consultasContactsSortMode !== 'default') {
+    userContacts.sort((a, b) => {
+      const isA = typeof isContactContacted === 'function' ? isContactContacted(a.id) : false;
+      const isB = typeof isContactContacted === 'function' ? isContactContacted(b.id) : false;
+      if (consultasContactsSortMode === 'contacted_first') {
+        if (isA && !isB) return -1;
+        if (!isA && isB) return 1;
+      } else if (consultasContactsSortMode === 'uncontacted_first') {
+        if (!isA && isB) return -1;
+        if (isA && !isB) return 1;
+      }
+      const nameA = `${a.nome || ''} ${a.apelido || ''}`.trim();
+      const nameB = `${b.nome || ''} ${b.apelido || ''}`.trim();
+      return nameA.localeCompare(nameB);
+    });
+  }
+
+  let userProjects = (db.projetos || []).filter(p => {
+    if (!p) return false;
+    const client = (db.clientes || []).find(c => c.id === p.clienteId);
+    const owner = p.comercialAtribuidoId || p.userId || (client ? (client.comercialAtribuidoId || client.userId || 'usr-admin-001') : 'usr-admin-001');
+    return owner === userId;
+  });
+
+  if (typeof consultasProjectsSortMode !== 'undefined' && consultasProjectsSortMode !== 'default') {
+    userProjects.sort((a, b) => {
+      const stA = typeof translateSystemTerm === 'function' ? translateSystemTerm(a.estado || 'Em Aberto', activeLang) : (a.estado || 'Em Aberto');
+      const stB = typeof translateSystemTerm === 'function' ? translateSystemTerm(b.estado || 'Em Aberto', activeLang) : (b.estado || 'Em Aberto');
+      if (consultasProjectsSortMode === 'status_asc') {
+        return stA.localeCompare(stB, undefined, { sensitivity: 'base' });
+      } else {
+        return stB.localeCompare(stA, undefined, { sensitivity: 'base' });
+      }
+    });
+  }
+
+  // Atualizar contadores
+  const sumCliEl = document.getElementById('consultasSummaryClientsCount');
+  const sumConEl = document.getElementById('consultasSummaryContactsCount');
+  const sumProjEl = document.getElementById('consultasSummaryProjectsCount');
+  const listCliEl = document.getElementById('consultasClientsListCount');
+  const listConEl = document.getElementById('consultasContactsListCount');
+  const listProjEl = document.getElementById('consultasProjectsListCount');
+
+  if (sumCliEl) sumCliEl.textContent = userClients.length;
+  if (sumConEl) sumConEl.textContent = userContacts.length;
+  if (sumProjEl) sumProjEl.textContent = userProjects.length;
+  if (listCliEl) listCliEl.textContent = userClients.length;
+  if (listConEl) listConEl.textContent = userContacts.length;
+  if (listProjEl) listProjEl.textContent = userProjects.length;
+
+  // 1. RENDER QUADRO 1: CLIENTES
+  const clientsTbody = document.getElementById('consultasClientsTableBody');
+  if (clientsTbody) {
+    if (userClients.length === 0) {
+      clientsTbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #64748b; padding: 2rem;"><i class="fa-solid fa-building-circle-xmark" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>Nenhum cliente associado a este utilizador.</td></tr>`;
+    } else {
+      clientsTbody.innerHTML = userClients.map(c => {
+        const rawTipo = c.tipoCliente || 'Privado';
+        const transTipo = typeof translateSystemTerm === 'function' ? translateSystemTerm(rawTipo, activeLang) : rawTipo;
+        const rawPais = c.pais || 'Portugal';
+        const transPais = typeof translateSystemTerm === 'function' ? translateSystemTerm(rawPais, activeLang) : rawPais;
+        const badgeClass = (rawTipo === 'Estatal' || rawTipo === 'Público' || rawTipo === 'Governamental') ? 'badge-blue' : (rawTipo === 'Fundação' || rawTipo === 'Fundacion' || rawTipo === 'Foundation') ? 'badge-purple' : 'badge-green';
+        const contactInfo = [c.telemovel, c.telefone].filter(Boolean).join(' / ') || '-';
+        const isContacted = typeof isClientContacted === 'function' ? isClientContacted(c.id) : false;
+        const transSim = typeof translateSystemTerm === 'function' ? translateSystemTerm('Sim', activeLang) : 'Sim';
+        const transNao = typeof translateSystemTerm === 'function' ? translateSystemTerm('Não', activeLang) : 'Não';
+        return `
+          <tr onclick="openClientFromConsultas('${c.id}')" style="cursor: pointer; transition: background 0.15s ease;" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='transparent'" title="Clique para abrir e consultar ficha do cliente">
+            <td><span class="badge ${badgeClass}" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;">${escapeHtml(transTipo)}</span></td>
+            <td style="padding: 0.5rem; text-align: center;" onclick="event.stopPropagation();">
+              <label style="display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem; margin: 0; cursor: pointer;" title="${isContacted ? transSim : transNao}">
+                <input type="checkbox" ${isContacted ? 'checked' : ''} disabled style="width: 16px; height: 16px; accent-color: #16a34a; cursor: default;">
+                <span style="font-size: 0.78rem; font-weight: 700; color: ${isContacted ? '#16a34a' : '#94a3b8'};">${isContacted ? transSim : transNao}</span>
+              </label>
+            </td>
+            <td><strong style="color: #1e3a8a; font-size: 0.9rem;"><i class="fa-solid fa-folder-open" style="font-size: 0.8rem; margin-right: 4px; color: #2563eb;"></i>${escapeHtml(c.nome || '-')}</strong>${c.ministerio ? `<br><span style="font-size: 0.75rem; color: #64748b;">${escapeHtml(c.ministerio)}</span>` : ''}</td>
+            <td style="color: #334155; font-size: 0.85rem;">${escapeHtml(c.contribuinte || '-')}</td>
+            <td style="color: #334155; font-size: 0.85rem;">${escapeHtml(c.localidade || '-')}</td>
+            <td style="color: #334155; font-size: 0.85rem;"><span style="display: inline-flex; align-items: center; gap: 0.25rem;"><i class="fa-solid fa-earth-europe" style="color: #0284c7; font-size: 0.75rem;"></i> ${escapeHtml(transPais)}</span></td>
+            <td style="color: #334155; font-size: 0.85rem;">${escapeHtml(contactInfo)}</td>
+            <td style="color: #2563eb; font-size: 0.85rem;">${c.email ? `<a href="mailto:${escapeHtml(c.email)}" onclick="event.stopPropagation()" style="color: #2563eb; text-decoration: none;"><i class="fa-solid fa-envelope" style="font-size: 0.75rem; margin-right: 3px;"></i>${escapeHtml(c.email)}</a>` : '-'}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+  }
+
+  // 2. RENDER QUADRO 2: CONTACTOS
+  const contactsTbody = document.getElementById('consultasContactsTableBody');
+  if (contactsTbody) {
+    if (userContacts.length === 0) {
+      contactsTbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #64748b; padding: 2rem;"><i class="fa-solid fa-user-slash" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>Nenhum contacto associado a este utilizador.</td></tr>`;
+    } else {
+      const transSim = typeof translateSystemTerm === 'function' ? translateSystemTerm('Sim', activeLang) : 'Sim';
+      const transNao = typeof translateSystemTerm === 'function' ? translateSystemTerm('Não', activeLang) : 'Não';
+
+      contactsTbody.innerHTML = userContacts.map(con => {
+        const client = (db.clientes || []).find(c => c.id === con.clienteId);
+        const contactName = `${con.nome || ''} ${con.apelido || ''}`.trim() || '-';
+        const contactPhone = [con.telemovel, con.telefone].filter(Boolean).join(' / ') || '-';
+        const isContacted = typeof isContactContacted === 'function' ? isContactContacted(con.id) : false;
+        const rawCargo = con.cargo || '-';
+        const transCargo = typeof translateSystemTerm === 'function' ? translateSystemTerm(rawCargo, activeLang) : rawCargo;
+        return `
+          <tr onclick="openContactFromConsultas('${con.id}')" style="cursor: pointer; transition: background 0.15s ease;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" title="Clique para abrir e consultar ficha do contacto">
+            <td style="padding: 0.5rem; text-align: center;" onclick="event.stopPropagation();">
+              <label style="display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem; margin: 0; cursor: pointer;" title="${isContacted ? transSim : transNao}">
+                <input type="checkbox" ${isContacted ? 'checked' : ''} disabled style="width: 16px; height: 16px; accent-color: #16a34a; cursor: default;">
+                <span style="font-size: 0.78rem; font-weight: 700; color: ${isContacted ? '#16a34a' : '#94a3b8'};">${isContacted ? transSim : transNao}</span>
+              </label>
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <div style="width: 28px; height: 28px; border-radius: 50%; background: #d1fae5; color: #065f46; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; flex-shrink: 0;">
+                  <i class="fa-solid fa-user"></i>
+                </div>
+                <strong style="color: #065f46; font-size: 0.9rem;">${escapeHtml(contactName)}</strong>
+              </div>
+            </td>
+            <td><strong style="color: #1e3a8a; font-size: 0.88rem;">${escapeHtml(client ? client.nome : '-')}</strong></td>
+            <td style="color: #334155; font-size: 0.85rem;">${escapeHtml(transCargo)}</td>
+            <td style="color: #334155; font-size: 0.85rem;">${escapeHtml(contactPhone)}</td>
+            <td style="color: #2563eb; font-size: 0.85rem;">${con.email ? `<a href="mailto:${escapeHtml(con.email)}" onclick="event.stopPropagation()" style="color: #2563eb; text-decoration: none;"><i class="fa-solid fa-envelope" style="font-size: 0.75rem; margin-right: 3px;"></i>${escapeHtml(con.email)}</a>` : '-'}</td>
+            <td style="color: #64748b; font-size: 0.82rem; max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(con.notas || '-')}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+  }
+
+  // 3. RENDER QUADRO 3: PROJETOS
+  const projectsTbody = document.getElementById('consultasProjectsTableBody');
+  if (projectsTbody) {
+    if (userProjects.length === 0) {
+      projectsTbody.innerHTML = `
+        <tr>
+          <td colspan="8" style="text-align: center; color: #64748b; padding: 2rem;">
+            <i class="fa-solid fa-diagram-project" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>
+            Nenhum projeto associado a este utilizador.<br>
+            <button type="button" class="btn btn-sm" onclick="createBudgetForSelectedConsultasUser()" style="margin-top: 0.75rem; padding: 0.4rem 0.9rem; font-size: 0.82rem; background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); color: #ffffff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 2px 6px rgba(37,99,235,0.25);">
+              <i class="fa-solid fa-file-circle-plus"></i> <span data-i18n="btn_criar_orcamento">Criar Orçamento para este Utilizador</span>
+            </button>
+          </td>
+        </tr>
+      `;
+    } else {
+      projectsTbody.innerHTML = userProjects.map(p => {
+        const client = (db.clientes || []).find(c => c.id === p.clienteId);
+        const vehicle = [p.viatura, p.matricula].filter(Boolean).join(' - ') || '-';
+        const dtInicio = p.dataInicio ? new Date(p.dataInicio).toLocaleDateString('pt-PT') : '-';
+        const dtFim = p.dataFim ? new Date(p.dataFim).toLocaleDateString('pt-PT') : '-';
+        
+        const rawTipo = p.tipo || '-';
+        const transTipo = typeof translateSystemTerm === 'function' ? translateSystemTerm(rawTipo, activeLang) : rawTipo;
+        const rawEstado = p.estado || 'Em Aberto';
+        const transEstado = typeof translateSystemTerm === 'function' ? translateSystemTerm(rawEstado, activeLang) : rawEstado;
+
+        let statusBadge = 'badge-blue';
+        const normEstado = (rawEstado || '').toLowerCase();
+        if (normEstado.includes('concl') || normEstado.includes('entreg') || normEstado.includes('termin') || normEstado.includes('zakoń')) statusBadge = 'badge-green';
+        else if (normEstado.includes('produ') || normEstado.includes('curso') || normEstado.includes('progress') || normEstado.includes('toku')) statusBadge = 'badge-purple';
+        else if (normEstado.includes('cancel') || normEstado.includes('susp') || normEstado.includes('annul') || normEstado.includes('anul')) statusBadge = 'badge-danger';
+        else if (normEstado.includes('orça') || normEstado.includes('presup') || normEstado.includes('devis') || normEstado.includes('wycen')) statusBadge = 'badge-amber';
+
+        return `
+          <tr onclick="openProjectFromConsultas('${p.id}')" style="cursor: pointer; transition: background 0.15s ease;" onmouseover="this.style.background='#f0f9ff'" onmouseout="this.style.background='transparent'" title="Clique para abrir e consultar ficha do projeto">
+            <td><strong style="color: #0284c7; font-size: 0.9rem;"><i class="fa-solid fa-diagram-project" style="font-size: 0.8rem; margin-right: 4px;"></i>${escapeHtml(p.nome || '-')}</strong></td>
+            <td><strong style="color: #1e3a8a; font-size: 0.88rem;">${escapeHtml(client ? client.nome : '-')}</strong></td>
+            <td style="color: #334155; font-size: 0.85rem;">${escapeHtml(transTipo)}</td>
+            <td><span class="badge ${statusBadge}" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;">${escapeHtml(transEstado)}</span></td>
+            <td style="color: #334155; font-size: 0.85rem;">${escapeHtml(dtInicio)}</td>
+            <td style="color: #334155; font-size: 0.85rem;">${escapeHtml(dtFim)}</td>
+            <td style="color: #334155; font-size: 0.85rem;"><span style="display: inline-flex; align-items: center; gap: 0.25rem;"><i class="fa-solid fa-truck-moving" style="color: #0284c7; font-size: 0.75rem;"></i> ${escapeHtml(vehicle)}</span></td>
+            <td style="padding: 0.5rem; text-align: center; white-space: nowrap;" onclick="event.stopPropagation();">
+              <button type="button" class="btn btn-sm" onclick="createBudgetForConsultasProject('${p.id}', '${userId}')" title="Criar Orçamento para este Projeto (atribuído ao utilizador consultado)" style="padding: 0.35rem 0.75rem; font-size: 0.78rem; background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); color: #ffffff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem; box-shadow: 0 1px 4px rgba(37,99,235,0.3);">
+                <i class="fa-solid fa-file-circle-plus"></i>
+                <span data-i18n="btn_criar_orcamento">Criar Orçamento</span>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+  }
+}
+window.renderConsultasUserData = renderConsultasUserData;
+
+
+function openClientFromConsultas(clientId) {
+  if (!clientId) return;
+  loadClientIntoForm(clientId);
+  openClientModal();
+}
+window.openClientFromConsultas = openClientFromConsultas;
+
+function openContactFromConsultas(contactId) {
+  if (!contactId) return;
+  openContactModalForEdit(contactId);
+}
+window.openContactFromConsultas = openContactFromConsultas;
+
+function openProjectFromConsultas(projectId) {
+  if (!projectId) return;
+  loadProjectIntoForm(projectId, true, true);
+  openProjectModal();
+}
+window.openProjectFromConsultas = openProjectFromConsultas;
+
+
+// ==========================================
+// ESTADOS DE ORDENAÇÃO POR CONTACTADO / NÃO CONTACTADO
+// ==========================================
+let consultasClientsSortMode = 'default'; // 'default' | 'contacted_first' | 'uncontacted_first'
+let consultasContactsSortMode = 'default'; // 'default' | 'contacted_first' | 'uncontacted_first'
+let dashClientsSortMode = 'default'; // 'default' | 'contacted_first' | 'uncontacted_first'
+let dashContactsSortMode = 'default'; // 'default' | 'contacted_first' | 'uncontacted_first'
+
+function toggleConsultasClientsContactSort() {
+  if (consultasClientsSortMode === 'default') consultasClientsSortMode = 'contacted_first';
+  else if (consultasClientsSortMode === 'contacted_first') consultasClientsSortMode = 'uncontacted_first';
+  else consultasClientsSortMode = 'default';
+
+  const labelEl = document.getElementById('consultasClientSortLabel');
+  if (labelEl) {
+    if (consultasClientsSortMode === 'contacted_first') labelEl.textContent = 'Sim ➔ Não';
+    else if (consultasClientsSortMode === 'uncontacted_first') labelEl.textContent = 'Não ➔ Sim';
+    else labelEl.textContent = 'Contactados';
+  }
+
+  const selectEl = document.getElementById('consultasUserSelect');
+  renderConsultasUserData(selectEl ? selectEl.value : null);
+}
+window.toggleConsultasClientsContactSort = toggleConsultasClientsContactSort;
+
+function toggleConsultasContactsContactSort() {
+  if (consultasContactsSortMode === 'default') consultasContactsSortMode = 'contacted_first';
+  else if (consultasContactsSortMode === 'contacted_first') consultasContactsSortMode = 'uncontacted_first';
+  else consultasContactsSortMode = 'default';
+
+  const labelEl = document.getElementById('consultasContactSortLabel');
+  if (labelEl) {
+    if (consultasContactsSortMode === 'contacted_first') labelEl.textContent = 'Sim ➔ Não';
+    else if (consultasContactsSortMode === 'uncontacted_first') labelEl.textContent = 'Não ➔ Sim';
+    else labelEl.textContent = 'Contactados';
+  }
+
+  const selectEl = document.getElementById('consultasUserSelect');
+  renderConsultasUserData(selectEl ? selectEl.value : null);
+}
+window.toggleConsultasContactsContactSort = toggleConsultasContactsContactSort;
+
+function toggleDashClientContactSort() {
+  if (dashClientsSortMode === 'default') dashClientsSortMode = 'contacted_first';
+  else if (dashClientsSortMode === 'contacted_first') dashClientsSortMode = 'uncontacted_first';
+  else dashClientsSortMode = 'default';
+
+  const labelEl = document.getElementById('dashClientSortLabel');
+  if (labelEl) {
+    if (dashClientsSortMode === 'contacted_first') labelEl.textContent = 'Sim ➔ Não';
+    else if (dashClientsSortMode === 'uncontacted_first') labelEl.textContent = 'Não ➔ Sim';
+    else labelEl.textContent = 'Contactados';
+  }
+
+  renderHomeDashboard();
+}
+window.toggleDashClientContactSort = toggleDashClientContactSort;
+
+function toggleDashContactSort() {
+  if (dashContactsSortMode === 'default') dashContactsSortMode = 'contacted_first';
+  else if (dashContactsSortMode === 'contacted_first') dashContactsSortMode = 'uncontacted_first';
+  else dashContactsSortMode = 'default';
+
+  const labelEl = document.getElementById('dashContactSortLabel');
+  if (labelEl) {
+    if (dashContactsSortMode === 'contacted_first') labelEl.textContent = 'Sim ➔ Não';
+    else if (dashContactsSortMode === 'uncontacted_first') labelEl.textContent = 'Não ➔ Sim';
+    else labelEl.textContent = 'Contactados';
+  }
+
+  renderHomeDashboard();
+}
+window.toggleDashContactSort = toggleDashContactSort;
+
+
+function createBudgetForConsultasProject(projectId, userId) {
+  const project = (db.projetos || []).find(p => String(p.id) === String(projectId));
+  if (!project) {
+    if (typeof showToast === 'function') showToast('Projeto não encontrado!', 'danger');
+    return;
+  }
+  const client = (db.clientes || []).find(c => String(c.id) === String(project.clienteId));
+  const targetUserId = userId || project.comercialAtribuidoId || project.userId || (client ? (client.comercialAtribuidoId || client.userId) : null) || 'usr-admin-001';
+  const targetUser = (db.usuarios || []).find(u => u.id === targetUserId);
+  const userName = targetUser ? targetUser.nome : 'Comercial';
+
+  switchTab('tab-orcamentos');
+  clearBudgetForm();
+
+  window._pendingNewBudgetProject = {
+    projectId: project.id,
+    projectName: project.nome,
+    projectType: project.tipo,
+    clientId: client ? client.id : null,
+    clientName: client ? client.nome : 'Cliente',
+    userId: targetUserId,
+    comercialAtribuidoId: targetUserId
+  };
+  window._currentEditingBudgetId = null;
+
+  if (client) {
+    populateBudgetClientsSelect(client.id);
+    const cliInput = document.getElementById('budgetHeaderCliente');
+    if (cliInput) cliInput.value = client.nome;
+    const hiddenId = document.getElementById('budgetHeaderClienteId');
+    if (hiddenId) hiddenId.value = client.id;
+  }
+
+  // Preencher referência do cliente com o nome do projeto
+  const refEl = document.getElementById('budgetHeaderRefCliente');
+  if (refEl) {
+    const cleanRef = client ? (client.nome || '').split(/[s([-]/)[0] : 'Cliente';
+    refEl.value = `${cleanRef} - ${project.nome || 'Projeto'} (${new Date().getFullYear()})`.trim();
+  }
+
+  // Preencher modelo base caso coincida com algum preset ou tipo do projeto
+  const modelInp = document.getElementById('budgetModelPresetInput');
+  if (modelInp && project.tipo) {
+    modelInp.value = project.tipo;
+  }
+
+  if (typeof showToast === 'function') {
+    showToast(`A criar novo orçamento para o projeto "${project.nome}" atribuído ao utilizador ${userName}.`, 'success');
+  }
+}
+window.createBudgetForConsultasProject = createBudgetForConsultasProject;
+
+
+function createBudgetForSelectedConsultasUser() {
+  const selectEl = document.getElementById('consultasUserSelect');
+  const userId = selectEl ? selectEl.value : (sessionStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001');
+  const targetUser = (db.usuarios || []).find(u => u.id === userId);
+  const userName = targetUser ? targetUser.nome : 'Comercial';
+
+  const userClients = (db.clientes || []).filter(c => {
+    const owner = c.comercialAtribuidoId || c.userId || 'usr-admin-001';
+    return owner === userId;
+  });
+  const firstClient = userClients.length > 0 ? userClients[0] : null;
+
+  switchTab('tab-orcamentos');
+  clearBudgetForm();
+
+  window._pendingNewBudgetProject = {
+    userId: userId,
+    comercialAtribuidoId: userId,
+    clientId: firstClient ? firstClient.id : null,
+    clientName: firstClient ? firstClient.nome : 'Cliente'
+  };
+  window._currentEditingBudgetId = null;
+
+  if (firstClient) {
+    populateBudgetClientsSelect(firstClient.id);
+    const cliInput = document.getElementById('budgetHeaderCliente');
+    if (cliInput) cliInput.value = firstClient.nome;
+    const hiddenId = document.getElementById('budgetHeaderClienteId');
+    if (hiddenId) hiddenId.value = firstClient.id;
+    syncBudgetRefFromClient(firstClient.nome);
+  }
+
+  if (typeof showToast === 'function') {
+    showToast(`A criar novo orçamento atribuído ao utilizador ${userName}.`, 'success');
+  }
+}
+window.createBudgetForSelectedConsultasUser = createBudgetForSelectedConsultasUser;
+
+
+function newBudgetForCurrentProject() {
+  if (!currentProjectId) {
+    if (typeof showToast === 'function') showToast('Nenhum projeto selecionado.', 'warning');
+    return;
+  }
+  const project = (db.projetos || []).find(p => String(p.id) === String(currentProjectId));
+  if (!project) return;
+  const client = (db.clientes || []).find(c => String(c.id) === String(project.clienteId));
+  const targetUserId = project.comercialAtribuidoId || project.userId || (client ? (client.comercialAtribuidoId || client.userId) : null) || sessionStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001';
+
+  closeProjectModal();
+  createBudgetForConsultasProject(project.id, targetUserId);
+}
+window.newBudgetForCurrentProject = newBudgetForCurrentProject;
+
+
+let consultasProjectsSortMode = 'default'; // 'default' | 'status_asc' | 'status_desc'
+
+function toggleConsultasProjectsStatusSort() {
+  if (consultasProjectsSortMode === 'default') consultasProjectsSortMode = 'status_asc';
+  else if (consultasProjectsSortMode === 'status_asc') consultasProjectsSortMode = 'status_desc';
+  else consultasProjectsSortMode = 'default';
+
+  const activeLang = typeof getCurrentSystemLanguage === 'function' ? getCurrentSystemLanguage() : (typeof currentSystemLanguage !== 'undefined' ? currentSystemLanguage : 'Português');
+  const labelEl = document.getElementById('consultasProjectSortLabel');
+  if (labelEl) {
+    if (consultasProjectsSortMode === 'status_asc') labelEl.textContent = 'A ➔ Z';
+    else if (consultasProjectsSortMode === 'status_desc') labelEl.textContent = 'Z ➔ A';
+    else labelEl.textContent = typeof translateSystemTerm === 'function' ? translateSystemTerm('Estado do Projeto', activeLang) : 'Estado do Projeto';
+  }
+
+  const selectEl = document.getElementById('consultasUserSelect');
+  renderConsultasUserData(selectEl ? selectEl.value : null);
+}
+window.toggleConsultasProjectsStatusSort = toggleConsultasProjectsStatusSort;

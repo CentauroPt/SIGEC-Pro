@@ -1026,6 +1026,12 @@ textarea.form-control {
   align-items: center;
   justify-content: space-between;
   flex-shrink: 0;
+  cursor: grab;
+  user-select: none;
+}
+
+.modal-header:active {
+  cursor: grabbing;
 }
 
 .modal-title {

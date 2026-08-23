@@ -316,11 +316,11 @@
 
             <label for="loginPinInput"
               style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.4rem; text-align: left;">
-              <i class="fa-solid fa-key" style="color: #0284c7; margin-right: 4px;"></i> Palavra-passe / PIN de Acesso:
+              <i class="fa-solid fa-key" style="color: #0284c7; margin-right: 4px;"></i> <span data-i18n="login_password_label">Palavra-Passe:</span>
             </label>
 
             <div style="position: relative; width: 100%;">
-              <input type="password" id="loginPinInput" placeholder="Insira o PIN / Palavra-passe"
+              <input type="password" id="loginPinInput" placeholder="Insira a sua Palavra-Passe"
                 onkeydown="if(event.key==='Enter'||event.keyCode===13){event.preventDefault();verifyLoginPin();}"
                 style="width: 100%; padding: 0.85rem 3rem 0.85rem 1rem; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 1.05rem; letter-spacing: 2px; text-align: center; font-weight: 700; color: #0f172a; outline: none; box-sizing: border-box;">
               <button type="button" onclick="togglePinVisibility('loginPinInput', 'pinToggleIcon')"
@@ -332,7 +332,7 @@
 
             <div id="loginErrorMessage"
               style="display: none; color: #dc2626; font-size: 0.82rem; margin-top: 0.5rem; font-weight: 600; text-align: center;">
-              <i class="fa-solid fa-circle-exclamation"></i> PIN incorreto. Tente novamente.
+              <i class="fa-solid fa-circle-exclamation"></i> Palavra-passe incorreta. Tente novamente.
             </div>
 
             <button type="submit" class="btn"
@@ -351,34 +351,56 @@
 
         <div id="registerFormMode" style="display: none; text-align: left;">
           <h3 style="font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 0.85rem; text-align: center;">
-            <i class="fa-solid fa-id-card" style="color: #0284c7;"></i> Registo de Novo Utilizador
+            <i class="fa-solid fa-id-card" style="color: #0284c7;"></i> <span data-i18n="reg_title">Registo de Novo Utilizador</span>
           </h3>
 
           <form onsubmit="handleUserSelfRegistration(event)"
             style="display: flex; flex-direction: column; gap: 0.65rem;">
-            <div>
-              <label style="font-size: 0.8rem; font-weight: 600; color: #475569;">Nome Completo:</label>
-              <input type="text" id="regUserName" class="form-control" placeholder="Ex: Maria Santos"
-                style="padding: 0.6rem; border-radius: 6px; font-size: 0.9rem;" required>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;">
+              <div>
+                <label data-i18n="reg_first_name" style="font-size: 0.8rem; font-weight: 600; color: #475569;">Nome:</label>
+                <input type="text" id="regUserFirstName" class="form-control" placeholder="Ex: Maria"
+                  style="padding: 0.6rem; border-radius: 6px; font-size: 0.9rem;" required>
+              </div>
+              <div>
+                <label data-i18n="reg_last_name" style="font-size: 0.8rem; font-weight: 600; color: #475569;">Apelido:</label>
+                <input type="text" id="regUserLastName" class="form-control" placeholder="Ex: Santos"
+                  style="padding: 0.6rem; border-radius: 6px; font-size: 0.9rem;" required>
+              </div>
             </div>
 
             <div>
-              <label style="font-size: 0.8rem; font-weight: 600; color: #475569;">Email de Acesso:</label>
+              <label data-i18n="reg_email" style="font-size: 0.8rem; font-weight: 600; color: #475569;">Email de Acesso:</label>
               <input type="email" id="regUserEmail" class="form-control" placeholder="maria@empresa.com"
                 style="padding: 0.6rem; border-radius: 6px; font-size: 0.9rem;" required>
             </div>
 
-            <div>
-              <label style="font-size: 0.8rem; font-weight: 600; color: #475569;">Cargo / Função:</label>
-              <input type="text" id="regUserCargo" class="form-control" placeholder="Ex: Gestora de Projetos"
-                style="padding: 0.6rem; border-radius: 6px; font-size: 0.9rem;" required>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;">
+              <div>
+                <label data-i18n="reg_cargo" style="font-size: 0.8rem; font-weight: 600; color: #475569;">Cargo / Função:</label>
+                <input type="text" id="regUserCargo" class="form-control" placeholder="Ex: Gestora de Projetos"
+                  style="padding: 0.6rem; border-radius: 6px; font-size: 0.9rem;" required>
+              </div>
+              <div>
+                <label data-i18n="reg_language" style="font-size: 0.8rem; font-weight: 600; color: #475569;">Idioma:</label>
+                <select id="regUserIdioma" class="form-control" onchange="if(typeof applyUserLanguage==='function') applyUserLanguage(this.value);"
+                  style="padding: 0.6rem; border-radius: 6px; font-size: 0.9rem; background: #ffffff;" required>
+                  <option value="Português" selected>Português</option>
+                  <option value="Español">Español</option>
+                  <option value="Français">Français</option>
+                  <option value="Polski">Polski</option>
+                  <option value="English">English</option>
+                </select>
+              </div>
             </div>
 
             <div>
-              <label style="font-size: 0.8rem; font-weight: 600; color: #475569;">Palavra-passe / PIN Secreto:</label>
+              <label data-i18n="reg_password" style="font-size: 0.8rem; font-weight: 600; color: #475569;">Palavra-Passe:</label>
               <div style="position: relative; width: 100%;">
-                <input type="password" id="regUserPin" class="form-control" placeholder="Mínimo 3 caracteres"
-                  style="padding: 0.6rem 2.5rem 0.6rem 0.6rem; border-radius: 6px; font-size: 0.9rem; width: 100%; box-sizing: border-box;"
+                <input type="password" id="regUserPin" class="form-control" placeholder="8 a 12 caracteres (Maiúscula, minúscula, nº e símbolo)"
+                  maxlength="12" minlength="8"
+                  style="padding: 0.6rem 2.5rem 0.6rem 0.6rem; border-radius: 6px; font-size: 0.85rem; width: 100%; box-sizing: border-box;"
                   required>
                 <button type="button" onclick="togglePinVisibility('regUserPin', 'regPinToggleIcon')"
                   title="Mostrar / Ocultar Palavra-passe"
@@ -388,14 +410,32 @@
               </div>
             </div>
 
+            <div>
+              <label data-i18n="reg_confirm_password" style="font-size: 0.8rem; font-weight: 600; color: #475569;">Repetir a Palavra-Passe:</label>
+              <div style="position: relative; width: 100%;">
+                <input type="password" id="regUserConfirmPin" class="form-control" placeholder="Repita a Palavra-Passe"
+                  maxlength="12" minlength="8"
+                  style="padding: 0.6rem 2.5rem 0.6rem 0.6rem; border-radius: 6px; font-size: 0.85rem; width: 100%; box-sizing: border-box;"
+                  required>
+                <button type="button" onclick="togglePinVisibility('regUserConfirmPin', 'regConfirmPinToggleIcon')"
+                  title="Mostrar / Ocultar Palavra-passe"
+                  style="position: absolute; right: 6px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; font-size: 1rem; padding: 4px; z-index: 20; display: flex; align-items: center; justify-content: center; outline: none;">
+                  <i id="regConfirmPinToggleIcon" class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+              <p style="font-size: 0.73rem; color: #64748b; margin: 0.25rem 0 0 0;" data-i18n="reg_password_hint">
+                (Deve conter entre 8 e 12 dígitos, 1 letra maiúscula, 1 minúscula, 1 número e 1 caráter especial).
+              </p>
+            </div>
+
             <button type="submit" class="btn btn-primary"
               style="width: 100%; margin-top: 0.5rem; padding: 0.75rem; background: #16a34a; font-weight: 700; justify-content: center;">
-              <i class="fa-solid fa-user-check"></i> Criar e Guardar Registo
+              <i class="fa-solid fa-user-check"></i> <span data-i18n="reg_btn_submit">Criar e Guardar Registo</span>
             </button>
 
             <button type="button" onclick="toggleLoginRegisterMode(false)"
               style="background: none; border: none; color: #64748b; font-size: 0.82rem; font-weight: 600; cursor: pointer; text-align: center; margin-top: 0.5rem;">
-              <i class="fa-solid fa-arrow-left"></i> Voltar ao Início de Sessão
+              <i class="fa-solid fa-arrow-left"></i> <span data-i18n="reg_btn_back">Voltar ao Início de Sessão</span>
             </button>
           </form>
         </div>
@@ -422,8 +462,12 @@
       <!-- MENU DE NAVEGAÇÃO SUPERIOR SLIDE-OUT (DESLIZA PARA A ESQUERDA) -->
       <nav class="nav-slide-bar" id="navSlideBar">
         <button type="button" class="nav-slide-btn" data-tab="tab-database" onclick="switchTab('tab-database')"
-          id="navBtnConfiguracao" title="Configuração">
+          id="navBtnConfiguracao" title="Configuração" style="display: none;">
           <i class="fa-solid fa-gear" style="color: #64748b;"></i> <span>Configuração</span>
+        </button>
+        <button type="button" class="nav-slide-btn" data-tab="tab-consultas" onclick="switchTab('tab-consultas')"
+          id="navBtnConsultas" title="Consultas" style="display: none;">
+          <i class="fa-solid fa-clipboard-list" style="color: #8b5cf6;"></i> <span>Consultas</span>
         </button>
         <button type="button" class="nav-slide-btn" data-tab="tab-orcamentos" onclick="switchTab('tab-orcamentos')"
           title="Orçamentos">
@@ -508,85 +552,75 @@
 
 
 
-      <!-- Grid de Botões do Menu Geral -->
-      <div class="menu-cards-grid">
-        <button type="button" class="main-menu-card" onclick="switchTab('tab-clientes')">
-          <div class="menu-card-icon">
-            <i class="fa-solid fa-building-user"></i>
-          </div>
-          <div class="menu-card-title">Clientes</div>
-          <div class="menu-card-desc">Gerir e registar fichas de clientes, moradas e contactos associados</div>
-        </button>
-
-        <button type="button" class="main-menu-card" onclick="switchTab('tab-contactos')">
-          <div class="menu-card-icon">
-            <i class="fa-solid fa-address-book"></i>
-          </div>
-          <div class="menu-card-title">Contactos</div>
-          <div class="menu-card-desc">Consultar e gerir a lista de contactos diretos de todos os clientes</div>
-        </button>
-
-        <button type="button" class="main-menu-card" onclick="switchTab('tab-projetos')">
-          <div class="menu-card-icon">
-            <i class="fa-solid fa-diagram-project"></i>
-          </div>
-          <div class="menu-card-title">Projetos</div>
-          <div class="menu-card-desc">Criar, gerir e acompanhar fichas de projetos e registo de ocorrências</div>
-        </button>
-
-        <button type="button" class="main-menu-card" onclick="switchTab('tab-orcamentos')">
-          <div class="menu-card-icon">
-            <i class="fa-solid fa-file-invoice-dollar" style="color: #f59e0b;"></i>
-          </div>
-          <div class="menu-card-title">Orçamentos</div>
-          <div class="menu-card-desc">Gerir e elaborar orçamentos, propostas e estimativas comerciais</div>
-        </button>
-
-        <button type="button" class="main-menu-card" onclick="switchTab('tab-duplicados')">
-          <div class="menu-card-icon">
-            <i class="fa-solid fa-clone" style="color: #6366f1;"></i>
-          </div>
-          <div class="menu-card-title">Gestão de Duplicados</div>
-          <div class="menu-card-desc">Deteção inteligente e fusão segura de clientes, contactos e projetos duplicados
-          </div>
-        </button>
-
-        <button type="button" class="main-menu-card" onclick="switchTab('tab-database')">
-          <div class="menu-card-icon">
-            <i class="fa-solid fa-gear"></i>
-          </div>
-          <div class="menu-card-title">Configuração</div>
-          <div class="menu-card-desc">Cópias de segurança, importação e exportação de dados do sistema</div>
-        </button>
-      </div>
 
       <!-- Seção Principal do Dashboard: Acompanhamento de Clientes e Projetos -->
       <div class="dashboard-sections-grid" style="display: flex; flex-direction: column; gap: 1.5rem;">
         <!-- Quadro 1: Acompanhamento de Clientes -->
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">
-              <i class="fa-solid fa-users-viewfinder"></i> Acompanhamento de Clientes
-            </h3>
-            <button class="btn btn-secondary" onclick="switchTab('tab-clientes')"
-              style="font-size: 0.82rem; padding: 0.35rem 0.75rem;">
-              Ver Todos <i class="fa-solid fa-arrow-right" style="margin-left: 4px;"></i>
-            </button>
+        <div class="card" style="border: 1.5px solid #bfdbfe; border-radius: 12px; overflow: hidden; background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 0;">
+          <div style="background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); color: #ffffff; padding: 0.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-building-user" style="font-size: 1.1rem; color: #93c5fd;"></i>
+              <h3 style="margin: 0; font-size: 1.02rem; font-weight: 700; color: #ffffff;">
+                <span data-i18n="dash_client_tracking_title">Acompanhamento de Clientes</span>
+              </h3>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+              <button type="button" class="btn btn-sm" onclick="toggleDashClientContactSort()"
+                title="Alternar ordenação: Contactados / Não Contactados"
+                style="padding: 0.3rem 0.75rem; font-size: 0.8rem; background: rgba(255,255,255,0.2); color: #ffffff; border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">
+                <i class="fa-solid fa-arrow-down-short-wide"></i>
+                <span id="dashClientSortLabel" data-i18n="sort_contacted_label">Contactados</span>
+              </button>
+              <button class="btn btn-sm" onclick="switchTab('tab-clientes')"
+                style="padding: 0.3rem 0.75rem; font-size: 0.8rem; background: #ffffff; color: #1e40af; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem;">
+                <span data-i18n="btn_view_all">Ver Todos</span> <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
           </div>
           <div id="dashClientTrackingContainer" class="dash-projects-scroll-container">
             <!-- Clientes renderizados via JS -->
           </div>
         </div>
 
-        <!-- Quadro 2: Acompanhamento de Projetos -->
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">
-              <i class="fa-solid fa-clock-rotate-left"></i> Acompanhamento de Projetos
-            </h3>
-            <button class="btn btn-secondary" onclick="switchTab('tab-projetos')"
-              style="font-size: 0.82rem; padding: 0.35rem 0.75rem;">
-              Ver Todos <i class="fa-solid fa-arrow-right" style="margin-left: 4px;"></i>
+        <!-- Quadro 2: Acompanhamento de Contactos -->
+        <div class="card" style="border: 1.5px solid #a7f3d0; border-radius: 12px; overflow: hidden; background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 0;">
+          <div style="background: linear-gradient(135deg, #065f46 0%, #059669 100%); color: #ffffff; padding: 0.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-address-book" style="font-size: 1.1rem; color: #6ee7b7;"></i>
+              <h3 style="margin: 0; font-size: 1.02rem; font-weight: 700; color: #ffffff;">
+                <span data-i18n="dash_contact_tracking_title">Acompanhamento de Contactos</span>
+              </h3>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+              <button type="button" class="btn btn-sm" onclick="toggleDashContactSort()"
+                title="Alternar ordenação: Contactados / Não Contactados"
+                style="padding: 0.3rem 0.75rem; font-size: 0.8rem; background: rgba(255,255,255,0.2); color: #ffffff; border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">
+                <i class="fa-solid fa-arrow-down-short-wide"></i>
+                <span id="dashContactSortLabel" data-i18n="sort_contacted_label">Contactados</span>
+              </button>
+              <button class="btn btn-sm" onclick="switchTab('tab-contactos')"
+                style="padding: 0.3rem 0.75rem; font-size: 0.8rem; background: #ffffff; color: #065f46; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem;">
+                <span data-i18n="btn_view_all">Ver Todos</span> <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+          <div id="dashContactTrackingContainer" class="dash-projects-scroll-container">
+            <!-- Contactos renderizados via JS -->
+          </div>
+        </div>
+
+        <!-- Quadro 3: Acompanhamento de Projetos -->
+        <div class="card" style="border: 1.5px solid #bae6fd; border-radius: 12px; overflow: hidden; background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 0;">
+          <div style="background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%); color: #ffffff; padding: 0.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-diagram-project" style="font-size: 1.1rem; color: #7dd3fc;"></i>
+              <h3 style="margin: 0; font-size: 1.02rem; font-weight: 700; color: #ffffff;">
+                <span data-i18n="dash_project_tracking_title">Acompanhamento de Projetos</span>
+              </h3>
+            </div>
+            <button class="btn btn-sm" onclick="switchTab('tab-projetos')"
+              style="padding: 0.3rem 0.75rem; font-size: 0.8rem; background: #ffffff; color: #0369a1; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem;">
+              <span data-i18n="btn_view_all">Ver Todos</span> <i class="fa-solid fa-arrow-right"></i>
             </button>
           </div>
           <div id="dashRecentProjectsContainer" class="dash-projects-scroll-container">
@@ -940,47 +974,55 @@
           <div
             style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
             <div>
-              <h2
+              <h2 data-i18n="budget_main_heading"
                 style="font-size: 1.45rem; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 0.5rem; color: #ffffff;">
                 <i class="fa-solid fa-file-signature"></i> Orçamentação e Especificação Técnica
               </h2>
-              <div style="font-size: 0.85rem; opacity: 0.85; margin-top: 0.25rem;">Especificação detalhada de
+              <div data-i18n="budget_main_subtitle" style="font-size: 0.85rem; opacity: 0.85; margin-top: 0.25rem;">Especificação detalhada de
                 componentes e proposta comercial</div>
             </div>
             <div
               style="display: flex; gap: 0.5rem; align-items: center; background: rgba(255,255,255,0.15); padding: 0.35rem 0.75rem; border-radius: 20px; border: 1px solid rgba(255,255,255,0.25); font-size: 0.82rem; font-weight: 600;">
-              <span>Nº:</span>
+              <span data-i18n="budget_num_label">Nº:</span>
               <input type="text" id="budgetHeaderNum" value="" placeholder="ex: ORC-2026-001"
                 style="background: transparent; border: none; color: #ffffff; font-weight: 700; width: 130px; outline: none; font-size: 0.85rem;">
             </div>
           </div>
 
-          <!-- Campos de Metadados em Grid -->
-          <div class="form-grid">
-            <div class="form-group col-6">
-              <label for="budgetHeaderCliente" style="color: #e2e8f0; font-weight: 600; font-size: 0.85rem;">Cliente
-                *</label>
-              <input type="text" id="budgetHeaderCliente" list="budgetClientsDatalist" class="form-control"
-                placeholder="Selecione ou introduza o Cliente..." oninput="syncBudgetRefFromClient(this.value)"
-                style="background: rgba(255,255,255,0.15); color: #ffffff; border: 1px solid rgba(255,255,255,0.35); font-weight: 600;"
+          <!-- Campos de Metadados Adaptativos e Auto-ajustáveis -->
+          <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; margin-top: 0.75rem;">
+            <div class="form-group" style="flex: 3 1 360px; min-width: 280px; margin-bottom: 0;">
+              <label for="budgetHeaderCliente" data-i18n="budget_client_label" style="color: #e2e8f0; font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.35rem;">Cliente *</label>
+              <select id="budgetHeaderCliente" class="form-control" onchange="handleBudgetClientSelect(this.value)"
+                onmousedown="if(this.options.length <= 1) populateBudgetClientsSelect(this.value);"
+                onfocus="if(this.options.length <= 1) populateBudgetClientsSelect(this.value);"
+                style="background: rgba(255,255,255,0.15); color: #ffffff; border: 1px solid rgba(255,255,255,0.35); font-weight: 600; width: 100%; height: 42px; font-size: 0.92rem; border-radius: 6px;"
                 required>
-              <datalist id="budgetClientsDatalist">
-                <!-- Preenchido dinamicamente com db.clientes -->
-              </datalist>
+                <option value="" style="color: #64748b;">-- Selecione o Cliente --</option>
+              </select>
             </div>
 
-            <div class="form-group col-4">
-              <label for="budgetHeaderRefCliente"
-                style="color: #e2e8f0; font-weight: 600; font-size: 0.85rem;">Referência do Orçamento / Projeto</label>
+            <div class="form-group" style="flex: 2 1 240px; min-width: 200px; margin-bottom: 0;">
+              <label for="budgetHeaderRefCliente" data-i18n="budget_ref_label"
+                style="color: #e2e8f0; font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.35rem;">Referência do Orçamento / Projeto</label>
               <input type="text" id="budgetHeaderRefCliente" class="form-control" value="" placeholder="ex: BCN-2026"
-                style="background: rgba(255,255,255,0.15); color: #ffffff; border: 1px solid rgba(255,255,255,0.35); font-weight: 600;">
+                style="background: rgba(255,255,255,0.15); color: #ffffff; border: 1px solid rgba(255,255,255,0.35); font-weight: 600; height: 42px; font-size: 0.92rem; border-radius: 6px;">
             </div>
 
-            <div class="form-group col-2">
-              <label for="budgetHeaderData" style="color: #e2e8f0; font-weight: 600; font-size: 0.85rem;">Data da
-                Proposta</label>
+            <div class="form-group" style="flex: 1 1 150px; min-width: 140px; margin-bottom: 0;">
+              <label for="budgetHeaderData" data-i18n="budget_date_label" style="color: #e2e8f0; font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.35rem;">Data da Proposta</label>
               <input type="date" id="budgetHeaderData" class="form-control"
-                style="background: rgba(255,255,255,0.15); color: #ffffff; border: 1px solid rgba(255,255,255,0.35); font-weight: 600;">
+                style="background: rgba(255,255,255,0.15); color: #ffffff; border: 1px solid rgba(255,255,255,0.35); font-weight: 600; height: 42px; font-size: 0.92rem; border-radius: 6px;">
+            </div>
+
+            <div class="form-group" style="flex: 1 1 160px; min-width: 150px; margin-bottom: 0;">
+              <label for="budgetHeaderEstado" style="color: #e2e8f0; font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.35rem;">Estado do Orçamento</label>
+              <select id="budgetHeaderEstado" class="form-control"
+                style="background: rgba(255,255,255,0.15); color: #ffffff; border: 1px solid rgba(255,255,255,0.35); font-weight: 600; height: 42px; font-size: 0.92rem; border-radius: 6px;">
+                <option value="Em avaliação" style="color: #0f172a;" selected>Em avaliação</option>
+                <option value="Adjudicado" style="color: #0f172a;">Adjudicado</option>
+                <option value="Não Adjudicado" style="color: #0f172a;">Não Adjudicado</option>
+              </select>
             </div>
           </div>
         </div>
@@ -2062,6 +2104,197 @@
 
     </section>
 
+    <!-- ========================================== -->
+    <!-- SEPARADOR: CONSULTAS (CHEFIA) -->
+    <!-- ========================================== -->
+    <section id="tab-consultas" class="tab-content">
+      <!-- Cabeçalho com Título e Seletor de Utilizador -->
+      <div class="page-header" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: #ffffff; padding: 1.25rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; box-shadow: 0 4px 14px rgba(30, 58, 138, 0.18);">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div style="width: 50px; height: 50px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #ffffff; flex-shrink: 0;">
+            <i class="fa-solid fa-clipboard-list"></i>
+          </div>
+          <div>
+            <h2 style="margin: 0; font-size: 1.4rem; font-weight: 700; color: #ffffff; display: flex; align-items: center; gap: 0.5rem;">
+              <span data-i18n="consultas_title">Consultas & Supervisão Geral</span>
+            </h2>
+            <span style="font-size: 0.84rem; color: #dbeafe;" data-i18n="consultas_subtitle">
+              Visualização e Supervisão de Clientes, Contactos e Projetos por Utilizador Registado
+            </span>
+          </div>
+        </div>
+
+        <!-- Seletor de Utilizador -->
+        <div style="display: flex; align-items: center; gap: 0.75rem; background: rgba(255, 255, 255, 0.18); padding: 0.55rem 0.95rem; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.35);">
+          <label for="consultasUserSelect" style="font-weight: 700; font-size: 0.88rem; color: #ffffff; margin: 0; display: flex; align-items: center; gap: 0.4rem; white-space: nowrap;">
+            <i class="fa-solid fa-user-tie"></i> <span data-i18n="consultas_select_user_label">Selecionar Utilizador:</span>
+          </label>
+          <select id="consultasUserSelect" class="form-control" onchange="renderConsultasUserData(this.value)"
+            style="min-width: 250px; font-size: 0.9rem; font-weight: 600; padding: 0.45rem 0.75rem; border-radius: 6px; border: 1.5px solid #93c5fd; background: #ffffff; color: #0f172a; cursor: pointer;">
+            <!-- Preenchido dinamicamente -->
+          </select>
+        </div>
+      </div>
+
+      <!-- Banner de Resumo do Utilizador Selecionado -->
+      <div id="consultasUserSummaryBanner" style="background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: 10px; padding: 0.9rem 1.25rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div style="width: 42px; height: 42px; border-radius: 50%; background: #dbeafe; color: #1d4ed8; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; font-weight: 700; flex-shrink: 0;">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;" data-i18n="consultas_selected_operator">Utilizador Selecionado:</div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <strong id="consultasSelectedUserName" style="font-size: 1.1rem; color: #1e3a8a;">-</strong>
+              <span id="consultasSelectedUserRoleBadge" style="font-size: 0.75rem; padding: 0.15rem 0.5rem; border-radius: 999px; background: #dbeafe; color: #1e40af; font-weight: 600;">-</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
+          <div style="text-align: center; padding: 0.3rem 0.75rem; background: #ffffff; border-radius: 8px; border: 1px solid #dbeafe;">
+            <span style="font-size: 0.72rem; color: #64748b; font-weight: 600; display: block;" data-i18n="tab_clientes">Clientes</span>
+            <strong id="consultasSummaryClientsCount" style="font-size: 1.15rem; color: #2563eb;">0</strong>
+          </div>
+          <div style="text-align: center; padding: 0.3rem 0.75rem; background: #ffffff; border-radius: 8px; border: 1px solid #d1fae5;">
+            <span style="font-size: 0.72rem; color: #64748b; font-weight: 600; display: block;" data-i18n="tab_contactos">Contactos</span>
+            <strong id="consultasSummaryContactsCount" style="font-size: 1.15rem; color: #059669;">0</strong>
+          </div>
+          <div style="text-align: center; padding: 0.3rem 0.75rem; background: #ffffff; border-radius: 8px; border: 1px solid #e0f2fe;">
+            <span style="font-size: 0.72rem; color: #64748b; font-weight: 600; display: block;" data-i18n="tab_projetos">Projetos</span>
+            <strong id="consultasSummaryProjectsCount" style="font-size: 1.15rem; color: #0284c7;">0</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- OS TRÊS QUADROS -->
+      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+        <!-- QUADRO 1: CLIENTES DO UTILIZADOR -->
+        <div class="card" style="border: 1.5px solid #bfdbfe; border-radius: 12px; overflow: hidden; background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+          <div style="background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); color: #ffffff; padding: 0.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-building-user" style="font-size: 1.1rem; color: #93c5fd;"></i>
+              <h3 style="margin: 0; font-size: 1.02rem; font-weight: 700; color: #ffffff;">
+                <span data-i18n="consultas_quadro1_title">1. Clientes do Utilizador</span>
+                <span style="font-size: 0.8rem; font-weight: 500; opacity: 0.9; margin-left: 0.4rem;">(<span id="consultasClientsListCount">0</span> registados)</span>
+              </h3>
+            </div>
+            <div>
+              <button type="button" class="btn btn-sm" onclick="toggleConsultasClientsContactSort()"
+                title="Ordenar por Contactados / Não Contactados"
+                style="padding: 0.3rem 0.75rem; font-size: 0.8rem; background: rgba(255,255,255,0.2); color: #ffffff; border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">
+                <i class="fa-solid fa-arrow-down-short-wide"></i>
+                <span id="consultasClientSortLabel" data-i18n="sort_contacted_label">Contactados</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="table-responsive" style="max-height: 380px; overflow-y: auto; padding: 0.5rem;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th data-i18n="th_tipo">Tipo</th>
+                  <th style="text-align: center; width: 110px;" data-i18n="th_contactado">Contactado</th>
+                  <th data-i18n="th_nome_empresa">Nome / Razão Social</th>
+                  <th data-i18n="th_nif">NIF / Contribuinte</th>
+                  <th data-i18n="th_localidade">Localidade</th>
+                  <th data-i18n="th_pais">País</th>
+                  <th data-i18n="th_contacto">Telefone / Telemóvel</th>
+                  <th data-i18n="th_email">Email</th>
+                </tr>
+              </thead>
+              <tbody id="consultasClientsTableBody">
+                <!-- Preenchido dinamicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- QUADRO 2: CONTACTOS DO UTILIZADOR -->
+        <div class="card" style="border: 1.5px solid #a7f3d0; border-radius: 12px; overflow: hidden; background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+          <div style="background: linear-gradient(135deg, #065f46 0%, #059669 100%); color: #ffffff; padding: 0.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-address-book" style="font-size: 1.1rem; color: #6ee7b7;"></i>
+              <h3 style="margin: 0; font-size: 1.02rem; font-weight: 700; color: #ffffff;">
+                <span data-i18n="consultas_quadro2_title">2. Contactos do Utilizador</span>
+                <span style="font-size: 0.8rem; font-weight: 500; opacity: 0.9; margin-left: 0.4rem;">(<span id="consultasContactsListCount">0</span> registados)</span>
+              </h3>
+            </div>
+            <div>
+              <button type="button" class="btn btn-sm" onclick="toggleConsultasContactsContactSort()"
+                title="Ordenar por Contactados / Não Contactados"
+                style="padding: 0.3rem 0.75rem; font-size: 0.8rem; background: rgba(255,255,255,0.2); color: #ffffff; border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">
+                <i class="fa-solid fa-arrow-down-short-wide"></i>
+                <span id="consultasContactSortLabel" data-i18n="sort_contacted_label">Contactados</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="table-responsive" style="max-height: 380px; overflow-y: auto; padding: 0.5rem;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="text-align: center; width: 110px;" data-i18n="th_contactado">Contactado</th>
+                  <th data-i18n="th_nome_contacto">Nome do Contacto</th>
+                  <th data-i18n="th_cliente_associado">Cliente Associado</th>
+                  <th data-i18n="th_cargo">Cargo / Função</th>
+                  <th data-i18n="th_telefone">Telefone / Telemóvel</th>
+                  <th data-i18n="th_email">Email</th>
+                  <th data-i18n="th_notas">Notas / Observações</th>
+                </tr>
+              </thead>
+              <tbody id="consultasContactsTableBody">
+                <!-- Preenchido dinamicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- QUADRO 3: PROJETOS DO UTILIZADOR -->
+        <div class="card" style="border: 1.5px solid #bae6fd; border-radius: 12px; overflow: hidden; background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+          <div style="background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%); color: #ffffff; padding: 0.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-diagram-project" style="font-size: 1.1rem; color: #7dd3fc;"></i>
+              <h3 style="margin: 0; font-size: 1.02rem; font-weight: 700; color: #ffffff;">
+                <span data-i18n="consultas_quadro3_title">3. Projetos do Utilizador</span>
+                <span style="font-size: 0.8rem; font-weight: 500; opacity: 0.9; margin-left: 0.4rem;">(<span id="consultasProjectsListCount">0</span> registados)</span>
+              </h3>
+            </div>
+            <div>
+              <button type="button" class="btn btn-sm" onclick="toggleConsultasProjectsStatusSort()"
+                title="Ordenar por Estado do Projeto"
+                style="padding: 0.3rem 0.75rem; font-size: 0.8rem; background: rgba(255,255,255,0.2); color: #ffffff; border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">
+                <i class="fa-solid fa-arrow-down-short-wide"></i>
+                <span id="consultasProjectSortLabel" data-i18n="sort_status_label">Estado do Projeto</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="table-responsive" style="max-height: 380px; overflow-y: auto; padding: 0.5rem;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th data-i18n="th_nome_projeto">Nome do Projeto</th>
+                  <th data-i18n="th_cliente_associado">Cliente Associado</th>
+                  <th data-i18n="th_tipo">Tipo</th>
+                  <th data-i18n="th_estado">Estado</th>
+                  <th data-i18n="th_data_inicio">Data Início</th>
+                  <th data-i18n="th_data_fim">Data Fim</th>
+                  <th data-i18n="th_viatura">Viatura / Matrícula</th>
+                  <th style="text-align: center; width: 170px;" data-i18n="th_acoes">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="consultasProjectsTableBody">
+                <!-- Preenchido dinamicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
     <!-- TAB: CONFIGURAÇÃO DO SISTEMA (inclui sub-tab Duplicados) -->
     <section id="tab-database" class="tab-content">
 
@@ -2357,6 +2590,7 @@
                       <th>Utilizador</th>
                       <th>Email</th>
                       <th>Cargo / Função</th>
+                      <th>Idioma</th>
                       <th>Tipo de Conta</th>
                       <th style="text-align: center;">Ações & Atividade Real</th>
                     </tr>
@@ -2593,17 +2827,27 @@
 
           <div class="form-grid">
             <!-- Tipo de Cliente -->
-            <div class="form-group col-4">
+            <div class="form-group col-6">
               <label for="tipoCliente">Tipo de Cliente *</label>
-              <select id="tipoCliente" class="form-control" onchange="handleTipoClienteChange()" required>
+              <select id="tipoCliente" class="form-control" onchange="handleTipoClienteChange()" required style="background: #ffffff;">
                 <option value="Privado">Privado</option>
                 <option value="Fundação">Fundação</option>
                 <option value="Estatal">Estatal</option>
               </select>
             </div>
 
+            <!-- Comercial Atribuído -->
+            <div class="form-group col-6">
+              <label for="clientComercialAtribuido" data-i18n="client_comercial_label">
+                <i class="fa-solid fa-user-tie" style="color: #0284c7; margin-right: 4px;"></i> Comercial Atribuído *
+              </label>
+              <select id="clientComercialAtribuido" class="form-control" required style="background: #ffffff; font-weight: 600;">
+                <!-- Preenchido dinamicamente via JS -->
+              </select>
+            </div>
+
             <!-- Campo Condicional para Estatal (Ministério) -->
-            <div id="estatalFieldsContainer" class="form-grid col-8 conditional-field">
+            <div id="estatalFieldsContainer" class="form-grid col-12 conditional-field" style="margin: 0; padding: 0;">
               <div class="form-group col-12">
                 <label for="ministerio">Ministério *</label>
                 <input type="text" id="ministerio" class="form-control" placeholder="ex: Ministério da Economia">
@@ -2749,6 +2993,17 @@
                   <span id="textSortClientInteractions" style="font-size: 0.76rem;">Mais recente</span>
                 </button>
               </h3>
+              <div class="client-next-contact-wrapper"
+                style="display: inline-flex; align-items: center; gap: 0.5rem; margin-left: auto;">
+                <label for="clientProximoContacto"
+                  style="font-weight: 600; font-size: 0.85rem; color: #1e3a8a; margin: 0; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px;">
+                  <i class="fa-regular fa-calendar-plus" style="color: #2563eb;"></i>
+                  <span>Próximo contacto:</span>
+                </label>
+                <input type="date" id="clientProximoContacto" class="form-control"
+                  style="width: auto; padding: 0.25rem 0.6rem; font-size: 0.85rem; font-weight: 500; height: 34px; border: 1.5px solid #cbd5e1; border-radius: 6px;"
+                  onchange="saveClientNextContactDate(this.value)" title="Data agendada para o próximo contacto">
+              </div>
             </div>
 
             <!-- Formulário em Linha: Campo de Data + Campo em frente de Escrita Livre Auto-expansível -->
@@ -2823,10 +3078,20 @@
               <h3 class="embedded-title">
                 <i class="fa-solid fa-file-invoice-dollar" style="color: #f59e0b;"></i> Orçamentos do Cliente
               </h3>
-              <button type="button" class="btn btn-secondary" onclick="newBudgetForCurrentClient()"
-                style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">
-                <i class="fa-solid fa-plus"></i> Criar Orçamento
-              </button>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input type="file" id="clientBudgetFileInput" accept=".json,.pdf,.xlsx,.xls,.docx,.doc"
+                  onchange="handleUploadBudgetForClient(event)" style="display: none;">
+                <button type="button" class="btn btn-secondary" onclick="document.getElementById('clientBudgetFileInput').click()"
+                  style="padding: 0.35rem 0.75rem; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.4rem;"
+                  title="Carregar ficheiro de orçamento a partir do computador">
+                  <i class="fa-solid fa-upload"></i> Carregar Orçamento
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="newBudgetForCurrentClient()"
+                  style="padding: 0.35rem 0.75rem; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.4rem;"
+                  title="Criar novo orçamento no formulário">
+                  <i class="fa-solid fa-plus"></i> Criar Orçamento
+                </button>
+              </div>
             </div>
             <div id="clientBudgetsList" class="projects-badge-list" style="margin-top: 0.5rem;">
               <span class="empty-state">Nenhum orçamento guardado para este cliente.</span>
@@ -3241,9 +3506,14 @@
                 <i class="fa-solid fa-file-invoice-dollar" style="color: #f59e0b;"></i> Orçamentos Cliente
               </h3>
               <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                <button type="button" class="btn btn-sm btn-primary" onclick="newBudgetForCurrentProject()"
+                  style="background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); color: #ffffff; border: none; border-radius: 6px; font-weight: 600; padding: 0.35rem 0.85rem; display: inline-flex; align-items: center; gap: 0.35rem; box-shadow: 0 1px 4px rgba(37,99,235,0.3); cursor: pointer;"
+                  title="Criar Novo Orçamento no Sistema para este Projeto">
+                  <i class="fa-solid fa-file-circle-plus"></i> <span data-i18n="btn_criar_orcamento">Criar Orçamento</span>
+                </button>
                 <input type="file" id="projectOrcamentosInput" multiple onchange="handleProjectOrcamentosUpload(event)"
                   style="display: none;">
-                <button type="button" class="btn btn-primary btn-sm" onclick="triggerProjectOrcamentosUpload()">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="triggerProjectOrcamentosUpload()">
                   <i class="fa-solid fa-cloud-arrow-up"></i> Importar Orçamentos
                 </button>
                 <button type="button" class="btn btn-secondary btn-sm" onclick="exportProjectOrcamentosAll()">
@@ -4025,6 +4295,8 @@
   <!-- Toast Notifications Container -->
   <div id="toastContainer" class="toast-container"></div>
 
+  <!-- Internationalization & Translations Engine -->
+  <script src="i18n.js?v=20260822_v1"></script>
   <!-- Main JavaScript App -->
   <script src="app.js?v=20260821_v21"></script>
   <!-- Duplicates Management Engine -->
@@ -4036,11 +4308,18 @@
       if (tabId === 'tab-database' || tabId === 'tab-configuracao') {
         var activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
         var activeUser = (typeof db !== 'undefined' && db.usuarios) ? db.usuarios.find(function (u) { return u.id === activeUserId; }) : null;
-        var isAdmin = activeUser ? (activeUser.role === 'admin') : true;
+        var hasAccess = false;
+        if (typeof window.hasConfigAccess === 'function') {
+          hasAccess = window.hasConfigAccess(activeUser);
+        } else if (activeUser) {
+          var normName = (activeUser.nome || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+          var normEmail = (activeUser.email || '').toLowerCase().trim();
+          hasAccess = (activeUser.role === 'admin' || activeUser.id === 'usr-admin-001' || normName.includes('jose centurio') || normEmail === 'jmcenturio@alegria-activity.com');
+        }
 
-        if (!isAdmin) {
-          if (typeof showToast === 'function') showToast('Acesso à Configuração restrito ao Administrador.', 'warning');
-          alert('Acesso Restrito:\nA página de Configuração é acessível exclusivamente ao Administrador do Sistema.');
+        if (!hasAccess) {
+          if (typeof showToast === 'function') showToast('Acesso à Configuração restrito ao Administrador e ao Utilizador José Centúrio.', 'warning');
+          alert('Acesso Restrito:\nA página de Configuração é acessível exclusivamente ao Administrador e ao utilizador José Centúrio.');
           tabId = 'tab-home';
         }
       }
@@ -4072,6 +4351,8 @@
       if (tabId === 'tab-database') {
         if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
         if (typeof renderUserManagementGrid === 'function') renderUserManagementGrid();
+      } else if (tabId === 'tab-consultas') {
+        if (typeof populateConsultasUserSelect === 'function') populateConsultasUserSelect();
       } else if (tabId === 'tab-contactos') {
         if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
       } else if (tabId === 'tab-clientes') {
@@ -4090,6 +4371,10 @@
         if (typeof populateBudgetClientsDatalist === 'function') populateBudgetClientsDatalist();
         if (typeof populateBudgetModelPresetDatalist === 'function') populateBudgetModelPresetDatalist();
         if (typeof renderSavedBudgetsList === 'function') renderSavedBudgetsList();
+      }
+
+      if (typeof window.applyUserLanguage === 'function') {
+        setTimeout(function () { window.applyUserLanguage(); }, 50);
       }
     };
 
@@ -4439,29 +4724,48 @@
       </div>
       <div class="modal-body" style="padding: 1.25rem;">
         <form onsubmit="handleUserRegistration(event)" style="display: flex; flex-direction: column; gap: 0.85rem;">
-          <div>
-            <label
-              style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.25rem;">Nome
-              Completo:</label>
-            <input type="text" id="cfgRegUserName" class="form-control" placeholder="Ex: António Silva" required>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div>
+              <label data-i18n="reg_first_name"
+                style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.25rem;">Nome:</label>
+              <input type="text" id="cfgRegUserFirstName" class="form-control" placeholder="Ex: António" required>
+            </div>
+            <div>
+              <label data-i18n="reg_last_name"
+                style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.25rem;">Apelido:</label>
+              <input type="text" id="cfgRegUserLastName" class="form-control" placeholder="Ex: Silva" required>
+            </div>
           </div>
 
           <div>
-            <label
+            <label data-i18n="reg_email"
               style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.25rem;">Email
               de Acesso:</label>
             <input type="email" id="cfgRegUserEmail" class="form-control" placeholder="antonio@empresa.pt" required>
           </div>
 
-          <div>
-            <label
-              style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.25rem;">Cargo
-              / Função:</label>
-            <input type="text" id="cfgRegUserCargo" class="form-control" placeholder="Ex: Diretor Técnico" required>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div>
+              <label data-i18n="reg_cargo"
+                style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.25rem;">Cargo
+                / Função:</label>
+              <input type="text" id="cfgRegUserCargo" class="form-control" placeholder="Ex: Diretor Técnico" required>
+            </div>
+            <div>
+              <label data-i18n="reg_language"
+                style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.25rem;">Idioma:</label>
+              <select id="cfgRegUserIdioma" class="form-control" required style="background: #ffffff;">
+                <option value="Português" selected>Português</option>
+                <option value="Español">Español</option>
+                <option value="Français">Français</option>
+                <option value="Polski">Polski</option>
+                <option value="English">English</option>
+              </select>
+            </div>
           </div>
 
           <div>
-            <label
+            <label data-i18n="profile_role_access"
               style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.25rem;">Perfil
               de Acesso:</label>
             <select id="cfgRegUserRole" class="form-control" required style="background: #ffffff;">
@@ -4471,23 +4775,68 @@
           </div>
 
           <div>
-            <label
-              style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.25rem;">Palavra-passe
-              / PIN Secreto:</label>
-            <input type="password" id="cfgRegUserPin" class="form-control" placeholder="Mínimo 3 caracteres" required>
+            <label data-i18n="reg_password"
+              style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.25rem;">Palavra-Passe:</label>
+            <div style="position: relative; width: 100%;">
+              <input type="password" id="cfgRegUserPin" class="form-control" placeholder="8 a 12 caracteres (Maiúscula, minúscula, nº e símbolo)"
+                maxlength="12" minlength="8" required style="padding-right: 2.5rem;">
+              <button type="button" onclick="togglePinVisibility('cfgRegUserPin', 'cfgRegPinToggleIcon')"
+                title="Mostrar / Ocultar Palavra-passe"
+                style="position: absolute; right: 6px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; font-size: 1rem; padding: 4px; z-index: 20; display: flex; align-items: center; justify-content: center; outline: none;">
+                <i id="cfgRegPinToggleIcon" class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label data-i18n="reg_confirm_password"
+              style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.25rem;">Repetir a Palavra-Passe:</label>
+            <div style="position: relative; width: 100%;">
+              <input type="password" id="cfgRegUserConfirmPin" class="form-control" placeholder="Repita a Palavra-Passe"
+                maxlength="12" minlength="8" required style="padding-right: 2.5rem;">
+              <button type="button" onclick="togglePinVisibility('cfgRegUserConfirmPin', 'cfgRegConfirmPinToggleIcon')"
+                title="Mostrar / Ocultar Palavra-passe"
+                style="position: absolute; right: 6px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; font-size: 1rem; padding: 4px; z-index: 20; display: flex; align-items: center; justify-content: center; outline: none;">
+                <i id="cfgRegConfirmPinToggleIcon" class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+            <p style="font-size: 0.73rem; color: #64748b; margin: 0.25rem 0 0 0;" data-i18n="reg_password_hint">
+              (Deve conter entre 8 e 12 dígitos, 1 letra maiúscula, 1 minúscula, 1 número e 1 caráter especial).
+            </p>
           </div>
 
           <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
             <button type="button" class="btn btn-secondary" onclick="closeRegisterUserModal()"
               style="flex: 1; justify-content: center;">
-              Cancelar
+              <span data-i18n="btn_cancel">Cancelar</span>
             </button>
             <button type="submit" class="btn btn-primary"
               style="flex: 1; justify-content: center; background: #2563eb;">
-              <i class="fa-solid fa-save"></i> Guardar Utilizador
+              <i class="fa-solid fa-save"></i> <span data-i18n="btn_save_user_profile">Guardar Utilizador</span>
             </button>
           </div>
         </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: AVISO DE PALAVRA-PASSE NÃO COINCIDE -->
+  <div id="passwordMismatchModal" class="modal-overlay" style="z-index: 100060; display: none;">
+    <div class="modal-window" style="max-width: 440px; border-radius: 12px; overflow: hidden; text-align: center; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);">
+      <div class="modal-header" style="background: #dc2626; color: #ffffff; justify-content: center; padding: 1rem;">
+        <h3 class="modal-title" style="color: #ffffff; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+          <i class="fa-solid fa-triangle-exclamation" style="font-size: 1.25rem;"></i>
+          <span data-i18n="pwd_mismatch_title">Aviso de Segurança</span>
+        </h3>
+      </div>
+      <div class="modal-body" style="padding: 1.5rem 1.25rem;">
+        <p id="passwordMismatchMessage" style="font-size: 0.95rem; font-weight: 600; color: #1e293b; line-height: 1.5; margin-bottom: 1.25rem;" data-i18n="pwd_mismatch_msg">
+          Palavra Passe não coincide, repita a palavra Passe
+        </p>
+        <button type="button" class="btn btn-primary" onclick="closePasswordMismatchModal()"
+          style="background: #dc2626; padding: 0.65rem 2rem; font-weight: 700; margin: 0 auto; border-radius: 8px; justify-content: center; display: inline-flex; align-items: center; gap: 0.5rem;">
+          <i class="fa-solid fa-xmark"></i> <span data-i18n="btn_close">Fechar</span>
+        </button>
       </div>
     </div>
   </div>
@@ -4568,14 +4917,14 @@
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
               <div>
-                <label
+                <label data-i18n="reg_full_name"
                   style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Nome
                   Completo:</label>
                 <input type="text" id="profileUserName" class="form-control" placeholder="Ex: Maria Santos" required
                   style="padding: 0.65rem; border-radius: 6px;">
               </div>
               <div>
-                <label
+                <label data-i18n="reg_email"
                   style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Email
                   de Acesso:</label>
                 <input type="email" id="profileUserEmail" class="form-control" placeholder="maria@empresa.com" required
@@ -4585,14 +4934,29 @@
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
               <div>
-                <label
+                <label data-i18n="reg_cargo"
                   style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Cargo
                   / Função:</label>
                 <input type="text" id="profileUserCargo" class="form-control" placeholder="Ex: Gestora de Projetos"
                   required style="padding: 0.65rem; border-radius: 6px;">
               </div>
               <div>
-                <label
+                <label data-i18n="reg_language"
+                  style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Idioma:</label>
+                <select id="profileUserIdioma" class="form-control" onchange="if(typeof applyUserLanguage==='function') applyUserLanguage(this.value);" required
+                  style="padding: 0.65rem; border-radius: 6px; background: #ffffff;">
+                  <option value="Português">Português</option>
+                  <option value="Español">Español</option>
+                  <option value="Français">Français</option>
+                  <option value="Polski">Polski</option>
+                  <option value="English">English</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr; gap: 1rem;">
+              <div>
+                <label data-i18n="profile_role_access"
                   style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Perfil
                   de Acesso:</label>
                 <select id="profileUserRole" class="form-control" required
@@ -4609,11 +4973,24 @@
                 style="font-size: 0.88rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 0.6rem; cursor: pointer; margin-bottom: 0.2rem;">
                 <input type="checkbox" id="profileUserActive"
                   style="width: 18px; height: 18px; accent-color: #0284c7; cursor: pointer;">
-                <span>Acesso Autorizado / Utilizador Ativo</span>
+                <span data-i18n="profile_active_label">Acesso Autorizado / Utilizador Ativo</span>
               </label>
-              <p style="font-size: 0.78rem; color: #64748b; margin: 0 0 0 1.65rem;">
+              <p data-i18n="profile_active_desc" style="font-size: 0.78rem; color: #64748b; margin: 0 0 0 1.65rem;">
                 (Cada utilizador fica bloqueado por defeito ao registar. Marque a caixa para autorizar/desbloquear o
                 acesso).
+              </p>
+            </div>
+
+            <!-- Perfil de Chefia (Separador Consultas) -->
+            <div style="padding: 0.75rem 1rem; background: #f0fdf4; border-radius: 8px; border: 1px solid #86efac;">
+              <label
+                style="font-size: 0.88rem; font-weight: 700; color: #166534; display: flex; align-items: center; gap: 0.6rem; cursor: pointer; margin-bottom: 0.2rem;">
+                <input type="checkbox" id="profileUserChefia"
+                  style="width: 18px; height: 18px; accent-color: #16a34a; cursor: pointer;">
+                <span data-i18n="profile_chefia_label">Acesso de Chefia (Separador Consultas)</span>
+              </label>
+              <p data-i18n="profile_chefia_desc" style="font-size: 0.78rem; color: #15803d; margin: 0 0 0 1.65rem;">
+                (Apenas o Administrador pode ativar. Concede permissão para aceder à página "Consultas" e visualizar clientes, contactos e projetos de todos os utilizadores).
               </p>
             </div>
 
@@ -4621,23 +4998,30 @@
               style="margin-top: 0.5rem; padding: 1rem; background: #f8fafc; border-radius: 8px; border: 1px solid #cbd5e1;">
               <h4
                 style="margin: 0 0 0.65rem 0; font-size: 0.9rem; color: #0f172a; font-weight: 700; display: flex; align-items: center; gap: 0.4rem;">
-                <i class="fa-solid fa-key" style="color: #0284c7;"></i> Definição de Palavra-passe / PIN Secreto
+                <i class="fa-solid fa-key" style="color: #0284c7;"></i> <span data-i18n="profile_pin_section_title">Definição de Palavra-Passe</span>
               </h4>
-              <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 0.75rem;">
-                Defina a palavra-passe ou PIN secreto necessário para este utilizador abrir e aceder ao programa.
+              <p data-i18n="profile_pin_section_desc" style="font-size: 0.8rem; color: #64748b; margin-bottom: 0.75rem;">
+                Defina a palavra-passe necessária para este utilizador abrir e aceder ao programa (8 a 12 caracteres, maiúscula, minúscula, número e símbolo).
               </p>
               <div>
-                <label
-                  style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.25rem;">Novo
-                  PIN / Palavra-passe:</label>
+                <label data-i18n="profile_new_pin_label"
+                  style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.25rem;">Nova Palavra-Passe:</label>
                 <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-                  <input type="password" id="profileUserPin" class="form-control"
-                    placeholder="Introduza o PIN (mínimo 3 caracteres)" required
-                    style="padding: 0.65rem; border-radius: 6px; background: #ffffff; flex: 1; min-width: 200px;">
+                  <div style="position: relative; flex: 1; min-width: 200px;">
+                    <input type="password" id="profileUserPin" class="form-control"
+                      placeholder="8 a 12 caracteres (Maiúscula, minúscula, nº e símbolo)" required
+                      maxlength="12" minlength="8"
+                      style="padding: 0.65rem 2.5rem 0.65rem 0.65rem; border-radius: 6px; background: #ffffff; width: 100%; box-sizing: border-box;">
+                    <button type="button" onclick="togglePinVisibility('profileUserPin', 'profilePinToggleIcon')"
+                      title="Mostrar / Ocultar Palavra-passe"
+                      style="position: absolute; right: 6px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; font-size: 1rem; padding: 4px; z-index: 20; display: flex; align-items: center; justify-content: center; outline: none;">
+                      <i id="profilePinToggleIcon" class="fa-solid fa-eye"></i>
+                    </button>
+                  </div>
                   <button type="button" onclick="sendPasswordResetEmailToUser()" class="btn btn-secondary"
                     title="Enviar email ao utilizador com link para redefinir a palavra-passe"
                     style="background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; font-weight: 600; padding: 0.65rem 0.85rem; font-size: 0.85rem; white-space: nowrap;">
-                    <i class="fa-solid fa-envelope-circle-check"></i> Enviar Link por Email
+                    <i class="fa-solid fa-envelope-circle-check"></i> <span data-i18n="profile_send_link_email">Enviar Link por Email</span>
                   </button>
                 </div>
               </div>
@@ -4645,10 +5029,10 @@
 
             <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 0.5rem;">
               <button type="button" class="btn btn-secondary" onclick="closeUserProfileModal()">
-                Cancelar
+                <span data-i18n="btn_cancel">Cancelar</span>
               </button>
               <button type="submit" class="btn btn-primary" style="background: #0284c7; padding: 0.65rem 1.25rem;">
-                <i class="fa-solid fa-floppy-disk"></i> Guardar Ficha do Utilizador
+                <i class="fa-solid fa-floppy-disk"></i> <span data-i18n="btn_save_user_profile">Guardar Ficha do Utilizador</span>
               </button>
             </div>
           </form>
@@ -4686,12 +5070,12 @@
     </div>
   </div>
 
-  <!-- MODAL: REDEFINIR PALAVRA-PASSE / PIN VIA LINK DE EMAIL -->
+  <!-- MODAL: REDEFINIR PALAVRA-PASSE VIA LINK DE EMAIL -->
   <div id="resetPasswordModal" class="modal-overlay" style="z-index: 9999;">
     <div class="modal-window" style="max-width: 440px; border-radius: 12px; overflow: hidden;">
       <div class="modal-header" style="background: #0284c7; color: #ffffff;">
         <h3 class="modal-title" style="color: #ffffff; font-size: 1.05rem;">
-          <i class="fa-solid fa-key" style="color: #ffffff;"></i> Redefinir Palavra-passe / PIN
+          <i class="fa-solid fa-key" style="color: #ffffff;"></i> Redefinir Palavra-Passe
         </h3>
         <button class="action-icon-btn" onclick="closeResetPasswordModal()" style="color: #ffffff;">
           <i class="fa-solid fa-xmark"></i>
@@ -4709,23 +5093,23 @@
 
           <div style="margin-bottom: 1rem;">
             <label
-              style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Nova
-              Palavra-passe / PIN Secreto:</label>
-            <input type="password" id="resetPasswordNewPin" class="form-control" placeholder="Mínimo 3 caracteres"
+              style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Nova Palavra-Passe:</label>
+            <input type="password" id="resetPasswordNewPin" class="form-control" placeholder="8 a 12 caracteres (Maiúscula, minúscula, nº e símbolo)"
+              maxlength="12" minlength="8"
               required style="padding: 0.75rem; border-radius: 8px; border: 1.5px solid #cbd5e1;" autofocus>
           </div>
 
           <div style="margin-bottom: 1.25rem;">
             <label
-              style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Confirmar
-              Nova Palavra-passe / PIN:</label>
-            <input type="password" id="resetPasswordConfirmPin" class="form-control" placeholder="Repita o novo PIN"
+              style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Repetir a Palavra-Passe:</label>
+            <input type="password" id="resetPasswordConfirmPin" class="form-control" placeholder="Repita a Palavra-Passe"
+              maxlength="12" minlength="8"
               required style="padding: 0.75rem; border-radius: 8px; border: 1.5px solid #cbd5e1;">
           </div>
 
           <button type="submit" class="btn btn-primary"
             style="width: 100%; justify-content: center; padding: 0.75rem; background: #16a34a; font-weight: 700;">
-            <i class="fa-solid fa-check"></i> Redefinir e Guardar Novo PIN
+            <i class="fa-solid fa-check"></i> Redefinir e Guardar Palavra-Passe
           </button>
         </form>
       </div>

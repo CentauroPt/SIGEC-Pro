@@ -51,4 +51,13 @@ Ao gerar qualquer orçamento em PDF ou Word (via `printBudgetPDF` ou `exportBudg
 - **Comparação de Contactos**: A verificação e deteção de duplicados de contactos (tanto no modal de validação como na página de Configuração no separador Duplicados) deve ser feita através do **Nome e apelidos de cada contacto** (`nome + apelido`).
 - **Preservação de Estrutura**: A estrutura visual, os modais e o fluxo do programa mantêm-se inalterados, modificando-se exclusivamente os dados e campos utilizados para a comparação.
 
+### 9. ACESSO EXCLUSIVO À CONFIGURAÇÃO (ADMINISTRADOR E JOSÉ CENTÚRIO)
+- **Acesso Restrito**: Só o Administrador tem acesso à página/separador de Configuração (`tab-database`), com exceção exclusiva do Utilizador José Centúrio.
+- **Ocultação do Botão de Configuração**: O botão de Configuração (`navBtnConfiguracao`) NÃO deve aparecer em nenhum outro perfil de utilizador, ficando oculto por defeito para todos os restantes utilizadores.
+- **Bloqueio de Navegação**: Qualquer tentativa de aceder ao separador de Configuração por utilizadores sem estas permissões deve ser estritamente bloqueada e redirecionada para a página inicial com aviso informativo.
 
+### 10. ISOLAMENTO E INDEPENDÊNCIA TOTAL DE DADOS POR UTILIZADOR (PERFIS ISOLADOS)
+- **Criação Automática de Perfil Independente**: Quando um utilizador se regista no sistema, é criado automaticamente um perfil exclusivo e independente para esse utilizador.
+- **Acesso Exclusivo aos Próprios Registos**: Cada utilizador só tem acesso ao seu próprio perfil e aos seus próprios dados de trabalho.
+- **Não Mistura de Dados**: Os dados registados por um utilizador (sejam Clientes, Contactos, Projetos, Orçamentos, Interações ou qualquer outro registo) são estritamente isolados e NUNCA se misturam com os dados registados pelos restantes utilizadores.
+- **Preservação e Integridade**: Os dados de cada utilizador permanecem autónomos, protegidos e inalterados perante qualquer ação ou registo efetuado por outros perfis.
