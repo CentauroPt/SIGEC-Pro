@@ -319,29 +319,6 @@
       "comercialAtribuidoNome": "José Centúrio"
     },
     {
-      "id": "cli-imp-020",
-      "tipoCliente": "Fundação",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "Fundação Altice Portugal",
-      "contribuinte": "500000357",
-      "direcao1": "Avenida Fontes Pereira de Melo",
-      "direcao2": "",
-      "numero": "40",
-      "andar": "6Âº",
-      "codigoPostal": "1069-300",
-      "localidade": "Lisboa",
-      "pais": "Portugal",
-      "telefone": "+351 215 003 500",
-      "telemovel": "",
-      "email": "fundacao@altice.pt",
-      "notas": "Temas: innovación, la inclusión social y el acceso al conocimiento mediante la tecnología",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio"
-    },
-    {
       "id": "cli-imp-021",
       "tipoCliente": "Fundação",
       "ministerio": "",
@@ -3243,21 +3220,6 @@
       "comercialAtribuidoId": "usr-admin-001"
     },
     {
-      "id": "con-imp-032",
-      "clienteId": "cli-imp-077",
-      "nome": "Ines",
-      "apelido": "Pina",
-      "cargo": "Communication & Experience",
-      "telefone": "+351 21 782 47 00",
-      "telemovel": "",
-      "email": "ines.s.pina@nos.pt",
-      "notas": "Temas: telecomunicaciones, televisión, internet, telefonía móvil, entretenimiento",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 1,
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
-    },
-    {
       "id": "con-imp-033",
       "clienteId": "cli-imp-077",
       "nome": "Joao",
@@ -3589,20 +3551,6 @@
       "comercialAtribuidoId": "usr-admin-001"
     },
     {
-      "id": "con-imp-112",
-      "clienteId": "cli-imp-016",
-      "nome": "Namalimba",
-      "apelido": "Coelho",
-      "cargo": "Diretora de Comunicação (Head of Arts & Culture, PR & Stakeholders)",
-      "telefone": "210028130",
-      "telemovel": "",
-      "email": "fundacaoedp@edp.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
-    },
-    {
       "id": "con-imp-113",
       "clienteId": "cli-imp-024",
       "nome": "Carina",
@@ -3626,21 +3574,6 @@
       "telefone": "210480200",
       "telemovel": "",
       "email": "info@fundacaochampalimaud.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
-    },
-    {
-      "id": "con-imp-115",
-      "clienteId": "cli-imp-070",
-      "subTabIndex": 0,
-      "nome": "Maria",
-      "apelido": "de Fátima Coelho Dias",
-      "cargo": "Secretária-Geral / Administradora Executiva",
-      "telefone": "211131682",
-      "telemovel": "",
-      "email": "fundacao@millenniumbcp.pt",
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "userId": "usr-admin-001",
@@ -3691,21 +3624,6 @@
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
       "createdById": "usr-admin-001"
-    },
-    {
-      "id": "con-imp-120",
-      "clienteId": "cli-imp-082",
-      "nome": "Daniel",
-      "apelido": "Fonseca",
-      "cargo": "Diretor de Marca e Comunicação",
-      "telefone": "220104000",
-      "telemovel": "",
-      "email": "comunicacao@sonae.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0,
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-122",
@@ -3767,36 +3685,6 @@
       "comercialAtribuidoId": "usr-admin-001"
     },
     {
-      "id": "con-imp-126",
-      "clienteId": "cli-imp-072",
-      "nome": "Maria",
-      "apelido": "Inês Marques",
-      "cargo": "R&D Senior Project Manager",
-      "telefone": "210012500",
-      "telemovel": "",
-      "email": "edponservices@edp.com",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
-    },
-    {
-      "id": "con-imp-127",
-      "clienteId": "cli-imp-080",
-      "nome": "Tiago",
-      "apelido": "Silva Vieira",
-      "cargo": "Project Manager and Scrum Master",
-      "telefone": "234403200",
-      "telemovel": "",
-      "email": "contact@alticelabs.com",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0,
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-1787393198433"
-    },
-    {
       "id": "con-imp-128",
       "clienteId": "cli-imp-080",
       "nome": "Ricardo",
@@ -3835,21 +3723,6 @@
       "telefone": "+351 220 104 000",
       "telemovel": "",
       "email": "comunicacao@sonae.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0,
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
-    },
-    {
-      "id": "con-imp-132",
-      "clienteId": "cli-imp-072",
-      "nome": "Júlia",
-      "apelido": "Pereira",
-      "cargo": "Project Coordinator (POCITYF)",
-      "telefone": "+351 210 012 500",
-      "telemovel": "",
-      "email": "edponservices@edp.com",
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 0,
@@ -4239,21 +4112,6 @@
       "createdById": "usr-admin-001"
     },
     {
-      "id": "con-1787049428085-826",
-      "clienteId": "Ministério de Reforma de Estado",
-      "tratamento": "",
-      "nome": "Maria Joao Santos",
-      "apelido": "",
-      "cargo": "Chefe de Gabinete - Secretaria de Estado para a Simplificação",
-      "departamento": "",
-      "telefone": "",
-      "telemovel": "",
-      "email": "gabinete.simplificacao@mare.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
-    },
-    {
       "id": "con-1787049428085-72",
       "clienteId": "cli-1787050401189-194",
       "tratamento": "",
@@ -4287,24 +4145,6 @@
       "comercialAtribuidoId": "usr-admin-001"
     },
     {
-      "id": "con-1787049428085-965",
-      "clienteId": "cli-1787050401189-194",
-      "tratamento": "",
-      "nome": "Carla",
-      "apelido": "Marques Mendes",
-      "cargo": "Secretária de Estado de acción social e de Inclusão",
-      "departamento": "",
-      "telefone": "",
-      "telemovel": "",
-      "email": "gabinete.seasi@mtsss.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "subTabIndex": 1,
-      "notas": "",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-admin-001"
-    },
-    {
       "id": "con-1787049428085-251",
       "clienteId": "Ministério do Trabalho, Solidariedade e Segurança Social",
       "tratamento": "",
@@ -4335,21 +4175,6 @@
       "comercialAtribuidoId": "usr-admin-001"
     },
     {
-      "id": "con-1787049428085-832",
-      "clienteId": "Ministério da Administração Interna",
-      "tratamento": "",
-      "nome": "Luís Neves",
-      "apelido": "",
-      "cargo": "Ministro",
-      "departamento": "",
-      "telefone": "",
-      "telemovel": "",
-      "email": "gabinete.mai@mai.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
-    },
-    {
       "id": "con-1787049428085-609",
       "clienteId": "Ministério da Administração Interna",
       "tratamento": "",
@@ -4375,36 +4200,6 @@
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.seai@mai.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
-    },
-    {
-      "id": "con-1787049428085-175",
-      "clienteId": "Ministério da Administração Interna",
-      "tratamento": "",
-      "nome": "Rui Ribeiro",
-      "apelido": "",
-      "cargo": "Chefe de Gabinete - Secretaria de Estado de Administração interna",
-      "departamento": "",
-      "telefone": "",
-      "telemovel": "",
-      "email": "gabinete.seai@mai.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
-    },
-    {
-      "id": "con-1787049428085-360",
-      "clienteId": "Ministério das Infraestruturas e Habitação",
-      "tratamento": "",
-      "nome": "Miguel Pinto Luz",
-      "apelido": "",
-      "cargo": "Ministro",
-      "departamento": "",
-      "telefone": "",
-      "telemovel": "",
-      "email": "gabinete.mih@mih.gov.pt",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001"
@@ -4444,21 +4239,6 @@
       "comercialAtribuidoId": "usr-admin-001"
     },
     {
-      "id": "con-1787049428085-649",
-      "clienteId": "Ministério das Infraestruturas e Habitação",
-      "tratamento": "",
-      "nome": "Joao Pedro Coutinho",
-      "apelido": "",
-      "cargo": "Chefe de Gabinete - Secretaria de Estado das Infraestruturas",
-      "departamento": "",
-      "telefone": "",
-      "telemovel": "",
-      "email": "gabinete.seinf@mih.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
-    },
-    {
       "id": "con-1787049428085-943",
       "clienteId": "Ministério da Justiça",
       "tratamento": "",
@@ -4474,24 +4254,6 @@
       "comercialAtribuidoId": "usr-admin-001"
     },
     {
-      "id": "con-1787049428085-801",
-      "clienteId": "cli-1787050401189-194",
-      "tratamento": "",
-      "nome": "Elsa",
-      "apelido": "Martins",
-      "cargo": "Chefe de Gabinete",
-      "departamento": "",
-      "telefone": "",
-      "telemovel": "",
-      "email": "gabinete.mj@mj.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "subTabIndex": 1,
-      "notas": "",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-admin-001"
-    },
-    {
       "id": "con-1787049428085-715",
       "clienteId": "cli-1787038283894-51",
       "subTabIndex": 0,
@@ -4502,36 +4264,6 @@
       "telemovel": "",
       "email": "gabinete.sej@mj.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
-    },
-    {
-      "id": "con-1787049428085-422",
-      "clienteId": "Ministério da Justiça",
-      "tratamento": "",
-      "nome": "João Galvão Teles",
-      "apelido": "",
-      "cargo": "Chefe de Gabinete - Secretaria de Estado de Justiça",
-      "departamento": "",
-      "telefone": "",
-      "telemovel": "",
-      "email": "gabinete.sej@mj.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
-    },
-    {
-      "id": "con-1787049428085-162",
-      "clienteId": "Ministério da Defesa Nacional",
-      "tratamento": "",
-      "nome": "Nuno Melo",
-      "apelido": "",
-      "cargo": "Ministro",
-      "departamento": "",
-      "telefone": "",
-      "telemovel": "",
-      "email": "gabinete.Ministro@mdn.gov.pt",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001"
@@ -4567,24 +4299,6 @@
       "comercialAtribuidoId": "usr-admin-001"
     },
     {
-      "id": "con-1787049428085-561",
-      "clienteId": "cli-1787050401189-194",
-      "tratamento": "",
-      "nome": "Carlos",
-      "apelido": "Abreu Amorim",
-      "cargo": "Ministro",
-      "departamento": "",
-      "telefone": "",
-      "telemovel": "",
-      "email": "gabinete.map@map.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "subTabIndex": 1,
-      "notas": "",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-admin-001"
-    },
-    {
       "id": "con-1787049428085-370",
       "clienteId": "Ministério de Assuntos Parlamentares",
       "tratamento": "",
@@ -4596,23 +4310,6 @@
       "telemovel": "",
       "email": "gabinete.map@map.gov.pt",
       "createdAt": "2026-08-18T10:37:08.085Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
-    },
-    {
-      "id": "con-1787049428085-253",
-      "clienteId": "cli-1787038283894-699",
-      "subTabIndex": 0,
-      "nome": "Gonçalo",
-      "apelido": "Saraiva Matias",
-      "cargo": "Ministro",
-      "telefone": "",
-      "telemovel": "",
-      "email": "gabinete.ministro@mare.gov.pt",
-      "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "tratamento": "",
-      "departamento": "",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001"
     },
@@ -5541,19 +5238,91 @@
     },
     {
       "id": "usr-1787590828349",
-      "nome": "dasdasda dsadasdas",
+      "nome": "‎",
       "primeiroNome": "dasdasda",
       "apelido": "dsadasdas",
-      "email": "jmcenturio2@alegria-activity.com",
-      "cargo": "joao",
+      "email": "maria@empresa.com",
+      "cargo": "‎",
       "idioma": "Português",
-      "pin": "Passw0rd!",
-      "role": "user",
-      "active": false,
-      "createdAt": "2026-08-24T17:00:28.349Z"
+      "pin": "Passw0rd!111",
+      "role": "admin",
+      "active": true,
+      "createdAt": "2026-08-24T17:00:28.349Z",
+      "chefia": true
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1787593435599-484",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Atualização de Software",
+      "descricao": "Versão de software \"SIGEC_V2.0_23-08-2026_02h07m\" instalada com sucesso.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-24T17:43:55.599Z"
+    },
+    {
+      "id": "log-1787593359444-579",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Atualização de Software",
+      "descricao": "Pacote de atualização \"SIGEC_V1.7.4_24-08-2026_18h42m.json\" gerado (Apenas Software - Sem dados de registo).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-24T17:42:39.444Z"
+    },
+    {
+      "id": "log-1787593340915-144",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Dados de registo e PIN do utilizador ‎ atualizados pelo Administrador.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-24T17:42:20.915Z"
+    },
+    {
+      "id": "log-1787593257210-574",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Ficha do utilizador dasdasda dsadasdas aberta após autenticação de Administrador.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-24T17:40:57.210Z"
+    },
+    {
+      "id": "log-1787593101803-434",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Início de Sessão",
+      "descricao": "Acesso autorizado efetuado por José Centúrio.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "utilizador": "José Centúrio",
+        "email": "jmcenturio@alegria-activity.com",
+        "cargo": "Administrador do Sistema",
+        "dispositivo": "Computador"
+      },
+      "timestamp": "2026-08-24T17:38:21.803Z"
+    },
+    {
+      "id": "log-1787593092799-730",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-24T17:38:12.799Z"
+    },
     {
       "id": "log-1787592916878-517",
       "usuarioId": "usr-admin-001",
@@ -5634,6 +5403,170 @@
     }
   ],
   "ignoredDuplicates": [],
+  "activityHistory": [
+    {
+      "id": "act-1787593494417",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_DELETE",
+      "entity": "contactos",
+      "entityId": "con-1787049428085-253",
+      "details": "Registo \"Gonçalo\" eliminado manualmente a partir do gestor de duplicados.",
+      "timestamp": "2026-08-24T17:44:54.417Z"
+    },
+    {
+      "id": "act-1787593491785",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_DELETE",
+      "entity": "contactos",
+      "entityId": "con-1787049428085-561",
+      "details": "Registo \"Carlos\" eliminado manualmente a partir do gestor de duplicados.",
+      "timestamp": "2026-08-24T17:44:51.785Z"
+    },
+    {
+      "id": "act-1787593489070",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_DELETE",
+      "entity": "contactos",
+      "entityId": "con-1787049428085-162",
+      "details": "Registo \"Nuno Melo\" eliminado manualmente a partir do gestor de duplicados.",
+      "timestamp": "2026-08-24T17:44:49.070Z"
+    },
+    {
+      "id": "act-1787593487239",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_DELETE",
+      "entity": "contactos",
+      "entityId": "con-1787049428085-422",
+      "details": "Registo \"João Galvão Teles\" eliminado manualmente a partir do gestor de duplicados.",
+      "timestamp": "2026-08-24T17:44:47.239Z"
+    },
+    {
+      "id": "act-1787593483857",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_ONE",
+      "entity": "contactos",
+      "entityId": "con-1787049428085-943",
+      "details": "Mantido apenas um registo (con-1787049428085-943). Eliminados: \"Elsa\".",
+      "timestamp": "2026-08-24T17:44:43.857Z"
+    },
+    {
+      "id": "act-1787593479086",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_ONE",
+      "entity": "contactos",
+      "entityId": "con-1787049428085-932",
+      "details": "Mantido apenas um registo (con-1787049428085-932). Eliminados: \"Joao Pedro Coutinho\".",
+      "timestamp": "2026-08-24T17:44:39.086Z"
+    },
+    {
+      "id": "act-1787593474998",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_DELETE",
+      "entity": "contactos",
+      "entityId": "con-1787049428085-360",
+      "details": "Registo \"Miguel Pinto Luz\" eliminado manualmente a partir do gestor de duplicados.",
+      "timestamp": "2026-08-24T17:44:34.998Z"
+    },
+    {
+      "id": "act-1787593472591",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_ONE",
+      "entity": "contactos",
+      "entityId": "con-1787049428085-87",
+      "details": "Mantido apenas um registo (con-1787049428085-87). Eliminados: \"Rui Ribeiro\".",
+      "timestamp": "2026-08-24T17:44:32.591Z"
+    },
+    {
+      "id": "act-1787593462549",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_DELETE",
+      "entity": "contactos",
+      "entityId": "con-1787049428085-832",
+      "details": "Registo \"Luís Neves\" eliminado manualmente a partir do gestor de duplicados.",
+      "timestamp": "2026-08-24T17:44:22.549Z"
+    },
+    {
+      "id": "act-1787593460688",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_DELETE",
+      "entity": "contactos",
+      "entityId": "con-1787049428085-965",
+      "details": "Registo \"Carla\" eliminado manualmente a partir do gestor de duplicados.",
+      "timestamp": "2026-08-24T17:44:20.688Z"
+    },
+    {
+      "id": "act-1787593459009",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_DELETE",
+      "entity": "contactos",
+      "entityId": "con-1787049428085-826",
+      "details": "Registo \"Maria Joao Santos\" eliminado manualmente a partir do gestor de duplicados.",
+      "timestamp": "2026-08-24T17:44:19.009Z"
+    },
+    {
+      "id": "act-1787593457705",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_DELETE",
+      "entity": "contactos",
+      "entityId": "con-imp-132",
+      "details": "Registo \"Júlia\" eliminado manualmente a partir do gestor de duplicados.",
+      "timestamp": "2026-08-24T17:44:17.705Z"
+    },
+    {
+      "id": "act-1787593456279",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_DELETE",
+      "entity": "contactos",
+      "entityId": "con-imp-127",
+      "details": "Registo \"Tiago\" eliminado manualmente a partir do gestor de duplicados.",
+      "timestamp": "2026-08-24T17:44:16.279Z"
+    },
+    {
+      "id": "act-1787593455132",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_DELETE",
+      "entity": "contactos",
+      "entityId": "con-imp-126",
+      "details": "Registo \"Maria\" eliminado manualmente a partir do gestor de duplicados.",
+      "timestamp": "2026-08-24T17:44:15.132Z"
+    },
+    {
+      "id": "act-1787593453669",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_DELETE",
+      "entity": "contactos",
+      "entityId": "con-imp-120",
+      "details": "Registo \"Daniel\" eliminado manualmente a partir do gestor de duplicados.",
+      "timestamp": "2026-08-24T17:44:13.669Z"
+    },
+    {
+      "id": "act-1787593450625",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_DELETE",
+      "entity": "contactos",
+      "entityId": "con-imp-115",
+      "details": "Registo \"Maria\" eliminado manualmente a partir do gestor de duplicados.",
+      "timestamp": "2026-08-24T17:44:10.625Z"
+    },
+    {
+      "id": "act-1787593448794",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_DELETE",
+      "entity": "clientes",
+      "entityId": "cli-imp-020",
+      "details": "Registo \"Fundação Altice Portugal\" eliminado manualmente a partir do gestor de duplicados.",
+      "timestamp": "2026-08-24T17:44:08.794Z"
+    },
+    {
+      "id": "act-1787593162075",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_DELETE",
+      "entity": "contactos",
+      "entityId": "con-imp-112",
+      "details": "Registo \"Namalimba\" eliminado manualmente a partir do gestor de duplicados.",
+      "timestamp": "2026-08-24T17:39:22.075Z"
+    }
+  ],
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
   "_deletedRegistry": {
     "clientes": [
@@ -5786,7 +5719,8 @@
       "cli-imp-001",
       "cli-imp-080",
       "cli-imp-013",
-      "cli-1787208572192-719"
+      "cli-1787208572192-719",
+      "cli-imp-020"
     ],
     "contactos": [
       "con-imp-059",
@@ -5860,7 +5794,25 @@
       "con-1787049428085-374",
       "con-imp-009",
       "con-imp-027",
-      "con-1787209295713-151"
+      "con-1787209295713-151",
+      "con-imp-112",
+      "con-imp-115",
+      "con-imp-120",
+      "con-imp-126",
+      "con-imp-127",
+      "con-imp-132",
+      "con-1787049428085-826",
+      "con-1787049428085-965",
+      "con-1787049428085-832",
+      "con-1787049428085-175",
+      "con-1787049428085-360",
+      "con-1787049428085-649",
+      "con-1787049428085-801",
+      "con-1787049428085-422",
+      "con-1787049428085-162",
+      "con-1787049428085-561",
+      "con-1787049428085-253",
+      "con-imp-032"
     ],
     "projetos": [
       "proj-camp-008",
