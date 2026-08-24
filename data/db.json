@@ -3265,22 +3265,6 @@
       "comercialAtribuidoId": "usr-admin-001"
     },
     {
-      "id": "con-imp-039",
-      "clienteId": "cli-1786727373519-853",
-      "subTabIndex": 0,
-      "nome": "Paula",
-      "apelido": "Amorim",
-      "cargo": "Presidente",
-      "telefone": "+351 217 242 500",
-      "telemovel": "",
-      "email": "fundacao@galp.com",
-      "notas": "Temas: Transición energética, acción climática, sostenibilidad, educación, innovación social, biodiversidad y apoyo a comunidades vulnerables",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-admin-001"
-    },
-    {
       "id": "con-imp-040",
       "clienteId": "cli-imp-014",
       "subTabIndex": 0,
@@ -4234,21 +4218,6 @@
       "telemovel": "",
       "email": "gabinete.sej@mj.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
-    },
-    {
-      "id": "con-1787049428085-1",
-      "clienteId": "Ministério da Defesa Nacional",
-      "tratamento": "",
-      "nome": "Pedro Sardinha",
-      "apelido": "",
-      "cargo": "Chefe de Gabinete",
-      "departamento": "",
-      "telefone": "",
-      "telemovel": "",
-      "email": "gabinete.Ministro@mdn.gov.pt",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001"
@@ -5208,6 +5177,17 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787593542910-115",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Contactos",
+      "detalhes": null,
+      "timestamp": "2026-08-24T17:45:42.911Z"
+    },
+    {
       "id": "log-1787593538639-710",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -5792,7 +5772,9 @@
       "con-imp-032",
       "con-imp-049",
       "con-imp-038",
-      "con-1787217817944-195"
+      "con-1787217817944-195",
+      "con-imp-039",
+      "con-1787049428085-1"
     ],
     "projetos": [
       "proj-camp-008",
