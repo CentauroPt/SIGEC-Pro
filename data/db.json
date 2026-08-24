@@ -54,7 +54,8 @@
       "createdAt": "2026-08-18T10:53:21.189Z",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio"
+      "comercialAtribuidoNome": "José Centúrio",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "cli-imp-004",
@@ -4128,7 +4129,8 @@
       "subTabIndex": 1,
       "notas": "",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-204",
@@ -4145,7 +4147,8 @@
       "subTabIndex": 1,
       "notas": "",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-826",
@@ -4177,7 +4180,8 @@
       "subTabIndex": 1,
       "notas": "",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-379",
@@ -4209,7 +4213,8 @@
       "subTabIndex": 1,
       "notas": "",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-251",
@@ -4395,7 +4400,8 @@
       "subTabIndex": 1,
       "notas": "",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-715",
@@ -4487,7 +4493,8 @@
       "subTabIndex": 1,
       "notas": "",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-370",
@@ -4568,7 +4575,8 @@
       "subTabIndex": 1,
       "notas": "",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-527",
@@ -4660,7 +4668,8 @@
       "subTabIndex": 1,
       "notas": "",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-212",
@@ -5514,7 +5523,8 @@
       "pin": "J*cen*1971",
       "role": "user",
       "active": true,
-      "createdAt": "2026-08-22T06:46:08.601Z"
+      "createdAt": "2026-08-22T06:46:08.601Z",
+      "chefia": false
     },
     {
       "id": "usr-1787393198433",
@@ -5532,57 +5542,7 @@
   ],
   "userLogs": [
     {
-      "id": "log-1787579630407-55",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Projeto",
-      "descricao": "Ficha do projeto \"Huawei SmartBus\" atualizada.",
-      "pagina": "tab-consultas",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Projeto",
-        "nome": "Huawei SmartBus",
-        "tipo": "Campanha",
-        "estado": "Concluído",
-        "cliente": "Huawei Technologies Portugal",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas"
-          }
-        ]
-      },
-      "timestamp": "2026-08-24T13:53:50.407Z"
-    },
-    {
-      "id": "log-1787579615401-430",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Edição de Projeto",
-      "descricao": "Ficha do projeto \"Huawei SmartBus\" atualizada.",
-      "pagina": "tab-consultas",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Projeto",
-        "nome": "Huawei SmartBus",
-        "tipo": "Campanha",
-        "estado": "Concluído",
-        "cliente": "Huawei Technologies Portugal",
-        "camposAlterados": [
-          {
-            "campo": "Estado",
-            "anterior": "Concluido",
-            "novo": "Concluído"
-          }
-        ]
-      },
-      "timestamp": "2026-08-24T13:53:35.401Z"
-    },
-    {
-      "id": "log-1787579473978-454",
+      "id": "log-1787580674299-634",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
@@ -5595,7 +5555,7 @@
         "cargo": "Administrador do Sistema",
         "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-24T13:51:13.978Z"
+      "timestamp": "2026-08-24T14:11:14.299Z"
     }
   ],
   "orcamentos": [
@@ -5732,26 +5692,6 @@
       "id1": "cli-1787050401189-194",
       "ignoredAt": "2026-08-19T12:02:31.297Z",
       "ignoredBy": "Sistema"
-    }
-  ],
-  "activityHistory": [
-    {
-      "id": "act-1787580069021",
-      "userId": "usr-admin-001",
-      "action": "DUPLICATE_KEEP_BOTH",
-      "entity": "duplicados",
-      "entityId": "con-imp-042,con-imp-112",
-      "details": "Decidido manter ambos os registos (con-imp-042, con-imp-112).",
-      "timestamp": "2026-08-24T14:01:09.021Z"
-    },
-    {
-      "id": "act-1787580051365",
-      "userId": "usr-admin-001",
-      "action": "DUPLICATE_KEEP_BOTH",
-      "entity": "duplicados",
-      "entityId": "con-imp-041,con-imp-115",
-      "details": "Decidido manter ambos os registos (con-imp-041, con-imp-115).",
-      "timestamp": "2026-08-24T14:00:51.365Z"
     }
   ],
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
@@ -6001,7 +5941,8 @@
       "int-1787210357662-44",
       "int-1787222173351-216",
       "cpi-1787210126029-44",
-      "int-1787208850710-673"
+      "int-1787208850710-673",
+      "int-1787580640120-259"
     ],
     "interacoesProjetos": [],
     "orcamentos": [
