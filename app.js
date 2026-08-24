@@ -6628,60 +6628,64 @@ function renderClientContactsGrid(contacts) {
   contacts.forEach(con => {
     const card = document.createElement('div');
     card.className = 'contact-card';
-    card.style.cursor = 'pointer';
+    card.style.cssText = 'padding: 0.8rem 0.9rem; border-radius: 8px; border: 1px solid #e2e8f0; background: #ffffff; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.04); cursor: pointer; transition: all 0.2s ease;';
     card.onclick = () => openContactModalForEdit(con.id);
+
+    card.onmouseenter = () => { card.style.borderColor = '#93c5fd'; card.style.boxShadow = '0 3px 8px rgba(37,99,235,0.08)'; };
+    card.onmouseleave = () => { card.style.borderColor = '#e2e8f0'; card.style.boxShadow = '0 1px 3px rgba(0,0,0,0.04)'; };
     
     let subTabBadge = '';
     const cSub = (con.subTabIndex !== undefined && con.subTabIndex !== null && con.subTabIndex !== '') ? Number(con.subTabIndex) : 0;
     if (isEstatal && currentEstatalSeparadores && currentEstatalSeparadores[cSub]) {
       const sepTitle = getSeparadorTitle(currentEstatalSeparadores[cSub]);
-      subTabBadge = `<span class="badge badge-amber" style="margin-left: 6px; font-size: 0.72rem;">${escapeHtml(sepTitle)}</span>`;
+      subTabBadge = `<span class="badge badge-amber" style="margin-left: 4px; font-size: 0.7rem; padding: 1px 6px;">${escapeHtml(sepTitle)}</span>`;
     }
 
     card.innerHTML = `
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.6rem; flex-wrap: wrap;" onclick="event.stopPropagation();">
-        <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
-          ${isEstatal ? `
-            <button type="button" class="btn-subtab-pill" onclick="openMoveSubTabContactModal('${con.id}')" title="Mover contacto para outro separador deste cliente">
-              <i class="fa-solid fa-folder-tree"></i> Mover Separador
-            </button>
-          ` : ''}
-        </div>
-        <div style="display: flex; gap: 0.25rem; align-items: center;">
-          <button type="button" class="action-icon-btn" onclick="openTransferContactModal('${con.id}')" title="Mudar de cliente">
-            <i class="fa-solid fa-arrow-right-arrow-left"></i>
+      <div class="contact-card-actions" style="position: absolute; top: 0.6rem; right: 0.6rem; display: flex; gap: 0.25rem; align-items: center;" onclick="event.stopPropagation();">
+        ${isEstatal ? `
+          <button type="button" class="action-icon-btn" onclick="openMoveSubTabContactModal('${con.id}')" title="Mover contacto para outro separador deste cliente" style="width: 26px; height: 26px; font-size: 0.78rem;">
+            <i class="fa-solid fa-folder-tree" style="color: #2563eb;"></i>
           </button>
-          <button type="button" class="action-icon-btn" onclick="openContactModalForEdit('${con.id}')" title="Editar Ficha de Contacto">
-            <i class="fa-solid fa-pen-to-square"></i>
-          </button>
-          <button type="button" class="action-icon-btn danger" onclick="deleteContactInline('${con.id}')" title="Apagar Contacto">
-            <i class="fa-solid fa-trash"></i>
-          </button>
-        </div>
-}
-
-      <div class="contact-name" style="font-size: 0.95rem; font-weight: 700; color: #1e3a8a;">
-        ${escapeHtml(con.nome)} ${escapeHtml(con.apelido || '')} ${subTabBadge}
+        ` : ''}
+        <button type="button" class="action-icon-btn" onclick="openTransferContactModal('${con.id}')" title="Mudar de cliente" style="width: 26px; height: 26px; font-size: 0.78rem;">
+          <i class="fa-solid fa-arrow-right-arrow-left"></i>
+        </button>
+        <button type="button" class="action-icon-btn" onclick="openContactModalForEdit('${con.id}')" title="Editar Ficha de Contacto" style="width: 26px; height: 26px; font-size: 0.78rem;">
+          <i class="fa-solid fa-pen-to-square"></i>
+        </button>
+        <button type="button" class="action-icon-btn danger" onclick="deleteContactInline('${con.id}')" title="Apagar Contacto" style="width: 26px; height: 26px; font-size: 0.78rem;">
+          <i class="fa-solid fa-trash"></i>
+        </button>
       </div>
-      ${con.cargo ? `<div class="contact-role" style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.4rem;"><i class="fa-solid fa-briefcase"></i> ${escapeHtml(con.cargo)}</div>` : ''}
+
+      <div class="contact-name" style="font-size: 0.92rem; font-weight: 700; color: #1e3a8a; padding-right: 90px; margin-bottom: 0.25rem; display: flex; align-items: center; flex-wrap: wrap; gap: 0.25rem;">
+        <span>${escapeHtml(con.nome)} ${escapeHtml(con.apelido || '')}</span>
+        ${subTabBadge}
+      </div>
+
+      ${con.cargo ? `<div class="contact-role" style="font-size: 0.8rem; color: #64748b; margin-bottom: 0.45rem; display: flex; align-items: center; gap: 0.35rem;"><i class="fa-solid fa-briefcase" style="width: 14px; color: #94a3b8; font-size: 0.75rem;"></i> ${escapeHtml(con.cargo)}</div>` : ''}
       
-      <div style="display: flex; flex-direction: column; gap: 0.25rem; margin-top: 0.4rem; font-size: 0.85rem; color: #334155;">
+      <div style="display: flex; flex-direction: column; gap: 0.25rem; margin-top: 0.35rem; font-size: 0.82rem; color: #334155;">
         ${con.telemovel || con.telefone ? `
           <div style="display: flex; align-items: center; gap: 0.4rem;">
-            <i class="fa-solid fa-phone" style="width: 14px; color: #1e293b;"></i> ${escapeHtml(con.telemovel || con.telefone)}
+            <i class="fa-solid fa-phone" style="width: 14px; color: #0284c7; font-size: 0.75rem;"></i>
+            <span>${escapeHtml(con.telemovel || con.telefone)}</span>
           </div>
         ` : ''}
         ${con.email ? `
-          <div style="display: flex; align-items: center; gap: 0.4rem;">
-            <i class="fa-solid fa-envelope" style="width: 14px; color: #1e293b;"></i> ${escapeHtml(con.email)}
+          <div style="display: flex; align-items: center; gap: 0.4rem; word-break: break-all;">
+            <i class="fa-solid fa-envelope" style="width: 14px; color: #0284c7; font-size: 0.75rem;"></i>
+            <span>${escapeHtml(con.email)}</span>
           </div>
         ` : ''}
       </div>
-      ${con.notas ? `<div class="contact-notes-preview" title="${escapeHtmlAttr(con.notas)}"><strong>Notas:</strong> ${escapeHtml(con.notas)}</div>` : ''}
+      ${con.notas ? `<div class="contact-notes-preview" style="font-size: 0.76rem; margin-top: 0.45rem; padding-top: 0.35rem; border-top: 1px dashed #e2e8f0; color: #64748b;" title="${escapeHtmlAttr(con.notas)}"><strong>Notas:</strong> ${escapeHtml(con.notas)}</div>` : ''}
     `;
     grid.appendChild(card);
   });
 }
+
 
 function openAttachExistingContactModal() {
   const targetClientId = (typeof currentClientId !== 'undefined' && currentClientId)
