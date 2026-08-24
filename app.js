@@ -1,4 +1,4 @@
-﻿const INITIAL_EXCEL_DATABASE = {
+const INITIAL_EXCEL_DATABASE = {
     "clientes":  [
                      {
                          "id":  "cli-1786727373519-853",
@@ -4782,17 +4782,17 @@ function renderContactPageMainGrid() {
   if (!container) return;
   container.innerHTML = '';
 
-  const query = document.getElementById('contactPageSearchQuery')?\.value.trim() || '';
+  const query = document.getElementById('contactPageSearchQuery')?.value.trim() || '';
   let contactsList = getUserScopedItems([...(db.contactos || [])]);
 
-  // Filtro por Separador: Todos os Contactos, Contactos Privados, Contactos FundaÃ§Ãµes, Contactos PÃºblico / Estatal
+  // Filtro por Separador: Todos os Contactos, Contactos Privados, Contactos Fundações, Contactos Público / Estatal
   if (currentContactFilterTab === 'privado') {
     contactsList = contactsList.filter(con => {
       if (!con) return false;
       const cli = (db.clientes || []).find(c => c.id === con.clienteId);
       if (!cli) return true;
-      const isEstatal = cli.tipoCliente === 'PÃºblico' || cli.tipoCliente === 'Estatal' || cli.tipoCliente === 'Governamental' || (cli.ministerio && cli.ministerio.trim() !== '');
-      const isFundacao = cli.tipoCliente === 'FundaÃ§Ã£o' || cli.tipoCliente === 'Fundacao' || (cli.nome && normalizeText(cli.nome).startsWith('fundacao'));
+      const isEstatal = cli.tipoCliente === 'Público' || cli.tipoCliente === 'Estatal' || cli.tipoCliente === 'Governamental' || (cli.ministerio && cli.ministerio.trim() !== '');
+      const isFundacao = cli.tipoCliente === 'Fundação' || cli.tipoCliente === 'Fundacao' || (cli.nome && normalizeText(cli.nome).startsWith('fundacao'));
       return !isEstatal && !isFundacao;
     });
   } else if (currentContactFilterTab === 'fundacao') {
@@ -4809,7 +4809,7 @@ function renderContactPageMainGrid() {
       if (!con) return false;
       const cli = (db.clientes || []).find(c => c.id === con.clienteId);
       if (!cli) return false;
-      return cli.tipoCliente === 'PÃºblico' || cli.tipoCliente === 'Estatal' || cli.tipoCliente === 'Governamental' || (cli.ministerio && cli.ministerio.trim() !== '');
+      return cli.tipoCliente === 'Público' || cli.tipoCliente === 'Estatal' || cli.tipoCliente === 'Governamental' || (cli.ministerio && cli.ministerio.trim() !== '');
     });
   }
 
@@ -4831,22 +4831,22 @@ function renderContactPageMainGrid() {
     });
   }
 
-  // OrdenaÃ§Ã£o por Contactados se ativo
+  // Ordenação por Contactados se ativo
   if (typeof currentDashContactSortOrder !== 'undefined' && currentDashContactSortOrder === 'sim_nao') {
     contactsList.sort((a, b) => (isContactContacted(b.id) ? 1 : 0) - (isContactContacted(a.id) ? 1 : 0));
   } else if (typeof currentDashContactSortOrder !== 'undefined' && currentDashContactSortOrder === 'nao_sim') {
     contactsList.sort((a, b) => (isContactContacted(a.id) ? 1 : 0) - (isContactContacted(b.id) ? 1 : 0));
   } else {
-    // OrdenaÃ§Ã£o AlfabÃ©tica ObrigatÃ³ria A-Z
+    // Ordenação Alfabética Obrigatória A-Z
     contactsList.sort((a, b) => {
-      const nameA = `${a.nome || ''}\ ${a.apelido || ''}`.trim();
-      const nameB = `${b.nome || ''}\ ${b.apelido || ''}`.trim();
+      const nameA = `${a.nome || ''} ${a.apelido || ''}`.trim();
+      const nameB = `${b.nome || ''} ${b.apelido || ''}`.trim();
       return nameA.localeCompare(nameB, 'pt', { sensitivity: 'base' });
     });
   }
 
   if (contactsList.length === 0) {
-    container.innerHTML = '<span class="empty-state">Nenhum contacto encontrado para os critÃ©rios de pesquisa.</span>';
+    container.innerHTML = '<span class="empty-state">Nenhum contacto encontrado para os critérios de pesquisa.</span>';
     return;
   }
 
@@ -4861,9 +4861,9 @@ function renderContactPageMainGrid() {
               <th style="padding:0.75rem 1rem; text-align:left;">Nome do Contacto</th>
               <th style="padding:0.75rem 1rem; text-align:left;">Cliente Associado</th>
               <th style="padding:0.75rem 1rem; text-align:left;">Cargo</th>
-              <th style="padding:0.75rem 1rem; text-align:left;">TelemÃ³vel / Telefone</th>
+              <th style="padding:0.75rem 1rem; text-align:left;">Telemóvel / Telefone</th>
               <th style="padding:0.75rem 1rem; text-align:left;">Email</th>
-              <th style="padding:0.75rem 1rem; text-align:center;">AÃ§Ãµes</th>
+              <th style="padding:0.75rem 1rem; text-align:center;">Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -4873,17 +4873,17 @@ function renderContactPageMainGrid() {
       const client = db.clientes.find(c => c.id === con.clienteId);
       const isContacted = isContactContacted(con.id);
       html += `
-        <tr style="border-bottom:1px solid #e2e8f0; cursor:pointer;" onclick="openContactModalForEdit(''${con.id}'')">
+        <tr style="border-bottom:1px solid #e2e8f0; cursor:pointer;" onclick="openContactModalForEdit('${con.id}')">
           <td style="padding:0.75rem 0.5rem; text-align:center;" onclick="event.stopPropagation();">
-            <label style="display:inline-flex; align-items:center; justify-content:center; gap:0.35rem; cursor:pointer; margin:0;" title="${isContacted ? 'Contacto Contactado (possui registo de contactos realizados)' : 'NÃ£o Contactado (sem registo de contactos realizados)'}">
+            <label style="display:inline-flex; align-items:center; justify-content:center; gap:0.35rem; cursor:pointer; margin:0;" title="${isContacted ? 'Contacto Contactado (possui registo de contactos realizados)' : 'Não Contactado (sem registo de contactos realizados)'}">
               <input type="checkbox" ${isContacted ? 'checked' : ''} disabled style="width:17px; height:17px; accent-color:#16a34a; cursor:default;">
-              <span style="font-size:0.78rem; font-weight:700; color:${isContacted ? '#16a34a' : '#94a3b8'};">${isContacted ? 'Sim' : 'NÃ£o'}</span>
+              <span style="font-size:0.78rem; font-weight:700; color:${isContacted ? '#16a34a' : '#94a3b8'};">${isContacted ? 'Sim' : 'Não'}</span>
             </label>
           </td>
           <td style="padding:0.75rem 1rem; font-weight:700; color:#1e293b;">
             <div style="display:flex; align-items:center; gap:0.5rem;">
               <i class="fa-solid fa-user" style="color:var(--primary-blue); font-size:0.85rem;"></i>
-              <span>${escapeHtml(con.nome)} ${escapeHtml(con.apelido || ''\)}</span>
+              <span>${escapeHtml(con.nome)} ${escapeHtml(con.apelido || '')}</span>
             </div>
           </td>
           <td style="padding:0.75rem 1rem; color:#334155; font-weight:500;">${escapeHtml(client ? client.nome : '-')}</td>
@@ -4891,13 +4891,13 @@ function renderContactPageMainGrid() {
           <td style="padding:0.75rem 1rem; color:#475569;">${escapeHtml(con.telemovel || con.telefone || '-')}</td>
           <td style="padding:0.75rem 1rem; color:#475569;">${escapeHtml(con.email || '-')}</td>
           <td style="padding:0.75rem 1rem; text-align:center; white-space:nowrap;" onclick="event.stopPropagation();">
-            <button type="button" class="action-icon-btn" onclick="openTransferContactModal(''${con.id}'')" title="Mudar de Cliente">
+            <button type="button" class="action-icon-btn" onclick="openTransferContactModal('${con.id}')" title="Mudar de Cliente">
               <i class="fa-solid fa-arrow-right-arrow-left"></i>
             </button>
-            <button type="button" class="action-icon-btn" onclick="openContactModalForEdit(''${con.id}'')" title="Editar Ficha de Contacto">
+            <button type="button" class="action-icon-btn" onclick="openContactModalForEdit('${con.id}')" title="Editar Ficha de Contacto">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
-            <button type="button" class="action-icon-btn danger" onclick="deleteContactInline(''${con.id}'')" title="Apagar Contacto">
+            <button type="button" class="action-icon-btn danger" onclick="deleteContactInline('${con.id}')" title="Apagar Contacto">
               <i class="fa-solid fa-trash"></i>
             </button>
           </td>
@@ -4919,17 +4919,17 @@ function renderContactPageMainGrid() {
       card.onclick = () => openContactModalForEdit(con.id);
       card.innerHTML = `
         <div class="contact-card-actions" onclick="event.stopPropagation();">
-          <button type="button" class="action-icon-btn" onclick="openTransferContactModal(''${con.id}'')" title="Mudar de Cliente">
+          <button type="button" class="action-icon-btn" onclick="openTransferContactModal('${con.id}')" title="Mudar de Cliente">
             <i class="fa-solid fa-arrow-right-arrow-left"></i>
           </button>
-          <button type="button" class="action-icon-btn" onclick="openContactModalForEdit(''${con.id}'')" title="Editar Ficha de Contacto">
+          <button type="button" class="action-icon-btn" onclick="openContactModalForEdit('${con.id}')" title="Editar Ficha de Contacto">
             <i class="fa-solid fa-pen-to-square"></i>
           </button>
-          <button type="button" class="action-icon-btn danger" onclick="deleteContactInline(''${con.id}'')" title="Apagar Contacto">
+          <button type="button" class="action-icon-btn danger" onclick="deleteContactInline('${con.id}')" title="Apagar Contacto">
             <i class="fa-solid fa-trash"></i>
           </button>
         </div>
-        <div class="contact-name">${escapeHtml(con.nome)} ${escapeHtml(con.apelido || ''\)}</div>
+        <div class="contact-name">${escapeHtml(con.nome)} ${escapeHtml(con.apelido || '')}</div>
         <div class="contact-role"><i class="fa-solid fa-briefcase"></i> ${escapeHtml(con.cargo || 'Contacto')}</div>
         <div class="contact-detail" style="font-weight: 500; color: var(--primary-blue);"><i class="fa-solid fa-building"></i> ${escapeHtml(clientName)}</div>
         ${con.telefone ? `<div class="contact-detail"><i class="fa-solid fa-phone"></i> ${escapeHtml(con.telefone)}</div>` : ''}
@@ -4941,6 +4941,8 @@ function renderContactPageMainGrid() {
     });
   }
 }
+
+
 let currentClientFilterTab = 'all';
 
 function setClientFilterTab(filter) {
@@ -14737,6 +14739,8 @@ function verifyLoginPin() {
   }
 }
 window.verifyLoginPin = verifyLoginPin;
+window.toggleLoginRegisterMode = toggleLoginRegisterMode;
+window.handleUserSelfRegistration = handleUserSelfRegistration;
 
 let pendingPasswordMismatchSource = null;
 
