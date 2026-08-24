@@ -1,4 +1,4 @@
-const INITIAL_EXCEL_DATABASE = {
+﻿const INITIAL_EXCEL_DATABASE = {
     "clientes":  [
                      {
                          "id":  "cli-1786727373519-853",
@@ -4782,17 +4782,17 @@ function renderContactPageMainGrid() {
   if (!container) return;
   container.innerHTML = '';
 
-  const query = document.getElementById('contactPageSearchQuery')?.value.trim() || '';
+  const query = document.getElementById('contactPageSearchQuery')?\.value.trim() || '';
   let contactsList = getUserScopedItems([...(db.contactos || [])]);
 
-  // Filtro por Separador: Todos os Contactos, Contactos Privados, Contactos Fundações, Contactos Público / Estatal
+  // Filtro por Separador: Todos os Contactos, Contactos Privados, Contactos FundaÃ§Ãµes, Contactos PÃºblico / Estatal
   if (currentContactFilterTab === 'privado') {
     contactsList = contactsList.filter(con => {
       if (!con) return false;
       const cli = (db.clientes || []).find(c => c.id === con.clienteId);
       if (!cli) return true;
-      const isEstatal = cli.tipoCliente === 'Público' || cli.tipoCliente === 'Estatal' || cli.tipoCliente === 'Governamental' || (cli.ministerio && cli.ministerio.trim() !== '');
-      const isFundacao = cli.tipoCliente === 'Fundação' || cli.tipoCliente === 'Fundacao' || (cli.nome && normalizeText(cli.nome).startsWith('fundacao'));
+      const isEstatal = cli.tipoCliente === 'PÃºblico' || cli.tipoCliente === 'Estatal' || cli.tipoCliente === 'Governamental' || (cli.ministerio && cli.ministerio.trim() !== '');
+      const isFundacao = cli.tipoCliente === 'FundaÃ§Ã£o' || cli.tipoCliente === 'Fundacao' || (cli.nome && normalizeText(cli.nome).startsWith('fundacao'));
       return !isEstatal && !isFundacao;
     });
   } else if (currentContactFilterTab === 'fundacao') {
@@ -4809,7 +4809,7 @@ function renderContactPageMainGrid() {
       if (!con) return false;
       const cli = (db.clientes || []).find(c => c.id === con.clienteId);
       if (!cli) return false;
-      return cli.tipoCliente === 'Público' || cli.tipoCliente === 'Estatal' || cli.tipoCliente === 'Governamental' || (cli.ministerio && cli.ministerio.trim() !== '');
+      return cli.tipoCliente === 'PÃºblico' || cli.tipoCliente === 'Estatal' || cli.tipoCliente === 'Governamental' || (cli.ministerio && cli.ministerio.trim() !== '');
     });
   }
 
@@ -4831,15 +4831,22 @@ function renderContactPageMainGrid() {
     });
   }
 
-  // Ordenação Alfabética Obrigatória A-Z
-  contactsList.sort((a, b) => {
-    const nameA = `${a.nome || ''} ${a.apelido || ''}`.trim();
-    const nameB = `${b.nome || ''} ${b.apelido || ''}`.trim();
-    return nameA.localeCompare(nameB, 'pt', { sensitivity: 'base' });
-  });
+  // OrdenaÃ§Ã£o por Contactados se ativo
+  if (typeof currentDashContactSortOrder !== 'undefined' && currentDashContactSortOrder === 'sim_nao') {
+    contactsList.sort((a, b) => (isContactContacted(b.id) ? 1 : 0) - (isContactContacted(a.id) ? 1 : 0));
+  } else if (typeof currentDashContactSortOrder !== 'undefined' && currentDashContactSortOrder === 'nao_sim') {
+    contactsList.sort((a, b) => (isContactContacted(a.id) ? 1 : 0) - (isContactContacted(b.id) ? 1 : 0));
+  } else {
+    // OrdenaÃ§Ã£o AlfabÃ©tica ObrigatÃ³ria A-Z
+    contactsList.sort((a, b) => {
+      const nameA = `${a.nome || ''}\ ${a.apelido || ''}`.trim();
+      const nameB = `${b.nome || ''}\ ${b.apelido || ''}`.trim();
+      return nameA.localeCompare(nameB, 'pt', { sensitivity: 'base' });
+    });
+  }
 
   if (contactsList.length === 0) {
-    container.innerHTML = '<span class="empty-state">Nenhum contacto encontrado para os critérios de pesquisa.</span>';
+    container.innerHTML = '<span class="empty-state">Nenhum contacto encontrado para os critÃ©rios de pesquisa.</span>';
     return;
   }
 
@@ -4854,9 +4861,9 @@ function renderContactPageMainGrid() {
               <th style="padding:0.75rem 1rem; text-align:left;">Nome do Contacto</th>
               <th style="padding:0.75rem 1rem; text-align:left;">Cliente Associado</th>
               <th style="padding:0.75rem 1rem; text-align:left;">Cargo</th>
-              <th style="padding:0.75rem 1rem; text-align:left;">Telemóvel / Telefone</th>
+              <th style="padding:0.75rem 1rem; text-align:left;">TelemÃ³vel / Telefone</th>
               <th style="padding:0.75rem 1rem; text-align:left;">Email</th>
-              <th style="padding:0.75rem 1rem; text-align:center;">Ações</th>
+              <th style="padding:0.75rem 1rem; text-align:center;">AÃ§Ãµes</th>
             </tr>
           </thead>
           <tbody>
@@ -4866,17 +4873,17 @@ function renderContactPageMainGrid() {
       const client = db.clientes.find(c => c.id === con.clienteId);
       const isContacted = isContactContacted(con.id);
       html += `
-        <tr style="border-bottom:1px solid #e2e8f0; cursor:pointer;" onclick="openContactModalForEdit('${con.id}')">
+        <tr style="border-bottom:1px solid #e2e8f0; cursor:pointer;" onclick="openContactModalForEdit(''${con.id}'')">
           <td style="padding:0.75rem 0.5rem; text-align:center;" onclick="event.stopPropagation();">
-            <label style="display:inline-flex; align-items:center; justify-content:center; gap:0.35rem; cursor:pointer; margin:0;" title="${isContacted ? 'Contacto Contactado (possui registo de contactos realizados)' : 'Não Contactado (sem registo de contactos realizados)'}">
+            <label style="display:inline-flex; align-items:center; justify-content:center; gap:0.35rem; cursor:pointer; margin:0;" title="${isContacted ? 'Contacto Contactado (possui registo de contactos realizados)' : 'NÃ£o Contactado (sem registo de contactos realizados)'}">
               <input type="checkbox" ${isContacted ? 'checked' : ''} disabled style="width:17px; height:17px; accent-color:#16a34a; cursor:default;">
-              <span style="font-size:0.78rem; font-weight:700; color:${isContacted ? '#16a34a' : '#94a3b8'};">${isContacted ? 'Sim' : 'Não'}</span>
+              <span style="font-size:0.78rem; font-weight:700; color:${isContacted ? '#16a34a' : '#94a3b8'};">${isContacted ? 'Sim' : 'NÃ£o'}</span>
             </label>
           </td>
           <td style="padding:0.75rem 1rem; font-weight:700; color:#1e293b;">
             <div style="display:flex; align-items:center; gap:0.5rem;">
               <i class="fa-solid fa-user" style="color:var(--primary-blue); font-size:0.85rem;"></i>
-              <span>${escapeHtml(con.nome)} ${escapeHtml(con.apelido || '')}</span>
+              <span>${escapeHtml(con.nome)} ${escapeHtml(con.apelido || ''\)}</span>
             </div>
           </td>
           <td style="padding:0.75rem 1rem; color:#334155; font-weight:500;">${escapeHtml(client ? client.nome : '-')}</td>
@@ -4884,13 +4891,13 @@ function renderContactPageMainGrid() {
           <td style="padding:0.75rem 1rem; color:#475569;">${escapeHtml(con.telemovel || con.telefone || '-')}</td>
           <td style="padding:0.75rem 1rem; color:#475569;">${escapeHtml(con.email || '-')}</td>
           <td style="padding:0.75rem 1rem; text-align:center; white-space:nowrap;" onclick="event.stopPropagation();">
-            <button type="button" class="action-icon-btn" onclick="openTransferContactModal('${con.id}')" title="Mudar de Cliente">
+            <button type="button" class="action-icon-btn" onclick="openTransferContactModal(''${con.id}'')" title="Mudar de Cliente">
               <i class="fa-solid fa-arrow-right-arrow-left"></i>
             </button>
-            <button type="button" class="action-icon-btn" onclick="openContactModalForEdit('${con.id}')" title="Editar Ficha de Contacto">
+            <button type="button" class="action-icon-btn" onclick="openContactModalForEdit(''${con.id}'')" title="Editar Ficha de Contacto">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
-            <button type="button" class="action-icon-btn danger" onclick="deleteContactInline('${con.id}')" title="Apagar Contacto">
+            <button type="button" class="action-icon-btn danger" onclick="deleteContactInline(''${con.id}'')" title="Apagar Contacto">
               <i class="fa-solid fa-trash"></i>
             </button>
           </td>
@@ -4912,17 +4919,17 @@ function renderContactPageMainGrid() {
       card.onclick = () => openContactModalForEdit(con.id);
       card.innerHTML = `
         <div class="contact-card-actions" onclick="event.stopPropagation();">
-          <button type="button" class="action-icon-btn" onclick="openTransferContactModal('${con.id}')" title="Mudar de Cliente">
+          <button type="button" class="action-icon-btn" onclick="openTransferContactModal(''${con.id}'')" title="Mudar de Cliente">
             <i class="fa-solid fa-arrow-right-arrow-left"></i>
           </button>
-          <button type="button" class="action-icon-btn" onclick="openContactModalForEdit('${con.id}')" title="Editar Ficha de Contacto">
+          <button type="button" class="action-icon-btn" onclick="openContactModalForEdit(''${con.id}'')" title="Editar Ficha de Contacto">
             <i class="fa-solid fa-pen-to-square"></i>
           </button>
-          <button type="button" class="action-icon-btn danger" onclick="deleteContactInline('${con.id}')" title="Apagar Contacto">
+          <button type="button" class="action-icon-btn danger" onclick="deleteContactInline(''${con.id}'')" title="Apagar Contacto">
             <i class="fa-solid fa-trash"></i>
           </button>
         </div>
-        <div class="contact-name">${escapeHtml(con.nome)} ${escapeHtml(con.apelido || '')}</div>
+        <div class="contact-name">${escapeHtml(con.nome)} ${escapeHtml(con.apelido || ''\)}</div>
         <div class="contact-role"><i class="fa-solid fa-briefcase"></i> ${escapeHtml(con.cargo || 'Contacto')}</div>
         <div class="contact-detail" style="font-weight: 500; color: var(--primary-blue);"><i class="fa-solid fa-building"></i> ${escapeHtml(clientName)}</div>
         ${con.telefone ? `<div class="contact-detail"><i class="fa-solid fa-phone"></i> ${escapeHtml(con.telefone)}</div>` : ''}
@@ -4934,7 +4941,6 @@ function renderContactPageMainGrid() {
     });
   }
 }
-
 let currentClientFilterTab = 'all';
 
 function setClientFilterTab(filter) {
@@ -6650,7 +6656,7 @@ function renderClientContactsGrid(contacts) {
             <i class="fa-solid fa-trash"></i>
           </button>
         </div>
-      </div>
+}
 
       <div class="contact-name" style="font-size: 0.95rem; font-weight: 700; color: #1e3a8a;">
         ${escapeHtml(con.nome)} ${escapeHtml(con.apelido || '')} ${subTabBadge}
@@ -6674,6 +6680,169 @@ function renderClientContactsGrid(contacts) {
     grid.appendChild(card);
   });
 }
+
+function openAttachExistingContactModal() {
+  if (!currentClientId) {
+    showToast('Guarde ou selecione primeiro o Cliente antes de associar contactos.', 'warning');
+    return;
+  }
+  const client = (db.clientes || []).find(c => c.id === currentClientId);
+  const clientNameEl = document.getElementById('attachModalClientName');
+  if (clientNameEl) {
+    clientNameEl.textContent = client ? (client.nome || client.empresa || '-') : '-';
+  }
+
+  const isEstatal = client && client.tipoCliente === 'Estatal';
+  const subTabGroup = document.getElementById('attachModalSubTabGroup');
+  const subTabSelect = document.getElementById('attachModalSubTabIndex');
+  if (subTabGroup && subTabSelect) {
+    if (isEstatal && Array.isArray(client.separadores) && client.separadores.length > 0) {
+      subTabGroup.style.display = '';
+      subTabSelect.innerHTML = client.separadores.map((s, idx) => {
+        const title = getSeparadorTitle(s);
+        return `<option value="${idx}">${escapeHtml(title)}</option>`;
+      }).join('');
+      if (typeof activeEstatalSeparadorIndex !== 'undefined') {
+        subTabSelect.value = activeEstatalSeparadorIndex;
+      }
+    } else {
+      subTabGroup.style.display = 'none';
+      subTabSelect.innerHTML = '';
+    }
+  }
+
+  const searchInput = document.getElementById('attachExistingContactSearch');
+  if (searchInput) searchInput.value = '';
+
+  renderAttachExistingContactList();
+
+  const modal = document.getElementById('attachExistingContactModal');
+  if (modal) modal.classList.add('active');
+}
+window.openAttachExistingContactModal = openAttachExistingContactModal;
+
+function closeAttachExistingContactModal() {
+  const modal = document.getElementById('attachExistingContactModal');
+  if (modal) modal.classList.remove('active');
+}
+window.closeAttachExistingContactModal = closeAttachExistingContactModal;
+
+function renderAttachExistingContactList() {
+  const container = document.getElementById('attachExistingContactList');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const searchInput = document.getElementById('attachExistingContactSearch');
+  const term = searchInput ? (searchInput.value || '').trim().toLowerCase() : '';
+
+  const allContacts = (db.contactos || []);
+  if (allContacts.length === 0) {
+    container.innerHTML = '<div style="text-align: center; color: #64748b; padding: 2rem;">Nenhum contacto registado no sistema.</div>';
+    return;
+  }
+
+  const filtered = allContacts.filter(con => {
+    if (term === '') return true;
+    const client = (db.clientes || []).find(c => c.id === con.clienteId);
+    const clientName = client ? (client.nome || client.empresa || '') : '';
+    const fullText = `${con.nome || ''} ${con.apelido || ''} ${con.cargo || ''} ${con.email || ''} ${con.telefone || ''} ${con.telemovel || ''} ${clientName}`.toLowerCase();
+    return fullText.includes(term);
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div style="text-align: center; color: #64748b; padding: 2rem;">Nenhum contacto corresponde Ã  pesquisa.</div>';
+    return;
+  }
+
+  filtered.forEach(con => {
+    const isCurrentClient = con.clienteId === currentClientId;
+    const clientObj = (db.clientes || []).find(c => c.id === con.clienteId);
+    const clientLabel = clientObj ? (clientObj.nome || clientObj.empresa || 'Empresa') : 'Sem cliente associado';
+
+    const card = document.createElement('div');
+    card.style.cssText = 'background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap; box-shadow: 0 1px 3px rgba(0,0,0,0.04);';
+
+    card.innerHTML = `
+      <div style="flex: 1; min-width: 220px;">
+        <div style="font-weight: 700; color: #1e3a8a; font-size: 0.95rem;">
+          ${escapeHtml(con.nome || '')} ${escapeHtml(con.apelido || '')}
+          ${isCurrentClient ? '<span class="badge badge-success" style="font-size: 0.7rem; margin-left: 6px;">JÃ¡ neste Cliente</span>' : ''}
+        </div>
+        ${con.cargo ? `<div style="font-size: 0.8rem; color: #64748b;"><i class="fa-solid fa-briefcase"></i> ${escapeHtml(con.cargo)}</div>` : ''}
+        <div style="font-size: 0.8rem; color: #475569; margin-top: 0.25rem; display: flex; gap: 0.8rem; flex-wrap: wrap;">
+          <span><i class="fa-solid fa-building"></i> ${escapeHtml(clientLabel)}</span>
+          ${con.email ? `<span><i class="fa-solid fa-envelope"></i> ${escapeHtml(con.email)}</span>` : ''}
+          ${con.telemovel || con.telefone ? `<span><i class="fa-solid fa-phone"></i> ${escapeHtml(con.telemovel || con.telefone)}</span>` : ''}
+        </div>
+      </div>
+      <div>
+        <button type="button" class="btn btn-primary" onclick="executeAttachExistingContact('${con.id}')"
+          style="padding: 0.4rem 0.9rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.35rem;">
+          <i class="fa-solid fa-link"></i> Associar
+        </button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+window.renderAttachExistingContactList = renderAttachExistingContactList;
+
+function executeAttachExistingContact(contactId) {
+  if (!currentClientId) {
+    showToast('Cliente nÃ£o identificado.', 'danger');
+    return;
+  }
+  const con = (db.contactos || []).find(c => c.id === contactId);
+  if (!con) {
+    showToast('Contacto nÃ£o encontrado.', 'danger');
+    return;
+  }
+
+  const client = (db.clientes || []).find(c => c.id === currentClientId);
+  const clientName = client ? (client.nome || client.empresa || 'Cliente') : 'Cliente';
+
+  const modeRadio = document.querySelector('input[name="attachContactMode"]:checked');
+  const mode = modeRadio ? modeRadio.value : 'move';
+
+  let chosenSubTab = 0;
+  const subTabSelect = document.getElementById('attachModalSubTabIndex');
+  if (subTabSelect && subTabSelect.value !== '') {
+    chosenSubTab = Number(subTabSelect.value);
+  } else if (typeof activeEstatalSeparadorIndex !== 'undefined') {
+    chosenSubTab = Number(activeEstatalSeparadorIndex || 0);
+  }
+
+  if (mode === 'move') {
+    con.clienteId = currentClientId;
+    con.subTabIndex = chosenSubTab;
+    if (typeof logUserActivity === 'function') {
+      logUserActivity('AssociaÃ§Ã£o de Contacto', `Contacto "${con.nome} ${con.apelido || ''}" associado ao cliente "${clientName}".`);
+    }
+  } else {
+    const newId = typeof generateId === 'function' ? generateId('con') : 'con-' + Date.now();
+    const newCon = {
+      ...con,
+      id: newId,
+      clienteId: currentClientId,
+      subTabIndex: chosenSubTab,
+      createdAt: new Date().toISOString()
+    };
+    db.contactos.push(newCon);
+    if (typeof logUserActivity === 'function') {
+      logUserActivity('DuplicaÃ§Ã£o de Contacto', `Contacto "${con.nome} ${con.apelido || ''}" duplicado para o cliente "${clientName}".`);
+    }
+  }
+
+  saveDatabase();
+  closeAttachExistingContactModal();
+  refreshClientSubLists(currentClientId);
+  if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
+  if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
+  if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
+
+  showToast(`Contacto associado com sucesso ao cliente "${clientName}"!`, 'success');
+}
+window.executeAttachExistingContact = executeAttachExistingContact;
 
 function saveClient(e) {
   if (e) e.preventDefault();
@@ -7327,7 +7496,8 @@ function renderContactPersonInteractionsGrid(interactions) {
     return;
   }
 
-  const sorted = [...interactions].sort((a, b) => new Date(b.data || 0) - new Date(a.data || 0));
+  const isAsc = (typeof clientInteractionsSortOrder !== 'undefined' && clientInteractionsSortOrder === 'asc');
+  const sorted = [...interactions].sort((a, b) => isAsc ? (new Date(a.data || 0) - new Date(b.data || 0)) : (new Date(b.data || 0) - new Date(a.data || 0)));
 
   sorted.forEach(item => {
     const formattedDate = item.data ? new Date(item.data).toLocaleString('pt-PT', { dateStyle: 'short', timeStyle: 'short' }) : '-';
@@ -7700,6 +7870,47 @@ function openClientFromDashboard(clientId) {
 }
 window.openClientFromDashboard = openClientFromDashboard;
 
+let clientInteractionsSortOrder = 'desc';
+function toggleClientInteractionsSort() {
+  clientInteractionsSortOrder = (clientInteractionsSortOrder === 'desc' ? 'asc' : 'desc');
+  const textEl = document.getElementById('textSortClientInteractions');
+  const iconEl = document.getElementById('iconSortClientInteractions');
+  if (textEl) textEl.textContent = (clientInteractionsSortOrder === 'desc' ? 'Mais recente' : 'Mais antigo');
+  if (iconEl) iconEl.className = (clientInteractionsSortOrder === 'desc' ? 'fa-solid fa-arrow-down-wide-short' : 'fa-solid fa-arrow-up-wide-short');
+  if (currentClientId && typeof refreshClientSubLists === 'function') {
+    refreshClientSubLists(currentClientId);
+  }
+}
+window.toggleClientInteractionsSort = toggleClientInteractionsSort;
+
+let contactPersonInteractionsSortOrder = 'desc';
+function toggleContactPersonInteractionsSort() {
+  contactPersonInteractionsSortOrder = (contactPersonInteractionsSortOrder === 'desc' ? 'asc' : 'desc');
+  const textEl = document.getElementById('textSortContactInteractions');
+  const iconEl = document.getElementById('iconSortContactInteractions');
+  if (textEl) textEl.textContent = (contactPersonInteractionsSortOrder === 'desc' ? 'Mais recente' : 'Mais antigo');
+  if (iconEl) iconEl.className = (contactPersonInteractionsSortOrder === 'desc' ? 'fa-solid fa-arrow-down-wide-short' : 'fa-solid fa-arrow-up-wide-short');
+  if (typeof currentContactIdForModal !== 'undefined' && currentContactIdForModal) {
+    const inters = (db.interacoes || []).filter(i => i.contactoId === currentContactIdForModal);
+    if (typeof renderContactPersonInteractionsGrid === 'function') renderContactPersonInteractionsGrid(inters);
+  }
+}
+window.toggleContactPersonInteractionsSort = toggleContactPersonInteractionsSort;
+
+let projectInteractionsSortOrder = 'desc';
+function toggleProjectInteractionsSort() {
+  projectInteractionsSortOrder = (projectInteractionsSortOrder === 'desc' ? 'asc' : 'desc');
+  const textEl = document.getElementById('textSortProjectInteractions');
+  const iconEl = document.getElementById('iconSortProjectInteractions');
+  if (textEl) textEl.textContent = (projectInteractionsSortOrder === 'desc' ? 'Mais recente' : 'Mais antigo');
+  if (iconEl) iconEl.className = (projectInteractionsSortOrder === 'desc' ? 'fa-solid fa-arrow-down-wide-short' : 'fa-solid fa-arrow-up-wide-short');
+  if (typeof currentProjectId !== 'undefined' && currentProjectId) {
+    const inters = (db.interacoes || []).filter(i => i.projetoId === currentProjectId);
+    if (typeof renderProjectInteractionsGrid === 'function') renderProjectInteractionsGrid(inters);
+  }
+}
+window.toggleProjectInteractionsSort = toggleProjectInteractionsSort;
+
 function renderClientInteractionsGrid(interactions) {
   const grid = document.getElementById('clientInteractionsGrid');
   grid.innerHTML = '';
@@ -7716,7 +7927,8 @@ function renderClientInteractionsGrid(interactions) {
     return;
   }
 
-  const sorted = [...interactions].sort((a, b) => new Date(b.data || 0) - new Date(a.data || 0));
+  const isAsc = (typeof clientInteractionsSortOrder !== 'undefined' && clientInteractionsSortOrder === 'asc');
+  const sorted = [...interactions].sort((a, b) => isAsc ? (new Date(a.data || 0) - new Date(b.data || 0)) : (new Date(b.data || 0) - new Date(a.data || 0)));
 
   sorted.forEach(item => {
     const formattedDate = item.data ? new Date(item.data).toLocaleString('pt-PT', { dateStyle: 'short', timeStyle: 'short' }) : '-';
@@ -8392,7 +8604,8 @@ function renderProjectInteractionsGrid(interactions) {
     return;
   }
 
-  const sorted = [...interactions].sort((a, b) => new Date(b.data || 0) - new Date(a.data || 0));
+  const isAsc = (typeof clientInteractionsSortOrder !== 'undefined' && clientInteractionsSortOrder === 'asc');
+  const sorted = [...interactions].sort((a, b) => isAsc ? (new Date(a.data || 0) - new Date(b.data || 0)) : (new Date(b.data || 0) - new Date(a.data || 0)));
 
   sorted.forEach(item => {
     const formattedDate = item.data ? new Date(item.data).toLocaleString('pt-PT', { dateStyle: 'short', timeStyle: 'short' }) : '-';
@@ -14132,6 +14345,26 @@ function handleSystemUpdateFileSelect(event) {
 
   reader.readAsText(file);
 }
+
+function closeUpdateConfirmationModal() {
+  if (typeof resolveSystemUpdateConfirm === 'function') {
+    resolveSystemUpdateConfirm(false);
+  } else {
+    const modal = document.getElementById('updateConfirmationModal');
+    if (modal) modal.classList.remove('active');
+  }
+}
+window.closeUpdateConfirmationModal = closeUpdateConfirmationModal;
+
+function triggerLocalUpdateFileSelect() {
+  if (typeof triggerSystemUpdateImport === 'function') {
+    triggerSystemUpdateImport();
+  } else {
+    const fi = document.getElementById('systemUpdateImportInput');
+    if (fi) fi.click();
+  }
+}
+window.triggerLocalUpdateFileSelect = triggerLocalUpdateFileSelect;
 
 function resolveSystemUpdateConfirm(shouldInstall) {
   const modal = document.getElementById('updateConfirmationModal');
