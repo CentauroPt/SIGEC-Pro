@@ -1785,6 +1785,8 @@ textarea.form-control {
   background: #cbd5e1;
   border-radius: 6px;
 }
+
+.estatal-tab-btn .tab-close-icon {
   font-size: 0.8rem;
   opacity: 0.8;
   transition: all 0.15s ease;

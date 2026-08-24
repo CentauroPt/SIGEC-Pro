@@ -1020,7 +1020,114 @@ const SIGEC_PHRASES_MAP = {
   "Fechar": { Español: "Cerrar", English: "Close", Français: "Fermer", Polski: "Zamknij" },
   "Cancelar": { Español: "Cancelar", English: "Cancel", Français: "Annuler", Polski: "Anuluj" },
   "Guardar": { Español: "Guardar", English: "Save", Français: "Enregistrer", Polski: "Zapisz" },
-  "Confirmar": { Español: "Confirmar", English: "Confirm", Français: "Confirmer", Polski: "Zatwierdź" }
+  "Confirmar": { Español: "Confirmar", English: "Confirm", Français: "Confirmer", Polski: "Zatwierdź" },
+
+  // Acompanhamento de Contactos, Clientes e Toasts
+  "Data de próximo contacto atualizada com sucesso!": {
+    Português: "Data de próximo contacto atualizada com sucesso!",
+    Español: "¡Fecha del próximo contacto actualizada con éxito!",
+    English: "Next contact date updated successfully!",
+    Français: "Date du prochain contact mise à jour avec succès !",
+    Polski: "Data kolejnego kontaktu zaktualizowana pomyślnie!"
+  },
+  "Nenhum cliente registado.": {
+    Português: "Nenhum cliente registado.",
+    Español: "Ningún cliente registrado.",
+    English: "No clients registered.",
+    Français: "Aucun client enregistré.",
+    Polski: "Brak zarejestrowanych klientów."
+  },
+  "Nenhum contacto registado.": {
+    Português: "Nenhum contacto registado.",
+    Español: "Ningún contacto registrado.",
+    English: "No contacts registered.",
+    Français: "Aucun contact enregistré.",
+    Polski: "Brak zarejestrowanych kontaktów."
+  },
+  "Contactado": {
+    Português: "Contactado",
+    Español: "Contactado",
+    English: "Contacted",
+    Français: "Contacté",
+    Polski: "Skontaktowano"
+  },
+  "Contacto / Telefone": {
+    Português: "Contacto / Telefone",
+    Español: "Contacto / Teléfono",
+    English: "Contact / Phone",
+    Français: "Contact / Téléphone",
+    Polski: "Kontakt / Telefon"
+  },
+  "Cliente Associado": {
+    Português: "Cliente Associado",
+    Español: "Cliente Asociado",
+    English: "Associated Client",
+    Français: "Client Associé",
+    Polski: "Powiązany Klient"
+  },
+  "Telefone / Email": {
+    Português: "Telefone / Email",
+    Español: "Teléfono / Email",
+    English: "Phone / Email",
+    Français: "Téléphone / Email",
+    Polski: "Telefon / Email"
+  },
+  "Último Contacto Realizado": {
+    Português: "Último Contacto Realizado",
+    Español: "Último Contacto Realizado",
+    English: "Last Contact Made",
+    Français: "Dernier Contact Réalisé",
+    Polski: "Ostatni Wykonany Kontakt"
+  },
+  "Em atraso": {
+    Português: "Em atraso",
+    Español: "Con retraso",
+    English: "Overdue",
+    Français: "En retard",
+    Polski: "Opóźniony"
+  },
+  "Amanhã": {
+    Português: "Amanhã",
+    Español: "Mañana",
+    English: "Tomorrow",
+    Français: "Demain",
+    Polski: "Jutro"
+  },
+  "em": {
+    Português: "em",
+    Español: "en",
+    English: "in",
+    Français: "dans",
+    Polski: "za"
+  },
+  "dias": {
+    Português: "dias",
+    Español: "días",
+    English: "days",
+    Français: "jours",
+    Polski: "dni"
+  },
+  "Sem data agendada": {
+    Português: "Sem data agendada",
+    Español: "Sin fecha programada",
+    English: "No scheduled date",
+    Français: "Aucune date programmée",
+    Polski: "Brak zaplanowanej daty"
+  },
+  "Sem registo prévio": {
+    Português: "Sem registo prévio",
+    Español: "Sin registro previo",
+    English: "No previous record",
+    Français: "Aucun historique préalable",
+    Polski: "Brak wcześniejszego wpisu"
+  },
+  "Abrir Ficha": {
+    Português: "Abrir Ficha",
+    Español: "Abrir Ficha",
+    English: "Open Profile",
+    Français: "Ouvrir Fiche",
+    Polski: "Otwórz Kartę"
+  }
 };
 window.SIGEC_I18N = SIGEC_I18N;
 window.SIGEC_PHRASES_MAP = SIGEC_PHRASES_MAP;

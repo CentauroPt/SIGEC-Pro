@@ -18053,7 +18053,8 @@ function printBudgetPDF() {
 
     (topic.linhas || []).forEach(line => {
       const descTrimmed = (line.desc || '').trim();
-      if (descTrimmed !== '') {
+      const hasPrice = line.price && Number(line.price) > 0;
+      if (descTrimmed !== '' || hasPrice) {
         const isOptionalLine = isOptionalTopic ||
           (line.itemLabel || '').toLowerCase().includes('opcional') ||
           (line.itemLabel || '').toLowerCase().includes('optional') ||
@@ -18437,7 +18438,8 @@ function exportBudgetToWord() {
 
     (topic.linhas || []).forEach(line => {
       const descTrimmed = (line.desc || '').trim();
-      if (descTrimmed !== '') {
+      const hasPrice = line.price && Number(line.price) > 0;
+      if (descTrimmed !== '' || hasPrice) {
         const isOptionalLine = isOptionalTopic ||
           (line.itemLabel || '').toLowerCase().includes('opcional') ||
           (line.itemLabel || '').toLowerCase().includes('optional') ||
