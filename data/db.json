@@ -5148,6 +5148,33 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787600731754-408",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Início de Sessão",
+      "descricao": "Acesso autorizado efetuado por ‎.",
+      "pagina": "Contactos",
+      "detalhes": {
+        "utilizador": "‎",
+        "email": "maria@empresa.com",
+        "cargo": "‎",
+        "dispositivo": "Computador"
+      },
+      "timestamp": "2026-08-24T19:45:31.754Z"
+    },
+    {
+      "id": "log-1787600714124-847",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Contactos",
+      "detalhes": null,
+      "timestamp": "2026-08-24T19:45:14.124Z"
+    },
+    {
       "id": "log-1787599830549-756",
       "usuarioId": "usr-1787590828349",
       "usuarioNome": "‎",
