@@ -3655,20 +3655,6 @@
       "createdById": "usr-1787393198433"
     },
     {
-      "id": "con-imp-129",
-      "clienteId": "cli-imp-081",
-      "nome": "Paulo",
-      "apelido": "Ramos",
-      "cargo": "Operations Project Manager",
-      "telefone": "219737000",
-      "telemovel": "",
-      "email": "geral.pt@omexom.com",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
-    },
-    {
       "id": "con-imp-131",
       "clienteId": "cli-imp-082",
       "nome": "Mafalda",
@@ -4218,21 +4204,6 @@
       "telemovel": "",
       "email": "gabinete.sej@mj.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
-    },
-    {
-      "id": "con-1787049428085-190",
-      "clienteId": "Ministério da Defesa Nacional",
-      "tratamento": "",
-      "nome": "Vasco Hilário",
-      "apelido": "",
-      "cargo": "Diretor Geral de Recursos da Defesa Nacional",
-      "departamento": "",
-      "telefone": "",
-      "telemovel": "",
-      "email": "dgrdn@defesa.pt",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001"
@@ -5177,6 +5148,17 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787593546389-701",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Contactos",
+      "detalhes": null,
+      "timestamp": "2026-08-24T17:45:46.389Z"
+    },
+    {
       "id": "log-1787593542910-115",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -5774,7 +5756,9 @@
       "con-imp-038",
       "con-1787217817944-195",
       "con-imp-039",
-      "con-1787049428085-1"
+      "con-1787049428085-1",
+      "con-imp-129",
+      "con-1787049428085-190"
     ],
     "projetos": [
       "proj-camp-008",
