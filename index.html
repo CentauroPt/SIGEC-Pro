@@ -27,7 +27,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
   <!-- Updates Registry -->
-  <script src="Atualização/updates_registry.js"></script>
+  <script src="Atualiza%C3%A7%C3%A3o/updates_registry.js" defer></script>
 
   <!-- Immediate Authentication & Toggle Password Helper -->
   <script>
@@ -50,6 +50,23 @@
       }
     }
     window.togglePinVisibility = togglePinVisibility;
+
+    function toggleLoginRegisterMode(isRegister) {
+      var loginMode = document.getElementById('loginFormMode');
+      var regMode = document.getElementById('registerFormMode');
+      var errorMsg = document.getElementById('loginErrorMessage');
+
+      if (errorMsg) errorMsg.style.display = 'none';
+
+      if (isRegister) {
+        if (loginMode) loginMode.style.display = 'none';
+        if (regMode) regMode.style.display = 'block';
+      } else {
+        if (regMode) regMode.style.display = 'none';
+        if (loginMode) loginMode.style.display = 'block';
+      }
+    }
+    window.toggleLoginRegisterMode = toggleLoginRegisterMode;
   </script>
 
   <!-- Stylesheet -->
@@ -4296,11 +4313,11 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- Internationalization & Translations Engine -->
-  <script src="i18n.js?v=20260824_v26"></script>
+  <script src="i18n.js?v=20260824_v27"></script>
   <!-- Main JavaScript App -->
-  <script src="app.js?v=20260824_v26"></script>
+  <script src="app.js?v=20260824_v27"></script>
   <!-- Duplicates Management Engine -->
-  <script src="duplicatesManager.js?v=20260824_v26"></script>
+  <script src="duplicatesManager.js?v=20260824_v27"></script>
 
   <!-- Override saveContact and switchTab to guarantee proper modal behavior regardless of app.js cache -->
   <script>
