@@ -51,10 +51,10 @@
           "email": "ama@ama.gov.pt"
         }
       ],
-      "createdAt": "2026-08-18T10:53:21.189Z",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
       "comercialAtribuidoNome": "José Centúrio",
+      "createdAt": "2026-08-18T10:53:21.189Z",
       "createdById": "usr-admin-001"
     },
     {
@@ -5541,6 +5541,42 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1787580697191-782",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "tab-consultas",
+      "detalhes": null,
+      "timestamp": "2026-08-24T14:11:37.191Z"
+    },
+    {
+      "id": "log-1787580696843-692",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Ministério da Presidência\" (NIF: 000000000) atualizada.",
+      "pagina": "tab-consultas",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Ministério da Presidência",
+        "contribuinte": "000000000",
+        "tipoCliente": "Estatal",
+        "comercialAtribuido": "José Centúrio",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-24T14:11:36.843Z"
+    },
     {
       "id": "log-1787580674299-634",
       "usuarioId": "usr-admin-001",
