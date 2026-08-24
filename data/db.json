@@ -3865,7 +3865,9 @@
       "telemovel": "",
       "email": "gabinete.seagri@magrim.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-529",
@@ -4022,7 +4024,9 @@
       "telemovel": "",
       "email": "dgss@seg-social.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-609",
@@ -4287,7 +4291,9 @@
       "telemovel": "",
       "email": "gabinete.mp@mp.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-18T10:37:08.085Z"
+      "createdAt": "2026-08-18T10:37:08.085Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-210",
@@ -5135,7 +5141,18 @@
   ],
   "userLogs": [
     {
-      "id": "log-1787600209284-36",
+      "id": "log-1787604586557-629",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Configuração Servidor",
+      "descricao": "Definições do servidor GitHub e Token PAT guardados pelo Administrador (4 chaves redundantes).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-24T20:49:46.557Z"
+    },
+    {
+      "id": "log-1787604154838-940",
       "usuarioId": "usr-1787590828349",
       "usuarioNome": "‎",
       "usuarioEmail": "maria@empresa.com",
@@ -5148,7 +5165,7 @@
         "cargo": "‎",
         "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-24T19:36:49.284Z"
+      "timestamp": "2026-08-24T20:42:34.838Z"
     }
   ],
   "orcamentos": [
@@ -5456,53 +5473,6 @@
       "id1": "con-1787049428085-473",
       "ignoredAt": "2026-08-24T19:39:24.144Z",
       "ignoredBy": "Sistema"
-    }
-  ],
-  "activityHistory": [
-    {
-      "id": "act-1787600269401",
-      "userId": "usr-1787590828349",
-      "action": "DUPLICATE_KEEP_BOTH",
-      "entity": "duplicados",
-      "entityId": "con-1787049428085-473,con-1787049428085-212",
-      "details": "Decidido manter ambos os registos (con-1787049428085-473, con-1787049428085-212).",
-      "timestamp": "2026-08-24T19:37:49.401Z"
-    },
-    {
-      "id": "act-1787600255713",
-      "userId": "usr-1787590828349",
-      "action": "DUPLICATE_KEEP_BOTH",
-      "entity": "duplicados",
-      "entityId": "con-1787049428085-352,con-1787049428085-425",
-      "details": "Decidido manter ambos os registos (con-1787049428085-352, con-1787049428085-425).",
-      "timestamp": "2026-08-24T19:37:35.713Z"
-    },
-    {
-      "id": "act-1787600251381",
-      "userId": "usr-1787590828349",
-      "action": "DUPLICATE_KEEP_BOTH",
-      "entity": "duplicados",
-      "entityId": "con-1787049428085-380,con-1787049428085-881",
-      "details": "Decidido manter ambos os registos (con-1787049428085-380, con-1787049428085-881).",
-      "timestamp": "2026-08-24T19:37:31.381Z"
-    },
-    {
-      "id": "act-1787600246314",
-      "userId": "usr-1787590828349",
-      "action": "DUPLICATE_KEEP_BOTH",
-      "entity": "duplicados",
-      "entityId": "con-1787049428085-580,con-1787049428085-443",
-      "details": "Decidido manter ambos os registos (con-1787049428085-580, con-1787049428085-443).",
-      "timestamp": "2026-08-24T19:37:26.314Z"
-    },
-    {
-      "id": "act-1787600242474",
-      "userId": "usr-1787590828349",
-      "action": "DUPLICATE_KEEP_BOTH",
-      "entity": "duplicados",
-      "entityId": "con-imp-050,con-imp-113",
-      "details": "Decidido manter ambos os registos (con-imp-050, con-imp-113).",
-      "timestamp": "2026-08-24T19:37:22.474Z"
     }
   ],
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
