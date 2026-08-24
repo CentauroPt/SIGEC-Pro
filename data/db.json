@@ -3265,21 +3265,6 @@
       "comercialAtribuidoId": "usr-admin-001"
     },
     {
-      "id": "con-imp-038",
-      "clienteId": "cli-imp-012",
-      "subTabIndex": 0,
-      "nome": "Luís",
-      "apelido": "Lopes",
-      "cargo": "Presidente",
-      "telefone": "+351 210 915 000",
-      "telemovel": "",
-      "email": "fundacao@vodafone.com",
-      "notas": "Temas: educación digital, inclusión social, innovación tecnológica, salud, accesibilidad, respuesta a emergencias y sostenibilidad,",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
-    },
-    {
       "id": "con-imp-039",
       "clienteId": "cli-1786727373519-853",
       "subTabIndex": 0,
@@ -3427,21 +3412,6 @@
       "email": "geral@fmam.pt",
       "notas": "Temas: integrated development of communities through initiatives in social development, education, culture, and environmental sustainability",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
-    },
-    {
-      "id": "con-imp-049",
-      "clienteId": "cli-imp-023",
-      "nome": "José",
-      "apelido": "Neves",
-      "cargo": "Presidente",
-      "telefone": "",
-      "telemovel": "",
-      "email": "hello@joseneves.org",
-      "notas": "Temas: ampliar el acceso a la educación, promover las competencias para el futuro y facilitar decisiones informadas sobre formación y empleo",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0,
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001"
     },
@@ -5253,6 +5223,17 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787593531826-323",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Contactos",
+      "detalhes": null,
+      "timestamp": "2026-08-24T17:45:31.826Z"
+    },
+    {
       "id": "log-1787593435599-484",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -5812,7 +5793,9 @@
       "con-1787049428085-162",
       "con-1787049428085-561",
       "con-1787049428085-253",
-      "con-imp-032"
+      "con-imp-032",
+      "con-imp-049",
+      "con-imp-038"
     ],
     "projetos": [
       "proj-camp-008",
