@@ -4296,11 +4296,11 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- Internationalization & Translations Engine -->
-  <script src="i18n.js?v=20260822_v1"></script>
+  <script src="i18n.js?v=20260824_v26"></script>
   <!-- Main JavaScript App -->
-  <script src="app.js?v=20260821_v21"></script>
+  <script src="app.js?v=20260824_v26"></script>
   <!-- Duplicates Management Engine -->
-  <script src="duplicatesManager.js?v=20260818_v1"></script>
+  <script src="duplicatesManager.js?v=20260824_v26"></script>
 
   <!-- Override saveContact and switchTab to guarantee proper modal behavior regardless of app.js cache -->
   <script>
@@ -4512,6 +4512,189 @@
       if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
       if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
       if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
+    };
+
+    window.openAttachExistingContactModal = function () {
+      var targetClientId = (typeof currentClientId !== 'undefined' && currentClientId)
+        ? currentClientId
+        : ((document.getElementById('clientId') || {}).value || sessionStorage.getItem('sigec_pro_active_client_id') || '');
+
+      if (!targetClientId) {
+        if (typeof showToast === 'function') showToast('Guarde ou selecione primeiro o Cliente antes de associar contactos.', 'warning');
+        alert('Por favor, selecione ou guarde primeiro o Cliente antes de associar contactos.');
+        return;
+      }
+
+      var client = (typeof db !== 'undefined' && db.clientes) ? db.clientes.find(function (c) { return String(c.id).trim() === String(targetClientId).trim(); }) : null;
+      var clientNameEl = document.getElementById('attachModalClientName');
+      if (clientNameEl) {
+        clientNameEl.textContent = client ? (client.nome || client.empresa || '-') : ((document.getElementById('nome') || {}).value || '-');
+      }
+
+      var isEstatal = client && client.tipoCliente === 'Estatal';
+      var subTabGroup = document.getElementById('attachModalSubTabGroup');
+      var subTabSelect = document.getElementById('attachModalSubTabIndex');
+      if (subTabGroup && subTabSelect) {
+        if (isEstatal && Array.isArray(client.separadores) && client.separadores.length > 0) {
+          subTabGroup.style.display = '';
+          subTabSelect.innerHTML = client.separadores.map(function (s, idx) {
+            var title = (typeof getSeparadorTitle === 'function') ? getSeparadorTitle(s) : (s.nome || 'Separador ' + (idx + 1));
+            return '<option value="' + idx + '">' + title + '</option>';
+          }).join('');
+          if (typeof activeEstatalSeparadorIndex !== 'undefined') {
+            subTabSelect.value = activeEstatalSeparadorIndex;
+          }
+        } else {
+          subTabGroup.style.display = 'none';
+          subTabSelect.innerHTML = '';
+        }
+      }
+
+      var searchInput = document.getElementById('attachExistingContactSearch');
+      if (searchInput) searchInput.value = '';
+
+      if (typeof window.renderAttachExistingContactList === 'function') {
+        window.renderAttachExistingContactList();
+      }
+
+      var modal = document.getElementById('attachExistingContactModal');
+      if (modal) {
+        modal.style.display = 'flex';
+        modal.classList.add('active');
+      }
+    };
+
+    window.closeAttachExistingContactModal = function () {
+      var modal = document.getElementById('attachExistingContactModal');
+      if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+      }
+    };
+
+    window.renderAttachExistingContactList = function () {
+      var container = document.getElementById('attachExistingContactList');
+      if (!container) return;
+      container.innerHTML = '';
+
+      var searchInput = document.getElementById('attachExistingContactSearch');
+      var term = searchInput ? (searchInput.value || '').trim().toLowerCase() : '';
+
+      var allContacts = (typeof db !== 'undefined' && Array.isArray(db.contactos)) ? db.contactos : [];
+      if (allContacts.length === 0) {
+        container.innerHTML = '<div style="text-align: center; color: #64748b; padding: 2rem;">Nenhum contacto registado no sistema.</div>';
+        return;
+      }
+
+      var targetClientId = (typeof currentClientId !== 'undefined' && currentClientId)
+        ? currentClientId
+        : ((document.getElementById('clientId') || {}).value || '');
+
+      var filtered = allContacts.filter(function (con) {
+        if (!con) return false;
+        if (term === '') return true;
+        var client = (typeof db !== 'undefined' && db.clientes) ? db.clientes.find(function (c) { return c.id === con.clienteId; }) : null;
+        var clientName = client ? (client.nome || client.empresa || '') : '';
+        var fullText = ((con.nome || '') + ' ' + (con.apelido || '') + ' ' + (con.cargo || '') + ' ' + (con.email || '') + ' ' + (con.telefone || '') + ' ' + (con.telemovel || '') + ' ' + clientName).toLowerCase();
+        return fullText.indexOf(term) >= 0;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div style="text-align: center; color: #64748b; padding: 2rem;">Nenhum contacto corresponde à pesquisa.</div>';
+        return;
+      }
+
+      filtered.forEach(function (con) {
+        var isCurrentClient = targetClientId && String(con.clienteId).trim() === String(targetClientId).trim();
+        var clientObj = (typeof db !== 'undefined' && db.clientes) ? db.clientes.find(function (c) { return c.id === con.clienteId; }) : null;
+        var clientLabel = clientObj ? (clientObj.nome || clientObj.empresa || 'Empresa') : 'Sem cliente associado';
+
+        var card = document.createElement('div');
+        card.style.cssText = 'background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap; box-shadow: 0 1px 3px rgba(0,0,0,0.04);';
+
+        var nameEscaped = (con.nome || '') + ' ' + (con.apelido || '');
+        card.innerHTML =
+          '<div style="flex: 1; min-width: 220px;">' +
+            '<div style="font-weight: 700; color: #1e3a8a; font-size: 0.95rem;">' +
+              nameEscaped +
+              (isCurrentClient ? ' <span class="badge badge-success" style="font-size: 0.7rem; margin-left: 6px; background:#dcfce7; color:#166534; padding:2px 6px; border-radius:4px;">Já neste Cliente</span>' : '') +
+            '</div>' +
+            (con.cargo ? '<div style="font-size: 0.8rem; color: #64748b; margin-top:2px;"><i class="fa-solid fa-briefcase"></i> ' + con.cargo + '</div>' : '') +
+            '<div style="font-size: 0.8rem; color: #475569; margin-top: 0.25rem; display: flex; gap: 0.8rem; flex-wrap: wrap;">' +
+              '<span><i class="fa-solid fa-building"></i> ' + clientLabel + '</span>' +
+              (con.email ? '<span><i class="fa-solid fa-envelope"></i> ' + con.email + '</span>' : '') +
+              (con.telemovel || con.telefone ? '<span><i class="fa-solid fa-phone"></i> ' + (con.telemovel || con.telefone) + '</span>' : '') +
+            '</div>' +
+          '</div>' +
+          '<div>' +
+            '<button type="button" class="btn btn-primary" onclick="executeAttachExistingContact(\'' + con.id + '\')" style="padding: 0.4rem 0.9rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.35rem; background:#2563eb; color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:600;">' +
+              '<i class="fa-solid fa-link"></i> Associar' +
+            '</button>' +
+          '</div>';
+
+        container.appendChild(card);
+      });
+    };
+
+    window.executeAttachExistingContact = function (contactId) {
+      var targetClientId = (typeof currentClientId !== 'undefined' && currentClientId)
+        ? currentClientId
+        : ((document.getElementById('clientId') || {}).value || '');
+
+      if (!targetClientId) {
+        if (typeof showToast === 'function') showToast('Cliente não identificado.', 'danger');
+        alert('Por favor, selecione ou guarde primeiro o Cliente antes de associar contactos.');
+        return;
+      }
+
+      var con = (typeof db !== 'undefined' && Array.isArray(db.contactos)) ? db.contactos.find(function (c) { return c.id === contactId; }) : null;
+      if (!con) {
+        if (typeof showToast === 'function') showToast('Contacto não encontrado.', 'danger');
+        return;
+      }
+
+      var client = (typeof db !== 'undefined' && db.clientes) ? db.clientes.find(function (c) { return c.id === targetClientId; }) : null;
+      var clientName = client ? (client.nome || client.empresa || 'Cliente') : 'Cliente';
+
+      var modeRadio = document.querySelector('input[name="attachContactMode"]:checked');
+      var mode = modeRadio ? modeRadio.value : 'move';
+
+      var chosenSubTab = 0;
+      var subTabSelect = document.getElementById('attachModalSubTabIndex');
+      if (subTabSelect && subTabSelect.value !== '') {
+        chosenSubTab = Number(subTabSelect.value);
+      } else if (typeof activeEstatalSeparadorIndex !== 'undefined') {
+        chosenSubTab = Number(activeEstatalSeparadorIndex || 0);
+      }
+
+      if (mode === 'move') {
+        con.clienteId = targetClientId;
+        con.subTabIndex = chosenSubTab;
+        if (typeof logUserActivity === 'function') {
+          logUserActivity('Associação de Contacto', 'Contacto "' + (con.nome || '') + ' ' + (con.apelido || '') + '" associado ao cliente "' + clientName + '".');
+        }
+      } else {
+        var newId = (typeof generateId === 'function') ? generateId('con') : 'con-' + Date.now();
+        var newCon = Object.assign({}, con, {
+          id: newId,
+          clienteId: targetClientId,
+          subTabIndex: chosenSubTab,
+          createdAt: new Date().toISOString()
+        });
+        db.contactos.push(newCon);
+        if (typeof logUserActivity === 'function') {
+          logUserActivity('Duplicação de Contacto', 'Contacto "' + (con.nome || '') + ' ' + (con.apelido || '') + '" duplicado para o cliente "' + clientName + '".');
+        }
+      }
+
+      if (typeof saveDatabase === 'function') saveDatabase();
+      if (typeof window.closeAttachExistingContactModal === 'function') window.closeAttachExistingContactModal();
+      if (typeof refreshClientSubLists === 'function') refreshClientSubLists(targetClientId);
+      if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
+      if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
+      if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
+
+      if (typeof showToast === 'function') showToast('Contacto associado com sucesso ao cliente "' + clientName + '"!', 'success');
     };
   </script>
 

@@ -6682,14 +6682,19 @@ function renderClientContactsGrid(contacts) {
 }
 
 function openAttachExistingContactModal() {
-  if (!currentClientId) {
+  const targetClientId = (typeof currentClientId !== 'undefined' && currentClientId)
+    ? currentClientId
+    : (document.getElementById('clientId')?.value || sessionStorage.getItem('sigec_pro_active_client_id') || '');
+
+  if (!targetClientId) {
     showToast('Guarde ou selecione primeiro o Cliente antes de associar contactos.', 'warning');
+    alert('Por favor, selecione ou guarde primeiro o Cliente antes de associar contactos.');
     return;
   }
-  const client = (db.clientes || []).find(c => c.id === currentClientId);
+  const client = (db.clientes || []).find(c => String(c.id).trim() === String(targetClientId).trim());
   const clientNameEl = document.getElementById('attachModalClientName');
   if (clientNameEl) {
-    clientNameEl.textContent = client ? (client.nome || client.empresa || '-') : '-';
+    clientNameEl.textContent = client ? (client.nome || client.empresa || '-') : (document.getElementById('nome')?.value || '-');
   }
 
   const isEstatal = client && client.tipoCliente === 'Estatal';
@@ -6717,13 +6722,19 @@ function openAttachExistingContactModal() {
   renderAttachExistingContactList();
 
   const modal = document.getElementById('attachExistingContactModal');
-  if (modal) modal.classList.add('active');
+  if (modal) {
+    modal.style.display = 'flex';
+    modal.classList.add('active');
+  }
 }
 window.openAttachExistingContactModal = openAttachExistingContactModal;
 
 function closeAttachExistingContactModal() {
   const modal = document.getElementById('attachExistingContactModal');
-  if (modal) modal.classList.remove('active');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.style.display = 'none';
+  }
 }
 window.closeAttachExistingContactModal = closeAttachExistingContactModal;
 
@@ -6741,7 +6752,12 @@ function renderAttachExistingContactList() {
     return;
   }
 
+  const targetClientId = (typeof currentClientId !== 'undefined' && currentClientId)
+    ? currentClientId
+    : (document.getElementById('clientId')?.value || '');
+
   const filtered = allContacts.filter(con => {
+    if (!con) return false;
     if (term === '') return true;
     const client = (db.clientes || []).find(c => c.id === con.clienteId);
     const clientName = client ? (client.nome || client.empresa || '') : '';
@@ -6755,7 +6771,7 @@ function renderAttachExistingContactList() {
   }
 
   filtered.forEach(con => {
-    const isCurrentClient = con.clienteId === currentClientId;
+    const isCurrentClient = targetClientId && String(con.clienteId).trim() === String(targetClientId).trim();
     const clientObj = (db.clientes || []).find(c => c.id === con.clienteId);
     const clientLabel = clientObj ? (clientObj.nome || clientObj.empresa || 'Empresa') : 'Sem cliente associado';
 
@@ -6788,8 +6804,13 @@ function renderAttachExistingContactList() {
 window.renderAttachExistingContactList = renderAttachExistingContactList;
 
 function executeAttachExistingContact(contactId) {
-  if (!currentClientId) {
+  const targetClientId = (typeof currentClientId !== 'undefined' && currentClientId)
+    ? currentClientId
+    : (document.getElementById('clientId')?.value || '');
+
+  if (!targetClientId) {
     showToast('Cliente nÃ£o identificado.', 'danger');
+    alert('Por favor, selecione ou guarde primeiro o Cliente antes de associar contactos.');
     return;
   }
   const con = (db.contactos || []).find(c => c.id === contactId);
@@ -6798,7 +6819,7 @@ function executeAttachExistingContact(contactId) {
     return;
   }
 
-  const client = (db.clientes || []).find(c => c.id === currentClientId);
+  const client = (db.clientes || []).find(c => String(c.id).trim() === String(targetClientId).trim());
   const clientName = client ? (client.nome || client.empresa || 'Cliente') : 'Cliente';
 
   const modeRadio = document.querySelector('input[name="attachContactMode"]:checked');
@@ -6813,7 +6834,7 @@ function executeAttachExistingContact(contactId) {
   }
 
   if (mode === 'move') {
-    con.clienteId = currentClientId;
+    con.clienteId = targetClientId;
     con.subTabIndex = chosenSubTab;
     if (typeof logUserActivity === 'function') {
       logUserActivity('AssociaÃ§Ã£o de Contacto', `Contacto "${con.nome} ${con.apelido || ''}" associado ao cliente "${clientName}".`);
@@ -6823,7 +6844,7 @@ function executeAttachExistingContact(contactId) {
     const newCon = {
       ...con,
       id: newId,
-      clienteId: currentClientId,
+      clienteId: targetClientId,
       subTabIndex: chosenSubTab,
       createdAt: new Date().toISOString()
     };
@@ -6835,7 +6856,7 @@ function executeAttachExistingContact(contactId) {
 
   saveDatabase();
   closeAttachExistingContactModal();
-  refreshClientSubLists(currentClientId);
+  refreshClientSubLists(targetClientId);
   if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
   if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
   if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
