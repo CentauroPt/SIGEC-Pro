@@ -1517,11 +1517,11 @@
       "telefone": "215003500",
       "telemovel": "",
       "email": "media@altice.pt",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio",
+      "userId": "usr-1787393198433",
+      "comercialAtribuidoId": "usr-1787393198433",
+      "comercialAtribuidoNome": "Steve Jobs",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "createdById": "usr-admin-001"
+      "createdById": "usr-1787393198433"
     },
     {
       "id": "cli-imp-078",
@@ -3718,9 +3718,9 @@
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 0,
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-admin-001"
+      "userId": "usr-1787393198433",
+      "comercialAtribuidoId": "usr-1787393198433",
+      "createdById": "usr-1787393198433"
     },
     {
       "id": "con-imp-123",
@@ -3791,8 +3791,9 @@
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 0,
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "userId": "usr-1787393198433",
+      "comercialAtribuidoId": "usr-1787393198433",
+      "createdById": "usr-1787393198433"
     },
     {
       "id": "con-imp-128",
@@ -3806,8 +3807,9 @@
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 0,
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "userId": "usr-1787393198433",
+      "comercialAtribuidoId": "usr-1787393198433",
+      "createdById": "usr-1787393198433"
     },
     {
       "id": "con-imp-129",
@@ -4999,22 +5001,22 @@
     },
     {
       "id": "proj-huawei-smartbus",
-      "clienteId": "cli-imp-086",
       "nome": "Huawei SmartBus",
       "tipo": "Campanha",
-      "dataInicio": "2023-10-01",
-      "dataFim": "2023-11-30",
-      "estado": "Concluido",
-      "viatura": "Bus extraível 13,80 ()",
-      "matricula": "99-HB-22",
-      "obs": "Huawei Technologies Portugal",
-      "createdAt": "2023-10-01T10:00:00.000Z",
+      "clienteId": "cli-1785514129444-833",
       "separadorId": null,
       "subTabIndex": null,
       "contacto1Id": "con-1785514369861-598",
       "contacto2Id": "con-1785825214404-496",
+      "dataInicio": "2023-10-01",
+      "dataFim": "2023-11-30",
+      "estado": "Concluído",
+      "viatura": "Bus extraível 13,80 ()",
+      "matricula": "99-HB-22",
+      "orcamentos": [],
       "documents": [],
       "media": [],
+      "createdAt": "2023-10-01T10:00:00.000Z",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001"
     },
@@ -5530,7 +5532,57 @@
   ],
   "userLogs": [
     {
-      "id": "log-1787579082624-953",
+      "id": "log-1787579630407-55",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Projeto",
+      "descricao": "Ficha do projeto \"Huawei SmartBus\" atualizada.",
+      "pagina": "tab-consultas",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Projeto",
+        "nome": "Huawei SmartBus",
+        "tipo": "Campanha",
+        "estado": "Concluído",
+        "cliente": "Huawei Technologies Portugal",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas"
+          }
+        ]
+      },
+      "timestamp": "2026-08-24T13:53:50.407Z"
+    },
+    {
+      "id": "log-1787579615401-430",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Projeto",
+      "descricao": "Ficha do projeto \"Huawei SmartBus\" atualizada.",
+      "pagina": "tab-consultas",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Projeto",
+        "nome": "Huawei SmartBus",
+        "tipo": "Campanha",
+        "estado": "Concluído",
+        "cliente": "Huawei Technologies Portugal",
+        "camposAlterados": [
+          {
+            "campo": "Estado",
+            "anterior": "Concluido",
+            "novo": "Concluído"
+          }
+        ]
+      },
+      "timestamp": "2026-08-24T13:53:35.401Z"
+    },
+    {
+      "id": "log-1787579473978-454",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
@@ -5543,7 +5595,7 @@
         "cargo": "Administrador do Sistema",
         "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-24T13:44:42.624Z"
+      "timestamp": "2026-08-24T13:51:13.978Z"
     }
   ],
   "orcamentos": [
@@ -5680,6 +5732,26 @@
       "id1": "cli-1787050401189-194",
       "ignoredAt": "2026-08-19T12:02:31.297Z",
       "ignoredBy": "Sistema"
+    }
+  ],
+  "activityHistory": [
+    {
+      "id": "act-1787580069021",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-042,con-imp-112",
+      "details": "Decidido manter ambos os registos (con-imp-042, con-imp-112).",
+      "timestamp": "2026-08-24T14:01:09.021Z"
+    },
+    {
+      "id": "act-1787580051365",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-041,con-imp-115",
+      "details": "Decidido manter ambos os registos (con-imp-041, con-imp-115).",
+      "timestamp": "2026-08-24T14:00:51.365Z"
     }
   ],
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
