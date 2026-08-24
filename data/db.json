@@ -4532,21 +4532,6 @@
       "comercialAtribuidoId": "usr-admin-001"
     },
     {
-      "id": "con-1787217817944-195",
-      "clienteId": "cli-imp-009",
-      "subTabIndex": 0,
-      "nome": "Luís",
-      "apelido": "Costa",
-      "cargo": "Head of Product Marketing",
-      "telefone": "",
-      "telemovel": "",
-      "email": "luis.costa@nos.pt",
-      "notas": "",
-      "createdAt": "2026-08-20T09:23:37.949Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
-    },
-    {
       "id": "con-1787218548447-659",
       "clienteId": "cli-imp-011",
       "subTabIndex": 0,
@@ -5223,6 +5208,17 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787593538639-710",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Contactos",
+      "detalhes": null,
+      "timestamp": "2026-08-24T17:45:38.639Z"
+    },
+    {
       "id": "log-1787593531826-323",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -5795,7 +5791,8 @@
       "con-1787049428085-253",
       "con-imp-032",
       "con-imp-049",
-      "con-imp-038"
+      "con-imp-038",
+      "con-1787217817944-195"
     ],
     "projetos": [
       "proj-camp-008",
