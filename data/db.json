@@ -5148,6 +5148,17 @@
   ],
   "userLogs": [
     {
+      "id": "log-1787601615913-474",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-24T20:00:15.913Z"
+    },
+    {
       "id": "log-1787601586222-469",
       "usuarioId": "usr-1787590828349",
       "usuarioNome": "‎",
