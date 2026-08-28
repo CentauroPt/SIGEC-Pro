@@ -1578,21 +1578,22 @@
       "secretariaEstado": "",
       "nome": "Banco Caboverdiano de Negócios - BCN",
       "contribuinte": "500001462",
-      "direcao1": "Avenida Amílcar Cabral, n.Âº 44",
+      "direcao1": "Avenida Amílcar Cabral, nº 44",
       "direcao2": "",
       "numero": "",
       "andar": "",
       "codigoPostal": "1000-001",
       "localidade": "Lisboa",
+      "pais": "",
       "telefone": "213456789",
       "telemovel": "",
       "email": "contacto@bcn.cv",
+      "userId": "usr-1787590828349",
+      "comercialAtribuidoId": "usr-1787590828349",
+      "comercialAtribuidoNome": "‎",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "pais": "",
-      "notas": "",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio"
+      "createdById": "usr-1787590828349",
+      "proximoContacto": "2026-09-16"
     },
     {
       "id": "cli-1785514129444-833",
@@ -3731,15 +3732,16 @@
       "clienteId": "cli-imp-085",
       "nome": "Alexey",
       "apelido": "Coimbra",
-      "cargo": "Diretor comercial",
+      "cargo": "Diretor Comercial",
       "telefone": "+ 238 260 49 35",
       "telemovel": "+ 238 985 51 14",
       "email": "acoimbra@bcn.cv",
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 0,
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "userId": "usr-1787590828349",
+      "comercialAtribuidoId": "usr-1787590828349",
+      "createdById": "usr-1787590828349"
     },
     {
       "id": "con-1785514369861-598",
@@ -3767,8 +3769,9 @@
       "notas": "",
       "createdAt": "2026-07-31T16:25:06.422Z",
       "subTabIndex": 0,
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "userId": "usr-1787590828349",
+      "comercialAtribuidoId": "usr-1787590828349",
+      "createdById": "usr-1787590828349"
     },
     {
       "id": "con-1785755195297-108",
@@ -4676,9 +4679,8 @@
       "documents": [],
       "media": [],
       "createdAt": "2026-07-27T09:00:00.000Z",
-      "obs": "Banco Caboverdiano de Negócios - BCN",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "userId": "usr-1787590828349",
+      "comercialAtribuidoId": "usr-1787590828349"
     },
     {
       "id": "proj-bcn-furgao",
@@ -4709,8 +4711,9 @@
       "media": [],
       "createdAt": "2026-07-27T09:00:00.000Z",
       "obs": "Banco Caboverdiano de Negócios - BCN",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "userId": "usr-1787590828349",
+      "comercialAtribuidoId": "usr-1787590828349",
+      "createdById": "usr-1787590828349"
     }
   ],
   "interacoes": [
@@ -4727,8 +4730,10 @@
       "id": "int-1785515776952-436",
       "clienteId": "cli-imp-085",
       "data": "2026-07-27T18:34",
-      "descricao": "Reunião com o administrador do banco e como diretor comercial",
-      "createdAt": "2026-07-31T16:36:16.952Z"
+      "descricao": "Reunião com o administrador do banco e como diretor comercial. Devemos apresentar proposta para um camião e um furgão.",
+      "createdAt": "2026-07-31T16:36:16.952Z",
+      "userId": "usr-1787590828349",
+      "createdById": "usr-1787590828349"
     },
     {
       "id": "int-1785515921992-452",
@@ -5108,6 +5113,15 @@
       "data": "2026-07-10T20:12",
       "descricao": "Enviado email de apresentação",
       "createdAt": "2026-08-21T18:14:43.136Z"
+    },
+    {
+      "id": "int-1787953273761-851",
+      "clienteId": "cli-imp-085",
+      "separadorId": null,
+      "subTabIndex": null,
+      "data": "2026-08-11T10:36",
+      "descricao": "Enviada proposta por email",
+      "createdAt": "2026-08-28T21:41:13.761Z"
     }
   ],
   "interacoesProjetos": [],
@@ -5165,7 +5179,195 @@
   ],
   "userLogs": [
     {
-      "id": "log-1787605259005-828",
+      "id": "log-1787953241052-699",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Edição de Projeto",
+      "descricao": "Ficha do projeto \"Unidade Móvel Bancária - Camião\" atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Projeto",
+        "nome": "Unidade Móvel Bancária - Camião",
+        "tipo": "Compra UM",
+        "estado": "Aguarda decisão",
+        "cliente": "Banco Caboverdiano de Negócios - BCN",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas"
+          }
+        ]
+      },
+      "timestamp": "2026-08-28T21:40:41.052Z"
+    },
+    {
+      "id": "log-1787953206326-693",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Transferência de Cliente",
+      "descricao": "Cliente \"Banco Caboverdiano de Negócios - BCN\" transferido de José Centúrio para ‎ com todos os seus contactos, projetos, orçamentos e interações.",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-28T21:40:06.326Z"
+    },
+    {
+      "id": "log-1787953206228-613",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Banco Caboverdiano de Negócios - BCN\" (NIF: 500001462) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Banco Caboverdiano de Negócios - BCN",
+        "contribuinte": "500001462",
+        "tipoCliente": "Privado",
+        "comercialAtribuido": "‎",
+        "camposAlterados": [
+          {
+            "campo": "Comercial Atribuído",
+            "anterior": "José Centúrio",
+            "novo": "‎"
+          }
+        ]
+      },
+      "timestamp": "2026-08-28T21:40:06.228Z"
+    },
+    {
+      "id": "log-1787953119399-138",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Transferência de Cliente",
+      "descricao": "Cliente \"Banco Caboverdiano de Negócios - BCN\" transferido de ‎ para José Centúrio com todos os seus contactos, projetos, orçamentos e interações.",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-28T21:38:39.399Z"
+    },
+    {
+      "id": "log-1787953119327-874",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Banco Caboverdiano de Negócios - BCN\" (NIF: 500001462) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Banco Caboverdiano de Negócios - BCN",
+        "contribuinte": "500001462",
+        "tipoCliente": "Privado",
+        "comercialAtribuido": "José Centúrio",
+        "camposAlterados": [
+          {
+            "campo": "Comercial Atribuído",
+            "anterior": "‎",
+            "novo": "José Centúrio"
+          }
+        ]
+      },
+      "timestamp": "2026-08-28T21:38:39.327Z"
+    },
+    {
+      "id": "log-1787953102136-159",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Transferência de Cliente",
+      "descricao": "Cliente \"Banco Caboverdiano de Negócios - BCN\" transferido de José Centúrio para ‎ com todos os seus contactos, projetos, orçamentos e interações.",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-28T21:38:22.136Z"
+    },
+    {
+      "id": "log-1787953102063-811",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Banco Caboverdiano de Negócios - BCN\" (NIF: 500001462) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Banco Caboverdiano de Negócios - BCN",
+        "contribuinte": "500001462",
+        "tipoCliente": "Privado",
+        "comercialAtribuido": "‎",
+        "camposAlterados": [
+          {
+            "campo": "Morada",
+            "anterior": "Avenida Amílcar Cabral, n.Âº 44",
+            "novo": "Avenida Amílcar Cabral, nº 44"
+          },
+          {
+            "campo": "Comercial Atribuído",
+            "anterior": "José Centúrio",
+            "novo": "‎"
+          }
+        ]
+      },
+      "timestamp": "2026-08-28T21:38:22.063Z"
+    },
+    {
+      "id": "log-1787953075499-976",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Banco Caboverdiano de Negócios - BCN\" (NIF: 500001462) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Banco Caboverdiano de Negócios - BCN",
+        "contribuinte": "500001462",
+        "tipoCliente": "Privado",
+        "comercialAtribuido": "José Centúrio",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-28T21:37:55.499Z"
+    },
+    {
+      "id": "log-1787953057241-850",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Banco Caboverdiano de Negócios - BCN\" (NIF: 500001462) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Banco Caboverdiano de Negócios - BCN",
+        "contribuinte": "500001462",
+        "tipoCliente": "Privado",
+        "comercialAtribuido": "José Centúrio",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-28T21:37:37.241Z"
+    },
+    {
+      "id": "log-1787953010348-922",
       "usuarioId": "usr-1787590828349",
       "usuarioNome": "‎",
       "usuarioEmail": "maria@empresa.com",
@@ -5178,7 +5380,7 @@
         "cargo": "‎",
         "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-24T21:00:59.005Z"
+      "timestamp": "2026-08-28T21:36:50.348Z"
     }
   ],
   "orcamentos": [
