@@ -2824,10 +2824,12 @@
           "pais": "Portugal"
         }
       ],
-      "createdAt": "2026-08-18T07:31:23.894Z",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio"
+      "comercialAtribuidoNome": "José Centúrio",
+      "createdAt": "2026-08-18T07:31:23.894Z",
+      "createdById": "usr-admin-001",
+      "proximoContacto": "2026-09-15"
     },
     {
       "id": "cli-1787604203987-284",
@@ -3712,7 +3714,7 @@
     },
     {
       "id": "con-imp-136",
-      "clienteId": "cli-imp-084",
+      "clienteId": "cli-1787038283894-503",
       "nome": "Gabriela",
       "apelido": "Leite",
       "cargo": "Vice Presidente",
@@ -3725,7 +3727,8 @@
       "separadorId": "sep-1786751754158-584",
       "empresa": "Ministério da Economia e da Coesão Territorial - Ministério da Economia e da Coesão Territorial",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-imp-137",
@@ -3847,7 +3850,8 @@
       "separadorId": "sep-1786751754158-584",
       "empresa": "Ministério da Economia e da Coesão Territorial - Ministério da Economia e da Coesão Territorial",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-546",
@@ -4345,11 +4349,12 @@
       "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-352",
-      "clienteId": "Ministério da Economia e da Coesão Territorial",
+      "clienteId": "cli-1787038283894-503",
       "tratamento": "",
       "nome": "Pedro Machado",
       "apelido": "",
@@ -4360,11 +4365,13 @@
       "email": "gabinete.setcs@mect.gov.pt",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "subTabIndex": 1,
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-425",
-      "clienteId": "Ministério da Economia e da Coesão Territorial",
+      "clienteId": "cli-1787038283894-503",
       "tratamento": "",
       "nome": "Mafalda Torre",
       "apelido": "",
@@ -4375,7 +4382,9 @@
       "email": "gabinete.setcs@mect.gov.pt",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "subTabIndex": 1,
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-473",
@@ -4627,7 +4636,8 @@
       "createdAt": "2026-07-31T16:30:00.000Z",
       "obs": "CCDR-N (Comissão de Coordenação e Desenvolvimento Regional do Norte)",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "proj-huawei-smartbus",
@@ -4725,7 +4735,9 @@
       "subTabIndex": 2,
       "data": "2026-07-31T11:42",
       "descricao": "Reunião com a Dra Gabriela Leite e Com a Dra. Isaura Costa, para possível fornecimento de uma UM de aluguer.",
-      "createdAt": "2026-08-18T09:48:51.397Z"
+      "createdAt": "2026-08-18T09:48:51.397Z",
+      "userId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "int-1785515776952-436",
@@ -5181,6 +5193,75 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1787953783047-86",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Ministério da Economia e da Coesão Territorial\" (NIF: 000000000) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Ministério da Economia e da Coesão Territorial",
+        "contribuinte": "000000000",
+        "tipoCliente": "Estatal",
+        "comercialAtribuido": "José Centúrio",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-28T21:49:43.047Z"
+    },
+    {
+      "id": "log-1787953670272-636",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Associação de Contacto",
+      "descricao": "Contacto \"Mafalda Torre \" associado ao cliente \"Ministério da Economia e da Coesão Territorial\".",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-28T21:47:50.272Z"
+    },
+    {
+      "id": "log-1787953644418-556",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Associação de Contacto",
+      "descricao": "Contacto \"Pedro Machado \" associado ao cliente \"Ministério da Economia e da Coesão Territorial\".",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-28T21:47:24.418Z"
+    },
+    {
+      "id": "log-1787953604028-984",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Associação de Contacto",
+      "descricao": "Contacto \"Gabriela Leite\" associado ao cliente \"Ministério da Economia e da Coesão Territorial\".",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-28T21:46:44.028Z"
+    },
+    {
+      "id": "log-1787953499574-922",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-28T21:44:59.574Z"
+    },
     {
       "id": "log-1787953431951-690",
       "usuarioId": "usr-1787590828349",
