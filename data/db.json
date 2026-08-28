@@ -2039,10 +2039,12 @@
           "email": ""
         }
       ],
-      "createdAt": "2026-08-18T07:31:23.893Z",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio"
+      "comercialAtribuidoNome": "José Centúrio",
+      "createdAt": "2026-08-18T07:31:23.893Z",
+      "createdById": "usr-admin-001",
+      "proximoContacto": "2026-09-15"
     },
     {
       "id": "cli-1787038283893-151",
@@ -2856,6 +2858,19 @@
   ],
   "contactos": [
     {
+      "id": "con-1787956306260-463",
+      "clienteId": "cli-1787038283893-788",
+      "subTabIndex": 2,
+      "nome": "Nuno",
+      "apelido": "Afonso",
+      "cargo": "Adjunto do Secretário de Estado do Ambiente",
+      "telefone": "",
+      "telemovel": "",
+      "email": "gabinete.seamb@maen.gov.pt",
+      "notas": "",
+      "createdAt": "2026-08-28T22:31:46.260Z"
+    },
+    {
       "id": "con-imp-001",
       "clienteId": "cli-imp-072",
       "subTabIndex": 0,
@@ -3429,7 +3444,8 @@
     },
     {
       "id": "con-imp-050",
-      "clienteId": "cli-imp-024",
+      "clienteId": "cli-imp-068",
+      "subTabIndex": 0,
       "nome": "Manuel",
       "apelido": "Ferreira da Silva",
       "cargo": "Presidente",
@@ -3437,10 +3453,7 @@
       "telemovel": "",
       "email": "serralves@serralves.pt",
       "notas": "Temas: culture, fostering environmental awareness a través del arte",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0,
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
       "id": "con-imp-051",
@@ -3899,18 +3912,19 @@
     },
     {
       "id": "con-1787049428085-95",
-      "clienteId": "Ministério do Ambiente e Energia",
-      "tratamento": "",
-      "nome": "Maria da Graça Carvalho",
-      "apelido": "",
+      "clienteId": "cli-1787038283893-788",
+      "subTabIndex": 0,
+      "nome": "Maria da Graça",
+      "apelido": "Carvalho",
       "cargo": "Ministra",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.maen@maen.gov.pt",
+      "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-799",
@@ -3929,33 +3943,35 @@
     },
     {
       "id": "con-1787049428085-518",
-      "clienteId": "Ministério do Ambiente e Energia",
-      "tratamento": "",
-      "nome": "Jean Barroca",
-      "apelido": "",
+      "clienteId": "cli-1787038283893-788",
+      "subTabIndex": 1,
+      "nome": "Jean",
+      "apelido": "Barroca",
       "cargo": "Secretário de Estado adjunto e da energia",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.seen@maen.gov.pt",
+      "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-481",
-      "clienteId": "Ministério do Ambiente e Energia",
-      "tratamento": "",
-      "nome": "Manuel Esteves",
-      "apelido": "",
+      "clienteId": "cli-1787038283893-788",
+      "subTabIndex": 2,
+      "nome": "Manuel",
+      "apelido": "Esteves",
       "cargo": "Secretário de Estado de ambiente",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.seamb@maen.gov.pt",
+      "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-21",
@@ -4322,18 +4338,16 @@
     },
     {
       "id": "con-1787049428085-380",
-      "clienteId": "Ministério da Economia e da Coesão Territorial",
-      "tratamento": "",
-      "nome": "Manuel Castro Almeida",
-      "apelido": "",
+      "clienteId": "cli-1787038283894-503",
+      "subTabIndex": 2,
+      "nome": "Manuel",
+      "apelido": "Castro Almeida",
       "cargo": "Ministro",
-      "departamento": "",
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.mect@mect.gov.pt",
-      "createdAt": "2026-08-18T10:37:08.085Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "notas": "",
+      "createdAt": "2026-08-18T10:37:08.085Z"
     },
     {
       "id": "con-1787049428085-881",
@@ -4612,6 +4626,54 @@
       "createdAt": "2026-08-20T11:02:33.515Z",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001"
+    },
+    {
+      "id": "con-1787955181030-19",
+      "clienteId": "cli-1787038283893-788",
+      "subTabIndex": 1,
+      "nome": "Jorge",
+      "apelido": "Serrote",
+      "cargo": "Chefe do Gabinete do Secretário de Estado Adjunto e da Energia",
+      "telefone": "",
+      "telemovel": "",
+      "email": "gabinete.seaen@maen.gov.pt",
+      "notas": "",
+      "createdAt": "2026-08-28T22:13:01.031Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
+    },
+    {
+      "id": "con-1787955286290-698",
+      "clienteId": "cli-1787038283893-788",
+      "subTabIndex": 1,
+      "nome": "Pedro",
+      "apelido": "Sereno",
+      "cargo": "Técnico",
+      "telefone": "",
+      "telemovel": "",
+      "email": "",
+      "notas": "",
+      "createdAt": "2026-08-28T22:14:46.291Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
+    },
+    {
+      "id": "con-1787955499370-362",
+      "clienteId": "cli-1787038283893-788",
+      "subTabIndex": 2,
+      "nome": "Sónia",
+      "apelido": "Prego",
+      "cargo": "Adjunta do Secretário de Estado do Ambiente",
+      "telefone": "",
+      "telemovel": "",
+      "email": "gabinete.seamb@maen.gov.pt",
+      "notas": "",
+      "createdAt": "2026-08-28T22:18:19.371Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     }
   ],
   "projetos": [
@@ -5136,6 +5198,51 @@
       "createdAt": "2026-08-28T21:41:13.761Z",
       "userId": "usr-1787590828349",
       "createdById": "usr-1787590828349"
+    },
+    {
+      "id": "cpi-1787955186779-336",
+      "contactoId": "con-1787955181030-19",
+      "data": "2026-07-14T10:10",
+      "descricao": "Reunião de apresentação",
+      "createdAt": "2026-08-28T22:13:06.779Z",
+      "userId": "usr-admin-001",
+      "createdById": "usr-admin-001"
+    },
+    {
+      "id": "cpi-1787955290110-72",
+      "contactoId": "con-1787955286290-698",
+      "data": "2026-07-14T00:13",
+      "descricao": "Presente na reunião com o Gab. do secretário de estado e da energia",
+      "createdAt": "2026-08-28T22:14:50.110Z",
+      "userId": "usr-admin-001",
+      "createdById": "usr-admin-001"
+    },
+    {
+      "id": "cpi-1787955503213-543",
+      "contactoId": "con-1787955499370-362",
+      "data": "2026-07-14T00:16",
+      "descricao": "Reunião de apresentação",
+      "createdAt": "2026-08-28T22:18:23.213Z",
+      "userId": "usr-admin-001",
+      "createdById": "usr-admin-001"
+    },
+    {
+      "id": "int-1787956136617-506",
+      "clienteId": "cli-1787038283893-788",
+      "separadorId": "sep-1787040287550-95",
+      "subTabIndex": 0,
+      "data": "2026-07-14T10:51",
+      "descricao": "Reunião com Jorge Serrote e com Pedro Sereno",
+      "createdAt": "2026-08-28T22:28:56.617Z",
+      "userId": "usr-admin-001",
+      "createdById": "usr-admin-001"
+    },
+    {
+      "id": "cpi-1787956346624-978",
+      "contactoId": "con-1787956306260-463",
+      "data": "2026-07-14T00:29",
+      "descricao": "Presente na reunião",
+      "createdAt": "2026-08-28T22:32:26.624Z"
     }
   ],
   "interacoesProjetos": [],
@@ -5192,6 +5299,67 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1787956138987-257",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Ministério do Ambiente e Energia\" (NIF: 000000000) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Ministério do Ambiente e Energia",
+        "contribuinte": "000000000",
+        "tipoCliente": "Estatal",
+        "comercialAtribuido": "José Centúrio",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-28T22:28:58.987Z"
+    },
+    {
+      "id": "log-1787956131149-221",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Ministério do Ambiente e Energia\" (NIF: 000000000) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Ministério do Ambiente e Energia",
+        "contribuinte": "000000000",
+        "tipoCliente": "Estatal",
+        "comercialAtribuido": "José Centúrio",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-28T22:28:51.149Z"
+    },
+    {
+      "id": "log-1787954109262-481",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-28T21:55:09.262Z"
+    },
     {
       "id": "log-1787954085816-269",
       "usuarioId": "usr-admin-001",
@@ -5318,7 +5486,63 @@
       "createdAt": "2023-09-15T09:00:00.000Z"
     }
   ],
-  "ignoredDuplicates": [],
+  "ignoredDuplicates": [
+    {
+      "type": "con-1787049428085-380",
+      "key": "con-1787049428085-881:::undefined",
+      "id1": "con-1787049428085-881",
+      "ignoredAt": "2026-08-28T21:58:58.934Z",
+      "ignoredBy": "Sistema"
+    },
+    {
+      "type": "con-imp-050",
+      "key": "con-imp-113:::undefined",
+      "id1": "con-imp-113",
+      "ignoredAt": "2026-08-28T22:01:16.042Z",
+      "ignoredBy": "Sistema"
+    },
+    {
+      "type": "con-1787955499370-362",
+      "key": "con-1787049428085-481:::undefined",
+      "id1": "con-1787049428085-481",
+      "ignoredAt": "2026-08-28T22:28:34.785Z",
+      "ignoredBy": "Sistema"
+    },
+    {
+      "type": "con-1787956306260-463",
+      "key": "con-1787049428085-481:::undefined",
+      "id1": "con-1787049428085-481",
+      "ignoredAt": "2026-08-28T22:31:52.708Z",
+      "ignoredBy": "Sistema"
+    },
+    {
+      "type": "con-1787956306260-463",
+      "key": "con-1787955499370-362:::undefined",
+      "id1": "con-1787955499370-362",
+      "ignoredAt": "2026-08-28T22:32:37.511Z",
+      "ignoredBy": "Sistema"
+    }
+  ],
+  "activityHistory": [
+    {
+      "id": "act-1787954172881",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-1787049428085-580,con-1787049428085-443",
+      "details": "Decidido manter ambos os registos (con-1787049428085-580, con-1787049428085-443).",
+      "timestamp": "2026-08-28T21:56:12.881Z"
+    },
+    {
+      "id": "act-1787954128443",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-050,con-imp-113",
+      "details": "Decidido manter ambos os registos (con-imp-050, con-imp-113).",
+      "timestamp": "2026-08-28T21:55:28.443Z"
+    }
+  ],
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
   "_deletedRegistry": {
     "clientes": [
