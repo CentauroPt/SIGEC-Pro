@@ -2828,7 +2828,8 @@
       "comercialAtribuidoId": "usr-1787590828349",
       "comercialAtribuidoNome": "‎",
       "createdAt": "2026-08-18T07:31:23.894Z",
-      "createdById": "usr-1787590828349"
+      "createdById": "usr-1787590828349",
+      "proximoContacto": "2026-09-15"
     },
     {
       "id": "cli-1787604203987-284",
@@ -5193,136 +5194,20 @@
   ],
   "userLogs": [
     {
-      "id": "log-1787953843796-384",
-      "usuarioId": "usr-1787590828349",
-      "usuarioNome": "‎",
-      "usuarioEmail": "maria@empresa.com",
-      "tipoAcao": "Transferência de Cliente",
-      "descricao": "Cliente \"Ministério da Economia e da Coesão Territorial\" transferido de José Centúrio para ‎ com todos os seus contactos, projetos, orçamentos e interações.",
-      "pagina": "Clientes",
-      "detalhes": null,
-      "timestamp": "2026-08-28T21:50:43.796Z"
-    },
-    {
-      "id": "log-1787953843740-489",
-      "usuarioId": "usr-1787590828349",
-      "usuarioNome": "‎",
-      "usuarioEmail": "maria@empresa.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Ministério da Economia e da Coesão Territorial\" (NIF: 000000000) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Ministério da Economia e da Coesão Territorial",
-        "contribuinte": "000000000",
-        "tipoCliente": "Estatal",
-        "comercialAtribuido": "‎",
-        "camposAlterados": [
-          {
-            "campo": "Comercial Atribuído",
-            "anterior": "José Centúrio",
-            "novo": "‎"
-          }
-        ]
-      },
-      "timestamp": "2026-08-28T21:50:43.740Z"
-    },
-    {
-      "id": "log-1787953840362-588",
-      "usuarioId": "usr-1787590828349",
-      "usuarioNome": "‎",
-      "usuarioEmail": "maria@empresa.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Clientes",
-      "detalhes": null,
-      "timestamp": "2026-08-28T21:50:40.362Z"
-    },
-    {
-      "id": "log-1787953783047-86",
-      "usuarioId": "usr-1787590828349",
-      "usuarioNome": "‎",
-      "usuarioEmail": "maria@empresa.com",
-      "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Ministério da Economia e da Coesão Territorial\" (NIF: 000000000) atualizada.",
-      "pagina": "Clientes",
-      "detalhes": {
-        "acao": "Edição",
-        "ficha": "Cliente",
-        "nome": "Ministério da Economia e da Coesão Territorial",
-        "contribuinte": "000000000",
-        "tipoCliente": "Estatal",
-        "comercialAtribuido": "José Centúrio",
-        "camposAlterados": [
-          {
-            "campo": "Ficheiro guardado",
-            "anterior": "",
-            "novo": "Sem alterações detetadas nos campos principais"
-          }
-        ]
-      },
-      "timestamp": "2026-08-28T21:49:43.047Z"
-    },
-    {
-      "id": "log-1787953670272-636",
-      "usuarioId": "usr-1787590828349",
-      "usuarioNome": "‎",
-      "usuarioEmail": "maria@empresa.com",
-      "tipoAcao": "Associação de Contacto",
-      "descricao": "Contacto \"Mafalda Torre \" associado ao cliente \"Ministério da Economia e da Coesão Territorial\".",
-      "pagina": "Clientes",
-      "detalhes": null,
-      "timestamp": "2026-08-28T21:47:50.272Z"
-    },
-    {
-      "id": "log-1787953644418-556",
-      "usuarioId": "usr-1787590828349",
-      "usuarioNome": "‎",
-      "usuarioEmail": "maria@empresa.com",
-      "tipoAcao": "Associação de Contacto",
-      "descricao": "Contacto \"Pedro Machado \" associado ao cliente \"Ministério da Economia e da Coesão Territorial\".",
-      "pagina": "Clientes",
-      "detalhes": null,
-      "timestamp": "2026-08-28T21:47:24.418Z"
-    },
-    {
-      "id": "log-1787953604028-984",
-      "usuarioId": "usr-1787590828349",
-      "usuarioNome": "‎",
-      "usuarioEmail": "maria@empresa.com",
-      "tipoAcao": "Associação de Contacto",
-      "descricao": "Contacto \"Gabriela Leite\" associado ao cliente \"Ministério da Economia e da Coesão Territorial\".",
-      "pagina": "Clientes",
-      "detalhes": null,
-      "timestamp": "2026-08-28T21:46:44.028Z"
-    },
-    {
-      "id": "log-1787953499574-922",
-      "usuarioId": "usr-1787590828349",
-      "usuarioNome": "‎",
-      "usuarioEmail": "maria@empresa.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-28T21:44:59.574Z"
-    },
-    {
-      "id": "log-1787953431951-690",
-      "usuarioId": "usr-1787590828349",
-      "usuarioNome": "‎",
-      "usuarioEmail": "maria@empresa.com",
+      "id": "log-1787954020002-768",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
       "tipoAcao": "Início de Sessão",
-      "descricao": "Acesso autorizado efetuado por ‎.",
+      "descricao": "Acesso autorizado efetuado por José Centúrio.",
       "pagina": "Dashboard / Início",
       "detalhes": {
-        "utilizador": "‎",
-        "email": "maria@empresa.com",
-        "cargo": "‎",
+        "utilizador": "José Centúrio",
+        "email": "jmcenturio@alegria-activity.com",
+        "cargo": "Administrador do Sistema",
         "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-28T21:43:51.951Z"
+      "timestamp": "2026-08-28T21:53:40.003Z"
     }
   ],
   "orcamentos": [
