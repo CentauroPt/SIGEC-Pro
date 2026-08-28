@@ -2824,12 +2824,11 @@
           "pais": "Portugal"
         }
       ],
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio",
+      "userId": "usr-1787590828349",
+      "comercialAtribuidoId": "usr-1787590828349",
+      "comercialAtribuidoNome": "‎",
       "createdAt": "2026-08-18T07:31:23.894Z",
-      "createdById": "usr-admin-001",
-      "proximoContacto": "2026-09-15"
+      "createdById": "usr-1787590828349"
     },
     {
       "id": "cli-1787604203987-284",
@@ -3726,9 +3725,9 @@
       "subTabIndex": 2,
       "separadorId": "sep-1786751754158-584",
       "empresa": "Ministério da Economia e da Coesão Territorial - Ministério da Economia e da Coesão Territorial",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-admin-001"
+      "userId": "usr-1787590828349",
+      "comercialAtribuidoId": "usr-1787590828349",
+      "createdById": "usr-1787590828349"
     },
     {
       "id": "con-imp-137",
@@ -3849,9 +3848,9 @@
       "createdAt": "2026-08-18T06:53:21.308Z",
       "separadorId": "sep-1786751754158-584",
       "empresa": "Ministério da Economia e da Coesão Territorial - Ministério da Economia e da Coesão Territorial",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-admin-001"
+      "userId": "usr-1787590828349",
+      "comercialAtribuidoId": "usr-1787590828349",
+      "createdById": "usr-1787590828349"
     },
     {
       "id": "con-1787049428085-546",
@@ -4348,9 +4347,9 @@
       "email": "gabinete.mect@mect.gov.pt",
       "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-admin-001"
+      "userId": "usr-1787590828349",
+      "comercialAtribuidoId": "usr-1787590828349",
+      "createdById": "usr-1787590828349"
     },
     {
       "id": "con-1787049428085-352",
@@ -4364,10 +4363,10 @@
       "telemovel": "",
       "email": "gabinete.setcs@mect.gov.pt",
       "createdAt": "2026-08-18T10:37:08.085Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
+      "userId": "usr-1787590828349",
+      "comercialAtribuidoId": "usr-1787590828349",
       "subTabIndex": 1,
-      "createdById": "usr-admin-001"
+      "createdById": "usr-1787590828349"
     },
     {
       "id": "con-1787049428085-425",
@@ -4381,10 +4380,10 @@
       "telemovel": "",
       "email": "gabinete.setcs@mect.gov.pt",
       "createdAt": "2026-08-18T10:37:08.085Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
+      "userId": "usr-1787590828349",
+      "comercialAtribuidoId": "usr-1787590828349",
       "subTabIndex": 1,
-      "createdById": "usr-admin-001"
+      "createdById": "usr-1787590828349"
     },
     {
       "id": "con-1787049428085-473",
@@ -4635,9 +4634,9 @@
       "media": [],
       "createdAt": "2026-07-31T16:30:00.000Z",
       "obs": "CCDR-N (Comissão de Coordenação e Desenvolvimento Regional do Norte)",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-admin-001"
+      "userId": "usr-1787590828349",
+      "comercialAtribuidoId": "usr-1787590828349",
+      "createdById": "usr-1787590828349"
     },
     {
       "id": "proj-huawei-smartbus",
@@ -4736,8 +4735,8 @@
       "data": "2026-07-31T11:42",
       "descricao": "Reunião com a Dra Gabriela Leite e Com a Dra. Isaura Costa, para possível fornecimento de uma UM de aluguer.",
       "createdAt": "2026-08-18T09:48:51.397Z",
-      "userId": "usr-admin-001",
-      "createdById": "usr-admin-001"
+      "userId": "usr-1787590828349",
+      "createdById": "usr-1787590828349"
     },
     {
       "id": "int-1785515776952-436",
@@ -5193,6 +5192,53 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1787953843796-384",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Transferência de Cliente",
+      "descricao": "Cliente \"Ministério da Economia e da Coesão Territorial\" transferido de José Centúrio para ‎ com todos os seus contactos, projetos, orçamentos e interações.",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-28T21:50:43.796Z"
+    },
+    {
+      "id": "log-1787953843740-489",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Ministério da Economia e da Coesão Territorial\" (NIF: 000000000) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Ministério da Economia e da Coesão Territorial",
+        "contribuinte": "000000000",
+        "tipoCliente": "Estatal",
+        "comercialAtribuido": "‎",
+        "camposAlterados": [
+          {
+            "campo": "Comercial Atribuído",
+            "anterior": "José Centúrio",
+            "novo": "‎"
+          }
+        ]
+      },
+      "timestamp": "2026-08-28T21:50:43.740Z"
+    },
+    {
+      "id": "log-1787953840362-588",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-28T21:50:40.362Z"
+    },
     {
       "id": "log-1787953783047-86",
       "usuarioId": "usr-1787590828349",
