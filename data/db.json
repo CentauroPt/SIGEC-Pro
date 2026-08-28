@@ -4680,7 +4680,8 @@
       "media": [],
       "createdAt": "2026-07-27T09:00:00.000Z",
       "userId": "usr-1787590828349",
-      "comercialAtribuidoId": "usr-1787590828349"
+      "comercialAtribuidoId": "usr-1787590828349",
+      "createdById": "usr-1787590828349"
     },
     {
       "id": "proj-bcn-furgao",
@@ -5121,7 +5122,9 @@
       "subTabIndex": null,
       "data": "2026-08-11T10:36",
       "descricao": "Enviada proposta por email",
-      "createdAt": "2026-08-28T21:41:13.761Z"
+      "createdAt": "2026-08-28T21:41:13.761Z",
+      "userId": "usr-1787590828349",
+      "createdById": "usr-1787590828349"
     }
   ],
   "interacoesProjetos": [],
@@ -5178,6 +5181,42 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1787953295285-81",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-28T21:41:35.285Z"
+    },
+    {
+      "id": "log-1787953294349-805",
+      "usuarioId": "usr-1787590828349",
+      "usuarioNome": "‎",
+      "usuarioEmail": "maria@empresa.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Banco Caboverdiano de Negócios - BCN\" (NIF: 500001462) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Banco Caboverdiano de Negócios - BCN",
+        "contribuinte": "500001462",
+        "tipoCliente": "Privado",
+        "comercialAtribuido": "‎",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-28T21:41:34.349Z"
+    },
     {
       "id": "log-1787953241052-699",
       "usuarioId": "usr-1787590828349",
