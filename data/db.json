@@ -2043,8 +2043,7 @@
       "comercialAtribuidoId": "usr-admin-001",
       "comercialAtribuidoNome": "José Centúrio",
       "createdAt": "2026-08-18T07:31:23.893Z",
-      "createdById": "usr-admin-001",
-      "proximoContacto": "2026-09-15"
+      "createdById": "usr-admin-001"
     },
     {
       "id": "cli-1787038283893-151",
@@ -2868,7 +2867,10 @@
       "telemovel": "",
       "email": "gabinete.seamb@maen.gov.pt",
       "notas": "",
-      "createdAt": "2026-08-28T22:31:46.260Z"
+      "createdAt": "2026-08-28T22:31:46.260Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-imp-001",
@@ -5242,7 +5244,9 @@
       "contactoId": "con-1787956306260-463",
       "data": "2026-07-14T00:29",
       "descricao": "Presente na reunião",
-      "createdAt": "2026-08-28T22:32:26.624Z"
+      "createdAt": "2026-08-28T22:32:26.624Z",
+      "userId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     }
   ],
   "interacoesProjetos": [],
@@ -5299,6 +5303,67 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1787956631238-951",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Ministério do Ambiente e Energia\" (NIF: 000000000) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Ministério do Ambiente e Energia",
+        "contribuinte": "000000000",
+        "tipoCliente": "Estatal",
+        "comercialAtribuido": "José Centúrio",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-28T22:37:11.238Z"
+    },
+    {
+      "id": "log-1787956387691-581",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Ministério do Ambiente e Energia\" (NIF: 000000000) atualizada.",
+      "pagina": "Clientes",
+      "detalhes": {
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Ministério do Ambiente e Energia",
+        "contribuinte": "000000000",
+        "tipoCliente": "Estatal",
+        "comercialAtribuido": "José Centúrio",
+        "camposAlterados": [
+          {
+            "campo": "Ficheiro guardado",
+            "anterior": "",
+            "novo": "Sem alterações detetadas nos campos principais"
+          }
+        ]
+      },
+      "timestamp": "2026-08-28T22:33:07.691Z"
+    },
+    {
+      "id": "log-1787956384335-583",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-28T22:33:04.335Z"
+    },
     {
       "id": "log-1787956138987-257",
       "usuarioId": "usr-admin-001",
