@@ -5295,7 +5295,24 @@
       "createdAt": "2026-08-22T10:06:38.433Z"
     }
   ],
-  "userLogs": [],
+  "userLogs": [
+    {
+      "id": "log-1788030793055-266",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Início de Sessão",
+      "descricao": "Acesso autorizado efetuado por José Centúrio.",
+      "pagina": "Dashboard / Início",
+      "detalhes": {
+        "utilizador": "José Centúrio",
+        "email": "jmcenturio@alegria-activity.com",
+        "cargo": "Administrador do Sistema",
+        "dispositivo": "Computador"
+      },
+      "timestamp": "2026-08-29T19:13:13.055Z"
+    }
+  ],
   "orcamentos": [
     {
       "id": "orc-norte-2040-004",
