@@ -3740,11 +3740,9 @@
       "telemovel": "",
       "email": "marketing@bcn.cv",
       "proximoContacto": "2026-09-16",
+      "inativo": false,
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "inativo": true
+      "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
       "id": "con-1787036001308-748",
@@ -5314,6 +5312,17 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1788003376738-274",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Contactos",
+      "detalhes": null,
+      "timestamp": "2026-08-29T11:36:16.738Z"
+    },
     {
       "id": "log-1788003363312-957",
       "usuarioId": "usr-admin-001",
