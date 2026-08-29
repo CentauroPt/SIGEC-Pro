@@ -307,6 +307,12 @@
 
   <!-- ECRÃ DE AUTENTICAÇÃO E SEGURANÇA (LOGIN PIN / PALAVRA-PASSE) -->
   <div id="loginOverlay" class="login-overlay">
+    <script>
+      if (sessionStorage.getItem('sigec_pro_authenticated') === 'true') {
+        var _lo = document.getElementById('loginOverlay');
+        if (_lo) { _lo.style.display = 'none'; _lo.classList.add('hidden'); }
+      }
+    </script>
     <div class="login-card">
       <div class="login-header">
         <div class="login-logo-circle" style="background: #ffffff; padding: 4px;">
@@ -581,18 +587,10 @@
                 <span data-i18n="dash_client_tracking_title">Acompanhamento de Clientes</span>
               </h3>
             </div>
-            <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-              <button type="button" class="btn btn-sm" onclick="toggleDashClientContactSort()"
-                title="Alternar ordenação: Contactados / Não Contactados"
-                style="padding: 0.3rem 0.75rem; font-size: 0.8rem; background: rgba(255,255,255,0.2); color: #ffffff; border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">
-                <i class="fa-solid fa-arrow-down-short-wide"></i>
-                <span id="dashClientSortLabel" data-i18n="sort_contacted_label">Contactados</span>
-              </button>
-              <button class="btn btn-sm" onclick="switchTab('tab-clientes')"
-                style="padding: 0.3rem 0.75rem; font-size: 0.8rem; background: #ffffff; color: #1e40af; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem;">
-                <span data-i18n="btn_view_all">Ver Todos</span> <i class="fa-solid fa-arrow-right"></i>
-              </button>
-            </div>
+            <button class="btn btn-sm" onclick="switchTab('tab-clientes')"
+              style="padding: 0.3rem 0.75rem; font-size: 0.8rem; background: #ffffff; color: #1e40af; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem;">
+              <span data-i18n="btn_view_all">Ver Todos</span> <i class="fa-solid fa-arrow-right"></i>
+            </button>
           </div>
           <div id="dashClientTrackingContainer" class="dash-projects-scroll-container">
             <!-- Clientes renderizados via JS -->
@@ -608,18 +606,10 @@
                 <span data-i18n="dash_contact_tracking_title">Acompanhamento de Contactos</span>
               </h3>
             </div>
-            <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-              <button type="button" class="btn btn-sm" onclick="toggleDashContactSort()"
-                title="Alternar ordenação: Contactados / Não Contactados"
-                style="padding: 0.3rem 0.75rem; font-size: 0.8rem; background: rgba(255,255,255,0.2); color: #ffffff; border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">
-                <i class="fa-solid fa-arrow-down-short-wide"></i>
-                <span id="dashContactSortLabel" data-i18n="sort_contacted_label">Contactados</span>
-              </button>
-              <button class="btn btn-sm" onclick="switchTab('tab-contactos')"
-                style="padding: 0.3rem 0.75rem; font-size: 0.8rem; background: #ffffff; color: #065f46; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem;">
-                <span data-i18n="btn_view_all">Ver Todos</span> <i class="fa-solid fa-arrow-right"></i>
-              </button>
-            </div>
+            <button class="btn btn-sm" onclick="switchTab('tab-contactos')"
+              style="padding: 0.3rem 0.75rem; font-size: 0.8rem; background: #ffffff; color: #065f46; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem;">
+              <span data-i18n="btn_view_all">Ver Todos</span> <i class="fa-solid fa-arrow-right"></i>
+            </button>
           </div>
           <div id="dashContactTrackingContainer" class="dash-projects-scroll-container">
             <!-- Contactos renderizados via JS -->
@@ -2197,29 +2187,12 @@
                 <span style="font-size: 0.8rem; font-weight: 500; opacity: 0.9; margin-left: 0.4rem;">(<span id="consultasClientsListCount">0</span> registados)</span>
               </h3>
             </div>
-            <div>
-              <button type="button" class="btn btn-sm" onclick="toggleConsultasClientsContactSort()"
-                title="Ordenar por Contactados / Não Contactados"
-                style="padding: 0.3rem 0.75rem; font-size: 0.8rem; background: rgba(255,255,255,0.2); color: #ffffff; border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">
-                <i class="fa-solid fa-arrow-down-short-wide"></i>
-                <span id="consultasClientSortLabel" data-i18n="sort_contacted_label">Contactados</span>
-              </button>
-            </div>
           </div>
 
-          <div class="table-responsive" style="max-height: 380px; overflow-y: auto; padding: 0.5rem;">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th data-i18n="th_tipo">Tipo</th>
-                  <th style="text-align: center; width: 110px;" data-i18n="th_contactado">Contactado</th>
-                  <th data-i18n="th_nome_empresa">Nome / Razão Social</th>
-                  <th data-i18n="th_nif">NIF / Contribuinte</th>
-                  <th data-i18n="th_localidade">Localidade</th>
-                  <th data-i18n="th_pais">País</th>
-                  <th data-i18n="th_contacto">Telefone / Telemóvel</th>
-                  <th data-i18n="th_email">Email</th>
-                </tr>
+          <div id="consultasClientsTableContainer" class="dash-projects-scroll-container table-responsive" style="max-height: 420px; overflow-y: auto; padding: 0.5rem;">
+            <table class="db-table full-width-list-table" style="width: 100%; border-collapse: collapse; font-size: 0.88rem;">
+              <thead id="consultasClientsTableHead">
+                <!-- Preenchido dinamicamente com ordenação por coluna -->
               </thead>
               <tbody id="consultasClientsTableBody">
                 <!-- Preenchido dinamicamente -->
@@ -2238,28 +2211,12 @@
                 <span style="font-size: 0.8rem; font-weight: 500; opacity: 0.9; margin-left: 0.4rem;">(<span id="consultasContactsListCount">0</span> registados)</span>
               </h3>
             </div>
-            <div>
-              <button type="button" class="btn btn-sm" onclick="toggleConsultasContactsContactSort()"
-                title="Ordenar por Contactados / Não Contactados"
-                style="padding: 0.3rem 0.75rem; font-size: 0.8rem; background: rgba(255,255,255,0.2); color: #ffffff; border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">
-                <i class="fa-solid fa-arrow-down-short-wide"></i>
-                <span id="consultasContactSortLabel" data-i18n="sort_contacted_label">Contactados</span>
-              </button>
-            </div>
           </div>
 
-          <div class="table-responsive" style="max-height: 380px; overflow-y: auto; padding: 0.5rem;">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th style="text-align: center; width: 110px;" data-i18n="th_contactado">Contactado</th>
-                  <th data-i18n="th_nome_contacto">Nome do Contacto</th>
-                  <th data-i18n="th_cliente_associado">Cliente Associado</th>
-                  <th data-i18n="th_cargo">Cargo / Função</th>
-                  <th data-i18n="th_telefone">Telefone / Telemóvel</th>
-                  <th data-i18n="th_email">Email</th>
-                  <th data-i18n="th_notas">Notas / Observações</th>
-                </tr>
+          <div id="consultasContactsTableContainer" class="dash-projects-scroll-container table-responsive" style="max-height: 420px; overflow-y: auto; padding: 0.5rem;">
+            <table class="db-table full-width-list-table" style="width: 100%; border-collapse: collapse; font-size: 0.88rem;">
+              <thead id="consultasContactsTableHead">
+                <!-- Preenchido dinamicamente com ordenação por coluna -->
               </thead>
               <tbody id="consultasContactsTableBody">
                 <!-- Preenchido dinamicamente -->
@@ -2278,29 +2235,12 @@
                 <span style="font-size: 0.8rem; font-weight: 500; opacity: 0.9; margin-left: 0.4rem;">(<span id="consultasProjectsListCount">0</span> registados)</span>
               </h3>
             </div>
-            <div>
-              <button type="button" class="btn btn-sm" onclick="toggleConsultasProjectsStatusSort()"
-                title="Ordenar por Estado do Projeto"
-                style="padding: 0.3rem 0.75rem; font-size: 0.8rem; background: rgba(255,255,255,0.2); color: #ffffff; border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">
-                <i class="fa-solid fa-arrow-down-short-wide"></i>
-                <span id="consultasProjectSortLabel" data-i18n="sort_status_label">Estado do Projeto</span>
-              </button>
-            </div>
           </div>
 
-          <div class="table-responsive" style="max-height: 380px; overflow-y: auto; padding: 0.5rem;">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th data-i18n="th_nome_projeto">Nome do Projeto</th>
-                  <th data-i18n="th_cliente_associado">Cliente Associado</th>
-                  <th data-i18n="th_tipo">Tipo</th>
-                  <th data-i18n="th_estado">Estado</th>
-                  <th data-i18n="th_data_inicio">Data Início</th>
-                  <th data-i18n="th_data_fim">Data Fim</th>
-                  <th data-i18n="th_viatura">Viatura / Matrícula</th>
-                  <th style="text-align: center; width: 170px;" data-i18n="th_acoes">Ações</th>
-                </tr>
+          <div id="consultasProjectsTableContainer" class="dash-projects-scroll-container table-responsive" style="max-height: 420px; overflow-y: auto; padding: 0.5rem;">
+            <table class="db-table" style="width: 100%; border-collapse: collapse; font-size: 0.88rem;">
+              <thead id="consultasProjectsTableHead">
+                <!-- Preenchido dinamicamente com ordenação por coluna -->
               </thead>
               <tbody id="consultasProjectsTableBody">
                 <!-- Preenchido dinamicamente -->
@@ -2978,6 +2918,11 @@
                 <i class="fa-solid fa-users"></i> Pessoas de Contacto (Pessoas que trabalham nesta empresa)
               </h3>
               <div style="display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap;">
+                <button type="button" id="btnToggleInactiveContacts" class="btn btn-secondary" onclick="toggleClientInactiveContactsVisibility()"
+                  style="padding: 0.35rem 0.75rem; font-size: 0.8rem; display: none; align-items: center; gap: 0.35rem;"
+                  title="Ver ou ocultar contactos inativos deste cliente">
+                  <i class="fa-solid fa-eye" id="iconToggleInactiveContacts"></i> <span id="textToggleInactiveContacts">Ver Inativos (0)</span>
+                </button>
                 <button type="button" class="btn btn-secondary" onclick="openAttachExistingContactModal()"
                   style="padding: 0.35rem 0.75rem; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.35rem;"
                   title="Adicionar contacto escolhendo da lista de contactos existentes">
@@ -3189,6 +3134,17 @@
               <input type="email" id="contactEmail" class="form-control" placeholder="nome@empresa.pt">
             </div>
 
+            <!-- Caixa de Verificação de Contacto Inativo -->
+            <div class="form-group col-12" style="margin-top: -0.25rem; margin-bottom: 0.25rem;">
+              <label for="contactInativo" style="display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; cursor: pointer; color: #334155; margin: 0;">
+                <input type="checkbox" id="contactInativo" style="width: 17px; height: 17px; accent-color: #dc2626; cursor: pointer;">
+                <span data-i18n="contact_inactive_label">Contacto Inativo</span>
+                <span class="badge badge-secondary" style="font-size: 0.72rem; padding: 2px 6px; background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; margin-left: 4px;">
+                  <i class="fa-solid fa-user-slash" style="margin-right: 3px;"></i>Ocultar por defeito na lista de contactos
+                </span>
+              </label>
+            </div>
+
             <!-- Campo de Notas com Barra de Deslocação Vertical -->
             <div class="form-group col-12">
               <label for="contactNotas">Notas</label>
@@ -3213,6 +3169,17 @@
                   <span id="textSortContactInteractions" style="font-size: 0.76rem;">Mais recente</span>
                 </button>
               </h3>
+              <div class="contact-next-contact-wrapper"
+                style="display: inline-flex; align-items: center; gap: 0.5rem; margin-left: auto;">
+                <label for="contactProximoContacto"
+                  style="font-weight: 600; font-size: 0.85rem; color: #1e3a8a; margin: 0; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px;">
+                  <i class="fa-regular fa-calendar-plus" style="color: #2563eb;"></i>
+                  <span>Próximo contacto:</span>
+                </label>
+                <input type="date" id="contactProximoContacto" class="form-control"
+                  style="width: auto; padding: 0.25rem 0.6rem; font-size: 0.85rem; font-weight: 500; height: 34px; border: 1.5px solid #cbd5e1; border-radius: 6px;"
+                  onchange="saveContactNextContactDate(this.value)" title="Data agendada para o próximo contacto">
+              </div>
             </div>
 
             <!-- Formulário em Linha: Data + Escrita Livre Auto-expansível -->
@@ -4313,11 +4280,11 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- Internationalization & Translations Engine -->
-  <script src="i18n.js?v=20260824_v27"></script>
+  <script src="i18n.js?v=20260829_v47"></script>
   <!-- Main JavaScript App -->
-  <script src="app.js?v=20260824_v27"></script>
+  <script src="app.js?v=20260829_v47"></script>
   <!-- Duplicates Management Engine -->
-  <script src="duplicatesManager.js?v=20260824_v27"></script>
+  <script src="duplicatesManager.js?v=20260829_v47"></script>
 
   <!-- Override saveContact and switchTab to guarantee proper modal behavior regardless of app.js cache -->
   <script>
@@ -4486,6 +4453,11 @@
         finalSubTabIndex = Number(activeEstatalSeparadorIndex || 0);
       }
 
+      var proxEl = document.getElementById('contactProximoContacto');
+      var proximoContacto = (proxEl && proxEl.value) ? proxEl.value.trim() : (existingIndex >= 0 ? db.contactos[existingIndex].proximoContacto : null);
+      var inativoEl = document.getElementById('contactInativo');
+      var inativo = inativoEl ? inativoEl.checked : (existingIndex >= 0 ? !!db.contactos[existingIndex].inativo : false);
+
       var contactObj = {
         id: id,
         clienteId: selectedClienteId,
@@ -4496,6 +4468,8 @@
         telefone: telefone,
         telemovel: telemovel,
         email: email,
+        proximoContacto: proximoContacto || null,
+        inativo: inativo,
         notas: notas,
         createdAt: existingIndex >= 0 ? db.contactos[existingIndex].createdAt : new Date().toISOString()
       };
@@ -5117,12 +5091,20 @@
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
               <div>
-                <label data-i18n="reg_full_name"
-                  style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Nome
-                  Completo:</label>
-                <input type="text" id="profileUserName" class="form-control" placeholder="Ex: Maria Santos" required
+                <label data-i18n="reg_first_name"
+                  style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Nome:</label>
+                <input type="text" id="profileUserFirstName" class="form-control" placeholder="Ex: Maria" required
                   style="padding: 0.65rem; border-radius: 6px;">
               </div>
+              <div>
+                <label data-i18n="reg_last_name"
+                  style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Apelido:</label>
+                <input type="text" id="profileUserLastName" class="form-control" placeholder="Ex: Santos" required
+                  style="padding: 0.65rem; border-radius: 6px;">
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
               <div>
                 <label data-i18n="reg_email"
                   style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Email
@@ -5130,9 +5112,6 @@
                 <input type="email" id="profileUserEmail" class="form-control" placeholder="maria@empresa.com" required
                   style="padding: 0.65rem; border-radius: 6px;">
               </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
               <div>
                 <label data-i18n="reg_cargo"
                   style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Cargo
@@ -5140,6 +5119,9 @@
                 <input type="text" id="profileUserCargo" class="form-control" placeholder="Ex: Gestora de Projetos"
                   required style="padding: 0.65rem; border-radius: 6px;">
               </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
               <div>
                 <label data-i18n="reg_language"
                   style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Idioma:</label>
@@ -5152,9 +5134,6 @@
                   <option value="English">English</option>
                 </select>
               </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr; gap: 1rem;">
               <div>
                 <label data-i18n="profile_role_access"
                   style="font-size: 0.82rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">Perfil

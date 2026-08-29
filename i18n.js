@@ -504,7 +504,20 @@ const SIGEC_I18N = {
     English: "New user registered successfully! Access pending Administrator authorization.",
     Français: "Nouvel utilisateur enregistré avec succès ! Accès en attente d'autorisation de l'Administrateur.",
     Polski: "Nowy użytkownik zarejestrowany pomyślnie! Dostęp oczekuje na autoryzację Administratora."
-  }
+  },
+  reg_first_name: { Português: "Nome:", Español: "Nombre:", English: "First Name:", Français: "Prénom :", Polski: "Imię:" },
+  reg_last_name: { Português: "Apelido:", Español: "Apellido:", English: "Last Name:", Français: "Nom de famille :", Polski: "Nazwisko:" },
+  reg_full_name: { Português: "Nome Completo:", Español: "Nombre Completo:", English: "Full Name:", Français: "Nom Complet :", Polski: "Imię i Nazwisko:" },
+  reg_email: { Português: "Email de Acesso:", Español: "Correo de Acceso:", English: "Access Email:", Français: "Email d'Accès :", Polski: "Email Logowania:" },
+  reg_cargo: { Português: "Cargo / Função:", Español: "Puesto / Función:", English: "Role / Position:", Français: "Poste / Fonction :", Polski: "Stanowisko / Funkcja:" },
+  reg_language: { Português: "Idioma:", Español: "Idioma:", English: "Language:", Français: "Langue :", Polski: "Język:" },
+  profile_role_access: { Português: "Perfil de Acesso:", Español: "Perfil de Acceso:", English: "Access Profile:", Français: "Profil d'Accès :", Polski: "Profil Dostępu:" },
+  reg_password: { Português: "Palavra-Passe:", Español: "Contraseña:", English: "Password:", Français: "Mot de Passe :", Polski: "Hasło:" },
+  reg_confirm_password: { Português: "Repetir a Palavra-Passe:", Español: "Repetir la Contraseña:", English: "Confirm Password:", Français: "Répéter le Mot de Passe :", Polski: "Powtórz Hasło:" },
+  btn_save_user_profile: { Português: "Guardar Ficha do Utilizador", Español: "Guardar Ficha del Usuario", English: "Save User Profile", Français: "Enregistrer la Fiche de l'Utilisateur", Polski: "Zapisz Kartę Użytkownika" },
+  profile_title: { Português: "Ficha do Utilizador", Español: "Ficha del Usuario", English: "User Profile", Français: "Fiche de l'Utilisateur", Polski: "Karta Użytkownika" },
+  profile_badge_admin: { Português: "Administrador do Sistema", Español: "Administrador del Sistema", English: "System Administrator", Français: "Administrateur Système", Polski: "Administrator Systemu" },
+  profile_badge_user: { Português: "Utilizador Padrão", Español: "Usuario Estándar", English: "Standard User", Français: "Utilisateur Standard", Polski: "Użytkownik Standardowy" }
 };
 
 /**
@@ -742,6 +755,7 @@ const SIGEC_PHRASES_MAP = {
   "Próximo contacto": { Español: "Próximo contacto", English: "Next contact", Français: "Prochain contact", Polski: "Następny kontakt" },
   "Próximo Contacto": { Español: "Próximo Contacto", English: "Next Contact", Français: "Prochain Contact", Polski: "Następny Kontakt" },
   "Acompanhamento de Clientes": { Español: "Seguimiento de Clientes", English: "Client Follow-up", Français: "Suivi des Clients", Polski: "Monitorowanie Klientów" },
+  "Nenhum contacto registado.": { Español: "Ningún contacto registrado.", English: "No registered contacts.", Français: "Aucun contact enregistré.", Polski: "Brak zarejestrowanych kontaktów." },
   "Sem data agendada": { Español: "Sin fecha programada", English: "No date scheduled", Français: "Aucune date prévue", Polski: "Brak zaplanowanej daty" },
   "Em atraso": { Español: "Atrasado", English: "Overdue", Français: "En retard", Polski: "Zaległe" },
   "Amanhã": { Español: "Mañana", English: "Tomorrow", Français: "Demain", Polski: "Jutro" },
@@ -758,7 +772,19 @@ const SIGEC_PHRASES_MAP = {
 
   // Cabeçalhos & Dashboard
   "Acompanhamento de Clientes": { Español: "Seguimiento de Clientes", English: "Client Tracking", Français: "Suivi des Clients", Polski: "Śledzenie Klientów" },
+  "Acompanhamento de Contactos": { Español: "Seguimiento de Contactos", English: "Contact Tracking", Français: "Suivi des Contacts", Polski: "Śledzenie Kontaktów" },
   "Acompanhamento de Projetos": { Español: "Seguimiento de Proyectos", English: "Project Tracking", Français: "Suivi des Projets", Polski: "Śledzenie Projektów" },
+  "Contactado": { Español: "Contactado", English: "Contacted", Français: "Contacté", Polski: "Skontaktowano" },
+  "Não Contactado": { Español: "No Contactado", English: "Not Contacted", Français: "Non Contacté", Polski: "Nie Skontaktowano" },
+  "Contacto Contactado": { Español: "Contacto Contactado", English: "Contact Contacted", Français: "Contact Contacté", Polski: "Kontakt Skontaktowany" },
+  "Cliente Contactado": { Español: "Cliente Contactado", English: "Client Contacted", Français: "Client Contacté", Polski: "Klient Skontaktowany" },
+  "Nenhum projeto nos estados": { Español: "Ningún proyecto en los estados", English: "No projects in the states", Français: "Aucun projet dans les états", Polski: "Brak projektów w statusach" },
+  "ou": { Español: "o", English: "or", Français: "ou", Polski: "lub" },
+  "Cliente": { Español: "Cliente", English: "Client", Français: "Client", Polski: "Klient" },
+  "Nome do Contacto": { Español: "Nombre del Contacto", English: "Contact Name", Français: "Nom du Contact", Polski: "Nazwisko Kontaktu" },
+  "Cliente Associado": { Español: "Cliente Associado", English: "Associated Client", Français: "Client Associé", Polski: "Powiązany Klient" },
+  "Telefone / Email": { Español: "Teléfono / Email", English: "Phone / Email", Français: "Téléphone / Email", Polski: "Telefon / Email" },
+  "Ações": { Español: "Acciones", English: "Actions", Français: "Actions", Polski: "Działania" },
   "Clientes Registados": { Español: "Clientes Registrados", English: "Registered Clients", Français: "Clients Enregistrés", Polski: "Zarejestrowani Klienci" },
   "Contactos Registados": { Español: "Contactos Registrados", English: "Registered Contacts", Français: "Contacts Enregistrés", Polski: "Zarejestrowani Kontakty" },
   "Projetos Registados": { Español: "Proyectos Registrados", English: "Registered Projects", Français: "Projets Enregistrés", Polski: "Zarejestrowane Projekty" },
@@ -827,6 +853,29 @@ const SIGEC_PHRASES_MAP = {
   "Email Direto": { Español: "Correo Directo", English: "Direct Email", Français: "Email Direct", Polski: "Email Bezpośredni" },
   "Guardar Contacto": { Español: "Guardar Contacto", English: "Save Contact", Français: "Enregistrer Contact", Polski: "Zapisz Kontakt" },
   "Eliminar Contacto": { Español: "Eliminar Contacto", English: "Delete Contact", Français: "Supprimer Contact", Polski: "Usuń Kontakt" },
+  "Inativo": { Español: "Inactivo", English: "Inactive", Français: "Inactif", Polski: "Nieaktywny" },
+  "Inativo:": { Español: "Inactivo:", English: "Inactive:", Français: "Inactif :", Polski: "Nieaktywny:" },
+  "Ver Inativos": { Español: "Ver Inactivos", English: "View Inactive", Français: "Voir Inactifs", Polski: "Pokaż Nieaktywne" },
+  "Ocultar Inativos": { Español: "Ocultar Inactivos", English: "Hide Inactive", Français: "Masquer Inactifs", Polski: "Ukryj Nieaktywne" },
+  "Contacto Inativo (clique para reativar)": { Español: "Contacto Inactivo (clic para reactivar)", English: "Inactive Contact (click to reactivate)", Français: "Contact Inactif (cliquer pour réactiver)", Polski: "Nieaktywny Kontakt (kliknij, aby reaktywować)" },
+  "Contacto Ativo (clique para marcar inativo)": { Español: "Contacto Activo (clic para marcar inactivo)", English: "Active Contact (click to mark inactive)", Français: "Contact Actif (cliquer pour marquer inactif)", Polski: "Aktywny Kontakt (kliknij, aby oznaczyć jako nieaktywny)" },
+  "Contacto marcado como inativo.": { Español: "Contacto marcado como inactivo.", English: "Contact marked as inactive.", Français: "Contact marqué comme inactif.", Polski: "Kontakt oznaczony jako nieaktywny." },
+  "Contacto reativado com sucesso!": { Español: "¡Contacto reactivado con éxito!", English: "Contact successfully reactivated!", Français: "Contact réactivé avec succès !", Polski: "Kontakt pomyślnie reaktywowany!" },
+  "Marcar como Contacto Inativo (não visível por defeito)": { Español: "Marcar como Contacto Inactivo (no visible por defecto)", English: "Mark as Inactive Contact (hidden by default)", Français: "Marquer comme Contact Inactif (masqué par défaut)", Polski: "Oznacz jako Nieaktywny Kontakt (domyślnie ukryty)" },
+  "Ordenar por Contactado (Sim / Não)": { Español: "Ordenar por Contactado (Sí / No)", English: "Sort by Contacted (Yes / No)", Français: "Trier par Contacté (Oui / Non)", Polski: "Sortuj wg Skontaktowano (Tak / Nie)" },
+  "Ordenar por Nome do Cliente (A-Z / Z-A)": { Español: "Ordenar por Nombre del Cliente (A-Z / Z-A)", English: "Sort by Client Name (A-Z / Z-A)", Français: "Trier par Nom du Client (A-Z / Z-A)", Polski: "Sortuj wg Nazwy Klienta (A-Z / Z-A)" },
+  "Ordenar por Data do Próximo Contacto (Mais recente / Mais antigo)": { Español: "Ordenar por Fecha del Próximo Contacto (Más reciente / Más antiguo)", English: "Sort by Next Contact Date (Most recent / Oldest)", Français: "Trier par Date du Prochain Contact (Plus récent / Plus ancien)", Polski: "Sortuj wg Daty Następnego Kontaktu (Najnowsze / Najstarsze)" },
+  "Ordenar por Contacto / Telefone": { Español: "Ordenar por Contacto / Teléfono", English: "Sort by Contact / Phone", Français: "Trier par Contact / Téléphone", Polski: "Sortuj wg Kontaktu / Telefonu" },
+  "Ordenar por Data do Último Contacto Realizado": { Español: "Ordenar por Fecha del Último Contacto Realizado", English: "Sort by Last Contact Date", Français: "Trier par Date du Dernier Contact Réalisé", Polski: "Sortuj wg Daty Ostatniego Kontaktu" },
+  "Ordenar por Nome do Contacto (A-Z / Z-A)": { Español: "Ordenar por Nombre del Contacto (A-Z / Z-A)", English: "Sort by Contact Name (A-Z / Z-A)", Français: "Trier par Nom du Contact (A-Z / Z-A)", Polski: "Sortuj wg Nazwy Kontaktu (A-Z / Z-A)" },
+  "Ordenar por Cliente Associado": { Español: "Ordenar por Cliente Asociado", English: "Sort by Associated Client", Français: "Trier par Client Associé", Polski: "Sortuj wg Powiązanego Klienta" },
+  "Ordenar por Data do Próximo Contacto": { Español: "Ordenar por Fecha del Próximo Contacto", English: "Sort by Next Contact Date", Français: "Trier par Date du Prochain Contact", Polski: "Sortuj wg Daty Następnego Kontaktu" },
+  "Ordenar por Telefone / Email": { Español: "Ordenar por Teléfono / Correo", English: "Sort by Phone / Email", Français: "Trier par Téléphone / Email", Polski: "Sortuj wg Telefonu / Email" },
+  "Ordenar por Nome do Projeto (A-Z / Z-A)": { Español: "Ordenar por Nombre del Projeto (A-Z / Z-A)", English: "Sort by Project Name (A-Z / Z-A)", Français: "Trier par Nom du Projet (A-Z / Z-A)", Polski: "Sortuj wg Nazwy Projektu (A-Z / Z-A)" },
+  "Ordenar por Tipo de Projeto / Veículo": { Español: "Ordenar por Tipo de Proyecto / Vehículo", English: "Sort by Project / Vehicle Type", Français: "Trier par Type de Projet / Véhicule", Polski: "Sortuj wg Typu Projektu / Pojazdu" },
+  "Ordenar por Datas (Mais recente / Mais antigo)": { Español: "Ordenar por Fechas (Más reciente / Más antiguo)", English: "Sort by Dates (Most recent / Oldest)", Français: "Trier par Dates (Plus récent / Plus ancien)", Polski: "Sortuj wg Dat (Najnowsze / Najstarsze)" },
+  "Ordenar por Estado do Projeto": { Español: "Ordenar por Estado del Proyecto", English: "Sort by Project Status", Français: "Trier par Statut du Projet", Polski: "Sortuj wg Statusu Projektu" },
+  "Ordenar por Viatura / Matrícula": { Español: "Ordenar por Vehículo / Matrícula", English: "Sort by Vehicle / License Plate", Français: "Trier par Véhicule / Immatriculation", Polski: "Sortuj wg Pojazdu / Nr Rejestracyjnego" },
 
   // Projetos
   "Registo / Ficha do Projeto": { Español: "Registro / Ficha del Proyecto", English: "Project Profile / Record", Français: "Fiche du Projet", Polski: "Karta Projektu" },
@@ -1153,7 +1202,8 @@ window.normalizeLanguageName = normalizeLanguageName;
  * Obtém a tradução de uma chave ou frase
  */
 function t(key, defaultText = '') {
-  const lang = normalizeLanguageName(currentSystemLanguage);
+  const activeLang = (typeof window !== 'undefined' && window.currentSystemLanguage) ? window.currentSystemLanguage : currentSystemLanguage;
+  const lang = normalizeLanguageName(activeLang);
   if (SIGEC_I18N[key]) {
     if (SIGEC_I18N[key][lang]) return SIGEC_I18N[key][lang];
     if (SIGEC_I18N[key]['Português']) return SIGEC_I18N[key]['Português'];

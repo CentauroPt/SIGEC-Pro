@@ -3687,6 +3687,29 @@ function loadDatabase() {
     }
 
     if (typeof ensureUsersInitialized === 'function') ensureUsersInitialized();
+    // Garantir que todos os clientes e contactos de referÃªncia estÃ£o presentes na base de dados ativa
+    if (typeof INITIAL_EXCEL_DATABASE !== 'undefined') {
+      if (Array.isArray(INITIAL_EXCEL_DATABASE.clientes)) {
+        INITIAL_EXCEL_DATABASE.clientes.forEach(initCli => {
+          if (initCli && initCli.id && !isDeletedId('clientes', initCli.id)) {
+            const exists = db.clientes.some(c => c && c.id === initCli.id);
+            if (!exists) {
+              db.clientes.push({ ...initCli });
+            }
+          }
+        });
+      }
+      if (Array.isArray(INITIAL_EXCEL_DATABASE.contactos)) {
+        INITIAL_EXCEL_DATABASE.contactos.forEach(initCon => {
+          if (initCon && initCon.id && !isDeletedId('contactos', initCon.id)) {
+            const exists = db.contactos.some(con => con && con.id === initCon.id);
+            if (!exists) {
+              db.contactos.push({ ...initCon });
+            }
+          }
+        });
+      }
+    }
 
     // Garantir que todos os registos existentes sem comercial atribuído pertencem por defeito ao José Centúrio (usr-admin-001)
     if (Array.isArray(db.clientes)) {
@@ -4912,13 +4935,23 @@ function renderContactPageMainGrid() {
     contactsList.forEach(con => {
       const client = db.clientes.find(c => c.id === con.clienteId);
       const clientName = client ? client.nome : 'N/D';
+      const isInactive = !!con.inativo;
 
       const card = document.createElement('div');
-      card.className = 'contact-card';
+      card.className = `contact-card ${isInactive ? 'contact-card-inactive' : ''}`;
       card.style.cursor = 'pointer';
+      if (isInactive) {
+        card.style.background = '#f8fafc';
+        card.style.borderColor = '#cbd5e1';
+        card.style.opacity = '0.85';
+      }
       card.onclick = () => openContactModalForEdit(con.id);
       card.innerHTML = `
-        <div class="contact-card-actions" onclick="event.stopPropagation();">
+        <div class="contact-card-actions" onclick="event.stopPropagation();" style="display: flex; gap: 0.3rem; align-items: center;">
+          <label style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 600; color: ${isInactive ? '#dc2626' : '#64748b'}; cursor: pointer; margin: 0 4px 0 0; background: ${isInactive ? '#fee2e2' : '#f1f5f9'}; padding: 2px 6px; border-radius: 4px; border: 1px solid ${isInactive ? '#fca5a5' : '#e2e8f0'};" title="${isInactive ? escapeHtml(t('Contacto Inativo (clique para reativar)')) : escapeHtml(t('Contacto Ativo (clique para marcar inativo)'))}">
+            <input type="checkbox" ${isInactive ? 'checked' : ''} onchange="toggleContactInactiveStatus('${con.id}', this.checked)" style="width: 14px; height: 14px; accent-color: #dc2626; cursor: pointer; margin: 0;">
+            <span>${isInactive ? escapeHtml(t('Inativo')) : escapeHtml(t('Inativo'))}</span>
+          </label>
           <button type="button" class="action-icon-btn" onclick="openTransferContactModal('${con.id}')" title="Mudar de Cliente">
             <i class="fa-solid fa-arrow-right-arrow-left"></i>
           </button>
@@ -4929,7 +4962,10 @@ function renderContactPageMainGrid() {
             <i class="fa-solid fa-trash"></i>
           </button>
         </div>
-        <div class="contact-name">${escapeHtml(con.nome)} ${escapeHtml(con.apelido || '')}</div>
+        <div class="contact-name" style="color: ${isInactive ? '#475569' : '#1e3a8a'}; padding-right: 170px; display: flex; align-items: center; flex-wrap: wrap; gap: 0.25rem;">
+          <span>${escapeHtml(con.nome)} ${escapeHtml(con.apelido || '')}</span>
+          ${isInactive ? `<span class="badge badge-secondary" style="font-size: 0.7rem; padding: 1px 6px; background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5;"><i class="fa-solid fa-user-slash" style="margin-right: 3px;"></i>${escapeHtml(t('Inativo'))}</span>` : ''}
+        </div>
         <div class="contact-role"><i class="fa-solid fa-briefcase"></i> ${escapeHtml(con.cargo || 'Contacto')}</div>
         <div class="contact-detail" style="font-weight: 500; color: var(--primary-blue);"><i class="fa-solid fa-building"></i> ${escapeHtml(clientName)}</div>
         ${con.telefone ? `<div class="contact-detail"><i class="fa-solid fa-phone"></i> ${escapeHtml(con.telefone)}</div>` : ''}
@@ -5855,22 +5891,88 @@ function populateClientComercialOptions(selectedUserId = null) {
 }
 window.populateClientComercialOptions = populateClientComercialOptions;
 
+function isItemOwnedByTargetUser(item, targetUser) {
+  if (!item || !targetUser) return false;
+
+  var targetId = String(targetUser.id || '').trim();
+  var targetNome = (targetUser.nome || '').toLowerCase().trim();
+  var targetNorm = typeof normalizeText === 'function' ? normalizeText(targetUser.nome || '') : targetNome;
+
+  var isTargetAdmin = (targetId === 'usr-admin-001') || (targetUser.role === 'admin') || (targetNorm.indexOf('centurio') !== -1) || (targetNorm.indexOf('administrador') !== -1);
+
+  // Apenas o campo Comercial Atribuido explicito define a titularidade comercial
+  var cAtribId = String(item.comercialAtribuidoId || '').trim();
+  var cAtribNome = String(item.comercialAtribuidoNome || item.comercial || '').toLowerCase().trim();
+  var cAtribNorm = typeof normalizeText === 'function' ? normalizeText(item.comercialAtribuidoNome || item.comercial || '') : cAtribNome;
+
+  // 1. Se o campo Comercial Atribuido aponta explicitamente para o utilizador alvo:
+  if (cAtribId && targetId && cAtribId === targetId) return true;
+  if (cAtribNome && targetNome && (cAtribNome === targetNome || cAtribNorm === targetNorm || cAtribNorm.indexOf(targetNorm) !== -1 || targetNorm.indexOf(cAtribNorm) !== -1)) return true;
+
+  // 2. Se o utilizador alvo for o Administrador (Jose Centurio):
+  if (isTargetAdmin) {
+    if (cAtribId === 'usr-admin-001' || cAtribId === 'admin') return true;
+    if (cAtribNorm.indexOf('centurio') !== -1 || cAtribNorm.indexOf('administrador') !== -1 || cAtribNorm.indexOf('admin') !== -1) return true;
+
+    // Verificar se esta explicitamente atribuido a outro comercial registado (nao-admin)
+    var allUsers = Array.isArray(db.usuarios) ? db.usuarios : [];
+    var isAssignedToOther = allUsers.some(function(u) {
+      if (!u || u.id === targetId) return false;
+      var uId = String(u.id || '').trim();
+      var uNorm = typeof normalizeText === 'function' ? normalizeText(u.nome || '') : (u.nome || '').toLowerCase().trim();
+      var isUAdmin = (uId === 'usr-admin-001') || (u.role === 'admin') || (uNorm.indexOf('centurio') !== -1) || (uNorm.indexOf('administrador') !== -1);
+      if (isUAdmin) return false;
+
+      if (cAtribId && uId && cAtribId === uId) return true;
+      if (cAtribNorm && uNorm && (cAtribNorm === uNorm || cAtribNorm.indexOf(uNorm) !== -1)) return true;
+      return false;
+    });
+
+    // Se nao esta atribuido a nenhum outro comercial registado, pertence a Jose Centurio
+    if (!isAssignedToOther) return true;
+  }
+
+  // 3. Se for outro comercial (nao-admin) e o item nao tem comercial atribuido, mas foi criado por ele:
+  if (!isTargetAdmin && !cAtribId && !cAtribNome) {
+    var creatorId = String(item.userId || item.criadoPorId || '').trim();
+    if (creatorId && creatorId === targetId) return true;
+  }
+
+  return false;
+}
+window.isItemOwnedByTargetUser = isItemOwnedByTargetUser;
+
+function isChildOwnedByTargetUser(child, targetUser) {
+  if (!child || !targetUser) return false;
+  if (isItemOwnedByTargetUser(child, targetUser)) return true;
+
+  if (child.clienteId) {
+    var parentClient = (db.clientes || []).find(function(c) { return c && String(c.id).trim() === String(child.clienteId).trim(); });
+    if (parentClient && isItemOwnedByTargetUser(parentClient, targetUser)) return true;
+  }
+  if (child.empresa || child.cliente) {
+    var cliName = child.empresa || child.cliente;
+    var normCliName = typeof normalizeText === 'function' ? normalizeText(cliName) : String(cliName).toLowerCase().trim();
+    var parentClient2 = (db.clientes || []).find(function(c) {
+      if (!c || !c.nome) return false;
+      var cNorm = typeof normalizeText === 'function' ? normalizeText(c.nome) : c.nome.toLowerCase().trim();
+      return cNorm === normCliName;
+    });
+    if (parentClient2 && isItemOwnedByTargetUser(parentClient2, targetUser)) return true;
+  }
+  return false;
+}
+window.isChildOwnedByTargetUser = isChildOwnedByTargetUser;
+
 function getUserScopedItems(items) {
   if (!Array.isArray(items)) return [];
   ensureUsersInitialized();
-  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001';
-  const activeUser = (db.usuarios || []).find(u => u.id === activeUserId);
+  var activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001';
+  var activeUser = (db.usuarios || []).find(function(u) { return u && u.id === activeUserId; }) || { id: activeUserId, nome: 'Utilizador', role: 'user' };
 
-  // Se o utilizador tem perfil de Administrador ou Chefia, tem acesso visual a todos os registos do sistema
-  if (activeUser && (activeUser.role === 'admin' || activeUser.chefia === true || activeUser.id === 'usr-admin-001')) {
-    return items.filter(Boolean);
-  }
-
-  return items.filter(item => {
+  return items.filter(function(item) {
     if (!item) return false;
-    // Se o registo não tem comercial atribuído explicitamente, pertence por defeito ao José Centúrio (usr-admin-001)
-    const itemOwner = item.comercialAtribuidoId || item.userId || 'usr-admin-001';
-    return itemOwner === activeUserId;
+    return isItemOwnedByTargetUser(item, activeUser) || isChildOwnedByTargetUser(item, activeUser);
   });
 }
 window.getUserScopedItems = getUserScopedItems;
@@ -6022,6 +6124,43 @@ function loadClientIntoForm(clientId, skipDirtyCheck = false, skipTabSwitch = fa
   }
 }
 
+let clientInactiveVisibilityState = {};
+
+function getInactiveVisibilityKey(clientId, subTabIndex) {
+  const cId = String(clientId || currentClientId || '').trim();
+  const isEstatal = cId && (db.clientes || []).find(c => c.id === cId)?.tipoCliente === 'Estatal';
+  if (isEstatal && subTabIndex !== null && subTabIndex !== undefined) {
+    return `${cId}_sep_${Number(subTabIndex)}`;
+  }
+  return cId;
+}
+
+function toggleClientInactiveContactsVisibility() {
+  const cId = String(currentClientId || '').trim();
+  if (!cId) return;
+  const isEstatal = (db.clientes || []).find(c => c.id === cId)?.tipoCliente === 'Estatal';
+  const subIdx = isEstatal ? Number(activeEstatalSeparadorIndex || 0) : null;
+  const key = getInactiveVisibilityKey(cId, subIdx);
+  clientInactiveVisibilityState[key] = !clientInactiveVisibilityState[key];
+  refreshClientSubLists(cId);
+}
+window.toggleClientInactiveContactsVisibility = toggleClientInactiveContactsVisibility;
+
+function toggleContactInactiveStatus(contactId, isInactive) {
+  const contact = (db.contactos || []).find(c => c.id === contactId);
+  if (!contact) return;
+  contact.inativo = !!isInactive;
+  saveDatabase();
+  if (currentClientId) refreshClientSubLists(currentClientId);
+  if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
+  if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
+  if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
+    syncDatabaseToGitHub(true, true).catch(() => {});
+  }
+  showToast(contact.inativo ? t('Contacto marcado como inativo.') : t('Contacto reativado com sucesso!'));
+}
+window.toggleContactInactiveStatus = toggleContactInactiveStatus;
+
 function refreshClientSubLists(clientId) {
   const targetId = String(clientId || '').trim();
   const client = db.clientes.find(c => String(c.id || '').trim() === targetId);
@@ -6057,9 +6196,9 @@ function refreshClientSubLists(clientId) {
   renderClientRelatedProjects(relatedProjects);
 
   // 2. Pessoas de Contacto independentes por separador
-  let clientContacts = [];
+  let allClientContacts = [];
   if (isEstatal) {
-    clientContacts = (db.contactos || []).filter(c => {
+    allClientContacts = (db.contactos || []).filter(c => {
       if (String(c.clienteId || '').trim() !== targetId) return false;
       if (c.separadorId && currentSepId) {
         return String(c.separadorId).trim() === String(currentSepId).trim();
@@ -6068,9 +6207,41 @@ function refreshClientSubLists(clientId) {
       return cSub === currentActiveIdx;
     });
   } else {
-    clientContacts = (db.contactos || []).filter(c => String(c.clienteId || '').trim() === targetId);
+    allClientContacts = (db.contactos || []).filter(c => String(c.clienteId || '').trim() === targetId);
   }
-  renderClientContactsGrid(clientContacts);
+
+  const inactiveCount = allClientContacts.filter(c => !!c.inativo).length;
+  const key = getInactiveVisibilityKey(targetId, isEstatal ? currentActiveIdx : null);
+  const showInactive = !!clientInactiveVisibilityState[key];
+
+  // Atualizar botÃ£o de ver/ocultar inativos
+  const btnToggleInactive = document.getElementById('btnToggleInactiveContacts');
+  const textToggleInactive = document.getElementById('textToggleInactiveContacts');
+  const iconToggleInactive = document.getElementById('iconToggleInactiveContacts');
+
+  if (btnToggleInactive && textToggleInactive) {
+    if (inactiveCount === 0) {
+      btnToggleInactive.style.display = 'none';
+    } else {
+      btnToggleInactive.style.display = 'inline-flex';
+      if (showInactive) {
+        textToggleInactive.textContent = `${t('Ocultar Inativos')} (${inactiveCount})`;
+        if (iconToggleInactive) iconToggleInactive.className = 'fa-solid fa-eye-slash';
+        btnToggleInactive.style.background = '#fee2e2';
+        btnToggleInactive.style.color = '#991b1b';
+        btnToggleInactive.style.borderColor = '#fca5a5';
+      } else {
+        textToggleInactive.textContent = `${t('Ver Inativos')} (${inactiveCount})`;
+        if (iconToggleInactive) iconToggleInactive.className = 'fa-solid fa-eye';
+        btnToggleInactive.style.background = '';
+        btnToggleInactive.style.color = '';
+        btnToggleInactive.style.borderColor = '';
+      }
+    }
+  }
+
+  const visibleContacts = showInactive ? allClientContacts : allClientContacts.filter(c => !c.inativo);
+  renderClientContactsGrid(visibleContacts);
 
   // 3. Registo de Contactos Realizados / Interações independentes por separador
   let clientInteractions = (db.interacoes || []).filter(i => String(i.clienteId || '').trim() === targetId);
@@ -6626,13 +6797,14 @@ function renderClientContactsGrid(contacts) {
   const isEstatal = currentClientId && db.clientes.find(c => c.id === currentClientId)?.tipoCliente === 'Estatal';
 
   contacts.forEach(con => {
+    const isInactive = !!con.inativo;
     const card = document.createElement('div');
-    card.className = 'contact-card';
-    card.style.cssText = 'padding: 0.8rem 0.9rem; border-radius: 8px; border: 1px solid #e2e8f0; background: #ffffff; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.04); cursor: pointer; transition: all 0.2s ease;';
+    card.className = `contact-card ${isInactive ? 'contact-card-inactive' : ''}`;
+    card.style.cssText = `padding: 0.8rem 0.9rem; border-radius: 8px; border: 1px solid ${isInactive ? '#cbd5e1' : '#e2e8f0'}; background: ${isInactive ? '#f8fafc' : '#ffffff'}; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.04); cursor: pointer; transition: all 0.2s ease; ${isInactive ? 'opacity: 0.82;' : ''}`;
     card.onclick = () => openContactModalForEdit(con.id);
 
-    card.onmouseenter = () => { card.style.borderColor = '#93c5fd'; card.style.boxShadow = '0 3px 8px rgba(37,99,235,0.08)'; };
-    card.onmouseleave = () => { card.style.borderColor = '#e2e8f0'; card.style.boxShadow = '0 1px 3px rgba(0,0,0,0.04)'; };
+    card.onmouseenter = () => { card.style.borderColor = isInactive ? '#94a3b8' : '#93c5fd'; card.style.boxShadow = '0 3px 8px rgba(37,99,235,0.08)'; };
+    card.onmouseleave = () => { card.style.borderColor = isInactive ? '#cbd5e1' : '#e2e8f0'; card.style.boxShadow = '0 1px 3px rgba(0,0,0,0.04)'; };
     
     let subTabBadge = '';
     const cSub = (con.subTabIndex !== undefined && con.subTabIndex !== null && con.subTabIndex !== '') ? Number(con.subTabIndex) : 0;
@@ -6641,8 +6813,14 @@ function renderClientContactsGrid(contacts) {
       subTabBadge = `<span class="badge badge-amber" style="margin-left: 4px; font-size: 0.7rem; padding: 1px 6px;">${escapeHtml(sepTitle)}</span>`;
     }
 
+    const inactiveBadge = isInactive ? `<span class="badge badge-secondary" style="margin-left: 4px; font-size: 0.7rem; padding: 1px 6px; background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5;"><i class="fa-solid fa-user-slash" style="margin-right: 3px;"></i>${escapeHtml(t('Inativo'))}</span>` : '';
+
     card.innerHTML = `
-      <div class="contact-card-actions" style="position: absolute; top: 0.6rem; right: 0.6rem; display: flex; gap: 0.25rem; align-items: center;" onclick="event.stopPropagation();">
+      <div class="contact-card-actions" style="position: absolute; top: 0.6rem; right: 0.6rem; display: flex; gap: 0.3rem; align-items: center;" onclick="event.stopPropagation();">
+        <label style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 600; color: ${isInactive ? '#dc2626' : '#64748b'}; cursor: pointer; margin: 0 4px 0 0; background: ${isInactive ? '#fee2e2' : '#f1f5f9'}; padding: 2px 6px; border-radius: 4px; border: 1px solid ${isInactive ? '#fca5a5' : '#e2e8f0'};" title="${isInactive ? escapeHtml(t('Contacto Inativo (clique para reativar)')) : escapeHtml(t('Contacto Ativo (clique para marcar inativo)'))}">
+          <input type="checkbox" ${isInactive ? 'checked' : ''} onchange="toggleContactInactiveStatus('${con.id}', this.checked)" style="width: 14px; height: 14px; accent-color: #dc2626; cursor: pointer; margin: 0;">
+          <span>${isInactive ? escapeHtml(t('Inativo')) : escapeHtml(t('Inativo'))}</span>
+        </label>
         ${isEstatal ? `
           <button type="button" class="action-icon-btn" onclick="openMoveSubTabContactModal('${con.id}')" title="Mover contacto para outro separador deste cliente" style="width: 26px; height: 26px; font-size: 0.78rem;">
             <i class="fa-solid fa-folder-tree" style="color: #2563eb;"></i>
@@ -6659,9 +6837,10 @@ function renderClientContactsGrid(contacts) {
         </button>
       </div>
 
-      <div class="contact-name" style="font-size: 0.92rem; font-weight: 700; color: #1e3a8a; padding-right: 90px; margin-bottom: 0.25rem; display: flex; align-items: center; flex-wrap: wrap; gap: 0.25rem;">
+      <div class="contact-name" style="font-size: 0.92rem; font-weight: 700; color: ${isInactive ? '#475569' : '#1e3a8a'}; padding-right: 170px; margin-bottom: 0.25rem; display: flex; align-items: center; flex-wrap: wrap; gap: 0.25rem;">
         <span>${escapeHtml(con.nome)} ${escapeHtml(con.apelido || '')}</span>
         ${subTabBadge}
+        ${inactiveBadge}
       </div>
 
       ${con.cargo ? `<div class="contact-role" style="font-size: 0.8rem; color: #64748b; margin-bottom: 0.45rem; display: flex; align-items: center; gap: 0.35rem;"><i class="fa-solid fa-briefcase" style="width: 14px; color: #94a3b8; font-size: 0.75rem;"></i> ${escapeHtml(con.cargo)}</div>` : ''}
@@ -6685,8 +6864,6 @@ function renderClientContactsGrid(contacts) {
     grid.appendChild(card);
   });
 }
-
-
 function openAttachExistingContactModal() {
   const targetClientId = (typeof currentClientId !== 'undefined' && currentClientId)
     ? currentClientId
@@ -6871,16 +7048,54 @@ function executeAttachExistingContact(contactId) {
 }
 window.executeAttachExistingContact = executeAttachExistingContact;
 
-function saveClient(e) {
-  if (e) e.preventDefault();
+function translateClientAndLinkedDataForUser(clientObj, targetUserId) {
+  if (!clientObj || !targetUserId) return;
+  ensureUsersInitialized();
+  const targetUser = (db.usuarios || []).find(u => u.id === targetUserId);
+  if (!targetUser || !targetUser.idioma) return;
+  const destLang = targetUser.idioma;
+
+  if (typeof translateSystemTerm === 'function') {
+    if (clientObj.tipoCliente) {
+      clientObj.tipoCliente = translateSystemTerm(clientObj.tipoCliente, destLang);
+    }
+    if (clientObj.pais) {
+      clientObj.pais = translateSystemTerm(clientObj.pais, destLang);
+    }
+    if (Array.isArray(clientObj.separadores)) {
+      clientObj.separadores.forEach(sep => {
+        if (sep.tipoSeparador) {
+          sep.tipoSeparador = translateSystemTerm(sep.tipoSeparador, destLang);
+        }
+      });
+    }
+
+    // Contactos vinculados
+    if (Array.isArray(db.contactos)) {
+      db.contactos.forEach(con => {
+        if (con.clienteId === clientObj.id) {
+          if (con.cargo) con.cargo = translateSystemTerm(con.cargo, destLang);
+        }
+      });
+    }
+
+    // Projetos vinculados
+    if (Array.isArray(db.projetos)) {
+      db.projetos.forEach(p => {
+        if (p.clienteId === clientObj.id) {
+          if (p.tipo) p.tipo = translateSystemTerm(p.tipo, destLang);
+          if (p.estado) p.estado = translateSystemTerm(p.estado, destLang);
+        }
+      });
+    }
+  }
+}
+window.translateClientAndLinkedDataForUser = translateClientAndLinkedDataForUser;
+
+function saveClient(e) {  if (e) e.preventDefault();
 
   const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001';
   const activeUser = (db.usuarios || []).find(u => u.id === activeUserId);
-  if (activeUser && activeUser.chefia === true && activeUser.role !== 'admin' && activeUser.id !== 'usr-admin-001') {
-    showToast('Acesso de Chefia: Tem permissão de visualização e consulta. A alteração e criação é exclusiva para Orçamentos.', 'warning');
-    alert('Acesso Restrito:\nO perfil de Chefia tem permissão de visualização e consulta de clientes.\nA criação, alteração e impressão é exclusiva para Orçamentos.');
-    return;
-  }
 
   const id = document.getElementById('clientId').value || generateId('cli');
   const tipoCliente = document.getElementById('tipoCliente').value;
@@ -7063,9 +7278,12 @@ function saveClient(e) {
     });
   }
 
-  // --- TRANSFERÊNCIA EM CASCATA DE TODOS OS DADOS ASSOCIADOS AO CLIENTE ---
+  // --- TRANSFERÃŠNCIA EM CASCATA DE TODOS OS DADOS ASSOCIADOS AO CLIENTE ---
   if (targetUserId) {
-    // Se for transferência de utilizador (ou nova atribuição comercial), traduzir o cliente e todos os dados vinculados para o idioma do novo utilizador
+    const targetUserObj = (db.usuarios || []).find(u => u.id === targetUserId);
+    const targetUserName = targetUserObj ? targetUserObj.nome : '';
+
+    // Se for transferÃªncia de utilizador (ou nova atribuiÃ§Ã£o comercial), traduzir o cliente e todos os dados vinculados para o idioma do novo utilizador
     if (isTransfer || (existingIndex < 0 && targetUserId)) {
       if (typeof translateClientAndLinkedDataForUser === 'function') {
         translateClientAndLinkedDataForUser(clientObj, targetUserId);
@@ -7074,7 +7292,14 @@ function saveClient(e) {
 
     clientObj.userId = targetUserId;
     clientObj.comercialAtribuidoId = targetUserId;
+    clientObj.comercialAtribuidoNome = targetUserName;
+    clientObj.comercial = targetUserName;
     clientObj.createdById = targetUserId;
+
+    // Atualizar no array db.clientes para garantir consistÃªncia e integridade
+    if (existingIndex >= 0) {
+      db.clientes[existingIndex] = clientObj;
+    }
 
     // 1. Atualizar todos os Contactos do cliente
     const contactIds = new Set();
@@ -7083,6 +7308,7 @@ function saveClient(e) {
         if (con.clienteId === id || (con.empresa && clientObj.nome && con.empresa.toLowerCase().trim() === clientObj.nome.toLowerCase().trim())) {
           con.userId = targetUserId;
           con.comercialAtribuidoId = targetUserId;
+          con.comercialAtribuidoNome = targetUserName;
           con.createdById = targetUserId;
           if (con.id) contactIds.add(con.id);
         }
@@ -7096,24 +7322,26 @@ function saveClient(e) {
         if (p.clienteId === id || (p.cliente && clientObj.nome && p.cliente.toLowerCase().trim() === clientObj.nome.toLowerCase().trim())) {
           p.userId = targetUserId;
           p.comercialAtribuidoId = targetUserId;
+          p.comercialAtribuidoNome = targetUserName;
           p.createdById = targetUserId;
           if (p.id) projectIds.add(p.id);
         }
       });
     }
 
-    // 3. Atualizar todos os Orçamentos do cliente
+    // 3. Atualizar todos os OrÃ§amentos do cliente
     if (Array.isArray(db.orcamentos)) {
       db.orcamentos.forEach(b => {
         if (b.clienteId === id || (b.cliente && clientObj.nome && b.cliente.toLowerCase().trim() === clientObj.nome.toLowerCase().trim())) {
           b.userId = targetUserId;
           b.comercialAtribuidoId = targetUserId;
+          b.comercialAtribuidoNome = targetUserName;
           b.createdById = targetUserId;
         }
       });
     }
 
-    // 4. Atualizar e MANTER integralmente todas as Interações do cliente e dos seus contactos
+    // 4. Atualizar e MANTER integralmente todas as InteraÃ§Ãµes do cliente e dos seus contactos
     if (Array.isArray(db.interacoes)) {
       db.interacoes.forEach(it => {
         if (it.clienteId === id || it.entidadeId === id || (it.contactoId && contactIds.has(it.contactoId))) {
@@ -7123,7 +7351,7 @@ function saveClient(e) {
       });
     }
 
-    // 5. Atualizar e MANTER integralmente todas as Interações de Projetos vinculados
+    // 5. Atualizar e MANTER integralmente todas as InteraÃ§Ãµes de Projetos vinculados
     if (Array.isArray(db.interacoesProjetos)) {
       db.interacoesProjetos.forEach(it => {
         if (it.clienteId === id || (it.projetoId && projectIds.has(it.projetoId))) {
@@ -7133,14 +7361,13 @@ function saveClient(e) {
       });
     }
 
-    // Se houve mudança de utilizador comercial, registar no histórico
+    // Se houve mudanÃ§a de utilizador comercial, registar no histÃ³rico
     if (isTransfer) {
       const oldUser = (db.usuarios || []).find(u => u.id === oldUserId);
       const oldName = oldUser ? oldUser.nome : oldUserId;
-      logUserActivity('Transferência de Cliente', `Cliente "${clientObj.nome}" transferido de ${oldName} para ${clientObj.comercialAtribuidoNome || targetUserId} com todos os seus contactos, projetos, orçamentos e interações.`);
+      logUserActivity('TransferÃªncia de Cliente', `Cliente "${clientObj.nome}" transferido de ${oldName} para ${targetUserName || targetUserId} com todos os seus contactos, projetos, orÃ§amentos e interaÃ§Ãµes.`);
     }
   }
-
   currentClientId = id;
   localStorage.setItem('sigec_pro_last_client_id', id);
   document.getElementById('clientId').value = id;
@@ -7154,6 +7381,7 @@ function saveClient(e) {
   renderProjectPageMainGrid();
   renderHomeDashboard();
   renderDatabaseOverview();
+  if (typeof renderConsultasUserData === 'function') renderConsultasUserData();
 }
 
 function deleteCurrentClient() {
@@ -7266,13 +7494,13 @@ function deleteClientInline(clientId, e) {
     if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
       syncDatabaseToGitHub(true, true).catch(() => {});
     }
-    showToast('Cliente apagado com sucesso.', 'danger');
+      showToast('Cliente apagado com sucesso.', 'danger');
   }
 }
 window.deleteClientInline = deleteClientInline;
 
 // ==========================================
-// 4. GESTÃO DE CONTACTOS (MODAL DE PESSOAS)
+// 4. GESTÃƒO DE CONTACTOS (MODAL DE PESSOAS)
 // ==========================================
 
 function populateContactModalClientSelect(selectedClientId) {
@@ -7307,13 +7535,18 @@ function openContactModalForNew(forcedSubIndex = null) {
 
   document.getElementById('contactForm').reset();
   document.getElementById('contactId').value = '';
+  const proxElReset = document.getElementById('contactProximoContacto');
+  if (proxElReset) proxElReset.value = '';
+  const inativoReset = document.getElementById('contactInativo');
+  if (inativoReset) inativoReset.checked = false;
+
   populateContactModalClientSelect(currentClientId);
   document.getElementById('btnDeleteContact').style.display = 'none';
 
   document.getElementById('contactModalTitle').innerHTML = '<i class="fa-solid fa-user-plus"></i> Novo Contacto do Cliente';
   document.getElementById('contactModal').classList.add('active');
 
-  // Renderizar lista de interações (vazia para novo contacto)
+  // Renderizar lista de interaÃ§Ãµes (vazia para novo contacto)
   renderContactPersonInteractionsGrid([]);
 }
 
@@ -7331,12 +7564,16 @@ function openContactModalForEdit(contactId) {
   document.getElementById('contactTelemovel').value = contact.telemovel || '';
   document.getElementById('contactEmail').value = contact.email || '';
   document.getElementById('contactNotas').value = contact.notas || '';
+  const proxElLoad = document.getElementById('contactProximoContacto');
+  if (proxElLoad) proxElLoad.value = contact.proximoContacto || '';
+  const inativoLoad = document.getElementById('contactInativo');
+  if (inativoLoad) inativoLoad.checked = !!contact.inativo;
 
   document.getElementById('btnDeleteContact').style.display = 'inline-flex';
   document.getElementById('contactModalTitle').innerHTML = '<i class="fa-solid fa-user-pen"></i> Editar Ficha de Contacto';
   document.getElementById('contactModal').classList.add('active');
 
-  // Renderizar interações deste contacto
+  // Renderizar interaÃ§Ãµes deste contacto
   const contactInteractions = (db.interacoes || []).filter(i => i.contactoId === contact.id);
   renderContactPersonInteractionsGrid(contactInteractions);
 }
@@ -7350,11 +7587,6 @@ function saveContact(e) {
 
   const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001';
   const activeUser = (db.usuarios || []).find(u => u.id === activeUserId);
-  if (activeUser && activeUser.chefia === true && activeUser.role !== 'admin' && activeUser.id !== 'usr-admin-001') {
-    showToast('Acesso de Chefia: Tem permissão de visualização e consulta. A alteração e criação é exclusiva para Orçamentos.', 'warning');
-    alert('Acesso Restrito:\nO perfil de Chefia tem permissão de visualização e consulta de contactos.\nA criação, alteração e impressão é exclusiva para Orçamentos.');
-    return;
-  }
 
   const selectedClienteId = document.getElementById('contactClienteId').value || currentClientId;
   if (!selectedClienteId) {
@@ -7386,6 +7618,9 @@ function saveContact(e) {
     finalSubTabIndex = Number(activeEstatalSeparadorIndex || 0);
   }
 
+  const inativoEl = document.getElementById('contactInativo');
+  const inativo = inativoEl ? inativoEl.checked : (existingIndex >= 0 ? !!db.contactos[existingIndex].inativo : false);
+
   const contactObj = {
     id,
     clienteId: selectedClienteId,
@@ -7396,6 +7631,8 @@ function saveContact(e) {
     telefone,
     telemovel,
     email,
+    proximoContacto: (document.getElementById('contactProximoContacto')?.value?.trim() || (existingIndex >= 0 ? db.contactos[existingIndex].proximoContacto : null)) || null,
+    inativo: inativo,
     notas,
     createdAt: existingIndex >= 0 ? db.contactos[existingIndex].createdAt : new Date().toISOString()
   };
@@ -7418,7 +7655,7 @@ function saveContact(e) {
 
   if (existingContactIndex >= 0) {
     const camposAlterados = [];
-    const camposLabel = { nome: 'Nome', apelido: 'Apelido', cargo: 'Cargo', email: 'Email', telefone: 'Telefone', telemovel: 'Telemóvel', notas: 'Notas' };
+    const camposLabel = { nome: 'Nome', apelido: 'Apelido', cargo: 'Cargo', email: 'Email', telefone: 'Telefone', telemovel: 'TelemÃ³vel', notas: 'Notas', inativo: 'Inativo' };
     Object.keys(camposLabel).forEach(campo => {
       const valAnterior = (contactoAnterior[campo] || '').toString().trim();
       const valNovo = (contactObj[campo] || '').toString().trim();
@@ -7429,25 +7666,23 @@ function saveContact(e) {
 
     db.contactos[existingContactIndex] = contactObj;
     showToast('Contacto atualizado com sucesso!');
-    logUserActivity('Edição de Contacto', `Ficha do contacto "${contactObj.nome} ${contactObj.apelido || ''}" atualizada.`, {
-      acao: 'Edição',
+    logUserActivity('EdiÃ§Ã£o de Contacto', `Ficha do contacto "${contactObj.nome} ${contactObj.apelido || ''}" atualizada.`, {
+      acao: 'EdiÃ§Ã£o',
       ficha: 'Contacto',
       nome: `${contactObj.nome} ${contactObj.apelido || ''}`.trim(),
       email: contactObj.email || '',
       cargo: contactObj.cargo || '',
-      camposAlterados: camposAlterados.length > 0 ? camposAlterados : [{ campo: 'Ficheiro guardado', anterior: '', novo: 'Sem alterações detetadas' }]
+      camposAlterados: camposAlterados.length > 0 ? camposAlterados : [{ campo: 'Ficheiro guardado', anterior: '', novo: 'Sem alteraÃ§Ãµes detetadas' }]
     });
   } else {
     db.contactos.push(contactObj);
-    showToast('Novo contacto adicionado ao cliente!');
-    const clienteAssoc = db.clientes.find(c => c.id === selectedClienteId);
-    logUserActivity('Criação de Contacto', `Novo contacto "${contactObj.nome} ${contactObj.apelido || ''}" adicionado ao cliente "${clienteAssoc ? clienteAssoc.nome : selectedClienteId}".`, {
-      acao: 'Criação',
+    showToast('Contacto adicionado com sucesso!');
+    logUserActivity('CriaÃ§Ã£o de Contacto', `Novo contacto "${contactObj.nome} ${contactObj.apelido || ''}" associado ao cliente.`, {
+      acao: 'CriaÃ§Ã£o',
       ficha: 'Contacto',
       nome: `${contactObj.nome} ${contactObj.apelido || ''}`.trim(),
-      cargo: contactObj.cargo || '',
       email: contactObj.email || '',
-      clienteAssociado: clienteAssoc ? clienteAssoc.nome : selectedClienteId
+      cargo: contactObj.cargo || ''
     });
   }
 
@@ -7455,240 +7690,15 @@ function saveContact(e) {
   closeContactModal();
   if (currentClientId) refreshClientSubLists(currentClientId);
   if (selectedClienteId && selectedClienteId !== currentClientId) refreshClientSubLists(selectedClienteId);
+  renderEstatalSeparadores();
   renderContactPageMainGrid();
   renderHomeDashboard();
   renderDatabaseOverview();
-}
-
-// ==========================================
-// INTERAÇÕES DE CONTACTOS (PESSOAS)
-// ==========================================
-
-let currentContactPersonInteractionIdForModal = null;
-
-function addQuickContactInteraction() {
-  if (!currentContactIdForModal) {
-    showToast('Guarde ou selecione um Contacto primeiro!', 'danger');
-    return;
-  }
-
-  const dateVal = document.getElementById('quickContactInteractionData').value;
-  const textVal = document.getElementById('quickContactInteractionText').value.trim();
-
-  if (!textVal) {
-    showToast('Escreva o texto do contacto efetuado.', 'danger');
-    return;
-  }
-
-  const id = generateId('cpi');
-  const now = new Date();
-  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-  const finalDate = dateVal || now.toISOString().slice(0, 16);
-
-  if (!db.interacoes) db.interacoes = [];
-
-  const intObj = {
-    id,
-    contactoId: currentContactIdForModal,
-    data: finalDate,
-    descricao: textVal,
-    createdAt: new Date().toISOString()
-  };
-
-  db.interacoes.push(intObj);
-  saveDatabase();
-
-  document.getElementById('quickContactInteractionText').value = '';
-  document.getElementById('quickContactInteractionText').style.height = 'auto';
-
-  const contactInteractions = db.interacoes.filter(i => i.contactoId === currentContactIdForModal);
-  renderContactPersonInteractionsGrid(contactInteractions);
-  showToast('Contacto registado com sucesso!');
-}
-
-function renderContactPersonInteractionsGrid(interactions) {
-  const grid = document.getElementById('contactPersonInteractionsGrid');
-  if (!grid) return;
-  grid.innerHTML = '';
-
-  const quickDateInput = document.getElementById('quickContactInteractionData');
-  if (quickDateInput && !quickDateInput.value) {
-    const now = new Date();
-    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    quickDateInput.value = now.toISOString().slice(0, 16);
-  }
-
-  if (!interactions || interactions.length === 0) {
-    grid.innerHTML = '<span class="empty-state">Nenhum contacto/interação registada com este contacto.</span>';
-    return;
-  }
-
-  const isAsc = (typeof clientInteractionsSortOrder !== 'undefined' && clientInteractionsSortOrder === 'asc');
-  const sorted = [...interactions].sort((a, b) => isAsc ? (new Date(a.data || 0) - new Date(b.data || 0)) : (new Date(b.data || 0) - new Date(a.data || 0)));
-
-  sorted.forEach(item => {
-    const formattedDate = item.data ? new Date(item.data).toLocaleString('pt-PT', { dateStyle: 'short', timeStyle: 'short' }) : '-';
-
-    const card = document.createElement('div');
-    card.className = 'interaction-card';
-    card.innerHTML = `
-      <div class="contact-card-actions">
-        <button type="button" class="action-icon-btn" onclick="openContactPersonInteractionModalForEdit('${item.id}')" title="Editar Registo">
-          <i class="fa-solid fa-pen-to-square"></i>
-        </button>
-        <button type="button" class="action-icon-btn danger" onclick="deleteContactPersonInteractionInline('${item.id}')" title="Apagar Registo">
-          <i class="fa-solid fa-trash"></i>
-        </button>
-      </div>
-      <div class="interaction-card-row">
-        <div class="interaction-card-date">
-          <i class="fa-regular fa-calendar-days"></i> ${formattedDate}
-        </div>
-        <div class="interaction-card-content">${item.descricao}</div>
-      </div>
-    `;
-    grid.appendChild(card);
-  });
-}
-
-function openContactPersonInteractionModalForNew() {
-  if (!currentContactIdForModal) {
-    showToast('Guarde ou selecione um Contacto antes de registar contactos efetuados!', 'danger');
-    return;
-  }
-
-  currentContactPersonInteractionIdForModal = null;
-  document.getElementById('contactPersonInteractionForm').reset();
-  document.getElementById('contactPersonInteractionId').value = '';
-
-  const now = new Date();
-  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-  document.getElementById('contactPersonInteractionData').value = now.toISOString().slice(0, 16);
-
-  document.getElementById('btnDeleteContactPersonInteraction').style.display = 'none';
-  document.getElementById('contactPersonInteractionModalTitle').innerHTML = '<i class="fa-solid fa-phone-volume"></i> Registar Contacto Realizado';
-  document.getElementById('contactPersonInteractionModal').classList.add('active');
-}
-
-function openContactPersonInteractionModalForEdit(interactionId) {
-  const item = (db.interacoes || []).find(i => i.id === interactionId);
-  if (!item) return;
-
-  currentContactPersonInteractionIdForModal = item.id;
-  document.getElementById('contactPersonInteractionId').value = item.id;
-  document.getElementById('contactPersonInteractionData').value = item.data || '';
-  document.getElementById('contactPersonInteractionDescricao').value = item.descricao || '';
-
-  setTimeout(() => {
-    autoExpandTextarea(document.getElementById('contactPersonInteractionDescricao'));
-  }, 100);
-
-  document.getElementById('btnDeleteContactPersonInteraction').style.display = 'inline-flex';
-  document.getElementById('contactPersonInteractionModalTitle').innerHTML = '<i class="fa-solid fa-phone-volume"></i> Editar Registo de Contacto';
-  document.getElementById('contactPersonInteractionModal').classList.add('active');
-}
-
-function closeContactPersonInteractionModal() {
-  document.getElementById('contactPersonInteractionModal').classList.remove('active');
-}
-
-function saveContactPersonInteraction(e) {
-  if (e) e.preventDefault();
-
-  const id = document.getElementById('contactPersonInteractionId').value || generateId('cpi');
-  const dataVal = document.getElementById('contactPersonInteractionData').value;
-  const descricao = document.getElementById('contactPersonInteractionDescricao').value.trim();
-
-  if (!descricao) {
-    showToast('Preencha o registo do contacto.', 'danger');
-    return;
-  }
-
-  if (!db.interacoes) db.interacoes = [];
-
-  const existingIndex = db.interacoes.findIndex(i => i.id === id);
-  const intObj = {
-    id,
-    contactoId: currentContactIdForModal,
-    data: dataVal,
-    descricao,
-    createdAt: existingIndex >= 0 ? db.interacoes[existingIndex].createdAt : new Date().toISOString()
-  };
-
-  if (existingIndex >= 0) {
-    db.interacoes[existingIndex] = intObj;
-    showToast('Registo atualizado com sucesso!');
-  } else {
-    db.interacoes.push(intObj);
-    showToast('Registo adicionado com sucesso!');
-  }
-
-  saveDatabase();
-  closeContactPersonInteractionModal();
-
-  const contactInteractions = db.interacoes.filter(i => i.contactoId === currentContactIdForModal);
-  renderContactPersonInteractionsGrid(contactInteractions);
-}
-
-function deleteCurrentContactPersonInteractionModal() {
-  if (!currentContactPersonInteractionIdForModal) return;
-
-  if (confirm('Tem a certeza que deseja apagar este registo?')) {
-    addDeletedId('interacoes', currentContactPersonInteractionIdForModal);
-    db.interacoes = (db.interacoes || []).filter(i => i.id !== currentContactPersonInteractionIdForModal);
-    saveDatabase();
-    closeContactPersonInteractionModal();
-    if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
-      syncDatabaseToGitHub(true, true).catch(() => {});
-    }
-    showToast('Registo apagado com sucesso!', 'danger');
-
-    const contactInteractions = (db.interacoes || []).filter(i => i.contactoId === currentContactIdForModal);
-    renderContactPersonInteractionsGrid(contactInteractions);
+  if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
+    syncDatabaseToGitHub(true, true).catch(() => {});
   }
 }
-
-function deleteContactPersonInteractionInline(interactionId) {
-  if (confirm('Tem a certeza que deseja apagar este registo?')) {
-    addDeletedId('interacoes', interactionId);
-    db.interacoes = (db.interacoes || []).filter(i => i.id !== interactionId);
-    saveDatabase();
-    if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
-      syncDatabaseToGitHub(true, true).catch(() => {});
-    }
-    showToast('Registo apagado!', 'danger');
-
-    const contactInteractions = (db.interacoes || []).filter(i => i.contactoId === currentContactIdForModal);
-    renderContactPersonInteractionsGrid(contactInteractions);
-  }
-}
-
-function deleteCurrentContactModal() {
-  if (!currentContactIdForModal) return;
-
-  if (confirm('Tem a certeza que deseja apagar este contacto?')) {
-    addDeletedId('contactos', currentContactIdForModal);
-    const contactInteractions = (db.interacoes || []).filter(i => i.contactoId === currentContactIdForModal);
-    contactInteractions.forEach(i => addDeletedId('interacoes', i.id));
-
-    const targetContact = (db.contactos || []).find(c => c.id === currentContactIdForModal);
-    const affectedClientId = targetContact ? targetContact.clienteId : null;
-    db.contactos = (db.contactos || []).filter(c => c.id !== currentContactIdForModal);
-    db.interacoes = (db.interacoes || []).filter(i => i.contactoId !== currentContactIdForModal);
-    saveDatabase();
-    closeContactModal();
-    if (currentClientId) refreshClientSubLists(currentClientId);
-    if (affectedClientId && affectedClientId !== currentClientId) refreshClientSubLists(affectedClientId);
-    renderContactPageMainGrid();
-    renderHomeDashboard();
-    renderDatabaseOverview();
-    if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
-      syncDatabaseToGitHub(true, true).catch(() => {});
-    }
-    showToast('Contacto apagado com sucesso.', 'danger');
-  }
-}
-
+window.saveContact = saveContact;
 function deleteContactInline(contactId) {
   if (confirm('Tem a certeza que deseja apagar este contacto?')) {
     addDeletedId('contactos', contactId);
@@ -7874,6 +7884,22 @@ function deleteInteractionInline(id) {
     showToast('Registo de contacto apagado.', 'danger');
   }
 }
+
+function saveContactNextContactDate(newDate) {
+  if (!currentContactIdForModal) return;
+  const contact = (db.contactos || []).find(c => c.id === currentContactIdForModal);
+  if (contact) {
+    contact.proximoContacto = newDate ? String(newDate).trim() : null;
+    saveDatabase();
+    if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
+    if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
+    if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
+      syncDatabaseToGitHub(true, true).catch(() => {});
+    }
+    showToast(t('Data de prÃ³ximo contacto atualizada com sucesso!'));
+  }
+}
+window.saveContactNextContactDate = saveContactNextContactDate;
 
 function saveClientNextContactDate(newDate) {
   if (!currentClientId) return;
@@ -8266,11 +8292,6 @@ function saveProject(e) {
 
   const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001';
   const activeUser = (db.usuarios || []).find(u => u.id === activeUserId);
-  if (activeUser && activeUser.chefia === true && activeUser.role !== 'admin' && activeUser.id !== 'usr-admin-001') {
-    showToast('Acesso de Chefia: Tem permissão de visualização e consulta. A alteração e criação é exclusiva para Orçamentos.', 'warning');
-    alert('Acesso Restrito:\nO perfil de Chefia tem permissão de visualização e consulta de projetos.\nA criação, alteração e impressão é exclusiva para Orçamentos.');
-    return;
-  }
 
   const id = document.getElementById('projectId').value || generateId('proj');
   const existingIndex = db.projetos.findIndex(p => p.id === id);
@@ -11813,47 +11834,87 @@ function renderHomeDashboard() {
   if (elemFrotaBrk) elemFrotaBrk.innerHTML = frotaBrkHtml;
 
 
-  // 4.5. Tabela de Acompanhamento de Clientes (Ordenados pelo Próximo Contacto mais próximo de hoje)
+  // ==========================================
+  // ESTADOS E FUNÃ‡Ã•ES DE ORDENAÃ‡ÃƒO PELOS CABEÃ‡ALHOS DAS TABELAS DO DASHBOARD
+  // ==========================================
+  if (typeof window.dashClientTableSort === 'undefined') {
+    window.dashClientTableSort = { field: 'proximoContacto', dir: 'asc' };
+  }
+  if (typeof window.dashContactTableSort === 'undefined') {
+    window.dashContactTableSort = { field: 'proximoContacto', dir: 'asc' };
+  }
+  if (typeof window.dashProjectTableSort === 'undefined') {
+    window.dashProjectTableSort = { field: 'datas', dir: 'desc' };
+  }
+
+  // 4.5. Tabela de Acompanhamento de Clientes (OrdenaÃ§Ã£o Independente por CabeÃ§alho de Coluna)
   const clientTrackingContainer = document.getElementById('dashClientTrackingContainer');
   if (clientTrackingContainer) {
     const now = new Date();
     const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
 
-    // Ordenação (suporta ordenação por contactado / não contactado se ativada):
+    // Helper para data da Ãºltima interaÃ§Ã£o do cliente
+    const getLastIntTimeClient = (clientId) => {
+      const ints = (db.interacoes || []).filter(i => String(i.clienteId || '').trim() === String(clientId).trim());
+      if (ints.length === 0) return 0;
+      let maxT = 0;
+      ints.forEach(i => {
+        const t = i.data ? new Date(i.data).getTime() : 0;
+        if (t > maxT) maxT = t;
+      });
+      return maxT;
+    };
+
     let sortedClients = [...scopedClients];
-    if (typeof dashClientsSortMode !== 'undefined' && dashClientsSortMode !== 'default') {
-      sortedClients.sort((a, b) => {
+    const sortF = window.dashClientTableSort.field || 'proximoContacto';
+    const sortD = window.dashClientTableSort.dir || 'asc';
+
+    sortedClients.sort((a, b) => {
+      let res = 0;
+      if (sortF === 'contactado') {
         const isA = typeof isClientContacted === 'function' ? isClientContacted(a.id) : false;
         const isB = typeof isClientContacted === 'function' ? isClientContacted(b.id) : false;
-        if (dashClientsSortMode === 'contacted_first') {
-          if (isA && !isB) return -1;
-          if (!isA && isB) return 1;
-        } else if (dashClientsSortMode === 'uncontacted_first') {
-          if (!isA && isB) return -1;
-          if (isA && !isB) return 1;
-        }
-        return (a.nome || '').localeCompare(b.nome || '');
-      });
-    } else {
-      sortedClients.sort((a, b) => {
+        res = (isA === isB ? 0 : (isA ? -1 : 1));
+      } else if (sortF === 'nome') {
+        res = (a.nome || '').localeCompare(b.nome || '', 'pt', { sensitivity: 'base' });
+      } else if (sortF === 'proximoContacto') {
         const hasDateA = !!(a.proximoContacto && String(a.proximoContacto).trim());
         const hasDateB = !!(b.proximoContacto && String(b.proximoContacto).trim());
-
         if (hasDateA && hasDateB) {
           const dateA = new Date(String(a.proximoContacto).trim() + 'T00:00:00').getTime();
           const dateB = new Date(String(b.proximoContacto).trim() + 'T00:00:00').getTime();
-          const diffA = Math.abs(dateA - todayMidnight);
-          const diffB = Math.abs(dateB - todayMidnight);
-          if (diffA !== diffB) return diffA - diffB;
-          return dateA - dateB;
+          res = dateA - dateB;
+        } else if (hasDateA && !hasDateB) {
+          res = -1;
+        } else if (!hasDateA && hasDateB) {
+          res = 1;
+        } else {
+          res = (a.nome || '').localeCompare(b.nome || '', 'pt', { sensitivity: 'base' });
         }
-        if (hasDateA && !hasDateB) return -1;
-        if (!hasDateA && hasDateB) return 1;
-        return (a.nome || '').localeCompare(b.nome || '');
-      });
-    }
+      } else if (sortF === 'telefone') {
+        const valA = (a.telemovel || a.telefone || a.email || '').trim();
+        const valB = (b.telemovel || b.telefone || b.email || '').trim();
+        res = valA.localeCompare(valB, 'pt', { sensitivity: 'base' });
+      } else if (sortF === 'ultimoContacto') {
+        const timeA = getLastIntTimeClient(a.id);
+        const timeB = getLastIntTimeClient(b.id);
+        res = timeA - timeB;
+      }
+
+      if (res === 0) {
+        res = (a.nome || '').localeCompare(b.nome || '', 'pt', { sensitivity: 'base' });
+      }
+      return sortD === 'asc' ? res : -res;
+    });
 
     const top20Clients = sortedClients.slice(0, 20);
+
+    const getSortIcon = (f) => {
+      if (sortF !== f) return '<i class="fa-solid fa-sort" style="opacity: 0.35; font-size: 0.72rem; margin-left: 4px;"></i>';
+      return sortD === 'asc' 
+        ? '<i class="fa-solid fa-sort-up" style="color: #1e3a8a; font-size: 0.8rem; margin-left: 4px;"></i>' 
+        : '<i class="fa-solid fa-sort-down" style="color: #1e3a8a; font-size: 0.8rem; margin-left: 4px;"></i>';
+    };
 
     if (top20Clients.length === 0) {
       clientTrackingContainer.innerHTML = `
@@ -11867,11 +11928,21 @@ function renderHomeDashboard() {
         <table class="db-table full-width-list-table" style="width: 100%; border-collapse: collapse; font-size: 0.88rem;">
           <thead>
             <tr style="background-color: #e0f2fe; color: #1e3a8a;">
-              <th style="padding: 0.75rem 0.5rem; text-align: center; width: 110px;">${escapeHtml(t('Contactado'))}</th>
-              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">${escapeHtml(t('Cliente'))}</th>
-              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">${escapeHtml(t('Próximo contacto'))}</th>
-              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">${escapeHtml(t('Contacto / Telefone'))}</th>
-              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">${escapeHtml(t('Último Contacto Realizado'))}</th>
+              <th onclick="toggleDashSortHeader('client', 'contactado')" style="padding: 0.75rem 0.5rem; text-align: center; width: 110px; cursor: pointer; user-select: none;" title="${escapeHtmlAttr(t('Ordenar por Contactado (Sim / Não)'))}">
+                ${escapeHtml(t('Contactado'))}${getSortIcon('contactado')}
+              </th>
+              <th onclick="toggleDashSortHeader('client', 'nome')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;" title="${escapeHtmlAttr(t('Ordenar por Nome do Cliente (A-Z / Z-A)'))}">
+                ${escapeHtml(t('Cliente'))}${getSortIcon('nome')}
+              </th>
+              <th onclick="toggleDashSortHeader('client', 'proximoContacto')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;" title="${escapeHtmlAttr(t('Ordenar por Data do Próximo Contacto (Mais recente / Mais antigo)'))}">
+                ${escapeHtml(t('Próximo contacto'))}${getSortIcon('proximoContacto')}
+              </th>
+              <th onclick="toggleDashSortHeader('client', 'telefone')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;" title="${escapeHtmlAttr(t('Ordenar por Contacto / Telefone'))}">
+                ${escapeHtml(t('Contacto / Telefone'))}${getSortIcon('telefone')}
+              </th>
+              <th onclick="toggleDashSortHeader('client', 'ultimoContacto')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;" title="${escapeHtmlAttr(t('Ordenar por Data do Último Contacto Realizado'))}">
+                ${escapeHtml(t('Último Contacto Realizado'))}${getSortIcon('ultimoContacto')}
+              </th>
               <th style="padding: 0.75rem 1rem; text-align: center; font-weight: 700; width: 110px;">${escapeHtml(t('Ações'))}</th>
             </tr>
           </thead>
@@ -11900,7 +11971,7 @@ function renderHomeDashboard() {
 
         // Último contacto efetuado
         const clientInteractions = (db.interacoes || [])
-          .filter(i => i.clienteId === cli.id)
+          .filter(i => String(i.clienteId || '').trim() === String(cli.id).trim())
           .sort((a, b) => new Date(b.data || 0) - new Date(a.data || 0));
 
         let lastIntStr = `<span style="color: #94a3b8; font-style: italic;">${escapeHtml(t('Sem registo prévio'))}</span>`;
@@ -11912,14 +11983,14 @@ function renderHomeDashboard() {
         }
 
         const phoneStr = cli.telemovel || cli.telefone || cli.email || '-';
-
         const isContacted = typeof isClientContacted === 'function' ? isClientContacted(cli.id) : false;
+
         html += `
           <tr style="border-bottom: 1px solid #e2e8f0; transition: background-color 0.15s; cursor: pointer;" onclick="openClientFromDashboard('${cli.id}')" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='transparent'">
             <td style="padding: 0.5rem; text-align: center;" onclick="event.stopPropagation();">
-              <label style="display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem; margin: 0; cursor: pointer;" title="${isContacted ? 'Cliente Contactado' : 'Não Contactado'}">
+              <label style="display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem; margin: 0; cursor: pointer;" title="${isContacted ? escapeHtml(t('Cliente Contactado')) : escapeHtml(t('Não Contactado'))}">
                 <input type="checkbox" ${isContacted ? 'checked' : ''} disabled style="width: 16px; height: 16px; accent-color: #16a34a; cursor: default;">
-                <span style="font-size: 0.78rem; font-weight: 700; color: ${isContacted ? '#16a34a' : '#94a3b8'};">${isContacted ? 'Sim' : 'Não'}</span>
+                <span style="font-size: 0.78rem; font-weight: 700; color: ${isContacted ? '#16a34a' : '#94a3b8'};">${isContacted ? escapeHtml(t('Sim')) : escapeHtml(t('Não'))}</span>
               </label>
             </td>
             <td style="padding: 0.75rem 1rem;">
@@ -11955,29 +12026,84 @@ function renderHomeDashboard() {
     }
   }
 
-  
-  // 4.6. Tabela de Acompanhamento de Contactos (Dashboard Menu)
+  // 4.6. Tabela de Acompanhamento de Contactos (OrdenaÃ§Ã£o Independente por CabeÃ§alho de Coluna)
   const contactTrackingContainer = document.getElementById('dashContactTrackingContainer');
   if (contactTrackingContainer) {
+    const now = new Date();
+    const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+
+    // Helper para data da Ãºltima interaÃ§Ã£o do contacto
+    const getLastIntTimeContact = (contactId) => {
+      const ints = (db.interacoes || []).filter(i => String(i.contactoId || '').trim() === String(contactId).trim());
+      if (ints.length === 0) return 0;
+      let maxT = 0;
+      ints.forEach(i => {
+        const t = i.data ? new Date(i.data).getTime() : 0;
+        if (t > maxT) maxT = t;
+      });
+      return maxT;
+    };
+
     let sortedContacts = [...scopedContacts];
-    if (typeof dashContactsSortMode !== 'undefined' && dashContactsSortMode !== 'default') {
-      sortedContacts.sort((a, b) => {
+    const sortF = window.dashContactTableSort.field || 'proximoContacto';
+    const sortD = window.dashContactTableSort.dir || 'asc';
+
+    sortedContacts.sort((a, b) => {
+      let res = 0;
+      if (sortF === 'contactado') {
         const isA = typeof isContactContacted === 'function' ? isContactContacted(a.id) : false;
         const isB = typeof isContactContacted === 'function' ? isContactContacted(b.id) : false;
-        if (dashContactsSortMode === 'contacted_first') {
-          if (isA && !isB) return -1;
-          if (!isA && isB) return 1;
-        } else if (dashContactsSortMode === 'uncontacted_first') {
-          if (!isA && isB) return -1;
-          if (isA && !isB) return 1;
-        }
+        res = (isA === isB ? 0 : (isA ? -1 : 1));
+      } else if (sortF === 'nome') {
         const nameA = `${a.nome || ''} ${a.apelido || ''}`.trim();
         const nameB = `${b.nome || ''} ${b.apelido || ''}`.trim();
-        return nameA.localeCompare(nameB);
-      });
-    }
+        res = nameA.localeCompare(nameB, 'pt', { sensitivity: 'base' });
+      } else if (sortF === 'cliente') {
+        const cliA = (db.clientes || []).find(c => c.id === a.clienteId)?.nome || '';
+        const cliB = (db.clientes || []).find(c => c.id === b.clienteId)?.nome || '';
+        res = cliA.localeCompare(cliB, 'pt', { sensitivity: 'base' });
+      } else if (sortF === 'proximoContacto') {
+        const hasDateA = !!(a.proximoContacto && String(a.proximoContacto).trim());
+        const hasDateB = !!(b.proximoContacto && String(b.proximoContacto).trim());
+        if (hasDateA && hasDateB) {
+          const dateA = new Date(String(a.proximoContacto).trim() + 'T00:00:00').getTime();
+          const dateB = new Date(String(b.proximoContacto).trim() + 'T00:00:00').getTime();
+          res = dateA - dateB;
+        } else if (hasDateA && !hasDateB) {
+          res = -1;
+        } else if (!hasDateA && hasDateB) {
+          res = 1;
+        } else {
+          const nameA = `${a.nome || ''} ${a.apelido || ''}`.trim();
+          const nameB = `${b.nome || ''} ${b.apelido || ''}`.trim();
+          res = nameA.localeCompare(nameB, 'pt', { sensitivity: 'base' });
+        }
+      } else if (sortF === 'telefone') {
+        const valA = (a.telemovel || a.telefone || a.email || '').trim();
+        const valB = (b.telemovel || b.telefone || b.email || '').trim();
+        res = valA.localeCompare(valB, 'pt', { sensitivity: 'base' });
+      } else if (sortF === 'ultimoContacto') {
+        const timeA = getLastIntTimeContact(a.id);
+        const timeB = getLastIntTimeContact(b.id);
+        res = timeA - timeB;
+      }
+
+      if (res === 0) {
+        const nameA = `${a.nome || ''} ${a.apelido || ''}`.trim();
+        const nameB = `${b.nome || ''} ${b.apelido || ''}`.trim();
+        res = nameA.localeCompare(nameB, 'pt', { sensitivity: 'base' });
+      }
+      return sortD === 'asc' ? res : -res;
+    });
 
     const top20Contacts = sortedContacts.slice(0, 20);
+
+    const getSortIcon = (f) => {
+      if (sortF !== f) return '<i class="fa-solid fa-sort" style="opacity: 0.35; font-size: 0.72rem; margin-left: 4px;"></i>';
+      return sortD === 'asc' 
+        ? '<i class="fa-solid fa-sort-up" style="color: #065f46; font-size: 0.8rem; margin-left: 4px;"></i>' 
+        : '<i class="fa-solid fa-sort-down" style="color: #065f46; font-size: 0.8rem; margin-left: 4px;"></i>';
+    };
 
     if (top20Contacts.length === 0) {
       contactTrackingContainer.innerHTML = `
@@ -11988,15 +12114,28 @@ function renderHomeDashboard() {
       `;
     } else {
       let cHtml = `
-        <table class="db-table" style="width: 100%; border-collapse: collapse; font-size: 0.88rem;">
+        <table class="db-table full-width-list-table" style="width: 100%; border-collapse: collapse; font-size: 0.88rem;">
           <thead>
             <tr style="background-color: #d1fae5; color: #065f46;">
-              <th style="padding: 0.75rem 0.5rem; text-align: center; width: 110px;">${escapeHtml(t('Contactado'))}</th>
-              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">${escapeHtml(t('Nome do Contacto'))}</th>
-              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">${escapeHtml(t('Cliente Associado'))}</th>
-              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">${escapeHtml(t('Cargo / Função'))}</th>
-              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">${escapeHtml(t('Telefone / Email'))}</th>
-              <th style="padding: 0.75rem 1rem; text-align: center; font-weight: 700;">${escapeHtml(t('Ações'))}</th>
+              <th onclick="toggleDashSortHeader('contact', 'contactado')" style="padding: 0.75rem 0.5rem; text-align: center; width: 110px; cursor: pointer; user-select: none;" title="${escapeHtmlAttr(t('Ordenar por Contactado (Sim / Não)'))}">
+                ${escapeHtml(t('Contactado'))}${getSortIcon('contactado')}
+              </th>
+              <th onclick="toggleDashSortHeader('contact', 'nome')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;" title="${escapeHtmlAttr(t('Ordenar por Nome do Contacto (A-Z / Z-A)'))}">
+                ${escapeHtml(t('Nome do Contacto'))}${getSortIcon('nome')}
+              </th>
+              <th onclick="toggleDashSortHeader('contact', 'cliente')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;" title="${escapeHtmlAttr(t('Ordenar por Cliente Associado'))}">
+                ${escapeHtml(t('Cliente Associado'))}${getSortIcon('cliente')}
+              </th>
+              <th onclick="toggleDashSortHeader('contact', 'proximoContacto')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;" title="${escapeHtmlAttr(t('Ordenar por Data do Próximo Contacto'))}">
+                ${escapeHtml(t('Próximo contacto'))}${getSortIcon('proximoContacto')}
+              </th>
+              <th onclick="toggleDashSortHeader('contact', 'telefone')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;" title="${escapeHtmlAttr(t('Ordenar por Telefone / Email'))}">
+                ${escapeHtml(t('Telefone / Email'))}${getSortIcon('telefone')}
+              </th>
+              <th onclick="toggleDashSortHeader('contact', 'ultimoContacto')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;" title="${escapeHtmlAttr(t('Ordenar por Data do Último Contacto Realizado'))}">
+                ${escapeHtml(t('Último Contacto Realizado'))}${getSortIcon('ultimoContacto')}
+              </th>
+              <th style="padding: 0.75rem 1rem; text-align: center; font-weight: 700; width: 110px;">${escapeHtml(t('Ações'))}</th>
             </tr>
           </thead>
           <tbody>
@@ -12008,27 +12147,63 @@ function renderHomeDashboard() {
         const isContacted = typeof isContactContacted === 'function' ? isContactContacted(con.id) : false;
         const phoneStr = con.telemovel || con.telefone || con.email || '-';
 
+        let proxBadge = '';
+        if (con.proximoContacto && String(con.proximoContacto).trim()) {
+          const targetDate = new Date(String(con.proximoContacto).trim() + 'T00:00:00');
+          const diffDays = Math.round((targetDate.getTime() - todayMidnight) / (1000 * 60 * 60 * 24));
+          const formattedDate = targetDate.toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+          if (diffDays === 0) {
+            proxBadge = `<span class="badge badge-amber" style="font-weight: 700; padding: 0.25rem 0.65rem; border-radius: 12px;"><i class="fa-solid fa-bell" style="margin-right: 4px;"></i>${escapeHtml(t('Hoje'))} (${formattedDate})</span>`;
+          } else if (diffDays < 0) {
+            proxBadge = `<span class="badge badge-danger" style="font-weight: 700; padding: 0.25rem 0.65rem; border-radius: 12px;"><i class="fa-solid fa-triangle-exclamation" style="margin-right: 4px;"></i>${escapeHtml(t('Em atraso'))} (${formattedDate})</span>`;
+          } else if (diffDays === 1) {
+            proxBadge = `<span class="badge badge-blue" style="font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 12px;"><i class="fa-regular fa-calendar-check" style="margin-right: 4px;"></i>${escapeHtml(t('Amanhã'))} (${formattedDate})</span>`;
+          } else {
+            proxBadge = `<span class="badge badge-blue" style="font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 12px;"><i class="fa-regular fa-calendar-check" style="margin-right: 4px;"></i>${formattedDate} (${escapeHtml(t('em'))} ${diffDays} ${escapeHtml(t('dias'))})</span>`;
+          }
+        } else {
+          proxBadge = `<span class="badge badge-gray" style="color: #94a3b8; font-style: italic; border-radius: 12px; padding: 0.25rem 0.65rem;">${escapeHtml(t('Sem data agendada'))}</span>`;
+        }
+
+        // Último contacto efetuado com este contacto
+        const contactInteractions = (db.interacoes || [])
+          .filter(i => String(i.contactoId || '').trim() === String(con.id).trim())
+          .sort((a, b) => new Date(b.data || 0) - new Date(a.data || 0));
+
+        let lastIntStr = `<span style="color: #94a3b8; font-style: italic;">${escapeHtml(t('Sem registo prévio'))}</span>`;
+        if (contactInteractions.length > 0) {
+          const lastInt = contactInteractions[0];
+          const lastDate = lastInt.data ? new Date(lastInt.data).toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '';
+          const snippet = lastInt.descricao ? (lastInt.descricao.length > 38 ? lastInt.descricao.substring(0, 35) + '...' : lastInt.descricao) : '';
+          lastIntStr = `<span style="font-weight: 600; color: #334155;">${lastDate}</span> <span style="font-size: 0.8rem; color: #64748b;">${escapeHtml(snippet)}</span>`;
+        }
+
         cHtml += `
-          <tr style="border-bottom: 1px solid #e2e8f0; transition: background-color 0.15s; cursor: pointer;" onclick="openContactModalForEdit('${con.id}')">
+          <tr style="border-bottom: 1px solid #e2e8f0; transition: background-color 0.15s; cursor: pointer;" onclick="openContactModalForEdit('${con.id}')" onmouseover="this.style.background='#ecfdf5'" onmouseout="this.style.background='transparent'">
             <td style="padding: 0.5rem; text-align: center;" onclick="event.stopPropagation();">
-              <label style="display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem; margin: 0; cursor: pointer;" title="${isContacted ? 'Contacto Contactado' : 'Não Contactado'}">
+              <label style="display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem; margin: 0; cursor: pointer;" title="${isContacted ? escapeHtml(t('Contacto Contactado')) : escapeHtml(t('Não Contactado'))}">
                 <input type="checkbox" ${isContacted ? 'checked' : ''} disabled style="width: 16px; height: 16px; accent-color: #16a34a; cursor: default;">
-                <span style="font-size: 0.78rem; font-weight: 700; color: ${isContacted ? '#16a34a' : '#94a3b8'};">${isContacted ? 'Sim' : 'Não'}</span>
+                <span style="font-size: 0.78rem; font-weight: 700; color: ${isContacted ? '#16a34a' : '#94a3b8'};">${isContacted ? escapeHtml(t('Sim')) : escapeHtml(t('Não'))}</span>
               </label>
             </td>
             <td style="padding: 0.75rem 1rem;">
               <div style="font-weight: 700; color: #1e293b; font-size: 0.92rem;">
                 <i class="fa-solid fa-user" style="color: #059669; font-size: 0.85rem; margin-right: 4px;"></i>${escapeHtml(contactName)}
               </div>
+              ${con.cargo ? `<div style="font-size: 0.78rem; color: #64748b; margin-top: 2px;"><i class="fa-solid fa-briefcase" style="margin-right: 2px; font-size: 0.75rem;"></i>${escapeHtml(con.cargo)}</div>` : ''}
             </td>
             <td style="padding: 0.75rem 1rem; color: #1e3a8a; font-weight: 600;">
               ${escapeHtml(client ? client.nome : '-')}
             </td>
-            <td style="padding: 0.75rem 1rem; color: #475569;">
-              ${escapeHtml(con.cargo || '-')}
+            <td style="padding: 0.75rem 1rem; white-space: nowrap;">
+              ${proxBadge}
             </td>
-            <td style="padding: 0.75rem 1rem; color: #334155; font-size: 0.85rem;">
+            <td style="padding: 0.75rem 1rem; color: #334155; font-size: 0.85rem; white-space: nowrap;">
               ${escapeHtml(phoneStr)}
+            </td>
+            <td style="padding: 0.75rem 1rem; font-size: 0.85rem;">
+              ${lastIntStr}
             </td>
             <td style="padding: 0.75rem 1rem; text-align: center; white-space: nowrap;" onclick="event.stopPropagation();">
               <button type="button" class="btn btn-secondary" onclick="openContactModalForEdit('${con.id}')" style="padding: 0.25rem 0.65rem; font-size: 0.8rem; border-radius: 12px; color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0; font-weight: 500; cursor: pointer;">
@@ -12044,7 +12219,7 @@ function renderHomeDashboard() {
     }
   }
 
-  // 5. Tabela de Projetos em Acompanhamento (Aguarda Orçamento, Aguarda decisão, Em Curso)
+  // 5. Tabela de Projetos em Acompanhamento (OrdenaÃ§Ã£o Independente por CabeÃ§alho de Coluna)
   const recentProjContainer = document.getElementById('dashRecentProjectsContainer');
   if (recentProjContainer) {
     const isProjectInTrackingState = (estado) => {
@@ -12058,22 +12233,72 @@ function renderHomeDashboard() {
       recentProjContainer.innerHTML = `
         <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
           <i class="fa-solid fa-folder-open" style="font-size: 2rem; margin-bottom: 0.5rem; display: block; color: var(--border-color);"></i>
-          Nenhum projeto nos estados <strong>Aguarda Orçamento</strong>, <strong>Aguarda decisão</strong> ou <strong>Em Curso</strong>.
+          ${escapeHtml(t('Nenhum projeto nos estados'))} <strong>${escapeHtml(t('Aguarda Orçamento'))}</strong>, <strong>${escapeHtml(t('Aguarda decisão'))}</strong> ${escapeHtml(t('ou'))} <strong>${escapeHtml(t('Em Curso'))}</strong>.
         </div>
       `;
     } else {
-      const sortedProjs = [...trackingProjs].reverse();
+      let sortedProjs = [...trackingProjs];
+      const sortF = window.dashProjectTableSort.field || 'datas';
+      const sortD = window.dashProjectTableSort.dir || 'desc';
+
+      sortedProjs.sort((a, b) => {
+        let res = 0;
+        if (sortF === 'nome') {
+          res = (a.nome || '').localeCompare(b.nome || '', 'pt', { sensitivity: 'base' });
+        } else if (sortF === 'tipo') {
+          res = (a.tipo || '').localeCompare(b.tipo || '', 'pt', { sensitivity: 'base' });
+        } else if (sortF === 'cliente') {
+          const cliA = (db.clientes || []).find(c => c.id === a.clienteId)?.nome || '';
+          const cliB = (db.clientes || []).find(c => c.id === b.clienteId)?.nome || '';
+          res = cliA.localeCompare(cliB, 'pt', { sensitivity: 'base' });
+        } else if (sortF === 'datas') {
+          const dateA = a.dataInicio ? new Date(a.dataInicio).getTime() : 0;
+          const dateB = b.dataInicio ? new Date(b.dataInicio).getTime() : 0;
+          res = dateA - dateB;
+        } else if (sortF === 'estado') {
+          res = (a.estado || '').localeCompare(b.estado || '', 'pt', { sensitivity: 'base' });
+        } else if (sortF === 'viatura') {
+          const vA = `${a.viatura || ''} ${a.matricula || ''}`.trim();
+          const vB = `${b.viatura || ''} ${b.matricula || ''}`.trim();
+          res = vA.localeCompare(vB, 'pt', { sensitivity: 'base' });
+        }
+
+        if (res === 0) {
+          res = (a.nome || '').localeCompare(b.nome || '', 'pt', { sensitivity: 'base' });
+        }
+        return sortD === 'asc' ? res : -res;
+      });
+
+      const getSortIcon = (f) => {
+        if (sortF !== f) return '<i class="fa-solid fa-sort" style="opacity: 0.35; font-size: 0.72rem; margin-left: 4px;"></i>';
+        return sortD === 'asc' 
+          ? '<i class="fa-solid fa-sort-up" style="color: #0369a1; font-size: 0.8rem; margin-left: 4px;"></i>' 
+          : '<i class="fa-solid fa-sort-down" style="color: #0369a1; font-size: 0.8rem; margin-left: 4px;"></i>';
+      };
+
       let html = `
         <table class="db-table" style="width: 100%; border-collapse: collapse; font-size: 0.88rem;">
           <thead>
             <tr style="background-color: #e0f2fe; color: #1e3a8a;">
-              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">Nome do Projeto</th>
-              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">Tipo</th>
-              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">Cliente</th>
-              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">Datas</th>
-              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">Estado</th>
-              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 700;">Viatura / Matrícula</th>
-              <th style="padding: 0.75rem 1rem; text-align: center; font-weight: 700;">Ações</th>
+              <th onclick="toggleDashSortHeader('project', 'nome')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;" title="${escapeHtmlAttr(t('Ordenar por Nome do Projeto (A-Z / Z-A)'))}">
+                ${escapeHtml(t('Nome do Projeto'))}${getSortIcon('nome')}
+              </th>
+              <th onclick="toggleDashSortHeader('project', 'tipo')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;" title="${escapeHtmlAttr(t('Ordenar por Tipo de Projeto / Veículo'))}">
+                ${escapeHtml(t('Tipo'))}${getSortIcon('tipo')}
+              </th>
+              <th onclick="toggleDashSortHeader('project', 'cliente')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;" title="${escapeHtmlAttr(t('Ordenar por Cliente Associado'))}">
+                ${escapeHtml(t('Cliente'))}${getSortIcon('cliente')}
+              </th>
+              <th onclick="toggleDashSortHeader('project', 'datas')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;" title="${escapeHtmlAttr(t('Ordenar por Datas (Mais recente / Mais antigo)'))}">
+                ${escapeHtml(t('Datas'))}${getSortIcon('datas')}
+              </th>
+              <th onclick="toggleDashSortHeader('project', 'estado')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;" title="${escapeHtmlAttr(t('Ordenar por Estado do Projeto'))}">
+                ${escapeHtml(t('Estado'))}${getSortIcon('estado')}
+              </th>
+              <th onclick="toggleDashSortHeader('project', 'viatura')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;" title="${escapeHtmlAttr(t('Ordenar por Viatura / Matrícula'))}">
+                ${escapeHtml(t('Viatura / Matrícula'))}${getSortIcon('viatura')}
+              </th>
+              <th style="padding: 0.75rem 1rem; text-align: center; font-weight: 700;">${escapeHtml(t('Ações'))}</th>
             </tr>
           </thead>
           <tbody>
@@ -12135,6 +12360,36 @@ function renderHomeDashboard() {
   }
 }
 
+function toggleDashSortHeader(tableType, field) {
+  if (tableType === 'client') {
+    if (!window.dashClientTableSort) window.dashClientTableSort = { field: 'proximoContacto', dir: 'asc' };
+    if (window.dashClientTableSort.field === field) {
+      window.dashClientTableSort.dir = window.dashClientTableSort.dir === 'asc' ? 'desc' : 'asc';
+    } else {
+      window.dashClientTableSort.field = field;
+      window.dashClientTableSort.dir = 'asc';
+    }
+  } else if (tableType === 'contact') {
+    if (!window.dashContactTableSort) window.dashContactTableSort = { field: 'proximoContacto', dir: 'asc' };
+    if (window.dashContactTableSort.field === field) {
+      window.dashContactTableSort.dir = window.dashContactTableSort.dir === 'asc' ? 'desc' : 'asc';
+    } else {
+      window.dashContactTableSort.field = field;
+      window.dashContactTableSort.dir = 'asc';
+    }
+  } else if (tableType === 'project') {
+    if (!window.dashProjectTableSort) window.dashProjectTableSort = { field: 'datas', dir: 'desc' };
+    if (window.dashProjectTableSort.field === field) {
+      window.dashProjectTableSort.dir = window.dashProjectTableSort.dir === 'asc' ? 'desc' : 'asc';
+    } else {
+      window.dashProjectTableSort.field = field;
+      window.dashProjectTableSort.dir = (field === 'datas') ? 'desc' : 'asc';
+    }
+  }
+
+  renderHomeDashboard();
+}
+window.toggleDashSortHeader = toggleDashSortHeader;
 function openProjectFromDashboard(projId) {
   switchTab('tab-projetos');
   loadProjectIntoForm(projId, true, true);
@@ -14571,17 +14826,37 @@ function getAdminPin() {
 
 function initSecurityAuthCheck() {
   ensureUsersInitialized();
+  if (typeof checkPasswordResetUrlParams === 'function') checkPasswordResetUrlParams();
+
+  // Verificar se o utilizador jÃ¡ se encontra autenticado nesta sessÃ£o (ex: refresh F5 / recarregamento da pÃ¡gina)
+  const isAuth = sessionStorage.getItem('sigec_pro_authenticated') === 'true';
+  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
+  const activeUser = (db.usuarios || []).find(u => u.id === activeUserId);
+
+  const overlay = document.getElementById('loginOverlay');
+
+  if (isAuth && activeUser && activeUser.active !== false) {
+    // Utilizador jÃ¡ autenticado nesta sessÃ£o: manter sessÃ£o ativa sem pedir utilizador/palavra-passe
+    if (overlay) {
+      overlay.classList.add('hidden');
+      overlay.style.display = 'none';
+    }
+    if (typeof applyUserLanguage === 'function') {
+      applyUserLanguage(activeUser.idioma);
+    }
+    renderUserManagementGrid();
+    return;
+  }
+
+  // SessÃ£o nÃ£o autenticada (primeira abertura apÃ³s encerramento do programa): solicitar utilizador e PIN
+  sessionStorage.removeItem('sigec_pro_authenticated');
+  sessionStorage.removeItem('sigec_pro_active_user_id');
+
   if (typeof applyUserLanguage === 'function') {
     applyUserLanguage();
   }
   renderUserManagementGrid();
-  if (typeof checkPasswordResetUrlParams === 'function') checkPasswordResetUrlParams();
 
-  // Exigência obrigatória de autenticação ao abrir o programa
-  sessionStorage.removeItem('sigec_pro_authenticated');
-  sessionStorage.removeItem('sigec_pro_active_user_id');
-
-  const overlay = document.getElementById('loginOverlay');
   if (overlay) {
     overlay.classList.remove('hidden');
     overlay.style.display = 'flex';
@@ -14594,7 +14869,6 @@ function initSecurityAuthCheck() {
     if (pinInput) pinInput.value = '';
   }
 }
-
 function toggleLoginRegisterMode(isRegister) {
   const loginMode = document.getElementById('loginFormMode');
   const regMode = document.getElementById('registerFormMode');
@@ -15144,15 +15418,27 @@ function openUserProfileModal(userId, initialTab = 'info') {
 
   // Fill Tab 1 Info
   const idInput = document.getElementById('profileUserId');
-  const nameInput = document.getElementById('profileUserName');
+  const firstNameInput = document.getElementById('profileUserFirstName');
+  const lastNameInput = document.getElementById('profileUserLastName');
+  const legacyNameInput = document.getElementById('profileUserName');
   const emailInput = document.getElementById('profileUserEmail');
   const cargoInput = document.getElementById('profileUserCargo');
   const idiomaSelect = document.getElementById('profileUserIdioma');
   const roleSelect = document.getElementById('profileUserRole');
   const pinInput = document.getElementById('profileUserPin');
 
+  let primeiroNome = user.primeiroNome || '';
+  let apelido = user.apelido || '';
+  if (!primeiroNome && !apelido && user.nome) {
+    const parts = user.nome.trim().split(/\s+/);
+    primeiroNome = parts[0] || '';
+    apelido = parts.slice(1).join(' ') || '';
+  }
+
   if (idInput) idInput.value = user.id;
-  if (nameInput) nameInput.value = user.nome || '';
+  if (firstNameInput) firstNameInput.value = primeiroNome;
+  if (lastNameInput) lastNameInput.value = apelido;
+  if (legacyNameInput) legacyNameInput.value = user.nome || `${primeiroNome} ${apelido}`.trim();
   if (emailInput) emailInput.value = user.email || '';
   if (cargoInput) cargoInput.value = user.cargo || '';
   if (idiomaSelect) idiomaSelect.value = user.idioma || 'Português';
@@ -15237,25 +15523,29 @@ function handleSaveUserProfile(event) {
   if (event && event.preventDefault) event.preventDefault();
 
   const idInput = document.getElementById('profileUserId');
-  const nameInput = document.getElementById('profileUserName');
+  const firstNameInput = document.getElementById('profileUserFirstName');
+  const lastNameInput = document.getElementById('profileUserLastName');
+  const legacyNameInput = document.getElementById('profileUserName');
   const emailInput = document.getElementById('profileUserEmail');
   const cargoInput = document.getElementById('profileUserCargo');
   const idiomaSelect = document.getElementById('profileUserIdioma');
   const roleSelect = document.getElementById('profileUserRole');
   const pinInput = document.getElementById('profileUserPin');
 
-  if (!idInput || !nameInput || !emailInput || !cargoInput || !roleSelect || !pinInput) return;
+  if (!idInput || (!firstNameInput && !legacyNameInput) || !emailInput || !cargoInput || !roleSelect || !pinInput) return;
 
   const userId = idInput.value;
-  const nome = nameInput.value.trim();
+  const primeiroNome = firstNameInput ? firstNameInput.value.trim() : (legacyNameInput ? legacyNameInput.value.trim().split(' ')[0] : '');
+  const apelido = lastNameInput ? lastNameInput.value.trim() : (legacyNameInput ? legacyNameInput.value.trim().split(' ').slice(1).join(' ') : '');
+  const nome = `${primeiroNome} ${apelido}`.trim();
   const email = emailInput.value.trim();
   const cargo = cargoInput.value.trim();
   const idioma = idiomaSelect ? idiomaSelect.value : 'Português';
   const role = roleSelect.value;
   const pin = pinInput.value.trim();
 
-  if (!nome || !email || !pin) {
-    alert("Preencha todos os campos obrigatórios.");
+  if (!primeiroNome || !apelido || !email || !pin) {
+    alert("Por favor, preencha todos os campos obrigatórios (Nome, Apelido, Email e Palavra-Pass).");
     return;
   }
 
@@ -15303,6 +15593,8 @@ function handleSaveUserProfile(event) {
   db.usuarios[userIndex] = {
     ...db.usuarios[userIndex],
     nome: nome,
+    primeiroNome: primeiroNome,
+    apelido: apelido,
     email: email,
     cargo: cargo,
     idioma: idioma,
@@ -15346,7 +15638,14 @@ function sendPasswordResetEmailToUser() {
   const adminName = adminUser ? adminUser.nome : 'Administrador do Sistema';
 
   const userEmail = emailInput.value.trim();
-  const userName = nameInput ? nameInput.value.trim() : 'Utilizador';
+  const firstNameInput = document.getElementById('profileUserFirstName');
+  const lastNameInput = document.getElementById('profileUserLastName');
+  let userName = 'Utilizador';
+  if (firstNameInput && lastNameInput && (firstNameInput.value || lastNameInput.value)) {
+    userName = (firstNameInput.value.trim() + ' ' + lastNameInput.value.trim()).trim();
+  } else if (nameInput && nameInput.value) {
+    userName = nameInput.value.trim();
+  }
   const userId = idInput ? idInput.value : '';
 
   const baseUrl = window.location.origin + window.location.pathname;
@@ -19928,21 +20227,26 @@ function populateConsultasUserSelect(selectedUserId = null) {
   const selectEl = document.getElementById('consultasUserSelect');
   if (!selectEl) return;
 
-  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001';
-  const targetSelectId = selectedUserId || selectEl.value || activeUserId;
-
   const users = Array.isArray(db.usuarios) ? db.usuarios : [];
-  
+  if (users.length === 0) return;
+
+  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001';
+  let targetSelectId = selectedUserId || selectEl.value;
+
+  if (!targetSelectId || !users.some(u => u.id === targetSelectId)) {
+    targetSelectId = activeUserId;
+  }
+  if (!users.some(u => u.id === targetSelectId) && users.length > 0) {
+    targetSelectId = users[0].id;
+  }
+
   selectEl.innerHTML = users.map(u => {
     const isSelected = (u.id === targetSelectId);
     return `<option value="${u.id}" ${isSelected ? 'selected' : ''}>${escapeHtml(u.nome)}</option>`;
   }).join('');
 
-  if (!selectEl.value && users.length > 0) {
-    selectEl.value = users[0].id;
-  }
-
-  renderConsultasUserData(selectEl.value);
+  selectEl.value = targetSelectId;
+  renderConsultasUserData(targetSelectId);
 }
 window.populateConsultasUserSelect = populateConsultasUserSelect;
 
@@ -19956,7 +20260,20 @@ function renderConsultasUserData(userId) {
     userId = db.usuarios[0].id;
   }
 
-  const activeLang = typeof getCurrentSystemLanguage === 'function' ? getCurrentSystemLanguage() : (typeof currentSystemLanguage !== 'undefined' ? currentSystemLanguage : 'Português');
+  const activeLang = typeof getCurrentSystemLanguage === 'function' ? getCurrentSystemLanguage() : (typeof currentSystemLanguage !== 'undefined' ? currentSystemLanguage : 'Portugu\u00EAs');
+  
+  // Safe BCP 47 locale for String.prototype.localeCompare
+  const getBcp47Locale = (lang) => {
+    if (!lang) return 'pt';
+    const l = String(lang).toLowerCase();
+    if (l.includes('es') || l.includes('esp')) return 'es';
+    if (l.includes('en') || l.includes('eng')) return 'en';
+    if (l.includes('fr')) return 'fr';
+    if (l.includes('pl')) return 'pl';
+    return 'pt';
+  };
+  const sortLocale = getBcp47Locale(activeLang);
+
   const targetUser = (db.usuarios || []).find(u => u.id === userId) || { id: userId, nome: 'Utilizador', role: 'user' };
 
   // Atualizar Banner de Resumo (no idioma do utilizador que faz a consulta)
@@ -19964,7 +20281,9 @@ function renderConsultasUserData(userId) {
   const roleEl = document.getElementById('consultasSelectedUserRoleBadge');
   if (nameEl) nameEl.textContent = targetUser.nome;
   if (roleEl) {
-    if (targetUser.role === 'admin') {
+    const targetNomeNorm = typeof normalizeText === 'function' ? normalizeText(targetUser.nome || '') : (targetUser.nome || '').toLowerCase();
+    const isTargetAdmin = (targetUser.role === 'admin' || targetUser.id === 'usr-admin-001' || targetNomeNorm.includes('centurio') || targetNomeNorm.includes('administrador'));
+    if (isTargetAdmin) {
       roleEl.textContent = typeof translateSystemTerm === 'function' ? translateSystemTerm('Administrador do Sistema', activeLang) : 'Administrador do Sistema';
       roleEl.style.background = '#dbeafe';
       roleEl.style.color = '#1e40af';
@@ -19979,70 +20298,144 @@ function renderConsultasUserData(userId) {
     }
   }
 
-  // Filtrar Registos pertencentes ao utilizador selecionado
-  let userClients = (db.clientes || []).filter(c => {
-    if (!c) return false;
-    const owner = c.comercialAtribuidoId || c.userId || 'usr-admin-001';
-    return owner === userId;
-  });
+  // 1. Filtrar Clientes pertencentes ao utilizador selecionado
+  let userClients = (db.clientes || []).filter(c => c && isItemOwnedByTargetUser(c, targetUser));
 
-  if (typeof consultasClientsSortMode !== 'undefined' && consultasClientsSortMode !== 'default') {
-    userClients.sort((a, b) => {
+  // 2. Filtrar Contactos pertencentes ao utilizador selecionado ou aos seus clientes
+  let userContacts = (db.contactos || []).filter(con => con && (isItemOwnedByTargetUser(con, targetUser) || isChildOwnedByTargetUser(con, targetUser)));
+
+  // 3. Filtrar Projetos pertencentes ao utilizador selecionado ou aos seus clientes
+  const activeProjsList = typeof filterDeletedProjects === 'function' ? filterDeletedProjects(db.projetos || []) : (db.projetos || []);
+  let userProjects = activeProjsList.filter(p => p && (isItemOwnedByTargetUser(p, targetUser) || isChildOwnedByTargetUser(p, targetUser)));
+  if (typeof window.consultasClientTableSort === 'undefined') {
+    window.consultasClientTableSort = { field: 'nome', dir: 'asc' };
+  }
+  if (typeof window.consultasContactTableSort === 'undefined') {
+    window.consultasContactTableSort = { field: 'nome', dir: 'asc' };
+  }
+  if (typeof window.consultasProjectTableSort === 'undefined') {
+    window.consultasProjectTableSort = { field: 'nome', dir: 'asc' };
+  }
+
+  // Helper para icones de ordenacao identico ao Dashboard do Menu
+  const getSortIcon = (f, currentF, currentD, activeColor = '#1e3a8a') => {
+    if (currentF !== f) return '<i class="fa-solid fa-sort" style="opacity: 0.35; font-size: 0.72rem; margin-left: 4px;"></i>';
+    return currentD === 'asc' 
+      ? `<i class="fa-solid fa-sort-up" style="color: ${activeColor}; font-size: 0.8rem; margin-left: 4px;"></i>` 
+      : `<i class="fa-solid fa-sort-down" style="color: ${activeColor}; font-size: 0.8rem; margin-left: 4px;"></i>`;
+  };
+
+  // 1. ORDENACAO DE CLIENTES DO UTILIZADOR
+  const cliSortF = window.consultasClientTableSort.field || 'nome';
+  const cliSortD = window.consultasClientTableSort.dir || 'asc';
+  userClients.sort((a, b) => {
+    let res = 0;
+    if (cliSortF === 'tipo') {
+      const tA = typeof translateSystemTerm === 'function' ? translateSystemTerm(a.tipoCliente || 'Privado', activeLang) : (a.tipoCliente || 'Privado');
+      const tB = typeof translateSystemTerm === 'function' ? translateSystemTerm(b.tipoCliente || 'Privado', activeLang) : (b.tipoCliente || 'Privado');
+      res = tA.localeCompare(tB, sortLocale, { sensitivity: 'base' });
+    } else if (cliSortF === 'contactado') {
       const isA = typeof isClientContacted === 'function' ? isClientContacted(a.id) : false;
       const isB = typeof isClientContacted === 'function' ? isClientContacted(b.id) : false;
-      if (consultasClientsSortMode === 'contacted_first') {
-        if (isA && !isB) return -1;
-        if (!isA && isB) return 1;
-      } else if (consultasClientsSortMode === 'uncontacted_first') {
-        if (!isA && isB) return -1;
-        if (isA && !isB) return 1;
-      }
-      return (a.nome || '').localeCompare(b.nome || '');
-    });
-  }
-
-  let userContacts = (db.contactos || []).filter(con => {
-    if (!con) return false;
-    const client = (db.clientes || []).find(c => c.id === con.clienteId);
-    const owner = con.comercialAtribuidoId || con.userId || (client ? (client.comercialAtribuidoId || client.userId || 'usr-admin-001') : 'usr-admin-001');
-    return owner === userId;
+      res = (isA === isB ? 0 : (isA ? -1 : 1));
+    } else if (cliSortF === 'nome') {
+      res = (a.nome || '').localeCompare(b.nome || '', sortLocale, { sensitivity: 'base' });
+    } else if (cliSortF === 'contribuinte') {
+      res = (a.contribuinte || '').localeCompare(b.contribuinte || '', sortLocale, { numeric: true, sensitivity: 'base' });
+    } else if (cliSortF === 'localidade') {
+      res = (a.localidade || '').localeCompare(b.localidade || '', sortLocale, { sensitivity: 'base' });
+    } else if (cliSortF === 'pais') {
+      const pA = typeof translateSystemTerm === 'function' ? translateSystemTerm(a.pais || 'Portugal', activeLang) : (a.pais || 'Portugal');
+      const pB = typeof translateSystemTerm === 'function' ? translateSystemTerm(b.pais || 'Portugal', activeLang) : (b.pais || 'Portugal');
+      res = pA.localeCompare(pB, sortLocale, { sensitivity: 'base' });
+    } else if (cliSortF === 'telefone') {
+      const valA = (a.telemovel || a.telefone || '').trim();
+      const valB = (b.telemovel || b.telefone || '').trim();
+      res = valA.localeCompare(valB, sortLocale, { sensitivity: 'base' });
+    } else if (cliSortF === 'email') {
+      res = (a.email || '').localeCompare(b.email || '', sortLocale, { sensitivity: 'base' });
+    }
+    if (res === 0) {
+      res = (a.nome || '').localeCompare(b.nome || '', sortLocale, { sensitivity: 'base' });
+    }
+    return cliSortD === 'asc' ? res : -res;
   });
 
-  if (typeof consultasContactsSortMode !== 'undefined' && consultasContactsSortMode !== 'default') {
-    userContacts.sort((a, b) => {
+  // 2. ORDENACAO DE CONTACTOS DO UTILIZADOR
+  const conSortF = window.consultasContactTableSort.field || 'nome';
+  const conSortD = window.consultasContactTableSort.dir || 'asc';
+  userContacts.sort((a, b) => {
+    let res = 0;
+    if (conSortF === 'contactado') {
       const isA = typeof isContactContacted === 'function' ? isContactContacted(a.id) : false;
       const isB = typeof isContactContacted === 'function' ? isContactContacted(b.id) : false;
-      if (consultasContactsSortMode === 'contacted_first') {
-        if (isA && !isB) return -1;
-        if (!isA && isB) return 1;
-      } else if (consultasContactsSortMode === 'uncontacted_first') {
-        if (!isA && isB) return -1;
-        if (isA && !isB) return 1;
-      }
+      res = (isA === isB ? 0 : (isA ? -1 : 1));
+    } else if (conSortF === 'nome') {
       const nameA = `${a.nome || ''} ${a.apelido || ''}`.trim();
       const nameB = `${b.nome || ''} ${b.apelido || ''}`.trim();
-      return nameA.localeCompare(nameB);
-    });
-  }
-
-  let userProjects = (db.projetos || []).filter(p => {
-    if (!p) return false;
-    const client = (db.clientes || []).find(c => c.id === p.clienteId);
-    const owner = p.comercialAtribuidoId || p.userId || (client ? (client.comercialAtribuidoId || client.userId || 'usr-admin-001') : 'usr-admin-001');
-    return owner === userId;
+      res = nameA.localeCompare(nameB, sortLocale, { sensitivity: 'base' });
+    } else if (conSortF === 'cliente') {
+      const cliA = (db.clientes || []).find(c => c.id === a.clienteId)?.nome || '';
+      const cliB = (db.clientes || []).find(c => c.id === b.clienteId)?.nome || '';
+      res = cliA.localeCompare(cliB, sortLocale, { sensitivity: 'base' });
+    } else if (conSortF === 'cargo') {
+      const cA = typeof translateSystemTerm === 'function' ? translateSystemTerm(a.cargo || '', activeLang) : (a.cargo || '');
+      const cB = typeof translateSystemTerm === 'function' ? translateSystemTerm(b.cargo || '', activeLang) : (b.cargo || '');
+      res = cA.localeCompare(cB, sortLocale, { sensitivity: 'base' });
+    } else if (conSortF === 'telefone') {
+      const valA = (a.telemovel || a.telefone || '').trim();
+      const valB = (b.telemovel || b.telefone || '').trim();
+      res = valA.localeCompare(valB, sortLocale, { sensitivity: 'base' });
+    } else if (conSortF === 'email') {
+      res = (a.email || '').localeCompare(b.email || '', sortLocale, { sensitivity: 'base' });
+    } else if (conSortF === 'notas') {
+      res = (a.notas || '').localeCompare(b.notas || '', sortLocale, { sensitivity: 'base' });
+    }
+    if (res === 0) {
+      const nameA = `${a.nome || ''} ${a.apelido || ''}`.trim();
+      const nameB = `${b.nome || ''} ${b.apelido || ''}`.trim();
+      res = nameA.localeCompare(nameB, sortLocale, { sensitivity: 'base' });
+    }
+    return conSortD === 'asc' ? res : -res;
   });
 
-  if (typeof consultasProjectsSortMode !== 'undefined' && consultasProjectsSortMode !== 'default') {
-    userProjects.sort((a, b) => {
+  // 3. ORDENACAO DE PROJETOS DO UTILIZADOR
+  const projSortF = window.consultasProjectTableSort.field || 'nome';
+  const projSortD = window.consultasProjectTableSort.dir || 'asc';
+  userProjects.sort((a, b) => {
+    let res = 0;
+    if (projSortF === 'nome') {
+      res = (a.nome || '').localeCompare(b.nome || '', sortLocale, { sensitivity: 'base' });
+    } else if (projSortF === 'cliente') {
+      const cliA = (db.clientes || []).find(c => c.id === a.clienteId)?.nome || '';
+      const cliB = (db.clientes || []).find(c => c.id === b.clienteId)?.nome || '';
+      res = cliA.localeCompare(cliB, sortLocale, { sensitivity: 'base' });
+    } else if (projSortF === 'tipo') {
+      const tA = typeof translateSystemTerm === 'function' ? translateSystemTerm(a.tipo || '', activeLang) : (a.tipo || '');
+      const tB = typeof translateSystemTerm === 'function' ? translateSystemTerm(b.tipo || '', activeLang) : (b.tipo || '');
+      res = tA.localeCompare(tB, sortLocale, { sensitivity: 'base' });
+    } else if (projSortF === 'estado') {
       const stA = typeof translateSystemTerm === 'function' ? translateSystemTerm(a.estado || 'Em Aberto', activeLang) : (a.estado || 'Em Aberto');
       const stB = typeof translateSystemTerm === 'function' ? translateSystemTerm(b.estado || 'Em Aberto', activeLang) : (b.estado || 'Em Aberto');
-      if (consultasProjectsSortMode === 'status_asc') {
-        return stA.localeCompare(stB, undefined, { sensitivity: 'base' });
-      } else {
-        return stB.localeCompare(stA, undefined, { sensitivity: 'base' });
-      }
-    });
-  }
+      res = stA.localeCompare(stB, sortLocale, { sensitivity: 'base' });
+    } else if (projSortF === 'dataInicio') {
+      const dateA = a.dataInicio ? new Date(a.dataInicio).getTime() : 0;
+      const dateB = b.dataInicio ? new Date(b.dataInicio).getTime() : 0;
+      res = dateA - dateB;
+    } else if (projSortF === 'dataFim') {
+      const dateA = a.dataFim ? new Date(a.dataFim).getTime() : 0;
+      const dateB = b.dataFim ? new Date(b.dataFim).getTime() : 0;
+      res = dateA - dateB;
+    } else if (projSortF === 'viatura') {
+      const vA = `${a.viatura || ''} ${a.matricula || ''}`.trim();
+      const vB = `${b.viatura || ''} ${b.matricula || ''}`.trim();
+      res = vA.localeCompare(vB, sortLocale, { sensitivity: 'base' });
+    }
+    if (res === 0) {
+      res = (a.nome || '').localeCompare(b.nome || '', sortLocale, { sensitivity: 'base' });
+    }
+    return projSortD === 'asc' ? res : -res;
+  });
 
   // Atualizar contadores
   const sumCliEl = document.getElementById('consultasSummaryClientsCount');
@@ -20060,36 +20453,78 @@ function renderConsultasUserData(userId) {
   if (listProjEl) listProjEl.textContent = userProjects.length;
 
   // 1. RENDER QUADRO 1: CLIENTES
+  const clientsThead = document.getElementById('consultasClientsTableHead');
+  if (clientsThead) {
+    const lblTipo = typeof translateSystemTerm === 'function' ? translateSystemTerm('Tipo de Cliente', activeLang) : 'Tipo de Cliente';
+    const lblContactado = typeof translateSystemTerm === 'function' ? translateSystemTerm('Contactado', activeLang) : 'Contactado';
+    const lblNome = typeof translateSystemTerm === 'function' ? translateSystemTerm('Nome / Raz\u00E3o Social', activeLang) : 'Nome / Raz\u00E3o Social';
+    const lblNif = typeof translateSystemTerm === 'function' ? translateSystemTerm('Contribuinte (NIF)', activeLang) : 'Contribuinte (NIF)';
+    const lblLocalidade = typeof translateSystemTerm === 'function' ? translateSystemTerm('Localidade', activeLang) : 'Localidade';
+    const lblPais = typeof translateSystemTerm === 'function' ? translateSystemTerm('Pa\u00EDs', activeLang) : 'Pa\u00EDs';
+    const lblTelefone = typeof translateSystemTerm === 'function' ? (translateSystemTerm('Telefone', activeLang) + ' / ' + translateSystemTerm('Telem\u00F3vel', activeLang)) : 'Telefone / Telem\u00F3vel';
+    const lblEmail = typeof translateSystemTerm === 'function' ? translateSystemTerm('Email', activeLang) : 'Email';
+
+    clientsThead.innerHTML = `
+      <tr style="background-color: #e0f2fe; color: #1e3a8a;">
+        <th onclick="toggleConsultasSortHeader('client', 'tipo')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblTipo)}${getSortIcon('tipo', cliSortF, cliSortD, '#1e3a8a')}
+        </th>
+        <th onclick="toggleConsultasSortHeader('client', 'contactado')" style="padding: 0.75rem 0.5rem; text-align: center; width: 110px; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblContactado)}${getSortIcon('contactado', cliSortF, cliSortD, '#1e3a8a')}
+        </th>
+        <th onclick="toggleConsultasSortHeader('client', 'nome')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblNome)}${getSortIcon('nome', cliSortF, cliSortD, '#1e3a8a')}
+        </th>
+        <th onclick="toggleConsultasSortHeader('client', 'contribuinte')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblNif)}${getSortIcon('contribuinte', cliSortF, cliSortD, '#1e3a8a')}
+        </th>
+        <th onclick="toggleConsultasSortHeader('client', 'localidade')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblLocalidade)}${getSortIcon('localidade', cliSortF, cliSortD, '#1e3a8a')}
+        </th>
+        <th onclick="toggleConsultasSortHeader('client', 'pais')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblPais)}${getSortIcon('pais', cliSortF, cliSortD, '#1e3a8a')}
+        </th>
+        <th onclick="toggleConsultasSortHeader('client', 'telefone')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblTelefone)}${getSortIcon('telefone', cliSortF, cliSortD, '#1e3a8a')}
+        </th>
+        <th onclick="toggleConsultasSortHeader('client', 'email')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblEmail)}${getSortIcon('email', cliSortF, cliSortD, '#1e3a8a')}
+        </th>
+      </tr>
+    `;
+  }
+
   const clientsTbody = document.getElementById('consultasClientsTableBody');
   if (clientsTbody) {
     if (userClients.length === 0) {
       clientsTbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #64748b; padding: 2rem;"><i class="fa-solid fa-building-circle-xmark" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>Nenhum cliente associado a este utilizador.</td></tr>`;
     } else {
+      const transSim = typeof translateSystemTerm === 'function' ? translateSystemTerm('Sim', activeLang) : 'Sim';
+      const transNao = typeof translateSystemTerm === 'function' ? translateSystemTerm('N\u00E3o', activeLang) : 'N\u00E3o';
+
       clientsTbody.innerHTML = userClients.map(c => {
         const rawTipo = c.tipoCliente || 'Privado';
         const transTipo = typeof translateSystemTerm === 'function' ? translateSystemTerm(rawTipo, activeLang) : rawTipo;
         const rawPais = c.pais || 'Portugal';
         const transPais = typeof translateSystemTerm === 'function' ? translateSystemTerm(rawPais, activeLang) : rawPais;
-        const badgeClass = (rawTipo === 'Estatal' || rawTipo === 'Público' || rawTipo === 'Governamental') ? 'badge-blue' : (rawTipo === 'Fundação' || rawTipo === 'Fundacion' || rawTipo === 'Foundation') ? 'badge-purple' : 'badge-green';
+        const badgeClass = (rawTipo === 'Estatal' || rawTipo === 'P\u00FAblico' || rawTipo === 'Governamental') ? 'badge-blue' : (rawTipo === 'Funda\u00E7\u00E3o' || rawTipo === 'Fundacion' || rawTipo === 'Foundation') ? 'badge-purple' : 'badge-green';
         const contactInfo = [c.telemovel, c.telefone].filter(Boolean).join(' / ') || '-';
         const isContacted = typeof isClientContacted === 'function' ? isClientContacted(c.id) : false;
-        const transSim = typeof translateSystemTerm === 'function' ? translateSystemTerm('Sim', activeLang) : 'Sim';
-        const transNao = typeof translateSystemTerm === 'function' ? translateSystemTerm('Não', activeLang) : 'Não';
         return `
-          <tr onclick="openClientFromConsultas('${c.id}')" style="cursor: pointer; transition: background 0.15s ease;" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='transparent'" title="Clique para abrir e consultar ficha do cliente">
-            <td><span class="badge ${badgeClass}" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;">${escapeHtml(transTipo)}</span></td>
+          <tr onclick="openClientFromConsultas('${c.id}')" style="border-bottom: 1px solid #e2e8f0; cursor: pointer; transition: background 0.15s ease;" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='transparent'" title="Clique para abrir e consultar ficha do cliente">
+            <td style="padding: 0.75rem 1rem;"><span class="badge ${badgeClass}" style="font-size: 0.75rem; padding: 0.2rem 0.55rem; border-radius: 12px;">${escapeHtml(transTipo)}</span></td>
             <td style="padding: 0.5rem; text-align: center;" onclick="event.stopPropagation();">
               <label style="display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem; margin: 0; cursor: pointer;" title="${isContacted ? transSim : transNao}">
                 <input type="checkbox" ${isContacted ? 'checked' : ''} disabled style="width: 16px; height: 16px; accent-color: #16a34a; cursor: default;">
                 <span style="font-size: 0.78rem; font-weight: 700; color: ${isContacted ? '#16a34a' : '#94a3b8'};">${isContacted ? transSim : transNao}</span>
               </label>
             </td>
-            <td><strong style="color: #1e3a8a; font-size: 0.9rem;"><i class="fa-solid fa-folder-open" style="font-size: 0.8rem; margin-right: 4px; color: #2563eb;"></i>${escapeHtml(c.nome || '-')}</strong>${c.ministerio ? `<br><span style="font-size: 0.75rem; color: #64748b;">${escapeHtml(c.ministerio)}</span>` : ''}</td>
-            <td style="color: #334155; font-size: 0.85rem;">${escapeHtml(c.contribuinte || '-')}</td>
-            <td style="color: #334155; font-size: 0.85rem;">${escapeHtml(c.localidade || '-')}</td>
-            <td style="color: #334155; font-size: 0.85rem;"><span style="display: inline-flex; align-items: center; gap: 0.25rem;"><i class="fa-solid fa-earth-europe" style="color: #0284c7; font-size: 0.75rem;"></i> ${escapeHtml(transPais)}</span></td>
-            <td style="color: #334155; font-size: 0.85rem;">${escapeHtml(contactInfo)}</td>
-            <td style="color: #2563eb; font-size: 0.85rem;">${c.email ? `<a href="mailto:${escapeHtml(c.email)}" onclick="event.stopPropagation()" style="color: #2563eb; text-decoration: none;"><i class="fa-solid fa-envelope" style="font-size: 0.75rem; margin-right: 3px;"></i>${escapeHtml(c.email)}</a>` : '-'}</td>
+            <td style="padding: 0.75rem 1rem;"><strong style="color: #1e3a8a; font-size: 0.9rem;"><i class="fa-solid fa-folder-open" style="font-size: 0.8rem; margin-right: 4px; color: #2563eb;"></i>${escapeHtml(c.nome || '-')}</strong>${c.ministerio ? `<br><span style="font-size: 0.75rem; color: #64748b;">${escapeHtml(c.ministerio)}</span>` : ''}</td>
+            <td style="padding: 0.75rem 1rem; color: #334155; font-size: 0.85rem;">${escapeHtml(c.contribuinte || '-')}</td>
+            <td style="padding: 0.75rem 1rem; color: #334155; font-size: 0.85rem;">${escapeHtml(c.localidade || '-')}</td>
+            <td style="padding: 0.75rem 1rem; color: #334155; font-size: 0.85rem;"><span style="display: inline-flex; align-items: center; gap: 0.25rem;"><i class="fa-solid fa-earth-europe" style="color: #0284c7; font-size: 0.75rem;"></i> ${escapeHtml(transPais)}</span></td>
+            <td style="padding: 0.75rem 1rem; color: #334155; font-size: 0.85rem;">${escapeHtml(contactInfo)}</td>
+            <td style="padding: 0.75rem 1rem; color: #2563eb; font-size: 0.85rem;">${c.email ? `<a href="mailto:${escapeHtml(c.email)}" onclick="event.stopPropagation()" style="color: #2563eb; text-decoration: none;"><i class="fa-solid fa-envelope" style="font-size: 0.75rem; margin-right: 3px;"></i>${escapeHtml(c.email)}</a>` : '-'}</td>
           </tr>
         `;
       }).join('');
@@ -20097,13 +20532,50 @@ function renderConsultasUserData(userId) {
   }
 
   // 2. RENDER QUADRO 2: CONTACTOS
+  const contactsThead = document.getElementById('consultasContactsTableHead');
+  if (contactsThead) {
+    const lblContactado2 = typeof translateSystemTerm === 'function' ? translateSystemTerm('Contactado', activeLang) : 'Contactado';
+    const lblNomeContacto = typeof translateSystemTerm === 'function' ? translateSystemTerm('Nome do Contacto', activeLang) : 'Nome do Contacto';
+    const lblCliAssoc = typeof translateSystemTerm === 'function' ? translateSystemTerm('Cliente Associado (Empresa)', activeLang) : 'Cliente Associado';
+    const lblCargo = typeof translateSystemTerm === 'function' ? translateSystemTerm('Cargo / Fun\u00E7\u00E3o', activeLang) : 'Cargo / Fun\u00E7\u00E3o';
+    const lblTelefone2 = typeof translateSystemTerm === 'function' ? (translateSystemTerm('Telefone', activeLang) + ' / ' + translateSystemTerm('Telem\u00F3vel', activeLang)) : 'Telefone / Telem\u00F3vel';
+    const lblEmail2 = typeof translateSystemTerm === 'function' ? translateSystemTerm('Email', activeLang) : 'Email';
+    const lblNotas = typeof translateSystemTerm === 'function' ? translateSystemTerm('Notas', activeLang) : 'Notas / Observa\u00E7\u00F5es';
+
+    contactsThead.innerHTML = `
+      <tr style="background-color: #d1fae5; color: #065f46;">
+        <th onclick="toggleConsultasSortHeader('contact', 'contactado')" style="padding: 0.75rem 0.5rem; text-align: center; width: 110px; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblContactado2)}${getSortIcon('contactado', conSortF, conSortD, '#065f46')}
+        </th>
+        <th onclick="toggleConsultasSortHeader('contact', 'nome')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblNomeContacto)}${getSortIcon('nome', conSortF, conSortD, '#065f46')}
+        </th>
+        <th onclick="toggleConsultasSortHeader('contact', 'cliente')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblCliAssoc)}${getSortIcon('cliente', conSortF, conSortD, '#065f46')}
+        </th>
+        <th onclick="toggleConsultasSortHeader('contact', 'cargo')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblCargo)}${getSortIcon('cargo', conSortF, conSortD, '#065f46')}
+        </th>
+        <th onclick="toggleConsultasSortHeader('contact', 'telefone')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblTelefone2)}${getSortIcon('telefone', conSortF, conSortD, '#065f46')}
+        </th>
+        <th onclick="toggleConsultasSortHeader('contact', 'email')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblEmail2)}${getSortIcon('email', conSortF, conSortD, '#065f46')}
+        </th>
+        <th onclick="toggleConsultasSortHeader('contact', 'notas')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblNotas)}${getSortIcon('notas', conSortF, conSortD, '#065f46')}
+        </th>
+      </tr>
+    `;
+  }
+
   const contactsTbody = document.getElementById('consultasContactsTableBody');
   if (contactsTbody) {
     if (userContacts.length === 0) {
       contactsTbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #64748b; padding: 2rem;"><i class="fa-solid fa-user-slash" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>Nenhum contacto associado a este utilizador.</td></tr>`;
     } else {
       const transSim = typeof translateSystemTerm === 'function' ? translateSystemTerm('Sim', activeLang) : 'Sim';
-      const transNao = typeof translateSystemTerm === 'function' ? translateSystemTerm('Não', activeLang) : 'Não';
+      const transNao = typeof translateSystemTerm === 'function' ? translateSystemTerm('N\u00E3o', activeLang) : 'N\u00E3o';
 
       contactsTbody.innerHTML = userContacts.map(con => {
         const client = (db.clientes || []).find(c => c.id === con.clienteId);
@@ -20113,14 +20585,14 @@ function renderConsultasUserData(userId) {
         const rawCargo = con.cargo || '-';
         const transCargo = typeof translateSystemTerm === 'function' ? translateSystemTerm(rawCargo, activeLang) : rawCargo;
         return `
-          <tr onclick="openContactFromConsultas('${con.id}')" style="cursor: pointer; transition: background 0.15s ease;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" title="Clique para abrir e consultar ficha do contacto">
+          <tr onclick="openContactFromConsultas('${con.id}')" style="border-bottom: 1px solid #e2e8f0; cursor: pointer; transition: background 0.15s ease;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'" title="Clique para abrir e consultar ficha do contacto">
             <td style="padding: 0.5rem; text-align: center;" onclick="event.stopPropagation();">
               <label style="display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem; margin: 0; cursor: pointer;" title="${isContacted ? transSim : transNao}">
                 <input type="checkbox" ${isContacted ? 'checked' : ''} disabled style="width: 16px; height: 16px; accent-color: #16a34a; cursor: default;">
                 <span style="font-size: 0.78rem; font-weight: 700; color: ${isContacted ? '#16a34a' : '#94a3b8'};">${isContacted ? transSim : transNao}</span>
               </label>
             </td>
-            <td>
+            <td style="padding: 0.75rem 1rem;">
               <div style="display: flex; align-items: center; gap: 0.5rem;">
                 <div style="width: 28px; height: 28px; border-radius: 50%; background: #d1fae5; color: #065f46; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; flex-shrink: 0;">
                   <i class="fa-solid fa-user"></i>
@@ -20128,11 +20600,11 @@ function renderConsultasUserData(userId) {
                 <strong style="color: #065f46; font-size: 0.9rem;">${escapeHtml(contactName)}</strong>
               </div>
             </td>
-            <td><strong style="color: #1e3a8a; font-size: 0.88rem;">${escapeHtml(client ? client.nome : '-')}</strong></td>
-            <td style="color: #334155; font-size: 0.85rem;">${escapeHtml(transCargo)}</td>
-            <td style="color: #334155; font-size: 0.85rem;">${escapeHtml(contactPhone)}</td>
-            <td style="color: #2563eb; font-size: 0.85rem;">${con.email ? `<a href="mailto:${escapeHtml(con.email)}" onclick="event.stopPropagation()" style="color: #2563eb; text-decoration: none;"><i class="fa-solid fa-envelope" style="font-size: 0.75rem; margin-right: 3px;"></i>${escapeHtml(con.email)}</a>` : '-'}</td>
-            <td style="color: #64748b; font-size: 0.82rem; max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(con.notas || '-')}</td>
+            <td style="padding: 0.75rem 1rem;"><strong style="color: #1e3a8a; font-size: 0.88rem;">${escapeHtml(client ? client.nome : '-')}</strong></td>
+            <td style="padding: 0.75rem 1rem; color: #334155; font-size: 0.85rem;">${escapeHtml(transCargo)}</td>
+            <td style="padding: 0.75rem 1rem; color: #334155; font-size: 0.85rem;">${escapeHtml(contactPhone)}</td>
+            <td style="padding: 0.75rem 1rem; color: #2563eb; font-size: 0.85rem;">${con.email ? `<a href="mailto:${escapeHtml(con.email)}" onclick="event.stopPropagation()" style="color: #2563eb; text-decoration: none;"><i class="fa-solid fa-envelope" style="font-size: 0.75rem; margin-right: 3px;"></i>${escapeHtml(con.email)}</a>` : '-'}</td>
+            <td style="padding: 0.75rem 1rem; color: #64748b; font-size: 0.82rem; max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(con.notas || '-')}</td>
           </tr>
         `;
       }).join('');
@@ -20140,52 +20612,76 @@ function renderConsultasUserData(userId) {
   }
 
   // 3. RENDER QUADRO 3: PROJETOS
+  const projectsThead = document.getElementById('consultasProjectsTableHead');
+  if (projectsThead) {
+    const lblNomeProj = typeof translateSystemTerm === 'function' ? translateSystemTerm('Nome do Projeto', activeLang) : 'Nome do Projeto';
+    const lblCliAssoc2 = typeof translateSystemTerm === 'function' ? translateSystemTerm('Cliente Associado (Empresa)', activeLang) : 'Cliente Associado';
+    const lblTipoProj = typeof translateSystemTerm === 'function' ? translateSystemTerm('Tipo de Projeto', activeLang) : 'Tipo';
+    const lblEstadoOrc = typeof translateSystemTerm === 'function' ? translateSystemTerm('Estado do Or\u00E7amento', activeLang) : 'Estado';
+    const lblDataInicio = typeof translateSystemTerm === 'function' ? translateSystemTerm('Data de In\u00EDcio', activeLang) : 'Data In\u00EDcio';
+    const lblDataFim = typeof translateSystemTerm === 'function' ? translateSystemTerm('Data de Fim', activeLang) : 'Data Fim';
+    const lblViatura = typeof translateSystemTerm === 'function' ? (translateSystemTerm('Viatura', activeLang) + ' / ' + translateSystemTerm('Matr\u00EDcula', activeLang)) : 'Viatura / Matr\u00EDcula';
+    const lblAcoes = typeof translateSystemTerm === 'function' ? translateSystemTerm('A\u00E7\u00F5es', activeLang) : 'A\u00E7\u00F5es';
+
+    projectsThead.innerHTML = `
+      <tr style="background-color: #e0f2fe; color: #1e3a8a;">
+        <th onclick="toggleConsultasSortHeader('project', 'nome')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblNomeProj)}${getSortIcon('nome', projSortF, projSortD, '#1e3a8a')}
+        </th>
+        <th onclick="toggleConsultasSortHeader('project', 'cliente')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblCliAssoc2)}${getSortIcon('cliente', projSortF, projSortD, '#1e3a8a')}
+        </th>
+        <th onclick="toggleConsultasSortHeader('project', 'tipo')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblTipoProj)}${getSortIcon('tipo', projSortF, projSortD, '#1e3a8a')}
+        </th>
+        <th onclick="toggleConsultasSortHeader('project', 'estado')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblEstadoOrc)}${getSortIcon('estado', projSortF, projSortD, '#1e3a8a')}
+        </th>
+        <th onclick="toggleConsultasSortHeader('project', 'dataInicio')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblDataInicio)}${getSortIcon('dataInicio', projSortF, projSortD, '#1e3a8a')}
+        </th>
+        <th onclick="toggleConsultasSortHeader('project', 'dataFim')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblDataFim)}${getSortIcon('dataFim', projSortF, projSortD, '#1e3a8a')}
+        </th>
+        <th onclick="toggleConsultasSortHeader('project', 'viatura')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblViatura)}${getSortIcon('viatura', projSortF, projSortD, '#1e3a8a')}
+        </th>
+        <th style="padding: 0.75rem 1rem; text-align: center; font-weight: 700; width: 170px;">
+          ${escapeHtml(lblAcoes)}
+        </th>
+      </tr>
+    `;
+  }
+
   const projectsTbody = document.getElementById('consultasProjectsTableBody');
   if (projectsTbody) {
     if (userProjects.length === 0) {
-      projectsTbody.innerHTML = `
-        <tr>
-          <td colspan="8" style="text-align: center; color: #64748b; padding: 2rem;">
-            <i class="fa-solid fa-diagram-project" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>
-            Nenhum projeto associado a este utilizador.<br>
-            <button type="button" class="btn btn-sm" onclick="createBudgetForSelectedConsultasUser()" style="margin-top: 0.75rem; padding: 0.4rem 0.9rem; font-size: 0.82rem; background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); color: #ffffff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 2px 6px rgba(37,99,235,0.25);">
-              <i class="fa-solid fa-file-circle-plus"></i> <span data-i18n="btn_criar_orcamento">Criar Orçamento para este Utilizador</span>
-            </button>
-          </td>
-        </tr>
-      `;
+      projectsTbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #64748b; padding: 2rem;"><i class="fa-solid fa-folder-open" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>Nenhum projeto associado a este utilizador.</td></tr>`;
     } else {
+      const lblOrcamentoBtn = typeof translateSystemTerm === 'function' ? translateSystemTerm('Or\u00E7amento', activeLang) : 'Or\u00E7amento';
+
       projectsTbody.innerHTML = userProjects.map(p => {
         const client = (db.clientes || []).find(c => c.id === p.clienteId);
-        const vehicle = [p.viatura, p.matricula].filter(Boolean).join(' - ') || '-';
-        const dtInicio = p.dataInicio ? new Date(p.dataInicio).toLocaleDateString('pt-PT') : '-';
-        const dtFim = p.dataFim ? new Date(p.dataFim).toLocaleDateString('pt-PT') : '-';
-        
         const rawTipo = p.tipo || '-';
         const transTipo = typeof translateSystemTerm === 'function' ? translateSystemTerm(rawTipo, activeLang) : rawTipo;
         const rawEstado = p.estado || 'Em Aberto';
         const transEstado = typeof translateSystemTerm === 'function' ? translateSystemTerm(rawEstado, activeLang) : rawEstado;
-
-        let statusBadge = 'badge-blue';
-        const normEstado = (rawEstado || '').toLowerCase();
-        if (normEstado.includes('concl') || normEstado.includes('entreg') || normEstado.includes('termin') || normEstado.includes('zakoń')) statusBadge = 'badge-green';
-        else if (normEstado.includes('produ') || normEstado.includes('curso') || normEstado.includes('progress') || normEstado.includes('toku')) statusBadge = 'badge-purple';
-        else if (normEstado.includes('cancel') || normEstado.includes('susp') || normEstado.includes('annul') || normEstado.includes('anul')) statusBadge = 'badge-danger';
-        else if (normEstado.includes('orça') || normEstado.includes('presup') || normEstado.includes('devis') || normEstado.includes('wycen')) statusBadge = 'badge-amber';
-
+        const statusBadgeStyle = getProjectStatusBadgeStyle(rawEstado);
+        const dInicio = p.dataInicio ? formatDate(p.dataInicio) : '-';
+        const dFim = p.dataFim ? formatDate(p.dataFim) : '-';
+        const viaturaInfo = [p.viatura, p.matricula].filter(Boolean).join(' / ') || '-';
         return `
-          <tr onclick="openProjectFromConsultas('${p.id}')" style="cursor: pointer; transition: background 0.15s ease;" onmouseover="this.style.background='#f0f9ff'" onmouseout="this.style.background='transparent'" title="Clique para abrir e consultar ficha do projeto">
-            <td><strong style="color: #0284c7; font-size: 0.9rem;"><i class="fa-solid fa-diagram-project" style="font-size: 0.8rem; margin-right: 4px;"></i>${escapeHtml(p.nome || '-')}</strong></td>
-            <td><strong style="color: #1e3a8a; font-size: 0.88rem;">${escapeHtml(client ? client.nome : '-')}</strong></td>
-            <td style="color: #334155; font-size: 0.85rem;">${escapeHtml(transTipo)}</td>
-            <td><span class="badge ${statusBadge}" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;">${escapeHtml(transEstado)}</span></td>
-            <td style="color: #334155; font-size: 0.85rem;">${escapeHtml(dtInicio)}</td>
-            <td style="color: #334155; font-size: 0.85rem;">${escapeHtml(dtFim)}</td>
-            <td style="color: #334155; font-size: 0.85rem;"><span style="display: inline-flex; align-items: center; gap: 0.25rem;"><i class="fa-solid fa-truck-moving" style="color: #0284c7; font-size: 0.75rem;"></i> ${escapeHtml(vehicle)}</span></td>
-            <td style="padding: 0.5rem; text-align: center; white-space: nowrap;" onclick="event.stopPropagation();">
-              <button type="button" class="btn btn-sm" onclick="createBudgetForConsultasProject('${p.id}', '${userId}')" title="Criar Orçamento para este Projeto (atribuído ao utilizador consultado)" style="padding: 0.35rem 0.75rem; font-size: 0.78rem; background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); color: #ffffff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem; box-shadow: 0 1px 4px rgba(37,99,235,0.3);">
-                <i class="fa-solid fa-file-circle-plus"></i>
-                <span data-i18n="btn_criar_orcamento">Criar Orçamento</span>
+          <tr onclick="openProjectFromConsultas('${p.id}')" style="border-bottom: 1px solid #e2e8f0; cursor: pointer; transition: background 0.15s ease;" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='transparent'" title="Clique para abrir e consultar ficha do projeto">
+            <td style="padding: 0.75rem 1rem;"><strong style="color: #0284c7; font-size: 0.9rem;"><i class="fa-solid fa-diagram-project" style="font-size: 0.8rem; margin-right: 4px; color: #0284c7;"></i>${escapeHtml(p.nome || '-')}</strong></td>
+            <td style="padding: 0.75rem 1rem;"><strong style="color: #1e3a8a; font-size: 0.88rem;">${escapeHtml(client ? client.nome : '-')}</strong></td>
+            <td style="padding: 0.75rem 1rem; color: #334155; font-size: 0.85rem;"><span style="display: inline-flex; align-items: center; gap: 0.3rem;"><i class="fa-solid fa-tags" style="color: #64748b; font-size: 0.75rem;"></i> ${escapeHtml(transTipo)}</span></td>
+            <td style="padding: 0.75rem 1rem;"><span style="${statusBadgeStyle}">${escapeHtml(transEstado)}</span></td>
+            <td style="padding: 0.75rem 1rem; color: #334155; font-size: 0.85rem;">${escapeHtml(dInicio)}</td>
+            <td style="padding: 0.75rem 1rem; color: #334155; font-size: 0.85rem;">${escapeHtml(dFim)}</td>
+            <td style="padding: 0.75rem 1rem; color: #334155; font-size: 0.85rem;">${escapeHtml(viaturaInfo)}</td>
+            <td style="padding: 0.75rem 1rem; text-align: center;" onclick="event.stopPropagation();">
+              <button type="button" class="btn btn-sm btn-primary" onclick="createBudgetForConsultasProject('${p.id}', '${targetUser.id}')" style="font-size: 0.78rem; padding: 0.3rem 0.65rem; border-radius: 6px; background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); border: none; color: #ffffff; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.3rem; box-shadow: 0 1px 3px rgba(37,99,235,0.2);">
+                <i class="fa-solid fa-file-invoice-dollar" style="font-size: 0.8rem;"></i> <span>${escapeHtml(lblOrcamentoBtn)}</span>
               </button>
             </td>
           </tr>
@@ -20226,39 +20722,52 @@ let consultasContactsSortMode = 'default'; // 'default' | 'contacted_first' | 'u
 let dashClientsSortMode = 'default'; // 'default' | 'contacted_first' | 'uncontacted_first'
 let dashContactsSortMode = 'default'; // 'default' | 'contacted_first' | 'uncontacted_first'
 
-function toggleConsultasClientsContactSort() {
-  if (consultasClientsSortMode === 'default') consultasClientsSortMode = 'contacted_first';
-  else if (consultasClientsSortMode === 'contacted_first') consultasClientsSortMode = 'uncontacted_first';
-  else consultasClientsSortMode = 'default';
-
-  const labelEl = document.getElementById('consultasClientSortLabel');
-  if (labelEl) {
-    if (consultasClientsSortMode === 'contacted_first') labelEl.textContent = 'Sim ➔ Não';
-    else if (consultasClientsSortMode === 'uncontacted_first') labelEl.textContent = 'Não ➔ Sim';
-    else labelEl.textContent = 'Contactados';
+function toggleConsultasSortHeader(tableType, field) {
+  if (tableType === 'client') {
+    if (!window.consultasClientTableSort) window.consultasClientTableSort = { field: 'nome', dir: 'asc' };
+    if (window.consultasClientTableSort.field === field) {
+      window.consultasClientTableSort.dir = window.consultasClientTableSort.dir === 'asc' ? 'desc' : 'asc';
+    } else {
+      window.consultasClientTableSort.field = field;
+      window.consultasClientTableSort.dir = 'asc';
+    }
+  } else if (tableType === 'contact') {
+    if (!window.consultasContactTableSort) window.consultasContactTableSort = { field: 'nome', dir: 'asc' };
+    if (window.consultasContactTableSort.field === field) {
+      window.consultasContactTableSort.dir = window.consultasContactTableSort.dir === 'asc' ? 'desc' : 'asc';
+    } else {
+      window.consultasContactTableSort.field = field;
+      window.consultasContactTableSort.dir = 'asc';
+    }
+  } else if (tableType === 'project') {
+    if (!window.consultasProjectTableSort) window.consultasProjectTableSort = { field: 'nome', dir: 'asc' };
+    if (window.consultasProjectTableSort.field === field) {
+      window.consultasProjectTableSort.dir = window.consultasProjectTableSort.dir === 'asc' ? 'desc' : 'asc';
+    } else {
+      window.consultasProjectTableSort.field = field;
+      window.consultasProjectTableSort.dir = (field === 'dataInicio' || field === 'dataFim') ? 'desc' : 'asc';
+    }
   }
 
   const selectEl = document.getElementById('consultasUserSelect');
   renderConsultasUserData(selectEl ? selectEl.value : null);
+}
+window.toggleConsultasSortHeader = toggleConsultasSortHeader;
+
+function toggleConsultasClientsContactSort() {
+  toggleConsultasSortHeader('client', 'contactado');
 }
 window.toggleConsultasClientsContactSort = toggleConsultasClientsContactSort;
 
 function toggleConsultasContactsContactSort() {
-  if (consultasContactsSortMode === 'default') consultasContactsSortMode = 'contacted_first';
-  else if (consultasContactsSortMode === 'contacted_first') consultasContactsSortMode = 'uncontacted_first';
-  else consultasContactsSortMode = 'default';
-
-  const labelEl = document.getElementById('consultasContactSortLabel');
-  if (labelEl) {
-    if (consultasContactsSortMode === 'contacted_first') labelEl.textContent = 'Sim ➔ Não';
-    else if (consultasContactsSortMode === 'uncontacted_first') labelEl.textContent = 'Não ➔ Sim';
-    else labelEl.textContent = 'Contactados';
-  }
-
-  const selectEl = document.getElementById('consultasUserSelect');
-  renderConsultasUserData(selectEl ? selectEl.value : null);
+  toggleConsultasSortHeader('contact', 'contactado');
 }
 window.toggleConsultasContactsContactSort = toggleConsultasContactsContactSort;
+
+function toggleConsultasProjectsStatusSort() {
+  toggleConsultasSortHeader('project', 'estado');
+}
+window.toggleConsultasProjectsStatusSort = toggleConsultasProjectsStatusSort;
 
 function toggleDashClientContactSort() {
   if (dashClientsSortMode === 'default') dashClientsSortMode = 'contacted_first';
