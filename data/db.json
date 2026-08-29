@@ -3725,7 +3725,9 @@
       "email": "gabriela.leite@ccdr-n.pt",
       "proximoContacto": "2026-09-14",
       "notas": "presidencia@ccdr-n.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-137",
@@ -3739,7 +3741,10 @@
       "email": "marketing@bcn.cv",
       "proximoContacto": "2026-09-16",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "inativo": true
     },
     {
       "id": "con-1787036001308-748",
@@ -3753,7 +3758,9 @@
       "email": "isaura.costa@ccdr-n.pt",
       "proximoContacto": "2026-09-14",
       "notas": "",
-      "createdAt": "2026-08-18T06:53:21.308Z"
+      "createdAt": "2026-08-18T06:53:21.308Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787049428085-546",
@@ -4628,7 +4635,9 @@
       "email": "gabinete.seamb@maen.gov.pt",
       "proximoContacto": "2026-09-16",
       "notas": "",
-      "createdAt": "2026-08-28T22:31:46.260Z"
+      "createdAt": "2026-08-28T22:31:46.260Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787955181030-19",
@@ -5306,62 +5315,7 @@
   ],
   "userLogs": [
     {
-      "id": "log-1788002812085-158",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Contactos",
-      "detalhes": null,
-      "timestamp": "2026-08-29T11:26:52.085Z"
-    },
-    {
-      "id": "log-1788002782724-393",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Contactos",
-      "detalhes": null,
-      "timestamp": "2026-08-29T11:26:22.724Z"
-    },
-    {
-      "id": "log-1788002752916-1",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Contactos",
-      "detalhes": null,
-      "timestamp": "2026-08-29T11:25:52.916Z"
-    },
-    {
-      "id": "log-1788002735183-250",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Contactos",
-      "detalhes": null,
-      "timestamp": "2026-08-29T11:25:35.183Z"
-    },
-    {
-      "id": "log-1788002671454-88",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Dashboard / Início",
-      "detalhes": null,
-      "timestamp": "2026-08-29T11:24:31.454Z"
-    },
-    {
-      "id": "log-1788002415840-100",
+      "id": "log-1788003363312-957",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
@@ -5374,7 +5328,7 @@
         "cargo": "Administrador do Sistema",
         "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-29T11:20:15.840Z"
+      "timestamp": "2026-08-29T11:36:03.312Z"
     }
   ],
   "orcamentos": [
