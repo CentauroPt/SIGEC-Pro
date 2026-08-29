@@ -5280,20 +5280,86 @@
     },
     {
       "id": "usr-1787590828349",
-      "nome": "‎",
-      "primeiroNome": "dasdasda",
-      "apelido": "dsadasdas",
+      "nome": "Maria Santos",
+      "primeiroNome": "Maria",
+      "apelido": "Santos",
       "email": "maria@empresa.com",
-      "cargo": "‎",
+      "cargo": "‎Comercial",
       "idioma": "Português",
-      "pin": "Passw0rd!111",
-      "role": "admin",
+      "pin": "J*cen*1971",
+      "role": "user",
       "active": true,
       "createdAt": "2026-08-24T17:00:28.349Z",
-      "chefia": true
+      "chefia": false
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1788019607432-746",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Dados de registo e PIN do utilizador Maria Santos atualizados pelo Administrador.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-29T16:06:47.432Z"
+    },
+    {
+      "id": "log-1788019600884-136",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Dados de registo e PIN do utilizador Maria Santos atualizados pelo Administrador.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-29T16:06:40.884Z"
+    },
+    {
+      "id": "log-1788019583376-791",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Dados de registo e PIN do utilizador Maria Santos atualizados pelo Administrador.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-29T16:06:23.376Z"
+    },
+    {
+      "id": "log-1788019539994-747",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Dados de registo e PIN do utilizador dasdasda dsadasdas atualizados pelo Administrador.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-29T16:05:39.994Z"
+    },
+    {
+      "id": "log-1788019527559-284",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Ficha do utilizador ‎ aberta após autenticação de Administrador.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-29T16:05:27.559Z"
+    },
+    {
+      "id": "log-1788019386944-347",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-29T16:03:06.944Z"
+    },
     {
       "id": "log-1788019030703-245",
       "usuarioId": "usr-admin-001",
@@ -5626,6 +5692,60 @@
     }
   ],
   "activityHistory": [
+    {
+      "id": "act-1788019428073",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-1787049428085-473,con-1787049428085-212",
+      "details": "Decidido manter ambos os registos (con-1787049428085-473, con-1787049428085-212).",
+      "timestamp": "2026-08-29T16:03:48.073Z"
+    },
+    {
+      "id": "act-1788019416927",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-1787049428085-352,con-1787049428085-425",
+      "details": "Decidido manter ambos os registos (con-1787049428085-352, con-1787049428085-425).",
+      "timestamp": "2026-08-29T16:03:36.927Z"
+    },
+    {
+      "id": "act-1788019409291",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-1787049428085-380,con-1787049428085-881",
+      "details": "Decidido manter ambos os registos (con-1787049428085-380, con-1787049428085-881).",
+      "timestamp": "2026-08-29T16:03:29.291Z"
+    },
+    {
+      "id": "act-1788019401411",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-1787049428085-580,con-1787049428085-443",
+      "details": "Decidido manter ambos os registos (con-1787049428085-580, con-1787049428085-443).",
+      "timestamp": "2026-08-29T16:03:21.411Z"
+    },
+    {
+      "id": "act-1788019396151",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-1787049428085-481,con-1787956306260-463,con-1787955499370-362",
+      "details": "Decidido manter ambos os registos (con-1787049428085-481, con-1787956306260-463, con-1787955499370-362).",
+      "timestamp": "2026-08-29T16:03:16.151Z"
+    },
+    {
+      "id": "act-1788019391395",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-050,con-imp-113",
+      "details": "Decidido manter ambos os registos (con-imp-050, con-imp-113).",
+      "timestamp": "2026-08-29T16:03:11.395Z"
+    },
     {
       "id": "act-1788019383793-ttmx",
       "userId": "usr-admin-001",
