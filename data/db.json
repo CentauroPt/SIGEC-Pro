@@ -3730,19 +3730,16 @@
     {
       "id": "con-imp-137",
       "clienteId": "cli-imp-085",
+      "subTabIndex": 0,
       "nome": "Alexey",
       "apelido": "Coimbra",
       "cargo": "Diretor de Marketing",
       "telefone": "213456789",
       "telemovel": "",
       "email": "marketing@bcn.cv",
+      "proximoContacto": "2026-09-17",
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "subTabIndex": 0,
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-1787590828349",
-      "proximoContacto": "2026-09-16"
+      "createdAt": "2026-07-31T16:30:00.000Z"
     },
     {
       "id": "con-1787036001308-748",
@@ -5308,6 +5305,17 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1788002782724-393",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Contactos",
+      "detalhes": null,
+      "timestamp": "2026-08-29T11:26:22.724Z"
+    },
     {
       "id": "log-1788002752916-1",
       "usuarioId": "usr-admin-001",
