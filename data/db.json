@@ -5298,31 +5298,20 @@
   ],
   "userLogs": [
     {
-      "id": "log-1788031107820-558",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Clientes",
-      "detalhes": null,
-      "timestamp": "2026-08-29T19:18:27.820Z"
-    },
-    {
-      "id": "log-1788030896289-650",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "id": "log-1788031514472-65",
+      "usuarioId": "usr-1787393198433",
+      "usuarioNome": "Steve Jobs",
+      "usuarioEmail": "steve@steve.com",
       "tipoAcao": "Início de Sessão",
-      "descricao": "Acesso autorizado efetuado por José Centúrio.",
+      "descricao": "Acesso autorizado efetuado por Steve Jobs.",
       "pagina": "Dashboard / Início",
       "detalhes": {
-        "utilizador": "José Centúrio",
-        "email": "jmcenturio@alegria-activity.com",
-        "cargo": "Administrador do Sistema",
+        "utilizador": "Steve Jobs",
+        "email": "steve@steve.com",
+        "cargo": "Comercial",
         "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-29T19:14:56.289Z"
+      "timestamp": "2026-08-29T19:25:14.472Z"
     }
   ],
   "orcamentos": [
