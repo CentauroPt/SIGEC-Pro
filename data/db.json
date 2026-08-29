@@ -4670,7 +4670,7 @@
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
       "createdById": "usr-admin-001",
-      "inativo": true
+      "inativo": false
     }
   ],
   "projetos": [
@@ -5297,6 +5297,17 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1788031107820-558",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Clientes",
+      "detalhes": null,
+      "timestamp": "2026-08-29T19:18:27.820Z"
+    },
     {
       "id": "log-1788030896289-650",
       "usuarioId": "usr-admin-001",
