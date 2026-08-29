@@ -1648,7 +1648,7 @@
       "comercialAtribuidoId": "usr-admin-001",
       "comercialAtribuidoNome": "José Centúrio",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "createdById": "usr-1787590828349",
+      "createdById": "usr-admin-001",
       "proximoContacto": "2026-09-16",
       "notas": ""
     },
@@ -3742,7 +3742,10 @@
       "proximoContacto": "2026-09-16",
       "inativo": false,
       "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z"
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787036001308-748",
@@ -4395,8 +4398,8 @@
       "subTabIndex": 0,
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-1787590828349",
-      "inativo": true
+      "createdById": "usr-admin-001",
+      "inativo": false
     },
     {
       "id": "con-1785755195297-108",
@@ -4763,7 +4766,7 @@
       "createdAt": "2026-07-27T09:00:00.000Z",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-1787590828349",
+      "createdById": "usr-admin-001",
       "obs": "Banco Caboverdiano de Negócios - BCN"
     },
     {
@@ -4797,7 +4800,7 @@
       "obs": "Banco Caboverdiano de Negócios - BCN",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-1787590828349"
+      "createdById": "usr-admin-001"
     }
   ],
   "interacoes": [
@@ -4818,8 +4821,8 @@
       "data": "2026-07-27T18:34",
       "descricao": "Reunião com o administrador do banco e como diretor comercial",
       "createdAt": "2026-07-31T16:36:16.952Z",
-      "userId": "usr-1787590828349",
-      "createdById": "usr-1787590828349"
+      "userId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "int-1785515921992-452",
@@ -5208,8 +5211,8 @@
       "data": "2026-08-11T10:36",
       "descricao": "Enviada proposta por email",
       "createdAt": "2026-08-28T21:41:13.761Z",
-      "userId": "usr-1787590828349",
-      "createdById": "usr-1787590828349"
+      "userId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "cpi-1787955186779-336",
@@ -5314,29 +5317,7 @@
   ],
   "userLogs": [
     {
-      "id": "log-1788003420933-241",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Clientes",
-      "detalhes": null,
-      "timestamp": "2026-08-29T11:37:00.933Z"
-    },
-    {
-      "id": "log-1788003376738-274",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Contactos",
-      "detalhes": null,
-      "timestamp": "2026-08-29T11:36:16.738Z"
-    },
-    {
-      "id": "log-1788003363312-957",
+      "id": "log-1788003687185-318",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
@@ -5349,7 +5330,7 @@
         "cargo": "Administrador do Sistema",
         "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-29T11:36:03.312Z"
+      "timestamp": "2026-08-29T11:41:27.185Z"
     }
   ],
   "orcamentos": [
