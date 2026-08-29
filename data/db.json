@@ -24,29 +24,6 @@
       "comercialAtribuidoNome": "José Centúrio"
     },
     {
-      "id": "cli-1787220780995-314",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "Grupo Ageas Portugal",
-      "contribuinte": "000000000",
-      "direcao1": "Praça Príncipe Perfeito",
-      "direcao2": "",
-      "numero": "2",
-      "andar": "",
-      "codigoPostal": "1990-278",
-      "localidade": "Lisboa",
-      "pais": "Portugal",
-      "telefone": "",
-      "telemovel": "",
-      "email": "imprensa@ageas.pt",
-      "notas": "AGEAS Seguros - https://www.grupoageas.pt/media/1877/ageas-logo.png?\nMEDIS - https://www.grupoageas.pt/media/1013/medis.\nSeguro Diretos - https://www.grupoageas.pt/media/2764/segurodirectosd.png?png?\nOcidental - https://www.grupoageas.pt/media/2763/ocidentalsd.png?\nAGEAS Pensões - https://www.grupoageas.pt/media/2804/ageaspensoes-logo.png?",
-      "createdAt": "2026-08-20T10:13:00.997Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio"
-    },
-    {
       "id": "cli-1787050401189-194",
       "tipoCliente": "Estatal",
       "ministerio": "Ministério da Presidência",
@@ -2827,11 +2804,10 @@
       "email": "bca@bca.cv",
       "createdAt": "2026-08-13T07:03:40.361Z",
       "pais": "",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio",
-      "createdById": "usr-admin-001",
-      "comercial": "José Centúrio"
+      "userId": "usr-1787590828349",
+      "comercialAtribuidoId": "usr-1787590828349",
+      "comercialAtribuidoNome": "‎",
+      "createdById": "usr-1787590828349"
     },
     {
       "id": "cli-1787604203987-284",
@@ -2850,12 +2826,11 @@
       "telefone": "",
       "telemovel": "",
       "email": "",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio",
+      "userId": "usr-1787590828349",
+      "comercialAtribuidoId": "usr-1787590828349",
+      "comercialAtribuidoNome": "‎",
       "createdAt": "2026-08-24T20:43:23.988Z",
-      "createdById": "usr-admin-001",
-      "comercial": "José Centúrio"
+      "createdById": "usr-1787590828349"
     }
   ],
   "contactos": [
@@ -4539,7 +4514,7 @@
     },
     {
       "id": "con-1787220906707-770",
-      "clienteId": "cli-1787220780995-314",
+      "clienteId": "cli-imp-073",
       "subTabIndex": 0,
       "nome": "Ângela Mónica",
       "apelido": "Rosa",
@@ -4624,10 +4599,9 @@
       "email": "msanches@bca.cv",
       "notas": "",
       "createdAt": "2026-08-13T07:10:35.080Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio"
+      "userId": "usr-1787590828349",
+      "comercialAtribuidoId": "usr-1787590828349",
+      "createdById": "usr-1787590828349"
     },
     {
       "id": "con-1787956306260-463",
@@ -5193,7 +5167,7 @@
     },
     {
       "id": "int-1787224734775-186",
-      "clienteId": "cli-1787220780995-314",
+      "clienteId": "cli-imp-073",
       "separadorId": null,
       "subTabIndex": null,
       "data": "2026-07-27T13:16",
@@ -5321,7 +5295,7 @@
   ],
   "userLogs": [
     {
-      "id": "log-1788019274156-686",
+      "id": "log-1788019030703-245",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
@@ -5334,7 +5308,7 @@
         "cargo": "Administrador do Sistema",
         "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-29T16:01:14.156Z"
+      "timestamp": "2026-08-29T15:57:10.703Z"
     }
   ],
   "orcamentos": [
@@ -5651,6 +5625,17 @@
       "ignoredBy": "Sistema"
     }
   ],
+  "activityHistory": [
+    {
+      "id": "act-1788019383793-ttmx",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_MERGE",
+      "entity": "clientes",
+      "entityId": "cli-imp-073",
+      "details": "Fusão de 2 registos duplicados em \"Grupo Ageas Portugal\". 2 vínculos reatribuídos com sucesso.",
+      "timestamp": "2026-08-29T16:03:03.793Z"
+    }
+  ],
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
   "_deletedRegistry": {
     "clientes": [
@@ -5804,7 +5789,8 @@
       "cli-imp-080",
       "cli-imp-013",
       "cli-1787208572192-719",
-      "cli-imp-020"
+      "cli-imp-020",
+      "cli-1787220780995-314"
     ],
     "contactos": [
       "con-imp-059",
