@@ -1508,13 +1508,13 @@
       "secretariaEstado": "",
       "nome": "Altice Portugal",
       "contribuinte": "500001309",
-      "direcao1": "Avenida Fontes Pereira de Melo, n.º 40, 1069-300 Lisboa",
+      "direcao1": "Avenida Fontes Pereira de Melo",
       "direcao2": "",
-      "numero": "",
+      "numero": "40",
       "andar": "",
       "codigoPostal": "1069-300",
       "localidade": "Lisboa",
-      "pais": "",
+      "pais": "Portugal",
       "telefone": "215003500",
       "telemovel": "",
       "email": "media@altice.pt",
@@ -2827,10 +2827,11 @@
       "email": "bca@bca.cv",
       "createdAt": "2026-08-13T07:03:40.361Z",
       "pais": "",
-      "userId": "usr-1787590828349",
-      "comercialAtribuidoId": "usr-1787590828349",
-      "comercialAtribuidoNome": "‎",
-      "createdById": "usr-1787590828349"
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio",
+      "createdById": "usr-admin-001",
+      "comercial": "José Centúrio"
     },
     {
       "id": "cli-1787604203987-284",
@@ -2849,11 +2850,12 @@
       "telefone": "",
       "telemovel": "",
       "email": "",
-      "userId": "usr-1787590828349",
-      "comercialAtribuidoId": "usr-1787590828349",
-      "comercialAtribuidoNome": "‎",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio",
       "createdAt": "2026-08-24T20:43:23.988Z",
-      "createdById": "usr-1787590828349"
+      "createdById": "usr-admin-001",
+      "comercial": "José Centúrio"
     }
   ],
   "contactos": [
@@ -3683,7 +3685,7 @@
       "userId": "usr-1787393198433",
       "comercialAtribuidoId": "usr-1787393198433",
       "createdById": "usr-1787393198433",
-      "inativo": true
+      "inativo": false
     },
     {
       "id": "con-imp-131",
@@ -4622,9 +4624,10 @@
       "email": "msanches@bca.cv",
       "notas": "",
       "createdAt": "2026-08-13T07:10:35.080Z",
-      "userId": "usr-1787590828349",
-      "comercialAtribuidoId": "usr-1787590828349",
-      "createdById": "usr-1787590828349"
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "createdById": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "con-1787956306260-463",
@@ -5318,20 +5321,20 @@
   ],
   "userLogs": [
     {
-      "id": "log-1788017494734-167",
-      "usuarioId": "usr-1787393198433",
-      "usuarioNome": "Steve Jobs",
-      "usuarioEmail": "steve@steve.com",
+      "id": "log-1788019274156-686",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
       "tipoAcao": "Início de Sessão",
-      "descricao": "Acesso autorizado efetuado por Steve Jobs.",
+      "descricao": "Acesso autorizado efetuado por José Centúrio.",
       "pagina": "Dashboard / Início",
       "detalhes": {
-        "utilizador": "Steve Jobs",
-        "email": "steve@steve.com",
-        "cargo": "Comercial",
+        "utilizador": "José Centúrio",
+        "email": "jmcenturio@alegria-activity.com",
+        "cargo": "Administrador do Sistema",
         "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-29T15:31:34.734Z"
+      "timestamp": "2026-08-29T16:01:14.156Z"
     }
   ],
   "orcamentos": [
