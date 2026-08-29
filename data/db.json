@@ -5293,25 +5293,22 @@
       "role": "user",
       "active": true,
       "createdAt": "2026-08-22T10:06:38.433Z"
-    },
-    {
-      "id": "usr-1787590828349",
-      "nome": "Maria Santos",
-      "primeiroNome": "Maria",
-      "apelido": "Santos",
-      "email": "maria@empresa.com",
-      "cargo": "‎Comercial",
-      "idioma": "Português",
-      "pin": "J*cen*1971",
-      "role": "admin",
-      "active": false,
-      "createdAt": "2026-08-24T17:00:28.349Z",
-      "chefia": false
     }
   ],
   "userLogs": [
     {
-      "id": "log-1788026484839-294",
+      "id": "log-1788026533367-354",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Gestão de Utilizadores",
+      "descricao": "Utilizador Maria Santos (maria@empresa.com) eliminado do sistema.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-29T18:02:13.367Z"
+    },
+    {
+      "id": "log-1788026526912-963",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
@@ -5319,10 +5316,10 @@
       "descricao": "Dados de registo e PIN do utilizador Maria Santos atualizados pelo Administrador.",
       "pagina": "Base de Dados",
       "detalhes": null,
-      "timestamp": "2026-08-29T18:01:24.839Z"
+      "timestamp": "2026-08-29T18:02:06.912Z"
     },
     {
-      "id": "log-1788026479378-961",
+      "id": "log-1788026519163-75",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
@@ -5330,7 +5327,7 @@
       "descricao": "Ficha do utilizador Maria Santos aberta após autenticação de Administrador.",
       "pagina": "Base de Dados",
       "detalhes": null,
-      "timestamp": "2026-08-29T18:01:19.378Z"
+      "timestamp": "2026-08-29T18:01:59.163Z"
     }
   ],
   "orcamentos": [
@@ -5685,7 +5682,8 @@
       "usr-1786749064522",
       "usr-1786751212893",
       "usr-1787382171866",
-      "usr-1787388410312"
+      "usr-1787388410312",
+      "usr-1787590828349"
     ]
   }
 }
