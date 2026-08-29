@@ -1518,11 +1518,11 @@
       "telefone": "215003500",
       "telemovel": "",
       "email": "media@altice.pt",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio",
+      "userId": "usr-1787393198433",
+      "comercialAtribuidoId": "usr-1787393198433",
+      "comercialAtribuidoNome": "Steve Jobs",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "createdById": "usr-admin-001",
+      "createdById": "usr-1787393198433",
       "notas": ""
     },
     {
@@ -3621,9 +3621,9 @@
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 0,
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-admin-001"
+      "userId": "usr-1787393198433",
+      "comercialAtribuidoId": "usr-1787393198433",
+      "createdById": "usr-1787393198433"
     },
     {
       "id": "con-imp-123",
@@ -3680,9 +3680,10 @@
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "subTabIndex": 0,
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-1787393198433"
+      "userId": "usr-1787393198433",
+      "comercialAtribuidoId": "usr-1787393198433",
+      "createdById": "usr-1787393198433",
+      "inativo": true
     },
     {
       "id": "con-imp-131",
@@ -5317,20 +5318,20 @@
   ],
   "userLogs": [
     {
-      "id": "log-1788003687185-318",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "id": "log-1788017494734-167",
+      "usuarioId": "usr-1787393198433",
+      "usuarioNome": "Steve Jobs",
+      "usuarioEmail": "steve@steve.com",
       "tipoAcao": "Início de Sessão",
-      "descricao": "Acesso autorizado efetuado por José Centúrio.",
+      "descricao": "Acesso autorizado efetuado por Steve Jobs.",
       "pagina": "Dashboard / Início",
       "detalhes": {
-        "utilizador": "José Centúrio",
-        "email": "jmcenturio@alegria-activity.com",
-        "cargo": "Administrador do Sistema",
+        "utilizador": "Steve Jobs",
+        "email": "steve@steve.com",
+        "cargo": "Comercial",
         "dispositivo": "Computador"
       },
-      "timestamp": "2026-08-29T11:41:27.185Z"
+      "timestamp": "2026-08-29T15:31:34.734Z"
     }
   ],
   "orcamentos": [
