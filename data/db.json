@@ -3763,7 +3763,8 @@
       "empresa": "Ministério da Economia e da Coesão Territorial - Ministério da Economia e da Coesão Territorial",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-admin-001"
+      "createdById": "usr-admin-001",
+      "proximoContacto": "2026-09-14"
     },
     {
       "id": "con-1787049428085-546",
@@ -4636,12 +4637,9 @@
       "telefone": "",
       "telemovel": "",
       "email": "gabinete.seamb@maen.gov.pt",
+      "proximoContacto": "2026-09-16",
       "notas": "",
-      "createdAt": "2026-08-28T22:31:46.260Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-admin-001",
-      "proximoContacto": "2026-09-16"
+      "createdAt": "2026-08-28T22:31:46.260Z"
     },
     {
       "id": "con-1787955181030-19",
@@ -5319,6 +5317,17 @@
   ],
   "userLogs": [
     {
+      "id": "log-1788002671454-88",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Dashboard / Início",
+      "detalhes": null,
+      "timestamp": "2026-08-29T11:24:31.454Z"
+    },
+    {
       "id": "log-1788002415840-100",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -5639,6 +5648,13 @@
       "key": "con-1787049428085-473:::undefined",
       "id1": "con-1787049428085-473",
       "ignoredAt": "2026-08-24T19:39:24.144Z",
+      "ignoredBy": "Sistema"
+    },
+    {
+      "type": "con-1787956306260-463",
+      "key": "con-1787049428085-481:::undefined",
+      "id1": "con-1787049428085-481",
+      "ignoredAt": "2026-08-29T11:24:37.484Z",
       "ignoredBy": "Sistema"
     }
   ],
