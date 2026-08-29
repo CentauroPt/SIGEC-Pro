@@ -5259,7 +5259,7 @@
       "id": "usr-admin-001",
       "nome": "José Centúrio",
       "email": "jmcenturio@alegria-activity.com",
-      "cargo": "Comercial",
+      "cargo": "Administrador do Sistema",
       "pin": "J*cen*1971",
       "role": "admin",
       "createdAt": "2026-08-10T09:45:00.000Z",
@@ -5297,37 +5297,26 @@
   ],
   "userLogs": [
     {
-      "id": "log-1788026533367-354",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Gestão de Utilizadores",
-      "descricao": "Utilizador Maria Santos (maria@empresa.com) eliminado do sistema.",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-29T18:02:13.367Z"
-    },
-    {
-      "id": "log-1788026526912-963",
+      "id": "log-1788027819749-974",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
       "tipoAcao": "Ficha do Utilizador",
-      "descricao": "Dados de registo e PIN do utilizador Maria Santos atualizados pelo Administrador.",
+      "descricao": "Dados de registo e PIN do utilizador José Centúrio atualizados pelo Administrador.",
       "pagina": "Base de Dados",
       "detalhes": null,
-      "timestamp": "2026-08-29T18:02:06.912Z"
+      "timestamp": "2026-08-29T18:23:39.749Z"
     },
     {
-      "id": "log-1788026519163-75",
+      "id": "log-1788027806874-1",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
       "tipoAcao": "Ficha do Utilizador",
-      "descricao": "Ficha do utilizador Maria Santos aberta após autenticação de Administrador.",
+      "descricao": "Ficha do utilizador José Centúrio aberta após autenticação de Administrador.",
       "pagina": "Base de Dados",
       "detalhes": null,
-      "timestamp": "2026-08-29T18:01:59.163Z"
+      "timestamp": "2026-08-29T18:23:26.874Z"
     }
   ],
   "orcamentos": [
@@ -5393,6 +5382,62 @@
     }
   ],
   "ignoredDuplicates": [],
+  "activityHistory": [
+    {
+      "id": "act-1788027865868",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-1787049428085-473,con-1787049428085-212",
+      "details": "Decidido manter ambos os registos (con-1787049428085-473, con-1787049428085-212).",
+      "timestamp": "2026-08-29T18:24:25.868Z"
+    },
+    {
+      "id": "act-1788027863003",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-1787049428085-352,con-1787049428085-425",
+      "details": "Decidido manter ambos os registos (con-1787049428085-352, con-1787049428085-425).",
+      "timestamp": "2026-08-29T18:24:23.003Z"
+    },
+    {
+      "id": "act-1788027860258",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-1787049428085-380,con-1787049428085-881",
+      "details": "Decidido manter ambos os registos (con-1787049428085-380, con-1787049428085-881).",
+      "timestamp": "2026-08-29T18:24:20.258Z"
+    },
+    {
+      "id": "act-1788027856601",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-1787049428085-580,con-1787049428085-443",
+      "details": "Decidido manter ambos os registos (con-1787049428085-580, con-1787049428085-443).",
+      "timestamp": "2026-08-29T18:24:16.601Z"
+    },
+    {
+      "id": "act-1788027852508",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-1787049428085-481,con-1787956306260-463,con-1787955499370-362",
+      "details": "Decidido manter ambos os registos (con-1787049428085-481, con-1787956306260-463, con-1787955499370-362).",
+      "timestamp": "2026-08-29T18:24:12.508Z"
+    },
+    {
+      "id": "act-1788027837937",
+      "userId": "usr-admin-001",
+      "action": "DUPLICATE_KEEP_BOTH",
+      "entity": "duplicados",
+      "entityId": "con-imp-050,con-imp-113",
+      "details": "Decidido manter ambos os registos (con-imp-050, con-imp-113).",
+      "timestamp": "2026-08-29T18:23:57.937Z"
+    }
+  ],
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
   "_deletedRegistry": {
     "clientes": [
