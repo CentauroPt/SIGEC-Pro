@@ -5304,12 +5304,35 @@
       "idioma": "Português",
       "pin": "J*cen*1971",
       "role": "admin",
-      "active": true,
+      "active": false,
       "createdAt": "2026-08-24T17:00:28.349Z",
-      "chefia": true
+      "chefia": false
     }
   ],
-  "userLogs": [],
+  "userLogs": [
+    {
+      "id": "log-1788026484839-294",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Dados de registo e PIN do utilizador Maria Santos atualizados pelo Administrador.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-29T18:01:24.839Z"
+    },
+    {
+      "id": "log-1788026479378-961",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Ficha do utilizador Maria Santos aberta após autenticação de Administrador.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-29T18:01:19.378Z"
+    }
+  ],
   "orcamentos": [
     {
       "id": "orc-norte-2040-004",
