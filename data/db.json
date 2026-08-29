@@ -3729,7 +3729,8 @@
       "empresa": "Ministério da Economia e da Coesão Territorial - Ministério da Economia e da Coesão Territorial",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-admin-001"
+      "createdById": "usr-admin-001",
+      "proximoContacto": "2026-09-14"
     },
     {
       "id": "con-imp-137",
@@ -3757,14 +3758,9 @@
       "telefone": "",
       "telemovel": "+351 917 775 543",
       "email": "isaura.costa@ccdr-n.pt",
+      "proximoContacto": "2026-09-14",
       "notas": "",
-      "createdAt": "2026-08-18T06:53:21.308Z",
-      "separadorId": "sep-1786751754158-584",
-      "empresa": "Ministério da Economia e da Coesão Territorial - Ministério da Economia e da Coesão Territorial",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-admin-001",
-      "proximoContacto": "2026-09-14"
+      "createdAt": "2026-08-18T06:53:21.308Z"
     },
     {
       "id": "con-1787049428085-546",
@@ -5316,6 +5312,17 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1788002735183-250",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Contactos",
+      "detalhes": null,
+      "timestamp": "2026-08-29T11:25:35.183Z"
+    },
     {
       "id": "log-1788002671454-88",
       "usuarioId": "usr-admin-001",
