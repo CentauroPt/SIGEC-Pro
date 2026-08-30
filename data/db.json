@@ -1945,7 +1945,7 @@
       "andar": "",
       "codigoPostal": "1000-300",
       "localidade": "Lisboa",
-      "telefone": "",
+      "telefone": "+351 213 927 600",
       "telemovel": "",
       "email": "",
       "separadores": [
@@ -1961,7 +1961,7 @@
           "andar": "",
           "codigoPostal": "1000-300",
           "localidade": "Lisboa",
-          "telefone": "",
+          "telefone": "+351 213 927 600",
           "telemovel": "",
           "email": "",
           "pais": "Portugal"
@@ -2022,8 +2022,8 @@
       "comercialAtribuidoId": "usr-admin-001",
       "comercialAtribuidoNome": "José Centúrio",
       "createdAt": "2026-08-18T07:31:23.893Z",
-      "createdById": "usr-admin-001",
-      "proximoContacto": "2026-09-29"
+      "comercial": "José Centúrio",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "cli-1787038283893-151",
@@ -4621,7 +4621,9 @@
       "notas": "",
       "createdAt": "2026-08-28T22:31:46.260Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787955181030-19",
@@ -4637,7 +4639,8 @@
       "createdAt": "2026-08-28T22:13:01.031Z",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-admin-001"
+      "createdById": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "con-1787955286290-698",
@@ -4653,7 +4656,8 @@
       "createdAt": "2026-08-28T22:14:46.291Z",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-admin-001"
+      "createdById": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "con-1787955499370-362",
@@ -4670,7 +4674,8 @@
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
       "createdById": "usr-admin-001",
-      "inativo": false
+      "inativo": false,
+      "comercialAtribuidoNome": "José Centúrio"
     }
   ],
   "projetos": [
@@ -5251,7 +5256,9 @@
       "subTabIndex": 1,
       "data": "2026-07-14T18:12",
       "descricao": "Reunião de apresentação",
-      "createdAt": "2026-08-29T16:14:39.201Z"
+      "createdAt": "2026-08-29T16:14:39.201Z",
+      "userId": "usr-admin-001",
+      "createdById": "usr-admin-001"
     }
   ],
   "interacoesProjetos": [],
@@ -5298,42 +5305,40 @@
   ],
   "userLogs": [
     {
-      "id": "log-1788031113880-323",
+      "id": "log-1788086243361-552",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Clientes",
+      "tipoAcao": "Atualização de Software",
+      "descricao": "Pacote de atualização \"SIGEC_V1.7.4_30-08-2026_12h37m.json\" gerado (Apenas Software - Sem dados de registo).",
+      "pagina": "Base de Dados",
       "detalhes": null,
-      "timestamp": "2026-08-29T19:18:33.880Z"
+      "timestamp": "2026-08-30T10:37:23.361Z"
     },
     {
-      "id": "log-1788031107820-558",
+      "id": "log-1788086181207-153",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "tipoAcao": "Edição de Cliente",
+      "descricao": "Ficha do cliente \"Ministério do Ambiente e Energia\" (NIF: 000000000) atualizada.",
       "pagina": "Clientes",
-      "detalhes": null,
-      "timestamp": "2026-08-29T19:18:27.820Z"
-    },
-    {
-      "id": "log-1788030896289-650",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Início de Sessão",
-      "descricao": "Acesso autorizado efetuado por José Centúrio.",
-      "pagina": "Dashboard / Início",
       "detalhes": {
-        "utilizador": "José Centúrio",
-        "email": "jmcenturio@alegria-activity.com",
-        "cargo": "Administrador do Sistema",
-        "dispositivo": "Computador"
+        "acao": "Edição",
+        "ficha": "Cliente",
+        "nome": "Ministério do Ambiente e Energia",
+        "contribuinte": "000000000",
+        "tipoCliente": "Estatal",
+        "comercialAtribuido": "José Centúrio",
+        "camposAlterados": [
+          {
+            "campo": "Telefone",
+            "anterior": "(vazio)",
+            "novo": "+351 213 927 600"
+          }
+        ]
       },
-      "timestamp": "2026-08-29T19:14:56.289Z"
+      "timestamp": "2026-08-30T10:36:21.207Z"
     }
   ],
   "orcamentos": [
