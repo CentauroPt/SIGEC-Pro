@@ -1466,9 +1466,8 @@
       "comercialAtribuidoId": "usr-admin-001",
       "comercialAtribuidoNome": "José Centúrio",
       "createdAt": "2026-07-31T16:30:00.000Z",
-      "createdById": "usr-admin-001",
-      "notas": "",
-      "comercial": "José Centúrio"
+      "comercial": "José Centúrio",
+      "createdById": "usr-admin-001"
     },
     {
       "id": "cli-imp-078",
@@ -1945,7 +1944,7 @@
       "andar": "",
       "codigoPostal": "1000-300",
       "localidade": "Lisboa",
-      "telefone": "+351 213 927 600",
+      "telefone": "",
       "telemovel": "",
       "email": "",
       "separadores": [
@@ -1961,7 +1960,7 @@
           "andar": "",
           "codigoPostal": "1000-300",
           "localidade": "Lisboa",
-          "telefone": "+351 213 927 600",
+          "telefone": "",
           "telemovel": "",
           "email": "",
           "pais": "Portugal"
@@ -2022,8 +2021,8 @@
       "comercialAtribuidoId": "usr-admin-001",
       "comercialAtribuidoNome": "José Centúrio",
       "createdAt": "2026-08-18T07:31:23.893Z",
-      "comercial": "José Centúrio",
-      "createdById": "usr-admin-001"
+      "createdById": "usr-admin-001",
+      "proximoContacto": "2026-09-29"
     },
     {
       "id": "cli-1787038283893-151",
@@ -4621,9 +4620,7 @@
       "notas": "",
       "createdAt": "2026-08-28T22:31:46.260Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio",
-      "createdById": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-1787955181030-19",
@@ -4639,8 +4636,7 @@
       "createdAt": "2026-08-28T22:13:01.031Z",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio"
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787955286290-698",
@@ -4656,8 +4652,7 @@
       "createdAt": "2026-08-28T22:14:46.291Z",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio"
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787955499370-362",
@@ -4674,8 +4669,7 @@
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
       "createdById": "usr-admin-001",
-      "inativo": false,
-      "comercialAtribuidoNome": "José Centúrio"
+      "inativo": false
     }
   ],
   "projetos": [
@@ -5256,9 +5250,7 @@
       "subTabIndex": 1,
       "data": "2026-07-14T18:12",
       "descricao": "Reunião de apresentação",
-      "createdAt": "2026-08-29T16:14:39.201Z",
-      "userId": "usr-admin-001",
-      "createdById": "usr-admin-001"
+      "createdAt": "2026-08-29T16:14:39.201Z"
     }
   ],
   "interacoesProjetos": [],
@@ -5305,95 +5297,40 @@
   ],
   "userLogs": [
     {
-      "id": "log-1788086545265-829",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Cópia de Segurança",
-      "descricao": "Backup de registos \"Backup_SIGEC-Pro_30-08-2026_12-42-22.json\" gerado (55 Clientes, 119 Contactos, 4 Projetos).",
-      "pagina": "Base de Dados",
+      "id": "log-1788086137585-442",
+      "usuarioId": "usr-1787393198433",
+      "usuarioNome": "Steve Jobs",
+      "usuarioEmail": "steve@steve.com",
+      "tipoAcao": "TransferÃªncia de Cliente",
+      "descricao": "Cliente \"Altice Portugal\" transferido de Steve Jobs para José Centúrio com todos os seus contactos, projetos, orÃ§amentos e interaÃ§Ãµes.",
+      "pagina": "Clientes",
       "detalhes": null,
-      "timestamp": "2026-08-30T10:42:25.265Z"
+      "timestamp": "2026-08-30T10:35:37.585Z"
     },
     {
-      "id": "log-1788086389402-737",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-30T10:39:49.402Z"
-    },
-    {
-      "id": "log-1788086382441-123",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-30T10:39:42.441Z"
-    },
-    {
-      "id": "log-1788086372416-787",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Atualização de Software",
-      "descricao": "Pacote de atualização \"SIGEC_V1.7.5_30-08-2026_12h39m.json\" gerado (Apenas Software - Sem dados de registo).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-30T10:39:32.416Z"
-    },
-    {
-      "id": "log-1788086254541-264",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-30T10:37:34.541Z"
-    },
-    {
-      "id": "log-1788086243361-552",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Atualização de Software",
-      "descricao": "Pacote de atualização \"SIGEC_V1.7.4_30-08-2026_12h37m.json\" gerado (Apenas Software - Sem dados de registo).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-08-30T10:37:23.361Z"
-    },
-    {
-      "id": "log-1788086181207-153",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "id": "log-1788086137549-18",
+      "usuarioId": "usr-1787393198433",
+      "usuarioNome": "Steve Jobs",
+      "usuarioEmail": "steve@steve.com",
       "tipoAcao": "Edição de Cliente",
-      "descricao": "Ficha do cliente \"Ministério do Ambiente e Energia\" (NIF: 000000000) atualizada.",
+      "descricao": "Ficha do cliente \"Altice Portugal\" (NIF: 500001309) atualizada.",
       "pagina": "Clientes",
       "detalhes": {
         "acao": "Edição",
         "ficha": "Cliente",
-        "nome": "Ministério do Ambiente e Energia",
-        "contribuinte": "000000000",
-        "tipoCliente": "Estatal",
+        "nome": "Altice Portugal",
+        "contribuinte": "500001309",
+        "tipoCliente": "Privado",
         "comercialAtribuido": "José Centúrio",
         "camposAlterados": [
           {
-            "campo": "Telefone",
-            "anterior": "(vazio)",
-            "novo": "+351 213 927 600"
+            "campo": "Comercial Atribuído",
+            "anterior": "Steve Jobs",
+            "novo": "José Centúrio"
           }
         ]
       },
-      "timestamp": "2026-08-30T10:36:21.207Z"
+      "timestamp": "2026-08-30T10:35:37.550Z"
     }
   ],
   "orcamentos": [
