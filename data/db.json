@@ -5305,6 +5305,28 @@
   ],
   "userLogs": [
     {
+      "id": "log-1788086372416-787",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Atualização de Software",
+      "descricao": "Pacote de atualização \"SIGEC_V1.7.5_30-08-2026_12h39m.json\" gerado (Apenas Software - Sem dados de registo).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-30T10:39:32.416Z"
+    },
+    {
+      "id": "log-1788086254541-264",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-08-30T10:37:34.541Z"
+    },
+    {
       "id": "log-1788086243361-552",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
