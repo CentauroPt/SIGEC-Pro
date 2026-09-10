@@ -21440,9 +21440,11 @@ function dispatchDirectEmail(targetEmail, subject, fields) {
         _subject: subject,
         _captcha: 'false',
         _template: 'table',
+        _honey: '',
         ...fields
       };
 
+      // 1. Canal Primário: Submissão via Formulário em Iframe Isolado (sem encoding do email na rota)
       if (typeof document !== 'undefined' && document.body) {
         const iframeName = `_sigec_relay_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
         const iframe = document.createElement('iframe');
@@ -21455,7 +21457,7 @@ function dispatchDirectEmail(targetEmail, subject, fields) {
 
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = `https://formsubmit.co/${encodeURIComponent(cleanEmail)}`;
+        form.action = `https://formsubmit.co/${cleanEmail}`;
         form.target = iframeName;
         form.style.display = 'none';
 
@@ -21485,13 +21487,40 @@ function dispatchDirectEmail(targetEmail, subject, fields) {
         setTimeout(cleanup, 3500);
 
         form.submit();
-        console.info(`[SIGEC-Pro] Notificação por email disparada para ${cleanEmail}`);
-      } else {
-        fetch(`https://formsubmit.co/ajax/${encodeURIComponent(cleanEmail)}`, {
+        console.info(`[SIGEC-Pro] Notificação por email disparada via formulário para ${cleanEmail}`);
+      }
+
+      // 2. Canal Secundário (Redundância AJAX em segundo plano com JSON)
+      if (typeof fetch === 'function') {
+        fetch(`https://formsubmit.co/ajax/${cleanEmail}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify(baseFields)
-        }).then(() => resolve(true)).catch(() => resolve(false));
+          body: JSON.stringify(baseFields),
+          mode: 'cors',
+          cache: 'no-store'
+        }).then(res => {
+          if (res.ok) console.info(`[SIGEC-Pro] AJAX Relay confirmado para ${cleanEmail}`);
+        }).catch(() => {});
+
+        // 3. Canal Terciário (FormData para clientes com restrição JSON)
+        try {
+          if (typeof FormData !== 'undefined') {
+            const fd = new FormData();
+            Object.entries(baseFields).forEach(([k, v]) => {
+              if (v !== undefined && v !== null) fd.append(k, String(v));
+            });
+            fetch(`https://formsubmit.co/ajax/${cleanEmail}`, {
+              method: 'POST',
+              body: fd,
+              mode: 'cors',
+              cache: 'no-store'
+            }).catch(() => {});
+          }
+        } catch(e) {}
+      }
+
+      if (typeof document === 'undefined' || !document.body) {
+        resolve(true);
       }
     } catch (err) {
       console.warn('[SIGEC-Pro] Erro no disparo de email:', err);
@@ -21876,8 +21905,10 @@ async function sendUserAccountActivatedEmail(user) {
     empresa: t.company
   };
 
+  // 1. Disparo direto multicanal
   dispatchDirectEmail(targetEmail, t.subject, payload);
 
+  // 2. Registo no histórico de atividade
   if (typeof logUserActivity === 'function') {
     logUserActivity('Conta Ativada', `Email de confirmação de conta ativa enviado para ${targetEmail} (${userName}) no idioma ${userLang}.`);
   }
