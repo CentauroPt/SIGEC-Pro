@@ -5361,7 +5361,18 @@
       "chefia": false
     }
   ],
-  "userLogs": [],
+  "userLogs": [
+    {
+      "id": "log-1789082684879-934",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Notificação por Email",
+      "detalhes": "Alerta de registo emitido para jmcenturio@alegria-activity.com (José Centúrio (Teste de Sistema)).",
+      "extra": {},
+      "timestamp": "2026-09-10T23:24:44.879Z"
+    }
+  ],
   "orcamentos": [
     {
       "id": "orc-norte-2040-004",
@@ -5442,6 +5453,12 @@
     }
   ],
   "ignoredDuplicates": [],
+  "config": {
+    "emailNotifyAddress": "jmcenturio@alegria-activity.com",
+    "emailNotifyEnabled": true,
+    "emailProvider": "web3forms",
+    "emailApiKey": ""
+  },
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
   "_deletedRegistry": {
     "clientes": [
