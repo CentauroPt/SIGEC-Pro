@@ -21220,7 +21220,7 @@ async function sendNewUserRegistrationEmailNotification(userData, isTest = false
   const settings = getEmailNotifySettings();
   if (!settings.enabled && !isTest) return;
 
-  const targetEmail = settings.email || 'jmcenturio@alegria-activity.com';
+  const targetEmail = settings.email || 'josecenturio@gmail.com';
   const userName = userData.nome || 'Novo Utilizador';
   const userEmail = userData.email || 'Não especificado';
   const userCargo = userData.cargo || 'Não especificado';
@@ -21230,28 +21230,52 @@ async function sendNewUserRegistrationEmailNotification(userData, isTest = false
   const userAgent = typeof navigator !== 'undefined' ? navigator.userAgent : 'Navegador Web';
   const deviceInfo = /Mobile|Android|iPhone/i.test(userAgent) ? 'Dispositivo Móvel' : 'Computador';
 
-  const cfg = typeof getGitHubConfig === 'function' ? getGitHubConfig() : {};
-  const token = (cfg.token || localStorage.getItem('sigec_pro_gh_token') || '').trim();
-  const owner = (cfg.owner || localStorage.getItem('sigec_pro_gh_owner') || 'centauropt').trim();
-  const repo = (cfg.repo || localStorage.getItem('sigec_pro_gh_repo') || 'SIGEC-Pro').trim();
-
   const issueTitle = isTest 
     ? `[SIGEC-Pro Teste] Confirmação de Notificação por Email - ${nowStr}`
     : `[SIGEC-Pro Alerta] Novo Registo de Utilizador: ${userName}`;
 
   const issueBody = isTest
-    ? `### ✉️ Confirmação de Notificação por Email (SIGEC-Pro)\n\nEste email confirma que as notificações automáticas do sistema para **${targetEmail}** estão **100% operacionais**.\n\n- **Data do Teste:** ${nowStr}\n- **Dispositivo:** ${deviceInfo}\n- **Destinatário Configurado:** ${targetEmail}\n\n*Servidor GitHub SIGEC-Pro - alegría-activity, S.L.*`
+    ? `### ✉️ Confirmação de Notificação por Email (SIGEC-Pro)\n\nEste email confirma que as notificações automáticas do sistema para **${targetEmail}** estão **100% operacionais**.\n\n- **Data do Teste:** ${nowStr}\n- **Dispositivo:** ${deviceInfo}\n- **Destinatário Configurado:** ${targetEmail}\n\n*Servidor SIGEC-Pro - alegría-activity, S.L.*`
     : `### 🔔 Novo Utilizador Registado no Sistema SIGEC-Pro\n\nUm novo utilizador concluiu o formulário de registo e aguarda validação:\n\n- **Nome:** ${userName}\n- **Email:** ${userEmail}\n- **Cargo / Função:** ${userCargo}\n- **Idioma Selecionado:** ${userIdioma}\n- **Perfil:** ${userRole}\n- **Data e Hora:** ${nowStr}\n- **Dispositivo:** ${deviceInfo}\n\n> ⚠️ **Ação do Administrador:** O acesso deste utilizador encontra-se atualmente pendente de ativação na área de **Gestão de Utilizadores** da Configuração.`;
 
-  let sentViaGitHub = false;
+  // 1. Envio Direto e Incondicional de Email para a Caixa de Correio (FormSubmit)
+  try {
+    await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(targetEmail)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        _subject: issueTitle,
+        _template: 'table',
+        _captcha: 'false',
+        utilizador_nome: userName,
+        utilizador_email: userEmail,
+        utilizador_cargo: userCargo,
+        utilizador_idioma: userIdioma,
+        utilizador_perfil: userRole,
+        data_registo: nowStr,
+        dispositivo: deviceInfo,
+        mensagem: isTest
+          ? `Este é um email de teste confirmando que o envio de notificações para ${targetEmail} está 100% ativo.`
+          : `Novo utilizador registado no programa SIGEC-Pro. O acesso encontra-se atualmente pendente de aprovação/ativação pelo Administrador.`
+      })
+    });
+    console.info(`[SIGEC-Pro] Email de notificação enviado para ${targetEmail}`);
+  } catch (errDirect) {
+    console.warn('[SIGEC-Pro] Erro no envio direto de email:', errDirect);
+  }
 
-  // 1. Envio Automático e Oficial através do GitHub API (Garante envio de email pelo GitHub para jmcenturio@alegria-activity.com)
+  // 2. Registo de Histórico no Servidor GitHub
+  const cfg = typeof getGitHubConfig === 'function' ? getGitHubConfig() : {};
+  const token = (cfg.token || localStorage.getItem('sigec_pro_gh_token') || '').trim();
+  const owner = (cfg.owner || localStorage.getItem('sigec_pro_gh_owner') || 'centauropt').trim();
+  const repo = (cfg.repo || localStorage.getItem('sigec_pro_gh_repo') || 'SIGEC-Pro').trim();
+
   if (token) {
     try {
       const issueUrl = `https://api.github.com/repos/${owner}/${repo}/issues`;
       const authHeader = token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`;
 
-      const res = await fetch(issueUrl, {
+      await fetch(issueUrl, {
         method: 'POST',
         headers: {
           'Authorization': authHeader,
@@ -21265,38 +21289,11 @@ async function sendNewUserRegistrationEmailNotification(userData, isTest = false
           labels: ['notificacao-registo', 'sigec-pro', 'urgente']
         })
       });
-
-      if (res.ok) {
-        sentViaGitHub = true;
-        console.info('[SIGEC-Pro] Alerta e Notificação GitHub emitidos com sucesso!');
-      }
-    } catch (errGh) {
-      console.warn('[SIGEC-Pro] Erro ao emitir notificação GitHub:', errGh);
-    }
-  }
-
-  // 2. Gateway Directo Alternativo FormSubmit
-  if (!sentViaGitHub) {
-    try {
-      await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(targetEmail)}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({
-          _subject: issueTitle,
-          _template: 'table',
-          _captcha: 'false',
-          utilizador: userName,
-          email: userEmail,
-          cargo: userCargo,
-          idioma: userIdioma,
-          data: nowStr
-        })
-      }).catch(() => {});
-    } catch (e) {}
+    } catch (errGh) {}
   }
 
   if (typeof logUserActivity === 'function') {
-    logUserActivity('Notificação por Email', `Alerta de registo emitido com sucesso para ${targetEmail} (${userName}).`);
+    logUserActivity('Notificação por Email', `Alerta de registo emitido para ${targetEmail} (${userName}).`);
   }
 
   return true;
