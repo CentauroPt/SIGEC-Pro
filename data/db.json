@@ -1428,7 +1428,7 @@
       "secretariaEstado": "",
       "nome": "Galp Energia, SGPS, S.A.",
       "contribuinte": "500001258",
-      "direcao1": "Avenida da Índia",
+      "direcao1": "Avenida da Ãndia",
       "direcao2": "",
       "numero": "8",
       "andar": "",
@@ -1437,7 +1437,7 @@
       "pais": "Portugal",
       "telefone": "217242500",
       "telemovel": "",
-      "email": "galp@galp.pt",
+      "email": "galp@galp.com",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
       "comercialAtribuidoNome": "José Centúrio",
@@ -3401,7 +3401,7 @@
     },
     {
       "id": "con-imp-046",
-      "clienteId": "cli-imp-020",
+      "clienteId": "cli-1787604203987-284",
       "subTabIndex": 0,
       "nome": "Ana",
       "apelido": "Figueiredo",
@@ -3409,11 +3409,12 @@
       "telefone": "+351 215 003 500",
       "telemovel": "",
       "email": "fundacao@altice.pt",
+      "proximoContacto": null,
+      "inativo": false,
       "notas": "Temas: innovación, la inclusión social y el acceso al conocimiento mediante la tecnología",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-1787590828349"
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-047",
@@ -3644,7 +3645,7 @@
     },
     {
       "id": "con-imp-123",
-      "clienteId": "cli-imp-077",
+      "clienteId": "cli-imp-009",
       "subTabIndex": 1,
       "nome": "António",
       "apelido": "Fuzeta da Ponte",
@@ -3652,6 +3653,8 @@
       "telefone": "217824700",
       "telemovel": "",
       "email": "secretaria.geral@nos.pt",
+      "proximoContacto": null,
+      "inativo": false,
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "userId": "usr-admin-001",
@@ -3733,7 +3736,7 @@
     },
     {
       "id": "con-imp-136",
-      "clienteId": "cli-imp-084",
+      "clienteId": "cli-1787038283894-503",
       "subTabIndex": 2,
       "nome": "Gabriela",
       "apelido": "Leite",
@@ -3742,12 +3745,11 @@
       "telemovel": "",
       "email": "gabriela.leite@ccdr-n.pt",
       "proximoContacto": "2026-09-14",
+      "inativo": false,
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "separadorId": "sep-1786751754158-584",
-      "empresa": "Ministério da Economia e da Coesão Territorial - Ministério da Economia e da Coesão Territorial"
+      "comercialAtribuidoId": "usr-admin-001"
     },
     {
       "id": "con-imp-137",
@@ -5348,9 +5350,9 @@
     },
     {
       "id": "usr-1787393198433",
-      "nome": "Steve Holmes",
+      "nome": "Steve Jobs",
       "primeiroNome": "Steve",
-      "apelido": "Holmes",
+      "apelido": "Jobs",
       "email": "steve@steve.com",
       "cargo": "Comercial",
       "idioma": "English",
@@ -5361,7 +5363,28 @@
       "chefia": false
     }
   ],
-  "userLogs": [],
+  "userLogs": [
+    {
+      "id": "log-1789083623163-993",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Notificação por Email",
+      "detalhes": "Alerta de registo emitido para josecenturio@gmail.com (José Centúrio (Teste de Sistema)).",
+      "extra": {},
+      "timestamp": "2026-09-10T23:40:23.163Z"
+    },
+    {
+      "id": "log-1789083565424-425",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Notificação por Email",
+      "detalhes": "Alerta de registo emitido para jmcenturio@alegria-activity.com (José Centúrio (Teste de Sistema)).",
+      "extra": {},
+      "timestamp": "2026-09-10T23:39:25.424Z"
+    }
+  ],
   "orcamentos": [
     {
       "id": "orc-norte-2040-004",
@@ -5441,15 +5464,13 @@
       "createdAt": "2026-08-30T11:36:06.325Z"
     }
   ],
-  "ignoredDuplicates": [
-    {
-      "type": "cli-1786604620361-357",
-      "key": "cli-1786727373519-853:::undefined",
-      "id1": "cli-1786727373519-853",
-      "ignoredAt": "2026-08-22T10:13:13.470Z",
-      "ignoredBy": "Sistema"
-    }
-  ],
+  "ignoredDuplicates": [],
+  "config": {
+    "emailNotifyAddress": "josecenturio@gmail.com",
+    "emailNotifyEnabled": true,
+    "emailProvider": "web3forms",
+    "emailApiKey": ""
+  },
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
   "_deletedRegistry": {
     "clientes": [
@@ -5743,9 +5764,6 @@
       "usr-1787590828349",
       "usr-1789046577312",
       "usr-1789053406957-975",
-      "usr-1789054332308-265",
-      "carlos@carlos.pt",
-      "Carlos Campos",
       "usr-1789054416576-555",
       "usr-1789054748706-278",
       "usr-1789054759868-750",
@@ -5762,12 +5780,23 @@
       "usr-1789055435883-607",
       "usr-1789055454953-612",
       "usr-1789055486358-895",
+      "usr-1789054332308-265",
+      "carlos@carlos.pt",
+      "Carlos Campos",
       "usr-1789057174081-262",
       "josecenturio@gmail.com",
       "José Centúrio (Teste de Sistema)",
       "usr-1789058923481",
+      "José Antonio",
+      "usr-1789070838707",
+      "jose Campos",
+      "usr-1789072378981",
+      "usr-1789072928344",
+      "usr-1789073688954",
+      "usr-1789074358245",
       "jjota26@gmail.com",
-      "José Antonio"
+      "antonio campos",
+      "usr-1789075169789"
     ]
   }
 }
