@@ -3651,8 +3651,7 @@ function loadDatabase() {
         if (id && isDeletedId(type, id)) return false;
         if (type === 'usuarios') {
           if (item.role === 'admin' || item.id === 'usr-admin-001') return true;
-          const email = (item.email || '').toLowerCase().trim();
-          if (email && isDeletedId('usuarios', email)) return false;
+          return item && item.id && !isDeletedId('usuarios', item.id);
         }
         if (!id) return true;
         if (seen.has(id)) return false;
@@ -4444,11 +4443,7 @@ async function loadDatabaseFromGitHub(silent = false) {
         if (!incUser || !incUser.id) return;
         const incEmail = (incUser.email || '').toLowerCase().trim();
         const incName = (incUser.nome || '').toLowerCase().trim();
-        if (
-          isDeletedId('usuarios', incUser.id) || 
-          (incEmail && isDeletedId('usuarios', incEmail)) ||
-          (incName && isDeletedId('usuarios', incName))
-        ) return;
+        if (isDeletedId('usuarios', incUser.id)) return;
         const idx = db.usuarios.findIndex(u => u && (u.id === incUser.id || (incEmail && u.email && u.email.toLowerCase().trim() === incEmail)));
         if (idx < 0) {
           db.usuarios.push(incUser);
@@ -4464,11 +4459,7 @@ async function loadDatabaseFromGitHub(silent = false) {
       const prevLen = db.usuarios.length;
       db.usuarios = db.usuarios.filter(u => {
         if (u.role === 'admin' || u.id === 'usr-admin-001') return true;
-        const uEmail = (u.email || '').toLowerCase().trim();
-        const uName = (u.nome || '').toLowerCase().trim();
-        return !isDeletedId('usuarios', u.id) && 
-               !(uEmail && isDeletedId('usuarios', uEmail)) &&
-               !(uName && isDeletedId('usuarios', uName));
+        return u && u.id && !isDeletedId('usuarios', u.id);
       });
       if (db.usuarios.length !== prevLen) {
         hasUpdates = true;
@@ -15046,11 +15037,7 @@ async function syncRegisteredUsersFromGitHub(silent = false) {
   if (Array.isArray(db.usuarios)) {
     db.usuarios = db.usuarios.filter(u => {
       if (u.role === 'admin' || u.id === 'usr-admin-001') return true;
-      const uEmail = (u.email || '').toLowerCase().trim();
-      const uName = (u.nome || '').toLowerCase().trim();
-      return !isDeletedId('usuarios', u.id) && 
-             !(uEmail && isDeletedId('usuarios', uEmail)) &&
-             !(uName && isDeletedId('usuarios', uName));
+      return u && u.id && !isDeletedId('usuarios', u.id);
     });
   }
 
@@ -15191,11 +15178,7 @@ async function syncRegisteredUsersFromGitHub(silent = false) {
     if (Array.isArray(db.usuarios)) {
       db.usuarios = db.usuarios.filter(u => {
         if (u.role === 'admin' || u.id === 'usr-admin-001') return true;
-        const uEmail = (u.email || '').toLowerCase().trim();
-        const uName = (u.nome || '').toLowerCase().trim();
-        return !isDeletedId('usuarios', u.id) && 
-               !(uEmail && isDeletedId('usuarios', uEmail)) &&
-               !(uName && isDeletedId('usuarios', uName));
+        return u && u.id && !isDeletedId('usuarios', u.id);
       });
     }
 
@@ -15272,15 +15255,7 @@ function renderUserManagementGrid() {
     return;
   }
 
-  // Sincronização silenciosa em segundo plano na primeira abertura do quadro
-  if (!window._hasAutoSyncedUsersOnOpen) {
-    window._hasAutoSyncedUsersOnOpen = true;
-    setTimeout(() => {
-      if (typeof syncRegisteredUsersFromGitHub === 'function') {
-        syncRegisteredUsersFromGitHub(true).catch(() => {});
-      }
-    }, 400);
-  }
+  // Sincronização do quadro de utilizadores
 
   const tbody = document.getElementById('userManagementTableBody');
   if (!tbody) return;
@@ -15429,8 +15404,9 @@ function handleUserRegistration(event) {
     return;
   }
 
+  const newUserId = "usr-" + Date.now();
   const newUser = {
-    id: "usr-" + Date.now(),
+    id: newUserId,
     nome: nome,
     primeiroNome: primeiroNome,
     apelido: apelido,
@@ -15443,7 +15419,16 @@ function handleUserRegistration(event) {
     createdAt: new Date().toISOString()
   };
 
+  if (typeof removeDeletedId === 'function') {
+    removeDeletedId('usuarios', email);
+    removeDeletedId('usuarios', email.toLowerCase());
+    removeDeletedId('usuarios', nome);
+    removeDeletedId('usuarios', nome.toLowerCase());
+    removeDeletedId('usuarios', newUserId);
+  }
+
   db.usuarios.push(newUser);
+  safeSetStorage('sigec_pro_usuarios', JSON.stringify(db.usuarios || []));
   saveDatabase();
 
   if (firstNameInput) firstNameInput.value = '';
