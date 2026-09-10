@@ -5359,23 +5359,31 @@
       "active": true,
       "createdAt": "2026-08-22T10:06:38.433Z",
       "chefia": false
-    },
-    {
-      "id": "usr-1789055132652-600",
-      "nome": "Carlos Campos",
-      "primeiroNome": "Carlos",
-      "apelido": "Campos",
-      "email": "Carlos@carlos.pt",
-      "cargo": "Comercial",
-      "idioma": "Português",
-      "pin": "",
-      "role": "user",
-      "chefia": false,
-      "active": false,
-      "createdAt": "2026-09-10T13:37:04Z"
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1789055138563-22",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Gestão de Utilizadores",
+      "descricao": "Utilizador Carlos Campos (Carlos@carlos.pt) eliminado do sistema.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-09-10T15:45:38.563Z"
+    },
+    {
+      "id": "log-1789055135566-469",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-09-10T15:45:35.566Z"
+    },
     {
       "id": "log-1789055132483-355",
       "usuarioId": "usr-admin-001",
@@ -5767,7 +5775,8 @@
       "usr-1789055053499-805",
       "usr-1789055067182-755",
       "usr-1789055095572-476",
-      "usr-1789055121493-768"
+      "usr-1789055121493-768",
+      "usr-1789055132652-600"
     ]
   }
 }
