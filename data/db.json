@@ -5359,18 +5359,42 @@
       "active": true,
       "createdAt": "2026-08-22T10:06:38.433Z",
       "chefia": false
+    },
+    {
+      "id": "usr-1789073688954",
+      "nome": "antonio campos",
+      "primeiroNome": "antonio",
+      "apelido": "campos",
+      "email": "jjota26@gmail.com",
+      "cargo": "Comercial",
+      "idioma": "Português",
+      "pin": "J*cen*1971",
+      "role": "user",
+      "chefia": false,
+      "active": true,
+      "createdAt": "2026-09-10T20:54:48.954Z"
     }
   ],
   "userLogs": [
     {
-      "id": "log-1789073567210-338",
+      "id": "log-1789073744654-160",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
       "acao": "Gestão de Utilizadores",
-      "detalhes": "Utilizador antonio Campos (jjota26@gmail.com) eliminado do sistema.",
+      "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Ativo / Aprovado.",
       "extra": {},
-      "timestamp": "2026-09-10T20:52:47.211Z"
+      "timestamp": "2026-09-10T20:55:44.654Z"
+    },
+    {
+      "id": "log-1789073744653-755",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Conta Ativada",
+      "detalhes": "Email de confirmação de conta ativa enviado para jjota26@gmail.com (antonio campos) no idioma Português.",
+      "extra": {},
+      "timestamp": "2026-09-10T20:55:44.653Z"
     }
   ],
   "orcamentos": [
@@ -5773,9 +5797,7 @@
       "usr-1789070838707",
       "jose Campos",
       "usr-1789072378981",
-      "jjota26@gmail.com",
-      "usr-1789072928344",
-      "antonio Campos"
+      "usr-1789072928344"
     ]
   }
 }
