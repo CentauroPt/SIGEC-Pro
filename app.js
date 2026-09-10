@@ -21260,8 +21260,9 @@ async function sendNewUserRegistrationEmailNotification(userData, isTest = false
         },
         body: JSON.stringify({
           title: issueTitle,
-          body: issueBody,
-          labels: ['notificacao-registo', 'sigec-pro']
+          body: `Atenção @${owner}:\n\n${issueBody}`,
+          assignees: [owner],
+          labels: ['notificacao-registo', 'sigec-pro', 'urgente']
         })
       });
 
