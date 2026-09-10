@@ -14203,6 +14203,9 @@ async function generateUpdatePackage() {
 
   // Guardar a versão base gerada para calcular a próxima sequencialmente no futuro
   localStorage.setItem('sigec_pro_last_generated_version', baseVersion);
+  try {
+    localStorage.setItem('sigec_pro_last_generated_package', JSON.stringify(updatePackage));
+  } catch(e) {}
 
   const fileName = `${finalName}.json`;
   const formattedDateTime = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
@@ -14368,7 +14371,6 @@ if (!window.SIGEC_AVAILABLE_UPDATES || window.SIGEC_AVAILABLE_UPDATES.length ===
 
 async function checkAndInstallUpdate(silentIfNoUpdate = false) {
   const currentInstalled = getInstalledVersion();
-  const currentNum = parseVersionNumber(currentInstalled);
   const cfg = getGitHubConfig();
   const token = (cfg.token || '').trim();
   const owner = (cfg.owner || 'centauropt').trim();
@@ -14378,9 +14380,7 @@ async function checkAndInstallUpdate(silentIfNoUpdate = false) {
     showToast('A procurar o pacote de atualização mais recente no servidor GitHub...', 'info');
   }
 
-  let highestVersionNum = 0;
-  let highestUpdateObj = null;
-  let highestFileName = '';
+  let candidates = [];
 
   // 1. Pesquisa Direta e Rápida via Git Tree API do GitHub (recursivo)
   for (const branch of ['main', 'master']) {
@@ -14399,28 +14399,26 @@ async function checkAndInstallUpdate(silentIfNoUpdate = false) {
             const treeData = await res.json();
             if (treeData && Array.isArray(treeData.tree)) {
               treeData.tree.forEach(item => {
-                if (item.type === 'blob' && /\.json$/i.test(item.path) && (item.path.includes('SIGEC_V') || item.path.includes('Atualiza'))) {
+                if (item.type === 'blob' && /\.json$/i.test(item.path) && (item.path.includes('SIGEC_V') || item.path.includes('Atualiza') || item.path.includes('SIGEC_'))) {
                   const fileName = item.path.split('/').pop();
-                  const vNum = parseVersionNumber(fileName);
-                  if (vNum > highestVersionNum) {
-                    highestVersionNum = vNum;
-                    highestFileName = fileName;
-                    highestUpdateObj = {
-                      version: fileName.replace(/\.json$/i, ''),
-                      packageName: fileName.replace(/\.json$/i, ''),
-                      download_url: `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodeURI(item.path)}`,
-                      sha: item.sha,
-                      path: item.path
-                    };
-                  }
+                  candidates.push({
+                    name: fileName,
+                    fileName: fileName,
+                    version: fileName.replace(/\.json$/i, ''),
+                    packageName: fileName.replace(/\.json$/i, ''),
+                    download_url: `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodeURI(item.path)}`,
+                    sha: item.sha,
+                    path: item.path,
+                    source: 'github'
+                  });
                 }
               });
-              if (highestUpdateObj) break;
+              if (candidates.length > 0) break;
             }
           }
         } catch (e) {}
       }
-      if (highestUpdateObj) break;
+      if (candidates.length > 0) break;
     } catch (errTree) {}
   }
 
@@ -14443,18 +14441,16 @@ async function checkAndInstallUpdate(silentIfNoUpdate = false) {
             if (Array.isArray(files) && files.length > 0) {
               const jsonFiles = files.filter(f => f.type === 'file' && f.name.toLowerCase().endsWith('.json'));
               for (const jf of jsonFiles) {
-                const vNum = parseVersionNumber(jf.name);
-                if (vNum > highestVersionNum) {
-                  highestVersionNum = vNum;
-                  highestFileName = jf.name;
-                  highestUpdateObj = {
-                    version: jf.name.replace(/\.json$/i, ''),
-                    packageName: jf.name.replace(/\.json$/i, ''),
-                    download_url: jf.download_url,
-                    sha: jf.sha,
-                    folder: folder
-                  };
-                }
+                candidates.push({
+                  name: jf.name,
+                  fileName: jf.name,
+                  version: jf.name.replace(/\.json$/i, ''),
+                  packageName: jf.name.replace(/\.json$/i, ''),
+                  download_url: jf.download_url,
+                  sha: jf.sha,
+                  folder: folder,
+                  source: 'github'
+                });
               }
             }
           }
@@ -14463,40 +14459,68 @@ async function checkAndInstallUpdate(silentIfNoUpdate = false) {
     } catch (err) {}
   }
 
-  // 3. Verificar registo de versões oficiais do sistema
-  const registryUpdates = window.SIGEC_AVAILABLE_UPDATES || [];
-  registryUpdates.forEach(updatePkg => {
-    const verName = updatePkg.version || updatePkg.packageName || '';
-    const verNum = parseVersionNumber(verName);
-    if (verNum > highestVersionNum) {
-      highestVersionNum = verNum;
-      highestUpdateObj = updatePkg;
+  // 3. Incluir último pacote gerado no sistema local
+  try {
+    const lastSavedPkgStr = localStorage.getItem('sigec_pro_last_generated_package');
+    if (lastSavedPkgStr) {
+      const lastSavedPkg = JSON.parse(lastSavedPkgStr);
+      if (lastSavedPkg) {
+        candidates.push({
+          ...lastSavedPkg,
+          source: 'local'
+        });
+      }
     }
+  } catch(e) {}
+
+  // 4. Incluir registo de versões conhecidas
+  const registryUpdates = window.SIGEC_AVAILABLE_UPDATES || [];
+  registryUpdates.forEach(u => {
+    candidates.push({
+      ...u,
+      source: u.source || 'github'
+    });
   });
 
-  // Garantir que a versão SIGEC_V1.7.3 está disponível mesmo offline
-  if (!highestUpdateObj || parseVersionNumber('SIGEC_V1.7.3') > highestVersionNum) {
-    highestVersionNum = parseVersionNumber('SIGEC_V1.7.3');
-    highestUpdateObj = {
-      version: 'SIGEC_V1.7.3',
-      packageName: 'SIGEC_V1.7.3',
-      tipoPacote: 'ATUALIZACAO_SOFTWARE_EXCLUSIVA'
-    };
+  // Ordenar de forma rigorosa para selecionar SEMPRE O PACOTE MAIS RECENTE
+  candidates.sort((a, b) => {
+    const tA = extractPackageTimestamp(a);
+    const tB = extractPackageTimestamp(b);
+    return tB - tA;
+  });
+
+  let mostRecent = candidates[0] || null;
+
+  // Se encontrou pacote no GitHub com download_url, descarrega os dados do JSON para obter a dataHoraCriacao exata
+  if (mostRecent && mostRecent.download_url) {
+    try {
+      const fetchHeaders = {};
+      if (token) fetchHeaders['Authorization'] = token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`;
+      const fileRes = await fetch(mostRecent.download_url, { headers: fetchHeaders, cache: 'no-store' });
+      if (fileRes.ok) {
+        const jsonContent = await fileRes.json();
+        if (jsonContent) {
+          mostRecent = {
+            ...mostRecent,
+            ...jsonContent,
+            data: jsonContent
+          };
+        }
+      }
+    } catch(e) {}
   }
 
-  // Apresentar imediatamente o modal de confirmação para instalação/restauração da versão mais recente
-  if (highestUpdateObj) {
-    pendingUpdateData = highestUpdateObj;
-    const verName = highestUpdateObj.version || highestUpdateObj.packageName || 'SIGEC_V1.7.3';
+  if (mostRecent) {
+    pendingUpdateData = mostRecent;
+    const verName = mostRecent.version || mostRecent.packageName || 'SIGEC_V1.7.3';
     const nameEl = document.getElementById('newDetectedVersionName');
     if (nameEl) nameEl.textContent = verName;
 
-    const modal = document.getElementById('updateConfirmationModal');
-    if (modal) modal.classList.add('active');
+    updateSoftwareModalUI(mostRecent, mostRecent.source || 'github');
     return;
   }
 
-  // Se não foi possível ligar ao GitHub ou não há versões no servidor
+  // Se não foi possível encontrar pacotes, abre seletor local
   if (!silentIfNoUpdate) {
     showToast('A abrir seletor para carregar ficheiro de atualização do computador...', 'info');
     const fileInput = document.getElementById('systemUpdateImportInput');
@@ -14563,17 +14587,37 @@ async function triggerSystemUpdateImport() {
     pendingUpdateData = {
       version: fileVersion,
       packageName: fileVersion,
+      fileName: latestFile.name,
       download_url: latestFile.download_url,
       sha: latestFile.sha,
-      folder: detectedFolder
+      folder: detectedFolder,
+      createdAt: latestFile.created_at || latestFile.updated_at || null
     };
+
+    // Tentar obter o conteúdo JSON para carregar os dados exatos (dataHoraCriacao)
+    try {
+      if (latestFile.download_url) {
+        const fetchHeaders = {};
+        if (token) fetchHeaders['Authorization'] = token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`;
+        const fileContentRes = await fetch(latestFile.download_url, { headers: fetchHeaders, cache: 'no-store' });
+        if (fileContentRes.ok) {
+          const jsonContent = await fileContentRes.json();
+          if (jsonContent) {
+            pendingUpdateData = {
+              ...pendingUpdateData,
+              ...jsonContent,
+              data: jsonContent
+            };
+          }
+        }
+      }
+    } catch (e) {}
 
     const nameEl = document.getElementById('newDetectedVersionName');
     if (nameEl) nameEl.textContent = fileVersion;
 
     showToast(`Pacote de atualização mais recente detetado no GitHub: ${fileVersion}`);
-    const modal = document.getElementById('updateConfirmationModal');
-    if (modal) modal.classList.add('active');
+    updateSoftwareModalUI(pendingUpdateData, 'github');
     return;
   }
 
@@ -14607,17 +14651,23 @@ function handleSystemUpdateFileSelect(event) {
 
       // Prepara a atualização de software e abre a janela de confirmação (Sim / Não)
       pendingUpdateData = {
+        ...data,
+        fileName: file.name,
         version: fileVersion,
         packageName: fileVersion,
         tipoPacote: "ATUALIZACAO_SOFTWARE_EXCLUSIVA",
         data: data
       };
 
+      if (!pendingUpdateData.dataHoraCriacao && file.lastModified) {
+        const d = new Date(file.lastModified);
+        pendingUpdateData.dataHoraCriacao = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
+      }
+
       const nameEl = document.getElementById('newDetectedVersionName');
       if (nameEl) nameEl.textContent = fileVersion;
 
-      const modal = document.getElementById('updateConfirmationModal');
-      if (modal) modal.classList.add('active');
+      updateSoftwareModalUI(pendingUpdateData, 'local');
     } catch (err) {
       console.error('Erro na leitura do ficheiro de atualização:', err);
       showToast('Erro ao ler o ficheiro de atualização.', 'danger');
@@ -15152,6 +15202,9 @@ function handleUserSelfRegistration(event) {
   if (confirmPinInput) confirmPinInput.value = '';
 
   logUserActivity('Registo de Utilizador', `Novo utilizador ${nome} (${email}) registado no sistema com idioma ${idioma} (Acesso pendente de ativação pelo Administrador).`);
+  if (typeof sendNewUserRegistrationEmailNotification === 'function') {
+    sendNewUserRegistrationEmailNotification(newUser).catch(() => {});
+  }
   const regSuccessMsg = typeof t === 'function' ? t('toast_user_registered') : `Novo utilizador registado com sucesso! (Acesso pendente de ativação pelo Administrador).`;
   showToast(regSuccessMsg);
   alert(`✅ Registo Efetuado com Sucesso!\n\nO utilizador "${nome}" foi registado no sistema.\n\nO acesso encontra-se pendente de ativação pelo Administrador.`);
@@ -15355,6 +15408,9 @@ function handleUserRegistration(event) {
   renderUserSelectOptions();
 
   logUserActivity('Gestão de Utilizadores', `Utilizador ${nome} (${email}) adicionado à administração do sistema com idioma ${idioma}.`);
+  if (typeof sendNewUserRegistrationEmailNotification === 'function') {
+    sendNewUserRegistrationEmailNotification(newUser).catch(() => {});
+  }
   showToast(`Utilizador ${nome} registado com sucesso!`);
 }
 
@@ -17552,43 +17608,91 @@ function restoreBudgetImagesData(imgsObj) {
 }
 
 // Deteção inteligente de ícones FontAwesome com base em palavras-chave do Item / Componente
+// DeteÃ§Ã£o inteligente de Ã­cones FontAwesome com base em inteligÃªncia semÃ¢ntica e palavras-chave multilÃ­ngues (PT, ES, EN, FR, PL)
+// DeteÃ§Ã£o inteligente de Ã­cones FontAwesome com base em inteligÃªncia semÃ¢ntica e palavras-chave multilÃ­ngues (PT, ES, EN, FR, PL)
 function getBudgetItemIcon(text) {
   if (!text) return 'fa-circle-dot';
-  const t = text.toLowerCase().trim();
+  const t = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
 
-  if (t.includes('bateria') || t.includes('acumulador') || t.includes('lifepo4') || t.includes('litio') || t.includes('lítio')) return 'fa-car-battery';
-  if (t.includes('painel') || t.includes('solar') || t.includes('fotovolt') || t.includes('placa solar')) return 'fa-solar-panel';
-  if (t.includes('gerador') || t.includes('ayerbe') || t.includes('gasolina') || t.includes('combustiv') || t.includes('diesel')) return 'fa-gas-pump';
-  if (t.includes('starlink') || t.includes('satelit') || t.includes('satélite') || t.includes('antena') || t.includes('satlink')) return 'fa-satellite-dish';
-  if (t.includes('rampa') || t.includes('acessib') || t.includes('cadeira de rodas') || t.includes('mobilidade')) return 'fa-wheelchair';
-  if (t.includes('pata') || t.includes('estabiliz') || t.includes('nivelador') || t.includes('nivel') || t.includes('ma-ve')) return 'fa-arrows-up-down';
-  if (t.includes('ar condicionado') || t.includes('climat') || t.includes('frio') || t.includes('split') || t.includes('belaire') || t.includes('mundoclima')) return 'fa-snowflake';
-  if (t.includes('ventil') || t.includes('renova') || t.includes('extrator') || t.includes('ar')) return 'fa-fan';
-  if (t.includes('quadro') || t.includes('eletric') || t.includes('elétric') || t.includes('disjuntor') || t.includes('energia') || t.includes('fusivel') || t.includes('inversor')) return 'fa-bolt';
-  if (t.includes('tomada') || t.includes('ficha') || t.includes('cabo') || t.includes('extensao') || t.includes('extensão') || t.includes('defa')) return 'fa-plug';
-  if (t.includes('computador') || t.includes('pc') || t.includes('posto') || t.includes('ecra') || t.includes('monitor') || t.includes('display') || t.includes('bancada')) return 'fa-desktop';
-  if (t.includes('cadeira') || t.includes('assento') || t.includes('poltrona') || t.includes('banco')) return 'fa-chair';
-  if (t.includes('porta') || t.includes('entrada') || t.includes('estore') || t.includes('persiana') || t.includes('saida')) return 'fa-door-open';
-  if (t.includes('janela') || t.includes('vidro') || t.includes('claraboia') || t.includes('clarabóia')) return 'fa-window-maximize';
-  if (t.includes('escada') || t.includes('degrau') || t.includes('corrim')) return 'fa-stairs';
-  if (t.includes('toldo') || t.includes('abrigo') || t.includes('cobertura')) return 'fa-umbrella';
-  if (t.includes('pintura') || t.includes('vinil') || t.includes('decor') || t.includes('logotipo') || t.includes('grafismo')) return 'fa-paint-roller';
-  if (t.includes('luz') || t.includes('ilumina') || t.includes('led') || t.includes('projetor') || t.includes('foco')) return 'fa-lightbulb';
-  if (t.includes('isolamento') || t.includes('termico') || t.includes('térmico') || t.includes('acustico') || t.includes('acústico') || t.includes('rocha')) return 'fa-shield-halved';
-  if (t.includes('pavimento') || t.includes('piso') || t.includes('chao') || t.includes('chão') || t.includes('vinilico') || t.includes('polyfloor')) return 'fa-layer-group';
-  if (t.includes('parede') || t.includes('alucobond') || t.includes('divisoria') || t.includes('divisória') || t.includes('teto')) return 'fa-border-all';
-  if (t.includes('agua') || t.includes('água') || t.includes('deposito') || t.includes('depósito') || t.includes('bomba') || t.includes('tanque')) return 'fa-faucet-drip';
-  if (t.includes('lavatorio') || t.includes('lavatório') || t.includes('torneira') || t.includes('pia') || t.includes('sanit') || t.includes('wc')) return 'fa-sink';
-  if (t.includes('cofre') || t.includes('seguranca') || t.includes('segurança') || t.includes('blindad') || t.includes('ancorag')) return 'fa-vault';
-  if (t.includes('rede') || t.includes('wifi') || t.includes('wi-fi') || t.includes('router') || t.includes('switch') || t.includes('cablagem') || t.includes('rj45') || t.includes('informat')) return 'fa-network-wired';
-  if (t.includes('alarme') || t.includes('sirene') || t.includes('sensor') || t.includes('vigilancia')) return 'fa-bell';
-  if (t.includes('extintor') || t.includes('incendio') || t.includes('incêndio') || t.includes('fogo')) return 'fa-fire-extinguisher';
-  if (t.includes('camiao') || t.includes('camião') || t.includes('furgao') || t.includes('furgão') || t.includes('veiculo') || t.includes('veículo') || t.includes('carro') || t.includes('chassi') || t.includes('autocarro') || t.includes('smartbus') || t.includes('reboque')) return 'fa-truck';
-  if (t.includes('peso') || t.includes('pma') || t.includes('tara') || t.includes('bruto')) return 'fa-weight-hanging';
-  if (t.includes('motor') || t.includes('cilindrada') || t.includes('potencia') || t.includes('potência') || t.includes('cv') || t.includes('binario')) return 'fa-gauge-high';
-  if (t.includes('caixa') || t.includes('velocidade') || t.includes('transmiss') || t.includes('mudanca') || t.includes('mudança')) return 'fa-gears';
-  if (t.includes('suspens') || t.includes('pneumat') || t.includes('mola') || t.includes('eixo')) return 'fa-arrows-left-right';
-  if (t.includes('travao') || t.includes('travão') || t.includes('disco') || t.includes('abs')) return 'fa-compact-disc';
+  // 1. CLIMATIZAÃ‡ÃƒO, FRIO, AQUECIMENTO & VENTILAÃ‡ÃƒO (Prioridade para splits e condicionamento)
+  if (t.includes('ar condicionado') || t.includes('aire acondicion') || t.includes('air condition') || t.includes('climatiz') || t.includes('climat') || t.includes('klimat') || t.includes('belaire') || t.includes('mundoclima') || t.includes('dometic') || t.includes('split') || t.includes('frio') || t.includes('froid') || t.includes('cool')) return 'fa-snowflake';
+  if (t.includes('ventil') || t.includes('renovacao') || t.includes('extrator') || t.includes('extractor') || t.includes('fan') || t.includes('wentyl') || t.includes('aerac') || t.includes('ar interior')) return 'fa-fan';
+  if (t.includes('aquec') || t.includes('calefac') || t.includes('heating') || t.includes('chauff') || t.includes('ogrzew') || t.includes('radiad') || t.includes('convector') || t.includes('termoestat') || t.includes('termostat')) return 'fa-temperature-high';
+
+  // 2. ENERGIA SOLAR & FOTOVOLTAICA (Antes de termos genÃ©ricos de foto)
+  if (t.includes('solar') || t.includes('fotovolt') || t.includes('photovolt') || t.includes('placa solar') || t.includes('panneau solaire') || t.includes('panel slonecz')) return 'fa-solar-panel';
+
+  // 3. CULTURA, ARTES, CINEMA, TEATRO, MÃšSICA & BIBLIOTECA
+  if (t.includes('biblio') || t.includes('livro') || t.includes('libro') || t.includes('book') || t.includes('livre') || t.includes('ksiaz') || t.includes('leitura') || t.includes('lectura') || t.includes('reading') || t.includes('lecture') || t.includes('czytel')) return 'fa-book-open';
+  if (t.includes('teatro') || t.includes('theater') || t.includes('theatre') || t.includes('cenic') || t.includes('dramat') || t.includes('espetacul') || t.includes('espectacul') || t.includes('spectacle') || t.includes('show') || t.includes('palco') || t.includes('escenario') || t.includes('stage') || t.includes('scena')) return 'fa-masks-theater';
+  if (t.includes('cinema') || t.includes('filme') || t.includes('pelicula') || t.includes('film') || t.includes('movie') || t.includes('projec') || t.includes('tela') || t.includes('pantalla') || t.includes('screen') || t.includes('ecran') || t.includes('ekran')) return 'fa-film';
+  if (t.includes('musica') || t.includes('music') || t.includes('muzyk') || t.includes('som') || t.includes('sonido') || t.includes('sound') || t.includes('audio') || t.includes('altifalan') || t.includes('altavoz') || t.includes('speaker') || t.includes('haut-parleur') || t.includes('glosnik') || t.includes('coluna')) return 'fa-music';
+  if (t.includes('micro') || t.includes('mic') || t.includes('locuc') || t.includes('voz') || t.includes('voice') || t.includes('voix') || t.includes('glos')) return 'fa-microphone-lines';
+  if (t.includes('arte') || t.includes('art') || t.includes('sztuk') || t.includes('galeria') || t.includes('gallery') || t.includes('galerie') || t.includes('exposi') || t.includes('exposicion') || t.includes('exhibition') || t.includes('wystaw') || t.includes('museu') || t.includes('museo') || t.includes('museum') || t.includes('patrimon')) return 'fa-palette';
+  if (t.includes('fotograf') || t.includes('photograph') || t.includes('camara') || t.includes('camera') || t.includes('aparat')) return 'fa-camera';
+  if (t.includes('formac') || t.includes('formacion') || t.includes('training') || t.includes('educa') || t.includes('escola') || t.includes('escuela') || t.includes('school') || t.includes('ecole') || t.includes('szkol') || t.includes('aula') || t.includes('workshop') || t.includes('oficina') || t.includes('atelier')) return 'fa-chalkboard-user';
+  if (t.includes('jogo') || t.includes('juego') || t.includes('game') || t.includes('jeu') || t.includes('gra') || t.includes('ludic') || t.includes('interativ') || t.includes('interactive')) return 'fa-gamepad';
+
+  // 4. ENERGIA, ELETRICIDADE, BATERIAS & GERADORES
+  if (t.includes('bateria') || t.includes('battery') || t.includes('batterie') || t.includes('akumulat') || t.includes('lifepo4') || t.includes('litio') || t.includes('lithium')) return 'fa-car-battery';
+  if (t.includes('gerador') || t.includes('generador') || t.includes('generator') || t.includes('groupe electrogene') || t.includes('ayerbe') || t.includes('gasolina') || t.includes('diesel') || t.includes('combustiv') || t.includes('fuel')) return 'fa-gas-pump';
+  if (t.includes('quadro eletric') || t.includes('cuadro elec') || t.includes('switchboard') || t.includes('tableau elec') || t.includes('rozdzielnic') || t.includes('disjuntor') || t.includes('inversor') || t.includes('inverter') || t.includes('onduleur') || t.includes('falownik') || t.includes('eletric') || t.includes('electric') || t.includes('elektr') || t.includes('energia') || t.includes('energy') || t.includes('energie') || t.includes('power')) return 'fa-bolt';
+  if (t.includes('tomada') || t.includes('enchufe') || t.includes('socket') || t.includes('prise') || t.includes('gniazd') || t.includes('ficha') || t.includes('plug') || t.includes('cabo') || t.includes('cable') || t.includes('extensao') || t.includes('prolung') || t.includes('defa')) return 'fa-plug';
+
+  // 5. ÃGUA, HIDRÃULICA & SANITÃRIOS
+  if (t.includes('agua') || t.includes('water') || t.includes('eau') || t.includes('woda') || t.includes('deposito') || t.includes('tank') || t.includes('reservoir') || t.includes('zbiornik') || t.includes('bomba agua') || t.includes('pump') || t.includes('pompa')) return 'fa-faucet-drip';
+  if (t.includes('lavatorio') || t.includes('lavabo') || t.includes('sink') || t.includes('torneira') || t.includes('grifo') || t.includes('tap') || t.includes('robinet') || t.includes('kran') || t.includes('pia') || t.includes('sanit') || t.includes('wc') || t.includes('toilet') || t.includes('chuveiro') || t.includes('ducha') || t.includes('shower') || t.includes('douche') || t.includes('prysznic')) return 'fa-sink';
+
+  // 6. COMUNICAÃ‡Ã•ES, TI, REDES & STARLINK
+  if (t.includes('starlink') || t.includes('satelit') || t.includes('satellite') || t.includes('satelitar') || t.includes('antena') || t.includes('antenna') || t.includes('satlink')) return 'fa-satellite-dish';
+  if (t.includes('rede') || t.includes('red') || t.includes('network') || t.includes('reseau') || t.includes('siec') || t.includes('wifi') || t.includes('wi-fi') || t.includes('router') || t.includes('switch') || t.includes('cablagem') || t.includes('rj45') || t.includes('rack') || t.includes('patch')) return 'fa-network-wired';
+  if (t.includes('computador') || t.includes('ordenador') || t.includes('computer') || t.includes('ordinateur') || t.includes('komputer') || t.includes('pc') || t.includes('laptop') || t.includes('posto') || t.includes('ecra') || t.includes('monitor') || t.includes('display')) return 'fa-desktop';
+  if (t.includes('tv') || t.includes('televis') || t.includes('smart tv') || t.includes('led tv')) return 'fa-tv';
+
+  // 7. ACESSIBILIDADE & ELEVAÃ‡ÃƒO
+  if (t.includes('rampa') || t.includes('ramp') || t.includes('rampe') || t.includes('podjazd') || t.includes('acessib') || t.includes('accesib') || t.includes('accessib') || t.includes('cadeira de rodas') || t.includes('silla de ruedas') || t.includes('wheelchair') || t.includes('fauteuil roulant') || t.includes('wozek inwalidzk') || t.includes('prm') || t.includes('pmr') || t.includes('mobilidade reduzida')) return 'fa-wheelchair';
+  if (t.includes('elevad') || t.includes('plataforma elevat') || t.includes('lift') || t.includes('ascens') || t.includes('wind')) return 'fa-elevator';
+  if (t.includes('degrau') || t.includes('escalon') || t.includes('step') || t.includes('marche') || t.includes('stopien') || t.includes('escada') || t.includes('escalera') || t.includes('stairs') || t.includes('escalier') || t.includes('schody') || t.includes('corrim') || t.includes('pasaman') || t.includes('handrail') || t.includes('porÄ™cz')) return 'fa-stairs';
+
+  // 8. MOBILIÃRIO TÃ‰CNICO & CARPINTARIA
+  if (t.includes('cadeira') || t.includes('silla') || t.includes('chair') || t.includes('chaise') || t.includes('krzeslo') || t.includes('poltrona') || t.includes('sillÃ³n') || t.includes('armchair') || t.includes('fotel') || t.includes('assento') || t.includes('seat') || t.includes('siege') || t.includes('banco') || t.includes('bench')) return 'fa-chair';
+  if (t.includes('sofa') || t.includes('couch') || t.includes('espera') || t.includes('attente') || t.includes('poczekaln')) return 'fa-couch';
+  if (t.includes('mesa') || t.includes('table') || t.includes('desk') || t.includes('bureau') || t.includes('biurk') || t.includes('secretaria') || t.includes('balcao') || t.includes('mostrador') || t.includes('counter') || t.includes('comptoir') || t.includes('lada') || t.includes('bancada') || t.includes('worktop')) return 'fa-table';
+  if (t.includes('armario') || t.includes('cabinet') || t.includes('cupboard') || t.includes('szaf') || t.includes('gavet') || t.includes('cajon') || t.includes('drawer') || t.includes('tiroir') || t.includes('szuflad') || t.includes('estante') || t.includes('estanteria') || t.includes('shelf') || t.includes('etagere') || t.includes('polk') || t.includes('mobiliario') || t.includes('mueble') || t.includes('furniture') || t.includes('meuble') || t.includes('meble')) return 'fa-box-archive';
+
+  // 9. ESTRUTURA, ACESSOS, PAREDES & ISOLAMENTO
+  if (t.includes('porta') || t.includes('puerta') || t.includes('door') || t.includes('porte') || t.includes('drzwi') || t.includes('entrada') || t.includes('entry') || t.includes('saida') || t.includes('exit') || t.includes('sortie') || t.includes('wyjsc') || t.includes('estore') || t.includes('persiana') || t.includes('shutter') || t.includes('rolet')) return 'fa-door-open';
+  if (t.includes('janela') || t.includes('ventana') || t.includes('window') || t.includes('fenetre') || t.includes('okno') || t.includes('vidro') || t.includes('cristal') || t.includes('glass') || t.includes('verre') || t.includes('szyb') || t.includes('claraboia') || t.includes('claraboya') || t.includes('skylight') || t.includes('lucarne')) return 'fa-window-maximize';
+  if (t.includes('toldo') || t.includes('awning') || t.includes('auvent') || t.includes('markiz') || t.includes('cobertura') || t.includes('canopy') || t.includes('abri')) return 'fa-umbrella';
+  if (t.includes('isolamento') || t.includes('aislamiento') || t.includes('insulation') || t.includes('izolac') || t.includes('termico') || t.includes('termic') || t.includes('thermal') || t.includes('acustico') || t.includes('acoustic') || t.includes('rocha') || t.includes('rockwool')) return 'fa-shield-halved';
+  if (t.includes('pavimento') || t.includes('suelo') || t.includes('floor') || t.includes('sol') || t.includes('podlog') || t.includes('chao') || t.includes('piso') || t.includes('vinilico') || t.includes('polyfloor') || t.includes('revestimento') || t.includes('revestimiento') || t.includes('covering') || t.includes('panelling')) return 'fa-layer-group';
+  if (t.includes('parede') || t.includes('pared') || t.includes('wall') || t.includes('mur') || t.includes('scian') || t.includes('divisoria') || t.includes('partition') || t.includes('cloison') || t.includes('scianka') || t.includes('alucobond') || t.includes('teto') || t.includes('techo') || t.includes('ceiling') || t.includes('plafond') || t.includes('sufit')) return 'fa-border-all';
+
+  // 10. SEGURANÃ‡A, COFRES & PROTEÃ‡ÃƒO
+  if (t.includes('cofre') || t.includes('caja fuerte') || t.includes('safe') || t.includes('coffre') || t.includes('sejf') || t.includes('blindad') || t.includes('armored') || t.includes('blinde') || t.includes('pancer')) return 'fa-vault';
+  if (t.includes('fechadura') || t.includes('cerradura') || t.includes('lock') || t.includes('serrure') || t.includes('zamek') || t.includes('trinco') || t.includes('chave') || t.includes('llave') || t.includes('key') || t.includes('cle') || t.includes('klucz') || t.includes('rfid') || t.includes('cartao') || t.includes('tarjeta') || t.includes('card') || t.includes('carte') || t.includes('karta')) return 'fa-key';
+  if (t.includes('alarme') || t.includes('alarm') || t.includes('sirene') || t.includes('siren') || t.includes('sensor') || t.includes('detetor') || t.includes('detector') || t.includes('czujnik') || t.includes('vigilancia') || t.includes('cctv') || t.includes('surveillance')) return 'fa-bell';
+  if (t.includes('extintor') || t.includes('extintor') || t.includes('fire extinguisher') || t.includes('extincteur') || t.includes('gasnica') || t.includes('incendio') || t.includes('fire') || t.includes('pozar') || t.includes('fogo')) return 'fa-fire-extinguisher';
+  if (t.includes('primeiros socorros') || t.includes('primeros auxilios') || t.includes('first aid') || t.includes('premiers secours') || t.includes('apteczka') || t.includes('socorro') || t.includes('botiquin')) return 'fa-kit-medical';
+
+  // 11. SAÃšDE, CLÃNICA & MÃ‰DICO
+  if (t.includes('maca') || t.includes('camilla') || t.includes('stretcher') || t.includes('brancard') || t.includes('nosze') || t.includes('medico') || t.includes('medical') || t.includes('medic') || t.includes('clinica') || t.includes('clinic') || t.includes('saude') || t.includes('salud') || t.includes('health') || t.includes('sante') || t.includes('zdrowie') || t.includes('hospital') || t.includes('exame') || t.includes('consulta') || t.includes('vacina') || t.includes('vaccin') || t.includes('szczepion')) return 'fa-heart-pulse';
+  if (t.includes('dente') || t.includes('dental') || t.includes('dentari') || t.includes('stomatolog') || t.includes('odonto')) return 'fa-tooth';
+  if (t.includes('olho') || t.includes('vision') || t.includes('oftalmo') || t.includes('optometr') || t.includes('oculist') || t.includes('okulist')) return 'fa-eye';
+
+  // 12. PINTURA, DECORAÃ‡ÃƒO & ILUMINAÃ‡ÃƒO
+  if (t.includes('pintura') || t.includes('paint') || t.includes('peinture') || t.includes('malowan') || t.includes('vinil') || t.includes('vinyl') || t.includes('vinyle') || t.includes('decorac') || t.includes('decoracion') || t.includes('decoration') || t.includes('dekorac') || t.includes('logotipo') || t.includes('logo') || t.includes('grafismo') || t.includes('rotulac') || t.includes('lettering') || t.includes('wrapping')) return 'fa-paint-roller';
+  if (t.includes('luz') || t.includes('ilumina') || t.includes('light') || t.includes('eclairage') || t.includes('oswietlen') || t.includes('led') || t.includes('projetor') || t.includes('foco') || t.includes('spot') || t.includes('lampada') || t.includes('lampara') || t.includes('lamp') || t.includes('lampe') || t.includes('lampa')) return 'fa-lightbulb';
+
+  // 13. VEÃCULO, CHASSI & MECÃ‚NICA
+  if (t.includes('camiao') || t.includes('camion') || t.includes('truck') || t.includes('ciezarow') || t.includes('furgao') || t.includes('furgo') || t.includes('van') || t.includes('fourgon') || t.includes('furgon') || t.includes('veiculo') || t.includes('vehiculo') || t.includes('vehicle') || t.includes('vehicule') || t.includes('pojazd') || t.includes('carro') || t.includes('coche') || t.includes('car') || t.includes('voiture') || t.includes('auto') || t.includes('chassi') || t.includes('chasis') || t.includes('chassis') || t.includes('podwozie') || t.includes('autocarro') || t.includes('autobus') || t.includes('bus') || t.includes('smartbus') || t.includes('semirreboque') || t.includes('semirremolque') || t.includes('semi-trailer') || t.includes('semi-remorque') || t.includes('naczep') || t.includes('reboque') || t.includes('remolque') || t.includes('trailer') || t.includes('remorque') || t.includes('przyczep')) return 'fa-truck';
+  if (t.includes('pata') || t.includes('estabiliz') || t.includes('stabiliz') || t.includes('nivelador') || t.includes('level') || t.includes('ma-ve') || t.includes('apoio')) return 'fa-arrows-up-down';
+  if (t.includes('peso') || t.includes('weight') || t.includes('poids') || t.includes('waga') || t.includes('pma') || t.includes('tara') || t.includes('bruto') || t.includes('gross') || t.includes('brutto')) return 'fa-weight-hanging';
+  if (t.includes('motor') || t.includes('engine') || t.includes('moteur') || t.includes('silnik') || t.includes('cilindrada') || t.includes('potencia') || t.includes('power') || t.includes('puissance') || t.includes('moc') || t.includes('cv') || t.includes('hp') || t.includes('km') || t.includes('binario') || t.includes('torque') || t.includes('couple') || t.includes('moment')) return 'fa-gauge-high';
+  if (t.includes('caixa') || t.includes('caja de cambio') || t.includes('gearbox') || t.includes('boite de vitesse') || t.includes('skrzynia bieg') || t.includes('transmiss') || t.includes('mudanca') || t.includes('marcha') || t.includes('gear') || t.includes('vitesse') || t.includes('bieg')) return 'fa-gears';
+  if (t.includes('suspens') || t.includes('pneumat') || t.includes('air suspens') || t.includes('zawieszen') || t.includes('mola') || t.includes('resorte') || t.includes('spring') || t.includes('ressort') || t.includes('eixo') || t.includes('eje') || t.includes('axle') || t.includes('essieu') || t.includes('os')) return 'fa-arrows-left-right';
+  if (t.includes('travao') || t.includes('freno') || t.includes('brake') || t.includes('frein') || t.includes('hamulec') || t.includes('disco') || t.includes('disc') || t.includes('disque') || t.includes('tarcza') || t.includes('abs') || t.includes('ebs') || t.includes('esp')) return 'fa-compact-disc';
+  if (t.includes('roda') || t.includes('rueda') || t.includes('wheel') || t.includes('roue') || t.includes('kolo') || t.includes('pneu') || t.includes('neumatic') || t.includes('tire') || t.includes('tyre') || t.includes('opon')) return 'fa-circle-notch';
 
   return 'fa-circle-dot';
 }
@@ -20338,6 +20442,10 @@ function renderConsultasUserData(userId) {
       const isA = typeof isClientContacted === 'function' ? isClientContacted(a.id) : false;
       const isB = typeof isClientContacted === 'function' ? isClientContacted(b.id) : false;
       res = (isA === isB ? 0 : (isA ? -1 : 1));
+    } else if (cliSortF === 'proximoContacto') {
+      const dateA = (a.proximoContacto && String(a.proximoContacto).trim()) ? new Date(String(a.proximoContacto).trim() + 'T00:00:00').getTime() : 0;
+      const dateB = (b.proximoContacto && String(b.proximoContacto).trim()) ? new Date(String(b.proximoContacto).trim() + 'T00:00:00').getTime() : 0;
+      res = (dateA === dateB ? 0 : (dateA === 0 ? 1 : (dateB === 0 ? -1 : dateA - dateB)));
     } else if (cliSortF === 'nome') {
       res = (a.nome || '').localeCompare(b.nome || '', sortLocale, { sensitivity: 'base' });
     } else if (cliSortF === 'contribuinte') {
@@ -20370,6 +20478,10 @@ function renderConsultasUserData(userId) {
       const isA = typeof isContactContacted === 'function' ? isContactContacted(a.id) : false;
       const isB = typeof isContactContacted === 'function' ? isContactContacted(b.id) : false;
       res = (isA === isB ? 0 : (isA ? -1 : 1));
+    } else if (conSortF === 'proximoContacto') {
+      const dateA = (a.proximoContacto && String(a.proximoContacto).trim()) ? new Date(String(a.proximoContacto).trim() + 'T00:00:00').getTime() : 0;
+      const dateB = (b.proximoContacto && String(b.proximoContacto).trim()) ? new Date(String(b.proximoContacto).trim() + 'T00:00:00').getTime() : 0;
+      res = (dateA === dateB ? 0 : (dateA === 0 ? 1 : (dateB === 0 ? -1 : dateA - dateB)));
     } else if (conSortF === 'nome') {
       const nameA = `${a.nome || ''} ${a.apelido || ''}`.trim();
       const nameB = `${b.nome || ''} ${b.apelido || ''}`.trim();
@@ -20452,11 +20564,35 @@ function renderConsultasUserData(userId) {
   if (listConEl) listConEl.textContent = userContacts.length;
   if (listProjEl) listProjEl.textContent = userProjects.length;
 
+  const todayMidnight = new Date(); todayMidnight.setHours(0, 0, 0, 0);
+
+  // Helper para badge de proximo contacto
+  const formatProxBadge = (proxDateStr) => {
+    if (!proxDateStr || !String(proxDateStr).trim()) {
+      return '<span style="color: #94a3b8; font-size: 0.8rem; font-style: italic;">-</span>';
+    }
+    const targetDate = new Date(String(proxDateStr).trim() + 'T00:00:00');
+    if (isNaN(targetDate.getTime())) return '<span style="color: #94a3b8; font-size: 0.8rem; font-style: italic;">-</span>';
+    const diffDays = Math.round((targetDate.getTime() - todayMidnight.getTime()) / (1000 * 60 * 60 * 24));
+    const formattedDate = targetDate.toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+    if (diffDays === 0) {
+      return `<span class="badge badge-amber" style="font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 12px; font-size: 0.75rem;"><i class="fa-solid fa-bell" style="margin-right: 3px;"></i>Hoje (${formattedDate})</span>`;
+    } else if (diffDays < 0) {
+      return `<span class="badge badge-danger" style="font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 12px; font-size: 0.75rem;"><i class="fa-solid fa-triangle-exclamation" style="margin-right: 3px;"></i>Em atraso (${formattedDate})</span>`;
+    } else if (diffDays === 1) {
+      return `<span class="badge badge-blue" style="font-weight: 600; padding: 0.2rem 0.55rem; border-radius: 12px; font-size: 0.75rem;"><i class="fa-regular fa-calendar-check" style="margin-right: 3px;"></i>Amanh\u00E3 (${formattedDate})</span>`;
+    } else {
+      return `<span class="badge badge-blue" style="font-weight: 600; padding: 0.2rem 0.55rem; border-radius: 12px; font-size: 0.75rem;"><i class="fa-regular fa-calendar-check" style="margin-right: 3px;"></i>${formattedDate}</span>`;
+    }
+  };
+
   // 1. RENDER QUADRO 1: CLIENTES
   const clientsThead = document.getElementById('consultasClientsTableHead');
   if (clientsThead) {
     const lblTipo = typeof translateSystemTerm === 'function' ? translateSystemTerm('Tipo de Cliente', activeLang) : 'Tipo de Cliente';
     const lblContactado = typeof translateSystemTerm === 'function' ? translateSystemTerm('Contactado', activeLang) : 'Contactado';
+    const lblProxContacto = typeof translateSystemTerm === 'function' ? translateSystemTerm('Pr\u00F3ximo Contacto', activeLang) : 'Pr\u00F3ximo Contacto';
     const lblNome = typeof translateSystemTerm === 'function' ? translateSystemTerm('Nome / Raz\u00E3o Social', activeLang) : 'Nome / Raz\u00E3o Social';
     const lblNif = typeof translateSystemTerm === 'function' ? translateSystemTerm('Contribuinte (NIF)', activeLang) : 'Contribuinte (NIF)';
     const lblLocalidade = typeof translateSystemTerm === 'function' ? translateSystemTerm('Localidade', activeLang) : 'Localidade';
@@ -20471,6 +20607,9 @@ function renderConsultasUserData(userId) {
         </th>
         <th onclick="toggleConsultasSortHeader('client', 'contactado')" style="padding: 0.75rem 0.5rem; text-align: center; width: 110px; cursor: pointer; user-select: none;">
           ${escapeHtml(lblContactado)}${getSortIcon('contactado', cliSortF, cliSortD, '#1e3a8a')}
+        </th>
+        <th onclick="toggleConsultasSortHeader('client', 'proximoContacto')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblProxContacto)}${getSortIcon('proximoContacto', cliSortF, cliSortD, '#1e3a8a')}
         </th>
         <th onclick="toggleConsultasSortHeader('client', 'nome')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
           ${escapeHtml(lblNome)}${getSortIcon('nome', cliSortF, cliSortD, '#1e3a8a')}
@@ -20497,7 +20636,7 @@ function renderConsultasUserData(userId) {
   const clientsTbody = document.getElementById('consultasClientsTableBody');
   if (clientsTbody) {
     if (userClients.length === 0) {
-      clientsTbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #64748b; padding: 2rem;"><i class="fa-solid fa-building-circle-xmark" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>Nenhum cliente associado a este utilizador.</td></tr>`;
+      clientsTbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: #64748b; padding: 2rem;"><i class="fa-solid fa-building-circle-xmark" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>Nenhum cliente associado a este utilizador.</td></tr>`;
     } else {
       const transSim = typeof translateSystemTerm === 'function' ? translateSystemTerm('Sim', activeLang) : 'Sim';
       const transNao = typeof translateSystemTerm === 'function' ? translateSystemTerm('N\u00E3o', activeLang) : 'N\u00E3o';
@@ -20510,6 +20649,8 @@ function renderConsultasUserData(userId) {
         const badgeClass = (rawTipo === 'Estatal' || rawTipo === 'P\u00FAblico' || rawTipo === 'Governamental') ? 'badge-blue' : (rawTipo === 'Funda\u00E7\u00E3o' || rawTipo === 'Fundacion' || rawTipo === 'Foundation') ? 'badge-purple' : 'badge-green';
         const contactInfo = [c.telemovel, c.telefone].filter(Boolean).join(' / ') || '-';
         const isContacted = typeof isClientContacted === 'function' ? isClientContacted(c.id) : false;
+        const proxBadge = formatProxBadge(c.proximoContacto);
+
         return `
           <tr onclick="openClientFromConsultas('${c.id}')" style="border-bottom: 1px solid #e2e8f0; cursor: pointer; transition: background 0.15s ease;" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='transparent'" title="Clique para abrir e consultar ficha do cliente">
             <td style="padding: 0.75rem 1rem;"><span class="badge ${badgeClass}" style="font-size: 0.75rem; padding: 0.2rem 0.55rem; border-radius: 12px;">${escapeHtml(transTipo)}</span></td>
@@ -20519,6 +20660,7 @@ function renderConsultasUserData(userId) {
                 <span style="font-size: 0.78rem; font-weight: 700; color: ${isContacted ? '#16a34a' : '#94a3b8'};">${isContacted ? transSim : transNao}</span>
               </label>
             </td>
+            <td style="padding: 0.75rem 1rem;">${proxBadge}</td>
             <td style="padding: 0.75rem 1rem;"><strong style="color: #1e3a8a; font-size: 0.9rem;"><i class="fa-solid fa-folder-open" style="font-size: 0.8rem; margin-right: 4px; color: #2563eb;"></i>${escapeHtml(c.nome || '-')}</strong>${c.ministerio ? `<br><span style="font-size: 0.75rem; color: #64748b;">${escapeHtml(c.ministerio)}</span>` : ''}</td>
             <td style="padding: 0.75rem 1rem; color: #334155; font-size: 0.85rem;">${escapeHtml(c.contribuinte || '-')}</td>
             <td style="padding: 0.75rem 1rem; color: #334155; font-size: 0.85rem;">${escapeHtml(c.localidade || '-')}</td>
@@ -20535,6 +20677,7 @@ function renderConsultasUserData(userId) {
   const contactsThead = document.getElementById('consultasContactsTableHead');
   if (contactsThead) {
     const lblContactado2 = typeof translateSystemTerm === 'function' ? translateSystemTerm('Contactado', activeLang) : 'Contactado';
+    const lblProxContacto2 = typeof translateSystemTerm === 'function' ? translateSystemTerm('Pr\u00F3ximo Contacto', activeLang) : 'Pr\u00F3ximo Contacto';
     const lblNomeContacto = typeof translateSystemTerm === 'function' ? translateSystemTerm('Nome do Contacto', activeLang) : 'Nome do Contacto';
     const lblCliAssoc = typeof translateSystemTerm === 'function' ? translateSystemTerm('Cliente Associado (Empresa)', activeLang) : 'Cliente Associado';
     const lblCargo = typeof translateSystemTerm === 'function' ? translateSystemTerm('Cargo / Fun\u00E7\u00E3o', activeLang) : 'Cargo / Fun\u00E7\u00E3o';
@@ -20546,6 +20689,9 @@ function renderConsultasUserData(userId) {
       <tr style="background-color: #d1fae5; color: #065f46;">
         <th onclick="toggleConsultasSortHeader('contact', 'contactado')" style="padding: 0.75rem 0.5rem; text-align: center; width: 110px; cursor: pointer; user-select: none;">
           ${escapeHtml(lblContactado2)}${getSortIcon('contactado', conSortF, conSortD, '#065f46')}
+        </th>
+        <th onclick="toggleConsultasSortHeader('contact', 'proximoContacto')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
+          ${escapeHtml(lblProxContacto2)}${getSortIcon('proximoContacto', conSortF, conSortD, '#065f46')}
         </th>
         <th onclick="toggleConsultasSortHeader('contact', 'nome')" style="padding: 0.75rem 1rem; text-align: left; font-weight: 700; cursor: pointer; user-select: none;">
           ${escapeHtml(lblNomeContacto)}${getSortIcon('nome', conSortF, conSortD, '#065f46')}
@@ -20572,7 +20718,7 @@ function renderConsultasUserData(userId) {
   const contactsTbody = document.getElementById('consultasContactsTableBody');
   if (contactsTbody) {
     if (userContacts.length === 0) {
-      contactsTbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #64748b; padding: 2rem;"><i class="fa-solid fa-user-slash" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>Nenhum contacto associado a este utilizador.</td></tr>`;
+      contactsTbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #64748b; padding: 2rem;"><i class="fa-solid fa-user-slash" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>Nenhum contacto associado a este utilizador.</td></tr>`;
     } else {
       const transSim = typeof translateSystemTerm === 'function' ? translateSystemTerm('Sim', activeLang) : 'Sim';
       const transNao = typeof translateSystemTerm === 'function' ? translateSystemTerm('N\u00E3o', activeLang) : 'N\u00E3o';
@@ -20582,6 +20728,7 @@ function renderConsultasUserData(userId) {
         const contactName = `${con.nome || ''} ${con.apelido || ''}`.trim() || '-';
         const contactPhone = [con.telemovel, con.telefone].filter(Boolean).join(' / ') || '-';
         const isContacted = typeof isContactContacted === 'function' ? isContactContacted(con.id) : false;
+        const proxBadge = formatProxBadge(con.proximoContacto);
         const rawCargo = con.cargo || '-';
         const transCargo = typeof translateSystemTerm === 'function' ? translateSystemTerm(rawCargo, activeLang) : rawCargo;
         return `
@@ -20592,6 +20739,7 @@ function renderConsultasUserData(userId) {
                 <span style="font-size: 0.78rem; font-weight: 700; color: ${isContacted ? '#16a34a' : '#94a3b8'};">${isContacted ? transSim : transNao}</span>
               </label>
             </td>
+            <td style="padding: 0.75rem 1rem;">${proxBadge}</td>
             <td style="padding: 0.75rem 1rem;">
               <div style="display: flex; align-items: center; gap: 0.5rem;">
                 <div style="width: 28px; height: 28px; border-radius: 50%; background: #d1fae5; color: #065f46; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; flex-shrink: 0;">
@@ -20929,3 +21077,203 @@ function toggleConsultasProjectsStatusSort() {
   renderConsultasUserData(selectEl ? selectEl.value : null);
 }
 window.toggleConsultasProjectsStatusSort = toggleConsultasProjectsStatusSort;
+
+
+function updateSoftwareModalUI(pkgData, source = 'github') {
+  if (!pkgData) return;
+  const modal = document.getElementById('updateConfirmationModal');
+  if (!modal) return;
+
+  const fileEl = document.getElementById('updateRestoreFileName');
+  const verEl = document.getElementById('updateRestoreFileVersion');
+  const dateEl = document.getElementById('updateRestoreFileDate');
+  const sourceBadge = document.getElementById('updateRestoreSourceBadge');
+  const compEl = document.getElementById('updateCountComponents');
+  const modEl = document.getElementById('updateCountModules');
+
+  const verName = pkgData.version || pkgData.packageName || 'SIGEC_V1.7.3';
+  const fileName = pkgData.fileName || (pkgData.packageName ? `${pkgData.packageName}.json` : (pkgData.name || `${verName}.json`));
+
+  // Extração e formatação rigorosa de Data e Hora
+  let dateText = pkgData.dataHoraCriacao || pkgData.dataCriacao || pkgData.createdAt || (pkgData.software ? pkgData.software.releasedAt : null);
+  
+  if (!dateText && pkgData.name) {
+    const match = pkgData.name.match(/([0-9]{2})-([0-9]{2})-([0-9]{4})_([0-9]{2})h([0-9]{2})m/);
+    if (match) {
+      dateText = `${match[1]}/${match[2]}/${match[3]} ${match[4]}:${match[5]}:00`;
+    }
+  }
+
+  if (dateText && !dateText.includes('/')) {
+    const d = new Date(dateText);
+    if (!isNaN(d.getTime())) {
+      dateText = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
+    }
+  }
+
+  if (!dateText || dateText === '--') {
+    const now = new Date();
+    dateText = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+  }
+
+  if (fileEl) fileEl.textContent = fileName;
+  if (verEl) verEl.textContent = verName;
+  if (dateEl) dateEl.textContent = dateText;
+
+  const activeLang = typeof getCurrentSystemLanguage === 'function' ? getCurrentSystemLanguage() : 'Português';
+
+  if (sourceBadge) {
+    if (source === 'local') {
+      const srcText = typeof translateSystemTerm === 'function' ? translateSystemTerm('Ficheiro Local (Computador)', activeLang) : 'Ficheiro Local (Computador)';
+      sourceBadge.innerHTML = `<i class="fa-solid fa-laptop"></i> ${srcText}`;
+      sourceBadge.style.background = '#fef3c7';
+      sourceBadge.style.color = '#92400e';
+      sourceBadge.style.borderColor = '#fde68a';
+    } else {
+      const srcText = typeof translateSystemTerm === 'function' ? translateSystemTerm('Servidor GitHub (Pasta Atualização)', activeLang) : 'Servidor GitHub (Pasta Atualização)';
+      sourceBadge.innerHTML = `<i class="fa-solid fa-cloud-check"></i> ${srcText}`;
+      sourceBadge.style.background = '#dcfce7';
+      sourceBadge.style.color = '#15803d';
+      sourceBadge.style.borderColor = '#86efac';
+    }
+  }
+
+  if (compEl) compEl.textContent = 'Completo';
+  if (modEl) modEl.textContent = 'Software SIGEC-Pro';
+
+  modal.classList.add('active');
+}
+window.updateSoftwareModalUI = updateSoftwareModalUI;
+
+
+function extractPackageTimestamp(pkgNameOrObj) {
+  if (!pkgNameOrObj) return 0;
+  
+  if (typeof pkgNameOrObj === 'object') {
+    const iso = pkgNameOrObj.createdAt || pkgNameOrObj.dataHoraCriacao || (pkgNameOrObj.software ? pkgNameOrObj.software.releasedAt : null);
+    if (iso) {
+      const t = new Date(iso).getTime();
+      if (!isNaN(t) && t > 0) return t;
+    }
+  }
+
+  const str = typeof pkgNameOrObj === 'string' ? pkgNameOrObj : (pkgNameOrObj.fileName || pkgNameOrObj.packageName || pkgNameOrObj.name || '');
+  const match = str.match(/([0-9]{2})-([0-9]{2})-([0-9]{4})_([0-9]{2})h([0-9]{2})m(?:([0-9]{2})s)?/);
+  if (match) {
+    const day = parseInt(match[1], 10);
+    const month = parseInt(match[2], 10) - 1;
+    const year = parseInt(match[3], 10);
+    const hours = parseInt(match[4], 10);
+    const minutes = parseInt(match[5], 10);
+    const seconds = match[6] ? parseInt(match[6], 10) : 0;
+    const dt = new Date(year, month, day, hours, minutes, seconds).getTime();
+    if (!isNaN(dt) && dt > 0) return dt;
+  }
+
+  const vNum = parseVersionNumber(str);
+  return vNum > 0 ? (vNum * 1000) : 0;
+}
+window.extractPackageTimestamp = extractPackageTimestamp;
+
+
+// ==========================================
+// NOTIFICAÇÕES POR EMAIL DE NOVOS REGISTOS
+// ==========================================
+
+function getEmailNotifySettings() {
+  const enabled = localStorage.getItem('sigec_pro_admin_notify_enabled') !== 'false';
+  const email = localStorage.getItem('sigec_pro_admin_notify_email') || 'jmcenturio@alegria-activity.com';
+  return { enabled, email };
+}
+window.getEmailNotifySettings = getEmailNotifySettings;
+
+function renderEmailNotifySettingsUI() {
+  const settings = getEmailNotifySettings();
+  const enabledEl = document.getElementById('cfgEmailNotifyEnabled');
+  const addressEl = document.getElementById('cfgEmailNotifyAddress');
+  if (enabledEl) enabledEl.checked = settings.enabled;
+  if (addressEl) addressEl.value = settings.email;
+}
+window.renderEmailNotifySettingsUI = renderEmailNotifySettingsUI;
+
+function handleSaveEmailNotifySettings(showToastMsg = false) {
+  const enabledEl = document.getElementById('cfgEmailNotifyEnabled');
+  const addressEl = document.getElementById('cfgEmailNotifyAddress');
+
+  const enabled = enabledEl ? enabledEl.checked : true;
+  const email = addressEl ? (addressEl.value.trim() || 'jmcenturio@alegria-activity.com') : 'jmcenturio@alegria-activity.com';
+
+  localStorage.setItem('sigec_pro_admin_notify_enabled', enabled ? 'true' : 'false');
+  localStorage.setItem('sigec_pro_admin_notify_email', email);
+
+  if (showToastMsg) {
+    showToast('Definições de notificação por email guardadas com sucesso!');
+  }
+}
+window.handleSaveEmailNotifySettings = handleSaveEmailNotifySettings;
+
+async function sendNewUserRegistrationEmailNotification(userData, isTest = false) {
+  const settings = getEmailNotifySettings();
+  if (!settings.enabled && !isTest) return;
+
+  const targetEmail = settings.email || 'jmcenturio@alegria-activity.com';
+  const userName = userData.nome || 'Novo Utilizador';
+  const userEmail = userData.email || 'Não especificado';
+  const userCargo = userData.cargo || 'Não especificado';
+  const userIdioma = userData.idioma || 'Português';
+  const userRole = userData.role === 'admin' ? 'Administrador' : 'Utilizador Padrão';
+  const nowStr = new Date().toLocaleString('pt-PT');
+  const userAgent = typeof navigator !== 'undefined' ? navigator.userAgent : 'Navegador Web';
+  const deviceInfo = /Mobile|Android|iPhone/i.test(userAgent) ? 'Dispositivo Móvel' : 'Computador';
+
+  const subject = isTest 
+    ? `[SIGEC-Pro] Teste de Notificação por Email - Sistema Ativo`
+    : `[SIGEC-Pro] Notificação: Novo Registo de Utilizador - ${userName}`;
+
+  const payload = {
+    to: targetEmail,
+    subject: subject,
+    utilizador_nome: userName,
+    utilizador_email: userEmail,
+    utilizador_cargo: userCargo,
+    utilizador_idioma: userIdioma,
+    utilizador_perfil: userRole,
+    data_registo: nowStr,
+    dispositivo: deviceInfo,
+    mensagem: isTest 
+      ? `Este é um email de teste do SIGEC-Pro confirmando que as notificações para ${targetEmail} estão 100% operacionais.`
+      : `Um novo utilizador registou-se no programa SIGEC-Pro.\n\nNome: ${userName}\nEmail: ${userEmail}\nCargo: ${userCargo}\nIdioma: ${userIdioma}\nData: ${nowStr}\nDispositivo: ${deviceInfo}\n\nO acesso encontra-se pendente de aprovação/ativação pelo Administrador.`
+  };
+
+  try {
+    // 1. Envio assíncrono via API de notificação com suporte Formspree / EmailJS
+    await fetch('https://formspree.io/f/mqaevepn', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    }).catch(() => {});
+
+    logUserActivity('Notificação por Email', `Notificação de registo enviada para ${targetEmail} (${userName}).`);
+    console.info(`[SIGEC-Pro] Notificação por email processada para ${targetEmail}`);
+  } catch (err) {
+    console.warn('[SIGEC-Pro] Falha no envio de notificação por email:', err);
+  }
+}
+window.sendNewUserRegistrationEmailNotification = sendNewUserRegistrationEmailNotification;
+
+async function sendTestEmailNotification() {
+  const settings = getEmailNotifySettings();
+  showToast(`A enviar email de teste para ${settings.email}...`, 'info');
+  await sendNewUserRegistrationEmailNotification({
+    nome: 'Teste de Notificação',
+    email: settings.email,
+    cargo: 'Administrador do Sistema',
+    idioma: 'Português',
+    role: 'admin'
+  }, true);
+  showToast(`Email de teste enviado com sucesso para ${settings.email}!`, 'success');
+}
+window.sendTestEmailNotification = sendTestEmailNotification;

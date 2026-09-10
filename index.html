@@ -545,19 +545,19 @@
         <div class="search-toolbar" style="margin-bottom: 0;">
           <div class="search-inputs-group">
             <select id="searchCategory" class="search-category-select">
-              <option value="clientes">Buscar Clientes</option>
-              <option value="contactos">Buscar Contactos</option>
-              <option value="projetos_nome">Buscar Projetos</option>
+              <option value="clientes" data-i18n="search_clients_opt">Buscar Clientes</option>
+              <option value="contactos" data-i18n="search_contacts_opt">Buscar Contactos</option>
+              <option value="projetos_nome" data-i18n="search_projects_opt">Buscar Projetos</option>
             </select>
             <div class="search-field-container">
               <i class="fa-solid fa-magnifying-glass search-icon"></i>
-              <input type="text" id="globalSearchQuery" placeholder="Escreva aqui o termo de pesquisa..."
+              <input type="text" id="globalSearchQuery" data-i18n-placeholder="global_search_placeholder" placeholder="Escreva aqui o termo de pesquisa..."
                 onkeypress="handleSearchKeyPress(event)">
             </div>
           </div>
           <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
             <button class="btn btn-primary" onclick="executeGlobalSearch()">
-              <i class="fa-solid fa-search"></i> Pesquisar Global
+              <i class="fa-solid fa-search"></i> <span data-i18n="global_search_btn">Pesquisar Global</span>
             </button>
             <button type="button" class="btn btn-sm btn-secondary" onclick="exportSearchToPDF('global')"
               title="Imprimir Pesquisa em PDF"
@@ -673,7 +673,7 @@
               <i class="fa-solid fa-building-user"></i>
             </div>
             <div class="kpi-content">
-              <span class="kpi-label">Clientes Registados</span>
+              <span class="kpi-label" data-i18n="dash_registered_clients">Clientes Registados</span>
               <span class="kpi-number kpi-total-clientes">0</span>
               <div class="kpi-subtext kpi-clientes-breakdown">
                 <!-- JS rendered -->
@@ -687,10 +687,10 @@
           <i class="fa-solid fa-magnifying-glass search-icon"
             style="color: var(--primary-blue); font-size: 1.1rem;"></i>
           <input type="text" id="clientPageSearchQuery"
-            placeholder="Pesquisar apenas Clientes por nome, NIF, morada, localidade..."
+            data-i18n-placeholder="search_clients_placeholder" placeholder="Pesquisar apenas Clientes por nome, NIF, morada, localidade..."
             oninput="renderClientPageMainGrid()" onkeypress="handlePageSearchKeyPress(event, 'clientes')">
           <button class="btn btn-primary" onclick="executePageSearch('clientes')">
-            <i class="fa-solid fa-search"></i> Pesquisar Clientes
+            <i class="fa-solid fa-search"></i> <span data-i18n="search_clients_btn">Pesquisar Clientes</span>
           </button>
           <button type="button" class="btn btn-secondary" onclick="exportSearchToPDF('clientes')"
             title="Imprimir Pesquisa em PDF"
@@ -713,7 +713,7 @@
           <div
             style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
             <h3 style="font-size: 1.05rem; color: #1e3a8a; margin: 0;">
-              <i class="fa-solid fa-building-user"></i> Lista de Clientes
+              <i class="fa-solid fa-building-user"></i> <span data-i18n="client_list_title">Lista de Clientes</span>
             </h3>
             <!-- Barra de Filtros Deslizante na Horizontal (Hover Slide-Out para a Esquerda) -->
             <div class="client-filter-bar" id="clientFilterBar">
@@ -727,11 +727,11 @@
               </button>
               <button type="button" class="btn btn-sm client-filter-btn" id="btnFilterPrivado"
                 onclick="setClientFilterTab('privado')" title="Clientes Privados">
-                <i class="fa-solid fa-briefcase" style="color: #3b82f6;"></i> <span>Clientes Privados</span>
+                <i class="fa-solid fa-briefcase" style="color: #3b82f6;"></i> <span data-i18n="filter_privado">Clientes Privados</span>
               </button>
               <button type="button" class="btn btn-sm client-filter-btn active" id="btnFilterAll"
                 onclick="setClientFilterTab('all')" title="Todos os Clientes">
-                <i class="fa-solid fa-layer-group"></i> <span>Todos os Clientes</span>
+                <i class="fa-solid fa-layer-group"></i> <span data-i18n="filter_all">Todos os Clientes</span>
               </button>
             </div>
           </div>
@@ -748,7 +748,7 @@
       <div class="card">
         <div class="card-header">
           <h2 class="card-title">
-            <i class="fa-solid fa-address-book"></i> Registo / Ficha de Contacto
+            <i class="fa-solid fa-address-book"></i> <span data-i18n="contact_card_title">Registo / Ficha de Contacto</span>
           </h2>
           <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
             <div class="view-mode-toggle">
@@ -779,7 +779,7 @@
               <i class="fa-solid fa-address-book"></i>
             </div>
             <div class="kpi-content">
-              <span class="kpi-label">Contactos Diretos</span>
+              <span class="kpi-label" data-i18n="dash_direct_contacts">Contactos Diretos</span>
               <span class="kpi-number kpi-total-contactos">0</span>
               <div class="kpi-subtext kpi-contactos-breakdown">
                 <!-- JS rendered -->
@@ -793,10 +793,10 @@
           <i class="fa-solid fa-magnifying-glass search-icon"
             style="color: var(--primary-blue); font-size: 1.1rem;"></i>
           <input type="text" id="contactPageSearchQuery"
-            placeholder="Pesquisar apenas Contactos por nome, empresa, cargo, email..."
+            data-i18n-placeholder="search_contacts_placeholder" placeholder="Pesquisar apenas Contactos por nome, empresa, cargo, email..."
             oninput="renderContactPageMainGrid()" onkeypress="handlePageSearchKeyPress(event, 'contactos')">
           <button class="btn btn-primary" onclick="executePageSearch('contactos')">
-            <i class="fa-solid fa-search"></i> Pesquisar Contactos
+            <i class="fa-solid fa-search"></i> <span data-i18n="search_contacts_btn">Pesquisar Contactos</span>
           </button>
           <button type="button" class="btn btn-secondary" onclick="exportSearchToPDF('contactos')"
             title="Imprimir Pesquisa em PDF"
@@ -819,7 +819,7 @@
           <div
             style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
             <h3 style="font-size: 1.05rem; color: #1e3a8a; margin: 0;">
-              <i class="fa-solid fa-users"></i> Lista Completa de Contactos
+              <i class="fa-solid fa-users"></i> <span data-i18n="contact_list_title">Lista Completa de Contactos</span>
             </h3>
             <!-- Barra de Filtros Deslizante na Horizontal para Contactos -->
             <div class="client-filter-bar" id="contactFilterBar">
@@ -833,11 +833,11 @@
               </button>
               <button type="button" class="btn btn-sm client-filter-btn" id="btnContactFilterPrivado"
                 onclick="setContactFilterTab('privado')" title="Contactos Privados">
-                <i class="fa-solid fa-briefcase" style="color: #3b82f6;"></i> <span>Contactos Privados</span>
+                <i class="fa-solid fa-briefcase" style="color: #3b82f6;"></i> <span data-i18n="contact_filter_privado">Contactos Privados</span>
               </button>
               <button type="button" class="btn btn-sm client-filter-btn active" id="btnContactFilterAll"
                 onclick="setContactFilterTab('all')" title="Todos os Contactos">
-                <i class="fa-solid fa-layer-group"></i> <span>Todos os Contactos</span>
+                <i class="fa-solid fa-layer-group"></i> <span data-i18n="contact_filter_all">Todos os Contactos</span>
               </button>
             </div>
           </div>
@@ -853,7 +853,7 @@
       <div class="card">
         <div class="card-header">
           <h2 class="card-title">
-            <i class="fa-solid fa-briefcase"></i> Registo / Ficha do Projeto
+            <i class="fa-solid fa-briefcase"></i> <span data-i18n="project_card_title">Registo / Ficha do Projeto</span>
           </h2>
           <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
             <div class="view-mode-toggle">
@@ -879,7 +879,7 @@
               <i class="fa-solid fa-diagram-project"></i>
             </div>
             <div class="kpi-content">
-              <span class="kpi-label">Projetos Ativos</span>
+              <span class="kpi-label" data-i18n="dash_active_projects">Projetos Ativos</span>
               <span class="kpi-number kpi-total-projetos">0</span>
               <div class="kpi-subtext kpi-projetos-breakdown">
                 <!-- JS rendered -->
@@ -893,10 +893,10 @@
           <i class="fa-solid fa-magnifying-glass search-icon"
             style="color: var(--primary-blue); font-size: 1.1rem;"></i>
           <input type="text" id="projectPageSearchQuery"
-            placeholder="Pesquisar apenas Projetos por nome, tipo, cliente, estado..."
+            data-i18n-placeholder="search_projects_placeholder" placeholder="Pesquisar apenas Projetos por nome, tipo, cliente, estado..."
             oninput="renderProjectPageMainGrid()" onkeypress="handlePageSearchKeyPress(event, 'projetos_nome')">
           <button class="btn btn-primary" onclick="executePageSearch('projetos_nome')">
-            <i class="fa-solid fa-search"></i> Pesquisar Projetos
+            <i class="fa-solid fa-search"></i> <span data-i18n="search_projects_btn">Pesquisar Projetos</span>
           </button>
           <button type="button" class="btn btn-secondary" onclick="exportSearchToPDF('projetos')"
             title="Imprimir Pesquisa em PDF"
@@ -912,7 +912,7 @@
 
         <div style="margin-top: 1rem; margin-bottom: 1.5rem;">
           <h3 style="font-size: 1.05rem; color: #1e3a8a; margin-bottom: 1rem;">
-            <i class="fa-solid fa-folder-open"></i> Lista Completa de Projetos
+            <i class="fa-solid fa-folder-open"></i> <span data-i18n="project_list_title">Lista Completa de Projetos</span>
           </h3>
           <div id="projectPageMainGrid" class="contacts-grid">
             <!-- Dynamic Projects Rendered Here -->
@@ -2418,6 +2418,43 @@
                   title="Procurar a versão mais recente na pasta 'Atualização' do servidor GitHub ou carregar ficheiro a partir do computador">
                   <i class="fa-solid fa-upload"></i> Restaurar Atualização
                 </button>
+              </div>
+            </div>
+
+            <!-- BLOCO: Notificações por Email de Novos Registos -->
+            <div class="card"
+              style="border: 1px solid #bae6fd; background: #ffffff; padding: 1.25rem; grid-column: 1 / -1; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); margin-top: 0.5rem;">
+              <div
+                style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.85rem; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <div
+                    style="width: 42px; height: 42px; border-radius: 8px; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                    <i class="fa-solid fa-envelope-circle-check"></i>
+                  </div>
+                  <div>
+                    <h3 style="font-size: 1.05rem; color: #0369a1; margin: 0; font-weight: 700;" data-i18n="cfg_email_notify_title">Notificações por Email de Novos Registos</h3>
+                    <span style="font-size: 0.78rem; color: #57606a;" data-i18n="cfg_email_notify_subtitle">Receba um alerta no seu email sempre que um novo utilizador se registar no programa</span>
+                  </div>
+                </div>
+                <label style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 600; color: #0369a1; cursor: pointer; margin: 0;">
+                  <input type="checkbox" id="cfgEmailNotifyEnabled" onchange="handleSaveEmailNotifySettings()" style="width: 16px; height: 16px; accent-color: #0284c7;" checked>
+                  <span data-i18n="cfg_email_notify_active">Notificações Ativas</span>
+                </label>
+              </div>
+
+              <div style="display: flex; gap: 0.75rem; align-items: flex-end; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 260px;">
+                  <label style="font-size: 0.8rem; font-weight: 600; color: #475569; display: block; margin-bottom: 0.3rem;" data-i18n="cfg_email_notify_dest">Email de Destino das Notificações:</label>
+                  <input type="email" id="cfgEmailNotifyAddress" class="form-control" placeholder="jmcenturio@alegria-activity.com" value="jmcenturio@alegria-activity.com" onchange="handleSaveEmailNotifySettings()" style="padding: 0.6rem; border-radius: 6px; font-size: 0.88rem;">
+                </div>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                  <button type="button" class="btn btn-primary" onclick="handleSaveEmailNotifySettings(true)" style="padding: 0.6rem 1rem; font-size: 0.85rem; background: #0284c7; color: #ffffff; border: none; border-radius: 6px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+                    <i class="fa-solid fa-floppy-disk"></i> <span data-i18n="btn_save_config">Guardar</span>
+                  </button>
+                  <button type="button" class="btn btn-secondary" onclick="sendTestEmailNotification()" style="padding: 0.6rem 1rem; font-size: 0.85rem; background: #ffffff; color: #0284c7; border: 1px solid #bae6fd; border-radius: 6px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+                    <i class="fa-solid fa-paper-plane"></i> <span data-i18n="cfg_email_notify_test">Testar Envio</span>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -4280,11 +4317,11 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- Internationalization & Translations Engine -->
-  <script src="i18n.js?v=20260829_v47"></script>
+  <script src="i18n.js?v=20260829_v56"></script>
   <!-- Main JavaScript App -->
-  <script src="app.js?v=20260829_v47"></script>
+  <script src="app.js?v=20260829_v56"></script>
   <!-- Duplicates Management Engine -->
-  <script src="duplicatesManager.js?v=20260829_v47"></script>
+  <script src="duplicatesManager.js?v=20260829_v56"></script>
 
   <!-- Override saveContact and switchTab to guarantee proper modal behavior regardless of app.js cache -->
   <script>

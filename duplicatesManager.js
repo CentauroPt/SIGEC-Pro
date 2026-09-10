@@ -124,7 +124,7 @@
 
       for (let j = i + 1; j < clientes.length; j++) {
         const c2 = clientes[j];
-        if (!c2 || !c2.id || processedIds.has(c2.id)) continue;
+        if (!c2 || !c2.id || processedIds.has(c2.id) || isDuplicatePairDecided(c1.id, c2.id)) continue;
 
         const nif2 = normalizeNIF(c2.nif);
         const email2 = normalizeEmail(c2.email);
@@ -216,7 +216,7 @@
 
       for (let j = i + 1; j < contactos.length; j++) {
         const c2 = contactos[j];
-        if (!c2 || !c2.id || processedIds.has(c2.id)) continue;
+        if (!c2 || !c2.id || processedIds.has(c2.id) || isDuplicatePairDecided(c1.id, c2.id)) continue;
 
         const email2 = normalizeEmail(c2.email);
         const fullName2 = `${c2.nome || ''} ${c2.apelido || ''}`.trim();
@@ -302,7 +302,7 @@
 
       for (let j = i + 1; j < projetos.length; j++) {
         const p2 = projetos[j];
-        if (!p2 || !p2.id || processedIds.has(p2.id)) continue;
+        if (!p2 || !p2.id || processedIds.has(p2.id) || isDuplicatePairDecided(p1.id, p2.id)) continue;
 
         const code2 = normalizeText(p2.codigo || '');
         const name2 = normalizeText(p2.nome || p2.designacao || '');
@@ -704,7 +704,7 @@
     const nameNorm = normalizeText(nome);
 
     db.clientes.forEach(c => {
-      if (excludeId && c.id === excludeId) return;
+      if (excludeId && (c.id === excludeId || isDuplicatePairDecided(excludeId, c.id))) return;
 
       if (nifNorm && nifNorm.length >= 5 && normalizeNIF(c.nif) === nifNorm) {
         warnings.push({ field: 'nif', client: c, message: `Já existe um cliente com este NIF (${c.nif}): "${c.nome}".` });
@@ -729,7 +729,7 @@
     const nameNorm = normalizeText(nome);
 
     db.contactos.forEach(con => {
-      if (excludeId && con.id === excludeId) return;
+      if (excludeId && (con.id === excludeId || isDuplicatePairDecided(excludeId, con.id))) return;
 
       if (emailNorm && emailNorm.includes('@') && normalizeEmail(con.email) === emailNorm) {
         warnings.push({ field: 'email', contact: con, message: `Já existe um contacto com este Email (${con.email}): "${con.nome}".` });
@@ -1174,6 +1174,11 @@
     if (!confirm(`Confirma a eliminação definitiva de ${toDelete.length} registo(s):\n${names}\n\nEsta ação não pode ser revertida.`)) return;
 
     // Reencaminhar dependências dos eliminados para o escolhido antes de apagar
+        for (let a = 0; a < group.items.length; a++) {
+      for (let b = a + 1; b < group.items.length; b++) {
+        markDuplicatePairDecided(group.items[a].id, group.items[b].id);
+      }
+    }
     const secondaryIds = toDelete.map(i => i.id);
     if (group.type === 'clientes') {
       ['projetos','contactos','orcamentos','interacoes'].forEach(col => {
@@ -1237,16 +1242,10 @@
       return;
     }
 
-    const pairKey = ids.slice().sort().join('|');
-
-    try {
-      const ignored = JSON.parse(localStorage.getItem('sigec_pro_dup_ignored') || '[]');
-      if (!ignored.includes(pairKey)) {
-        ignored.push(pairKey);
-        localStorage.setItem('sigec_pro_dup_ignored', JSON.stringify(ignored));
+    for (let a = 0; a < ids.length; a++) {
+      for (let b = a + 1; b < ids.length; b++) {
+        markDuplicatePairDecided(ids[a], ids[b]);
       }
-    } catch (e) {
-      console.error('[DuplicatesManager] Erro ao gravar par ignorado:', e);
     }
 
     try {
@@ -1323,6 +1322,9 @@
     if (!confirm(`Confirma a eliminação definitiva de:\n"${name}"${depWarning}\n\nEsta ação não pode ser revertida.`)) return;
 
     // Apagar o registo da BD
+        group.items.forEach(other => {
+      if (other.id !== itemId) markDuplicatePairDecided(itemId, other.id);
+    });
     if (typeof addDeletedId === 'function') addDeletedId(group.type, itemId);
     db[group.type] = db[group.type].filter(i => i.id !== itemId);
 
