@@ -557,6 +557,11 @@ const SIGEC_I18N = {
  * Permite a tradução automática e profunda de qualquer texto estático ou dinâmico
  */
 const SIGEC_PHRASES_MAP = {
+  "Serviço de Envio:": {"Português":"Serviço de Envio:","Español":"Servicio de Envío:","English":"Dispatch Service:","Français":"Service d'Envoi:","Polski":"Usługa Wysyłki:"},
+  "Chave de API / Public Key:": {"Português":"Chave de API / Public Key:","Español":"Clave de API / Public Key:","English":"API Key / Public Key:","Français":"Clé d'API / Public Key:","Polski":"Klucz API / Public Key:"},
+  "Service ID / Template ID:": {"Português":"Service ID / Template ID:","Español":"Service ID / Template ID:","English":"Service ID / Template ID:","Français":"Service ID / Template ID:","Polski":"Service ID / Template ID:"},
+  "Novos Registos Pendentes": {"Português":"Novos Registos Pendentes","Español":"Nuevos Registros Pendientes","English":"Pending New Registrations","Français":"Nouvelles Inscriptions en Attente","Polski":"Oczekujące Nowe Rejestracje"},
+
   "Notificações por Email de Novos Registos": {"Português":"Notificações por Email de Novos Registos","Español":"Notificaciones por Correo de Nuevos Registros","English":"Email Notifications for New Registrations","Français":"Notifications par E-mail pour Nouveaux Inscrits","Polski":"Powiadomienia E-mail o Nowych Rejestracjach"},
   "Receba um alerta no seu email sempre que um novo utilizador se registar no programa": {"Português":"Receba um alerta no seu email sempre que um novo utilizador se registar no programa","Español":"Reciba una alerta en su correo siempre que un nuevo usuario se registre en el programa","English":"Receive an email alert whenever a new user registers in the program","Français":"Recevez une alerte par e-mail chaque fois qu'un nouvel utilisateur s'inscrit","Polski":"Otrzymuj alert e-mail za każdym razem, gdy nowy użytkownik rejestruje się w programie"},
   "Notificações Ativas": {"Português":"Notificações Ativas","Español":"Notificaciones Activas","English":"Notifications Active","Français":"Notifications Actives","Polski":"Powiadomienia Aktywne"},

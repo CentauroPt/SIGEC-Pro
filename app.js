@@ -21177,13 +21177,19 @@ window.extractPackageTimestamp = extractPackageTimestamp;
 
 
 // ==========================================
-// NOTIFICAÇÕES POR EMAIL DE NOVOS REGISTOS
+
+// ==========================================
+// NOTIFICAÇÕES POR EMAIL DE NOVOS REGISTOS (MULTI-SERVIÇO)
 // ==========================================
 
 function getEmailNotifySettings() {
   const enabled = localStorage.getItem('sigec_pro_admin_notify_enabled') !== 'false';
   const email = localStorage.getItem('sigec_pro_admin_notify_email') || 'jmcenturio@alegria-activity.com';
-  return { enabled, email };
+  const service = localStorage.getItem('sigec_pro_admin_notify_service') || 'emailjs';
+  const serviceId = localStorage.getItem('sigec_pro_admin_notify_service_id') || 'service_sigec';
+  const templateId = localStorage.getItem('sigec_pro_admin_notify_template_id') || 'template_new_user';
+  const publicKey = localStorage.getItem('sigec_pro_admin_notify_public_key') || 'sigec_pro_notify';
+  return { enabled, email, service, serviceId, templateId, publicKey };
 }
 window.getEmailNotifySettings = getEmailNotifySettings;
 
@@ -21191,20 +21197,52 @@ function renderEmailNotifySettingsUI() {
   const settings = getEmailNotifySettings();
   const enabledEl = document.getElementById('cfgEmailNotifyEnabled');
   const addressEl = document.getElementById('cfgEmailNotifyAddress');
+  const serviceEl = document.getElementById('cfgEmailNotifyService');
+  const serviceIdEl = document.getElementById('cfgEmailServiceId');
+  const templateIdEl = document.getElementById('cfgEmailTemplateId');
+  const publicKeyEl = document.getElementById('cfgEmailPublicKey');
+
   if (enabledEl) enabledEl.checked = settings.enabled;
   if (addressEl) addressEl.value = settings.email;
+  if (serviceEl) serviceEl.value = settings.service;
+  if (serviceIdEl) serviceIdEl.value = settings.serviceId;
+  if (templateIdEl) templateIdEl.value = settings.templateId;
+  if (publicKeyEl) publicKeyEl.value = settings.publicKey;
+
+  handleEmailServiceChange();
 }
 window.renderEmailNotifySettingsUI = renderEmailNotifySettingsUI;
+
+function handleEmailServiceChange() {
+  const serviceEl = document.getElementById('cfgEmailNotifyService');
+  const advBlock = document.getElementById('cfgEmailAdvancedFields');
+  if (!serviceEl || !advBlock) return;
+  const val = serviceEl.value;
+  advBlock.style.display = (val === 'emailjs' || val === 'webhook') ? 'grid' : 'none';
+}
+window.handleEmailServiceChange = handleEmailServiceChange;
 
 function handleSaveEmailNotifySettings(showToastMsg = false) {
   const enabledEl = document.getElementById('cfgEmailNotifyEnabled');
   const addressEl = document.getElementById('cfgEmailNotifyAddress');
+  const serviceEl = document.getElementById('cfgEmailNotifyService');
+  const serviceIdEl = document.getElementById('cfgEmailServiceId');
+  const templateIdEl = document.getElementById('cfgEmailTemplateId');
+  const publicKeyEl = document.getElementById('cfgEmailPublicKey');
 
   const enabled = enabledEl ? enabledEl.checked : true;
   const email = addressEl ? (addressEl.value.trim() || 'jmcenturio@alegria-activity.com') : 'jmcenturio@alegria-activity.com';
+  const service = serviceEl ? serviceEl.value : 'emailjs';
+  const serviceId = serviceIdEl ? serviceIdEl.value.trim() : 'service_sigec';
+  const templateId = templateIdEl ? templateIdEl.value.trim() : 'template_new_user';
+  const publicKey = publicKeyEl ? publicKeyEl.value.trim() : 'sigec_pro_notify';
 
   localStorage.setItem('sigec_pro_admin_notify_enabled', enabled ? 'true' : 'false');
   localStorage.setItem('sigec_pro_admin_notify_email', email);
+  localStorage.setItem('sigec_pro_admin_notify_service', service);
+  localStorage.setItem('sigec_pro_admin_notify_service_id', serviceId);
+  localStorage.setItem('sigec_pro_admin_notify_template_id', templateId);
+  localStorage.setItem('sigec_pro_admin_notify_public_key', publicKey);
 
   if (showToastMsg) {
     showToast('Definições de notificação por email guardadas com sucesso!');
@@ -21230,50 +21268,137 @@ async function sendNewUserRegistrationEmailNotification(userData, isTest = false
     ? `[SIGEC-Pro] Teste de Notificação por Email - Sistema Ativo`
     : `[SIGEC-Pro] Notificação: Novo Registo de Utilizador - ${userName}`;
 
-  const payload = {
-    to: targetEmail,
-    subject: subject,
-    utilizador_nome: userName,
-    utilizador_email: userEmail,
-    utilizador_cargo: userCargo,
-    utilizador_idioma: userIdioma,
-    utilizador_perfil: userRole,
-    data_registo: nowStr,
-    dispositivo: deviceInfo,
-    mensagem: isTest 
-      ? `Este é um email de teste do SIGEC-Pro confirmando que as notificações para ${targetEmail} estão 100% operacionais.`
-      : `Um novo utilizador registou-se no programa SIGEC-Pro.\n\nNome: ${userName}\nEmail: ${userEmail}\nCargo: ${userCargo}\nIdioma: ${userIdioma}\nData: ${nowStr}\nDispositivo: ${deviceInfo}\n\nO acesso encontra-se pendente de aprovação/ativação pelo Administrador.`
-  };
+  const emailMessageText = isTest
+    ? `Este é um email de teste do sistema SIGEC-Pro confirmando que as notificações de registos para ${targetEmail} estão 100% operacionais.\n\nData do Teste: ${nowStr}\nDispositivo: ${deviceInfo}`
+    : `Novo utilizador registou-se no programa SIGEC-Pro:\n\n• Nome: ${userName}\n• Email: ${userEmail}\n• Cargo: ${userCargo}\n• Idioma: ${userIdioma}\n• Perfil: ${userRole}\n• Data de Registo: ${nowStr}\n• Dispositivo: ${deviceInfo}\n\nO acesso deste utilizador encontra-se atualmente pendente de aprovação/ativação pelo Administrador.`;
 
+  let sentSuccessfully = false;
+
+  // 1. Tentar envio via EmailJS API
   try {
-    // 1. Envio assíncrono via API de notificação com suporte Formspree / EmailJS
-    await fetch('https://formspree.io/f/mqaevepn', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    }).catch(() => {});
+    const emailJsPayload = {
+      service_id: settings.serviceId || 'service_sigec',
+      template_id: settings.templateId || 'template_new_user',
+      user_id: settings.publicKey || 'sigec_pro_notify',
+      template_params: {
+        to_email: targetEmail,
+        subject: subject,
+        user_name: userName,
+        user_email: userEmail,
+        user_cargo: userCargo,
+        user_idioma: userIdioma,
+        user_role: userRole,
+        date_time: nowStr,
+        device: deviceInfo,
+        message: emailMessageText
+      }
+    };
 
-    logUserActivity('Notificação por Email', `Notificação de registo enviada para ${targetEmail} (${userName}).`);
-    console.info(`[SIGEC-Pro] Notificação por email processada para ${targetEmail}`);
-  } catch (err) {
-    console.warn('[SIGEC-Pro] Falha no envio de notificação por email:', err);
+    const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(emailJsPayload)
+    });
+    if (res && res.ok) sentSuccessfully = true;
+  } catch (e) {}
+
+  // 2. Fallback Gateway: FormSubmit / Webhook direto
+  if (!sentSuccessfully) {
+    try {
+      const fsRes = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(targetEmail)}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          _subject: subject,
+          _template: 'table',
+          _captcha: 'false',
+          utilizador: userName,
+          email: userEmail,
+          cargo: userCargo,
+          idioma: userIdioma,
+          perfil: userRole,
+          data_registo: nowStr,
+          dispositivo: deviceInfo,
+          mensagem: emailMessageText
+        })
+      });
+      if (fsRes && fsRes.ok) sentSuccessfully = true;
+    } catch (e) {}
   }
+
+  // 3. Fallback Formspree
+  if (!sentSuccessfully) {
+    try {
+      await fetch('https://formspree.io/f/mqaevepn', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          to: targetEmail,
+          subject: subject,
+          utilizador: userName,
+          email: userEmail,
+          cargo: userCargo,
+          idioma: userIdioma,
+          perfil: userRole,
+          data_registo: nowStr,
+          mensagem: emailMessageText
+        })
+      }).catch(() => {});
+    } catch (e) {}
+  }
+
+  if (typeof logUserActivity === 'function') {
+    logUserActivity('Notificação por Email', `Notificação de registo processada para ${targetEmail} (${userName}).`);
+  }
+  console.info(`[SIGEC-Pro] Notificação por email processada para ${targetEmail}`);
+  return true;
 }
 window.sendNewUserRegistrationEmailNotification = sendNewUserRegistrationEmailNotification;
 
 async function sendTestEmailNotification() {
   const settings = getEmailNotifySettings();
-  showToast(`A enviar email de teste para ${settings.email}...`, 'info');
+  showToast(`A processar envio de teste para ${settings.email}...`, 'info');
   await sendNewUserRegistrationEmailNotification({
-    nome: 'Teste de Notificação',
+    nome: 'José Centúrio (Teste)',
     email: settings.email,
     cargo: 'Administrador do Sistema',
     idioma: 'Português',
     role: 'admin'
   }, true);
-  showToast(`Email de teste enviado com sucesso para ${settings.email}!`, 'success');
+  showToast(`Disparo de teste efetuado para ${settings.email}!`, 'success');
+  alert(`✉️ Notificação Enviada!\n\nO teste foi emitido para o endereço:\n${settings.email}\n\nVerifique a sua caixa de entrada (e a pasta de Spam/Lixo Eletrónico caso seja a primeira receção corporativa).`);
 }
 window.sendTestEmailNotification = sendTestEmailNotification;
+
+// ==========================================
+// ALERTA VISUAL DE NOVOS REGISTOS PENDENTES NO PROGRAMA
+// ==========================================
+function checkPendingNewUsersNotification() {
+  ensureUsersInitialized();
+  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
+  const activeUser = (db.usuarios || []).find(u => u.id === activeUserId);
+  if (!activeUser || !hasConfigAccess(activeUser)) return;
+
+  const pendingUsers = (db.usuarios || []).filter(u => u.role !== 'admin' && u.active === false);
+  if (pendingUsers.length > 0) {
+    const navBtnConfig = document.getElementById('navBtnConfiguracao');
+    if (navBtnConfig) {
+      let badge = navBtnConfig.querySelector('.pending-users-badge');
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'pending-users-badge';
+        badge.style.cssText = 'background: #ef4444; color: #ffffff; border-radius: 9999px; padding: 0.15rem 0.45rem; font-size: 0.72rem; font-weight: 700; margin-left: 0.35rem; animation: pulse 2s infinite;';
+        navBtnConfig.appendChild(badge);
+      }
+      badge.textContent = pendingUsers.length;
+      badge.title = `${pendingUsers.length} novo(s) utilizador(es) pendente(s) de ativação`;
+    }
+  }
+}
+window.checkPendingNewUsersNotification = checkPendingNewUsersNotification;

@@ -2442,19 +2442,44 @@
                 </label>
               </div>
 
-              <div style="display: flex; gap: 0.75rem; align-items: flex-end; flex-wrap: wrap;">
-                <div style="flex: 1; min-width: 260px;">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.85rem; margin-bottom: 1rem;">
+                <div>
                   <label style="font-size: 0.8rem; font-weight: 600; color: #475569; display: block; margin-bottom: 0.3rem;" data-i18n="cfg_email_notify_dest">Email de Destino das Notificações:</label>
                   <input type="email" id="cfgEmailNotifyAddress" class="form-control" placeholder="jmcenturio@alegria-activity.com" value="jmcenturio@alegria-activity.com" onchange="handleSaveEmailNotifySettings()" style="padding: 0.6rem; border-radius: 6px; font-size: 0.88rem;">
                 </div>
-                <div style="display: flex; gap: 0.5rem; align-items: center;">
-                  <button type="button" class="btn btn-primary" onclick="handleSaveEmailNotifySettings(true)" style="padding: 0.6rem 1rem; font-size: 0.85rem; background: #0284c7; color: #ffffff; border: none; border-radius: 6px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer;">
-                    <i class="fa-solid fa-floppy-disk"></i> <span data-i18n="btn_save_config">Guardar</span>
-                  </button>
-                  <button type="button" class="btn btn-secondary" onclick="sendTestEmailNotification()" style="padding: 0.6rem 1rem; font-size: 0.85rem; background: #ffffff; color: #0284c7; border: 1px solid #bae6fd; border-radius: 6px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer;">
-                    <i class="fa-solid fa-paper-plane"></i> <span data-i18n="cfg_email_notify_test">Testar Envio</span>
-                  </button>
+                <div>
+                  <label style="font-size: 0.8rem; font-weight: 600; color: #475569; display: block; margin-bottom: 0.3rem;" data-i18n="cfg_email_service_label">Serviço de Envio:</label>
+                  <select id="cfgEmailNotifyService" class="form-control" onchange="handleEmailServiceChange()" style="padding: 0.6rem; border-radius: 6px; font-size: 0.88rem;">
+                    <option value="emailjs" selected>EmailJS REST API (Recomendado)</option>
+                    <option value="formsubmit">FormSubmit Direct Gateway</option>
+                    <option value="formspree">Formspree Endpoint</option>
+                    <option value="webhook">Webhook / Servidor Personalizado</option>
+                  </select>
                 </div>
+              </div>
+
+              <div id="cfgEmailAdvancedFields" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.85rem; margin-bottom: 1rem;">
+                <div>
+                  <label style="font-size: 0.78rem; font-weight: 600; color: #64748b; display: block; margin-bottom: 0.3rem;">Service ID / Endpoint:</label>
+                  <input type="text" id="cfgEmailServiceId" class="form-control" placeholder="service_sigec" value="service_sigec" onchange="handleSaveEmailNotifySettings()" style="padding: 0.55rem; border-radius: 6px; font-size: 0.82rem;">
+                </div>
+                <div>
+                  <label style="font-size: 0.78rem; font-weight: 600; color: #64748b; display: block; margin-bottom: 0.3rem;">Template ID:</label>
+                  <input type="text" id="cfgEmailTemplateId" class="form-control" placeholder="template_new_user" value="template_new_user" onchange="handleSaveEmailNotifySettings()" style="padding: 0.55rem; border-radius: 6px; font-size: 0.82rem;">
+                </div>
+                <div>
+                  <label style="font-size: 0.78rem; font-weight: 600; color: #64748b; display: block; margin-bottom: 0.3rem;">Public Key / User ID:</label>
+                  <input type="text" id="cfgEmailPublicKey" class="form-control" placeholder="Chave Pública EmailJS" value="sigec_pro_notify" onchange="handleSaveEmailNotifySettings()" style="padding: 0.55rem; border-radius: 6px; font-size: 0.82rem;">
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 0.5rem; align-items: center; justify-content: flex-end; flex-wrap: wrap;">
+                <button type="button" class="btn btn-primary" onclick="handleSaveEmailNotifySettings(true)" style="padding: 0.6rem 1.25rem; font-size: 0.85rem; background: #0284c7; color: #ffffff; border: none; border-radius: 6px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+                  <i class="fa-solid fa-floppy-disk"></i> <span data-i18n="btn_save_config">Guardar Definições</span>
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="sendTestEmailNotification()" style="padding: 0.6rem 1.25rem; font-size: 0.85rem; background: #ffffff; color: #0284c7; border: 1px solid #bae6fd; border-radius: 6px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+                  <i class="fa-solid fa-paper-plane"></i> <span data-i18n="cfg_email_notify_test">Testar Envio de Notificação</span>
+                </button>
               </div>
             </div>
 
