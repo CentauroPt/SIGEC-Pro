@@ -4496,8 +4496,10 @@ document.addEventListener('DOMContentLoaded', () => {
   renderHomeDashboard();
   if (typeof populateBudgetClientsSelect === 'function') populateBudgetClientsSelect();
 
-  // Sincroniza automaticamente os dados salvaguardados no Servidor GitHub ao carregar a página
-  autoSyncServerOnStartup();
+  // Sincroniza automaticamente os dados salvaguardados no Servidor GitHub ao carregar a página se disponível
+  if (typeof autoSyncServerOnStartup === 'function') {
+    autoSyncServerOnStartup();
+  }
 
   // Escutar alterações nos campos para controlo de confirmação de edições
   document.addEventListener('input', (e) => {
@@ -14577,6 +14579,26 @@ const PERMANENT_ADMIN_MASTER_PIN = "J*cen*1971";
 
 function ensureUsersInitialized() {
   loadDeletedRegistry();
+
+  const rawStoredUsers = localStorage.getItem('sigec_pro_usuarios');
+  if (rawStoredUsers) {
+    try {
+      const parsed = JSON.parse(rawStoredUsers);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        if (!Array.isArray(db.usuarios)) db.usuarios = [];
+        parsed.forEach(storedU => {
+          if (storedU && storedU.id && !isDeletedId('usuarios', storedU.id)) {
+            const idx = db.usuarios.findIndex(u => u && (u.id === storedU.id || (u.email && storedU.email && u.email.toLowerCase().trim() === storedU.email.toLowerCase().trim())));
+            if (idx >= 0) {
+              db.usuarios[idx] = { ...storedU, ...db.usuarios[idx] };
+            } else {
+              db.usuarios.push(storedU);
+            }
+          }
+        });
+      }
+    } catch (e) {}
+  }
 
   if (Array.isArray(db.usuarios)) {
     db.usuarios = db.usuarios.filter(u => {
