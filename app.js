@@ -8992,6 +8992,7 @@ function renderDatabaseOverview() {
   if (typeof renderGitHubSettingsForm === 'function') renderGitHubSettingsForm();
   if (typeof renderEmailNotifySettingsUI === 'function') renderEmailNotifySettingsUI();
   if (typeof populateBudgetClientsSelect === 'function') populateBudgetClientsSelect();
+  if (typeof renderUserManagementGrid === 'function') renderUserManagementGrid();
 }
 
 // ==========================================
@@ -15197,6 +15198,20 @@ async function syncRegisteredUsersFromGitHub(silent = false) {
 window.syncRegisteredUsersFromGitHub = syncRegisteredUsersFromGitHub;
 
 function renderUserManagementGrid() {
+  const rawStoredUsers = localStorage.getItem('sigec_pro_usuarios');
+  if (rawStoredUsers) {
+    try {
+      const parsed = JSON.parse(rawStoredUsers);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        if (!Array.isArray(db.usuarios)) db.usuarios = [];
+        parsed.forEach(storedU => {
+          if (storedU && storedU.id && !db.usuarios.some(u => u.id === storedU.id || (u.email && storedU.email && u.email.toLowerCase().trim() === storedU.email.toLowerCase().trim()))) {
+            db.usuarios.push(storedU);
+          }
+        });
+      }
+    } catch (e) {}
+  }
   ensureUsersInitialized();
   const block = document.getElementById('adminUserManagementBlock');
   const navBtnConfig = document.getElementById('navBtnConfiguracao') || document.querySelector('.nav-btn[data-tab="tab-database"]');
