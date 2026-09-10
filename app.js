@@ -4100,11 +4100,11 @@ function handleSaveGitHubSettings(event) {
 
   ensureUsersInitialized();
   const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
-  const activeUser = db.usuarios.find(u => u.id === activeUserId);
+  const activeUser = (activeUserId && typeof db !== 'undefined' && Array.isArray(db.usuarios)) ? db.usuarios.find(u => u && u.id === activeUserId) : null;
 
-  if (!activeUser || activeUser.role !== 'admin') {
-    showToast('Apenas o Administrador pode configurar o Token e Servidor GitHub.', 'danger');
-    alert('Acesso Restrito:\nApenas o Administrador do Sistema tem permissão para alterar as definições de sincronização com o GitHub.');
+  if (!activeUser || !hasConfigAccess(activeUser)) {
+    showToast('Apenas o Administrador e José Centúrio podem configurar o Servidor GitHub.', 'danger');
+    alert('Acesso Restrito:\nApenas o Administrador e o utilizador José Centúrio têm permissão para alterar as definições de sincronização com o GitHub.');
     return;
   }
 
@@ -4137,18 +4137,19 @@ function handleSaveGitHubSettings(event) {
 
   renderGitHubSettingsForm();
   logUserActivity('Configuração Servidor', `Definições do servidor GitHub e Token PAT guardados pelo Administrador (4 chaves redundantes).`);
-  showToast('Definições do servidor GitHub e Token guardados com sucesso!');
+  showToast('Definições do servidor GitHub e Token guardados com sucesso!', 'success');
   alert(`✅ Definições do Servidor GitHub Guardadas!\n\nRepositório: ${owner}/${repo}\nFicheiro: ${path}\nStatus: ${token ? 'Token PAT Ativo & Blindado (4 chaves redundantes)' : 'Modo Leitura (Sem Token)'}\n\nO seu token está agora protegido em múltiplas localizações e será preservado mesmo após atualizações de software.`);
 }
+window.handleSaveGitHubSettings = handleSaveGitHubSettings;
 
 function handleRemoveGitHubToken() {
   ensureUsersInitialized();
   const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
-  const activeUser = db.usuarios.find(u => u.id === activeUserId);
+  const activeUser = (activeUserId && typeof db !== 'undefined' && Array.isArray(db.usuarios)) ? db.usuarios.find(u => u && u.id === activeUserId) : null;
 
-  if (!activeUser || activeUser.role !== 'admin') {
-    showToast('Apenas o Administrador pode remover o Token de Acesso.', 'danger');
-    alert('Acesso Restrito:\nApenas o Administrador do Sistema pode remover o Token de Acesso.');
+  if (!activeUser || !hasConfigAccess(activeUser)) {
+    showToast('Apenas o Administrador e José Centúrio podem remover o Token de Acesso.', 'danger');
+    alert('Acesso Restrito:\nApenas o Administrador e o utilizador José Centúrio podem remover o Token de Acesso.');
     return;
   }
 
@@ -4159,10 +4160,11 @@ function handleRemoveGitHubToken() {
     const tokenEl = document.getElementById('githubPersonalToken');
     if (tokenEl) tokenEl.value = '';
     renderGitHubSettingsForm();
-    logUserActivity('Configuração Servidor', `Token PAT do GitHub removido manualmente pelo Administrador.`);
+    logUserActivity('Configuração Servidor', `Token PAT do GitHub removido manualmente.`);
     showToast('Token de Acesso Pessoal removido com sucesso.', 'info');
   }
 }
+window.handleRemoveGitHubToken = handleRemoveGitHubToken;
 
 function toggleGithubTokenVisibility() {
   const tokenEl = document.getElementById('githubPersonalToken');
@@ -4182,6 +4184,30 @@ function toggleGithubTokenVisibility() {
     }
   }
 }
+window.toggleGithubTokenVisibility = toggleGithubTokenVisibility;
+
+async function handleFullServerSync(silent = false) {
+  ensureUsersInitialized();
+  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
+  const activeUser = (activeUserId && typeof db !== 'undefined' && Array.isArray(db.usuarios)) ? db.usuarios.find(u => u && u.id === activeUserId) : null;
+
+  if (!activeUser || !hasConfigAccess(activeUser)) {
+    if (!silent) {
+      showToast('Acesso restrito ao Administrador e a José Centúrio.', 'warning');
+      alert('Acesso Restrito:\nApenas o Administrador e o utilizador José Centúrio podem executar a sincronização com o servidor.');
+    }
+    return false;
+  }
+
+  if (!silent) showToast('A sincronizar com o servidor GitHub...', 'info');
+  const success = await syncDatabaseToGitHub(silent);
+  if (success) {
+    renderGitHubSettingsForm();
+  }
+  return success;
+}
+window.handleFullServerSync = handleFullServerSync;
+window.renderGitHubSettingsForm = renderGitHubSettingsForm;
 
 let isSyncingToGitHub = false;
 
