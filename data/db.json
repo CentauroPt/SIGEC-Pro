@@ -5314,6 +5314,39 @@
   ],
   "userLogs": [
     {
+      "id": "log-1789046342733-664",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Notificação por Email",
+      "descricao": "Alerta de registo emitido com sucesso para josecenturio@gmail.com (José Centúrio (Teste de Sistema)).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-09-10T13:19:02.733Z"
+    },
+    {
+      "id": "log-1789046251761-797",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Notificação por Email",
+      "descricao": "Alerta de registo emitido com sucesso para josecenturio@gmail.com (José Centúrio (Teste de Sistema)).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-09-10T13:17:31.761Z"
+    },
+    {
+      "id": "log-1789046248267-202",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-09-10T13:17:28.267Z"
+    },
+    {
       "id": "log-1789046214867-207",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
