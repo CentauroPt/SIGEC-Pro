@@ -1428,7 +1428,7 @@
       "secretariaEstado": "",
       "nome": "Galp Energia, SGPS, S.A.",
       "contribuinte": "500001258",
-      "direcao1": "Avenida da Índia",
+      "direcao1": "Avenida da Ãndia",
       "direcao2": "",
       "numero": "8",
       "andar": "",
@@ -1437,7 +1437,7 @@
       "pais": "Portugal",
       "telefone": "217242500",
       "telemovel": "",
-      "email": "galp@galp.pt",
+      "email": "galp@galp.com",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
       "comercialAtribuidoNome": "José Centúrio",
@@ -5348,9 +5348,9 @@
     },
     {
       "id": "usr-1787393198433",
-      "nome": "Steve Holmes",
+      "nome": "Steve Jobs",
       "primeiroNome": "Steve",
-      "apelido": "Holmes",
+      "apelido": "Jobs",
       "email": "steve@steve.com",
       "cargo": "Comercial",
       "idioma": "English",
@@ -5361,19 +5361,7 @@
       "chefia": false
     }
   ],
-  "userLogs": [
-    {
-      "id": "log-1789054048930-508",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Gestão de Utilizadores",
-      "descricao": "Utilizador Carlos Campos (Carlos@carlos.pt) eliminado do sistema.",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-09-10T15:27:28.930Z"
-    }
-  ],
+  "userLogs": [],
   "orcamentos": [
     {
       "id": "orc-norte-2040-004",
@@ -5453,15 +5441,7 @@
       "createdAt": "2026-08-30T11:36:06.325Z"
     }
   ],
-  "ignoredDuplicates": [
-    {
-      "type": "cli-1786604620361-357",
-      "key": "cli-1786727373519-853:::undefined",
-      "id1": "cli-1786727373519-853",
-      "ignoredAt": "2026-08-22T10:13:13.470Z",
-      "ignoredBy": "Sistema"
-    }
-  ],
+  "ignoredDuplicates": [],
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
   "_deletedRegistry": {
     "clientes": [
