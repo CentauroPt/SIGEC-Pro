@@ -5371,30 +5371,60 @@
       "pin": "J*cen*1971",
       "role": "user",
       "chefia": false,
-      "active": true,
+      "active": false,
       "createdAt": "2026-09-10T21:19:29.789Z"
     }
   ],
   "userLogs": [
     {
-      "id": "log-1789077587324-628",
+      "id": "log-1789077982787-892",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
       "acao": "Gestão de Utilizadores",
-      "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Ativo / Aprovado.",
+      "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Bloqueado.",
       "extra": {},
-      "timestamp": "2026-09-10T21:59:47.324Z"
+      "timestamp": "2026-09-10T22:06:22.787Z"
     },
     {
-      "id": "log-1789077587324-315",
+      "id": "log-1789077946256-520",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Conta Ativada",
-      "detalhes": "Email de confirmação de conta ativa enviado para jjota26@gmail.com (antonio campos) no idioma Português.",
+      "acao": "Notificação por Email",
+      "detalhes": "Alerta de registo emitido para jmcenturio@alegria-activity.com (José Centúrio (Teste de Sistema)).",
       "extra": {},
-      "timestamp": "2026-09-10T21:59:47.324Z"
+      "timestamp": "2026-09-10T22:05:46.256Z"
+    },
+    {
+      "id": "log-1789077828674-477",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Notificação por Email",
+      "detalhes": "Alerta de registo emitido para jmcenturio@alegria-activity.com (José Centúrio (Teste de Sistema)).",
+      "extra": {},
+      "timestamp": "2026-09-10T22:03:48.674Z"
+    },
+    {
+      "id": "log-1789077808553-941",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Notificação por Email",
+      "detalhes": "Alerta de registo emitido para jmcenturio@alegria-activity.com (José Centúrio (Teste de Sistema)).",
+      "extra": {},
+      "timestamp": "2026-09-10T22:03:28.553Z"
+    },
+    {
+      "id": "log-1789077776191-861",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Notificação por Email",
+      "detalhes": "Alerta de registo emitido para jmcenturio@alegria-activity.com (José Centúrio (Teste de Sistema)).",
+      "extra": {},
+      "timestamp": "2026-09-10T22:02:56.191Z"
     }
   ],
   "orcamentos": [
@@ -5477,6 +5507,12 @@
     }
   ],
   "ignoredDuplicates": [],
+  "config": {
+    "emailNotifyAddress": "jmcenturio@alegria-activity.com",
+    "emailNotifyEnabled": true,
+    "emailProvider": "web3forms",
+    "emailApiKey": ""
+  },
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
   "_deletedRegistry": {
     "clientes": [
