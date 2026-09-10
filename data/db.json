@@ -5371,70 +5371,30 @@
       "pin": "J*cen*1971",
       "role": "user",
       "chefia": false,
-      "active": false,
+      "active": true,
       "createdAt": "2026-09-10T21:19:29.789Z"
     }
   ],
   "userLogs": [
     {
-      "id": "log-1789076491978-966",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Gestão de Utilizadores",
-      "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Bloqueado.",
-      "extra": {},
-      "timestamp": "2026-09-10T21:41:31.978Z"
-    },
-    {
-      "id": "log-1789076443592-934",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Servidor GitHub",
-      "detalhes": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "extra": {},
-      "timestamp": "2026-09-10T21:40:43.592Z"
-    },
-    {
-      "id": "log-1789076440403-680",
+      "id": "log-1789077587324-628",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
       "acao": "Gestão de Utilizadores",
       "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Ativo / Aprovado.",
       "extra": {},
-      "timestamp": "2026-09-10T21:40:40.403Z"
+      "timestamp": "2026-09-10T21:59:47.324Z"
     },
     {
-      "id": "log-1789076440402-918",
+      "id": "log-1789077587324-315",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
       "acao": "Conta Ativada",
       "detalhes": "Email de confirmação de conta ativa enviado para jjota26@gmail.com (antonio campos) no idioma Português.",
       "extra": {},
-      "timestamp": "2026-09-10T21:40:40.402Z"
-    },
-    {
-      "id": "log-1789076417197-26",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Notificação por Email",
-      "detalhes": "Alerta de registo emitido para jmcenturio@alegria-activity.com (José Centúrio (Teste de Sistema)).",
-      "extra": {},
-      "timestamp": "2026-09-10T21:40:17.197Z"
-    },
-    {
-      "id": "log-1789076395358-566",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Notificação por Email",
-      "detalhes": "Alerta de registo emitido para jmcenturio@alegria-activity.com (José Centúrio (Teste de Sistema)).",
-      "extra": {},
-      "timestamp": "2026-09-10T21:39:55.358Z"
+      "timestamp": "2026-09-10T21:59:47.324Z"
     }
   ],
   "orcamentos": [
@@ -5517,12 +5477,6 @@
     }
   ],
   "ignoredDuplicates": [],
-  "config": {
-    "emailNotifyAddress": "jmcenturio@alegria-activity.com",
-    "emailNotifyEnabled": true,
-    "emailProvider": "web3forms",
-    "emailApiKey": ""
-  },
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
   "_deletedRegistry": {
     "clientes": [
