@@ -1428,7 +1428,7 @@
       "secretariaEstado": "",
       "nome": "Galp Energia, SGPS, S.A.",
       "contribuinte": "500001258",
-      "direcao1": "Avenida da Ãndia",
+      "direcao1": "Avenida da Índia",
       "direcao2": "",
       "numero": "8",
       "andar": "",
@@ -1437,7 +1437,7 @@
       "pais": "Portugal",
       "telefone": "217242500",
       "telemovel": "",
-      "email": "galp@galp.com",
+      "email": "galp@galp.pt",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
       "comercialAtribuidoNome": "José Centúrio",
@@ -1458,7 +1458,7 @@
       "andar": "",
       "codigoPostal": "1069-300",
       "localidade": "Lisboa",
-      "pais": "Portugal",
+      "pais": "",
       "telefone": "215003500",
       "telemovel": "",
       "email": "media@altice.pt",
@@ -1640,7 +1640,53 @@
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
       "comercialAtribuidoNome": "José Centúrio",
-      "createdById": "usr-1787590828349"
+      "createdById": "usr-admin-001"
+    },
+    {
+      "id": "cli-imp-009",
+      "tipoCliente": "Privado",
+      "ministerio": "",
+      "secretariaEstado": "",
+      "nome": "NOS",
+      "contribuinte": "500000170",
+      "direcao1": "Rua Actor António Silva, n.º 9, Campo Grande, 1600-404 Lisboa, Portugal",
+      "direcao2": "",
+      "numero": "",
+      "andar": "",
+      "codigoPostal": "1600-404",
+      "localidade": "Lisboa",
+      "pais": "",
+      "telefone": "+351 21 782 47 00",
+      "telemovel": "",
+      "email": "ines.s.pina@nos.pt",
+      "notas": "",
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
+    },
+    {
+      "id": "cli-imp-068",
+      "tipoCliente": "Fundação",
+      "ministerio": "",
+      "secretariaEstado": "",
+      "nome": "Fundação de Serralves",
+      "contribuinte": "500001173",
+      "direcao1": "Rua Dom João de Castro, 210, 4150-417 Porto",
+      "direcao2": "",
+      "numero": "",
+      "andar": "",
+      "codigoPostal": "4150-417",
+      "localidade": "Porto",
+      "telefone": "226156500",
+      "telemovel": "",
+      "email": "serralves@serralves.pt",
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "pais": "Portugal",
+      "notas": "Temas: culture, fostering environmental awareness a través del arte",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-1787223652146-540",
@@ -1721,52 +1767,6 @@
       "comercialAtribuidoNome": "José Centúrio",
       "createdAt": "2026-08-18T10:53:21.189Z",
       "createdById": "usr-admin-001"
-    },
-    {
-      "id": "cli-imp-009",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "NOS, SGPS, S.A.",
-      "contribuinte": "500000170",
-      "direcao1": "Rua Actor António Silva, n.º 9, Campo Grande, 1600-404 Lisboa, Portugal",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1600-404",
-      "localidade": "Lisboa",
-      "pais": "",
-      "telefone": "+351 21 782 47 00",
-      "telemovel": "",
-      "email": "ines.s.pina@nos.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio"
-    },
-    {
-      "id": "cli-imp-068",
-      "tipoCliente": "Fundação",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "Fundação de Serralves",
-      "contribuinte": "500001173",
-      "direcao1": "Rua Dom João de Castro",
-      "direcao2": "",
-      "numero": "210",
-      "andar": "",
-      "codigoPostal": "4150-417",
-      "localidade": "Porto",
-      "telefone": "226156500",
-      "telemovel": "",
-      "email": "serralves@serralves.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "pais": "Portugal",
-      "notas": "Temas: culture, fostering environmental awareness a través del arte",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-1787038283893-566",
@@ -3710,7 +3710,9 @@
       "notas": "",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "separadorId": "sep-1786751754158-584",
+      "empresa": "Ministério da Economia e da Coesão Territorial - Ministério da Economia e da Coesão Territorial"
     },
     {
       "id": "con-imp-137",
@@ -3820,7 +3822,7 @@
       "createdAt": "2026-08-13T07:10:35.080Z",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
-      "createdById": "usr-1787590828349"
+      "createdById": "usr-admin-001"
     },
     {
       "id": "con-1787036001308-748",
@@ -3836,7 +3838,9 @@
       "notas": "",
       "createdAt": "2026-08-18T06:53:21.308Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "separadorId": "sep-1786751754158-584",
+      "empresa": "Ministério da Economia e da Coesão Territorial - Ministério da Economia e da Coesão Territorial"
     },
     {
       "id": "con-1787049428085-546",
@@ -3969,7 +3973,7 @@
     },
     {
       "id": "con-1787049428085-920",
-      "clienteId": "cli-1787038283893-151",
+      "clienteId": "Ministério da Agricultura e Mar",
       "subTabIndex": 0,
       "nome": "Joao Moura",
       "apelido": "",
@@ -3980,7 +3984,9 @@
       "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "tratamento": "",
+      "departamento": ""
     },
     {
       "id": "con-1787049428085-529",
@@ -4128,7 +4134,7 @@
     },
     {
       "id": "con-1787049428085-608",
-      "clienteId": "cli-1787038283894-208",
+      "clienteId": "Ministério do Trabalho, Solidariedade e Segurança Social",
       "subTabIndex": 0,
       "nome": "João Manuel Grossinho Gonçalves",
       "apelido": "",
@@ -4139,7 +4145,9 @@
       "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "tratamento": "",
+      "departamento": ""
     },
     {
       "id": "con-1787049428085-609",
@@ -4402,10 +4410,10 @@
     },
     {
       "id": "con-1787049428085-212",
-      "clienteId": "cli-1787050401189-194",
+      "clienteId": "Ministério da Presidência",
       "subTabIndex": 0,
-      "nome": "João",
-      "apelido": "Martins de Carvalho",
+      "nome": "Joao Martins de Carvalho",
+      "apelido": "",
       "cargo": "Chefe de Gabinete",
       "telefone": "",
       "telemovel": "",
@@ -4413,7 +4421,9 @@
       "notas": "",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "tratamento": "",
+      "departamento": ""
     },
     {
       "id": "con-1787049428085-210",
@@ -4537,7 +4547,7 @@
     },
     {
       "id": "con-1787220906707-770",
-      "clienteId": "cli-imp-073",
+      "clienteId": "cli-1787220780995-314",
       "subTabIndex": 0,
       "nome": "Ângela Mónica",
       "apelido": "Rosa",
@@ -5177,7 +5187,7 @@
     },
     {
       "id": "int-1787224734775-186",
-      "clienteId": "cli-imp-073",
+      "clienteId": "cli-1787220780995-314",
       "separadorId": null,
       "subTabIndex": null,
       "data": "2026-07-27T13:16",
@@ -5289,19 +5299,59 @@
     },
     {
       "id": "usr-1787393198433",
-      "nome": "Steve Jobs",
+      "nome": "Steve Holmes",
       "primeiroNome": "Steve",
-      "apelido": "Jobs",
+      "apelido": "Holmes",
       "email": "steve@steve.com",
       "cargo": "Comercial",
       "idioma": "English",
       "pin": "J*cen*1971",
       "role": "user",
       "active": true,
-      "createdAt": "2026-08-22T10:06:38.433Z"
+      "createdAt": "2026-08-22T10:06:38.433Z",
+      "chefia": false
     }
   ],
-  "userLogs": [],
+  "userLogs": [
+    {
+      "id": "log-1789043182080-407",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Dados de registo e PIN do utilizador Steve Holmes atualizados pelo Administrador.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-09-10T12:26:22.080Z"
+    },
+    {
+      "id": "log-1789043123629-730",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Ficha do utilizador Steve Jobs aberta após autenticação de Administrador.",
+      "pagina": "Base de Dados",
+      "detalhes": null,
+      "timestamp": "2026-09-10T12:25:23.629Z"
+    },
+    {
+      "id": "log-1789043059773-57",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "tipoAcao": "Início de Sessão",
+      "descricao": "Acesso autorizado efetuado por José Centúrio.",
+      "pagina": "Dashboard / Início",
+      "detalhes": {
+        "utilizador": "José Centúrio",
+        "email": "jmcenturio@alegria-activity.com",
+        "cargo": "Administrador do Sistema",
+        "dispositivo": "Computador"
+      },
+      "timestamp": "2026-09-10T12:24:19.773Z"
+    }
+  ],
   "orcamentos": [
     {
       "id": "orc-norte-2040-004",
@@ -5381,7 +5431,15 @@
       "createdAt": "2026-08-30T11:36:06.325Z"
     }
   ],
-  "ignoredDuplicates": [],
+  "ignoredDuplicates": [
+    {
+      "type": "cli-1786604620361-357",
+      "key": "cli-1786727373519-853:::undefined",
+      "id1": "cli-1786727373519-853",
+      "ignoredAt": "2026-08-22T10:13:13.470Z",
+      "ignoredBy": "Sistema"
+    }
+  ],
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
   "_deletedRegistry": {
     "clientes": [
