@@ -1443,7 +1443,42 @@
       "comercialAtribuidoNome": "José Centúrio",
       "createdAt": "2026-07-31T16:30:00.000Z",
       "createdById": "usr-admin-001",
-      "notas": "AGEAS Seguros - https://www.grupoageas.pt/media/1877/ageas-logo.png?\nMEDIS - https://www.grupoageas.pt/media/1013/medis.\nSeguro Diretos - https://www.grupoageas.pt/media/2764/segurodirectosd.png?png?\nOcidental - https://www.grupoageas.pt/media/2763/ocidentalsd.png?\nAGEAS Pensões - https://www.grupoageas.pt/media/2804/ageaspensoes-logo.png?"
+      "notas": "AGEAS Seguros - https://www.grupoageas.pt/media/1877/ageas-logo.png?\nMEDIS - https://www.grupoageas.pt/media/1013/medis.\nSeguro Diretos - https://www.grupoageas.pt/media/2764/segurodirectosd.png?png?\nOcidental - https://www.grupoageas.pt/media/2763/ocidentalsd.png?\nAGEAS Pensões - https://www.grupoageas.pt/media/2804/ageaspensoes-logo.png?",
+      "separadores": [
+        {
+          "id": "sep-1787222680031-548",
+          "tipoSeparador": "Fundação Aga Khan Portugal",
+          "nomePersonalizado": "",
+          "nome": "Fundação Aga Khan Portugal",
+          "contribuinte": "500000459",
+          "direcao1": "Av. Lusíada",
+          "direcao2": "",
+          "numero": "10",
+          "andar": "",
+          "codigoPostal": "1600-150",
+          "localidade": "Lisboa",
+          "telefone": "+351 217 229 000",
+          "telemovel": "",
+          "email": "akfportugal@akdn.org",
+          "notas": "Nutrición infantil. Salud materno-infantil. Educación para familias. Bienestar comunitario.\n"
+        },
+        {
+          "id": "sep-1787222680031-43",
+          "tipoSeparador": "Fundação Aga Khan Portugal",
+          "nomePersonalizado": "",
+          "nome": "Fundação Aga Khan Portugal",
+          "contribuinte": "500000459",
+          "direcao1": "Av. Lusíada",
+          "direcao2": "",
+          "numero": "10",
+          "andar": "",
+          "codigoPostal": "1600-150",
+          "localidade": "Lisboa",
+          "telefone": "+351 217 229 000",
+          "telemovel": "",
+          "email": "akfportugal@akdn.org"
+        }
+      ]
     },
     {
       "id": "cli-imp-076",
@@ -1643,52 +1678,6 @@
       "createdById": "usr-admin-001"
     },
     {
-      "id": "cli-imp-009",
-      "tipoCliente": "Privado",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "NOS",
-      "contribuinte": "500000170",
-      "direcao1": "Rua Actor António Silva, n.º 9, Campo Grande, 1600-404 Lisboa, Portugal",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "1600-404",
-      "localidade": "Lisboa",
-      "pais": "",
-      "telefone": "+351 21 782 47 00",
-      "telemovel": "",
-      "email": "ines.s.pina@nos.pt",
-      "notas": "",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio"
-    },
-    {
-      "id": "cli-imp-068",
-      "tipoCliente": "Fundação",
-      "ministerio": "",
-      "secretariaEstado": "",
-      "nome": "Fundação de Serralves",
-      "contribuinte": "500001173",
-      "direcao1": "Rua Dom João de Castro, 210, 4150-417 Porto",
-      "direcao2": "",
-      "numero": "",
-      "andar": "",
-      "codigoPostal": "4150-417",
-      "localidade": "Porto",
-      "telefone": "226156500",
-      "telemovel": "",
-      "email": "serralves@serralves.pt",
-      "createdAt": "2026-07-31T16:30:00.000Z",
-      "pais": "Portugal",
-      "notas": "Temas: culture, fostering environmental awareness a través del arte",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001",
-      "comercialAtribuidoNome": "José Centúrio"
-    },
-    {
       "id": "cli-1787223652146-540",
       "tipoCliente": "Privado",
       "ministerio": "",
@@ -1767,6 +1756,52 @@
       "comercialAtribuidoNome": "José Centúrio",
       "createdAt": "2026-08-18T10:53:21.189Z",
       "createdById": "usr-admin-001"
+    },
+    {
+      "id": "cli-imp-009",
+      "tipoCliente": "Privado",
+      "ministerio": "",
+      "secretariaEstado": "",
+      "nome": "NOS, SGPS, S.A.",
+      "contribuinte": "500000170",
+      "direcao1": "Rua Actor António Silva, n.º 9, Campo Grande, 1600-404 Lisboa, Portugal",
+      "direcao2": "",
+      "numero": "",
+      "andar": "",
+      "codigoPostal": "1600-404",
+      "localidade": "Lisboa",
+      "pais": "",
+      "telefone": "+351 21 782 47 00",
+      "telemovel": "",
+      "email": "ines.s.pina@nos.pt",
+      "notas": "",
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
+    },
+    {
+      "id": "cli-imp-068",
+      "tipoCliente": "Fundação",
+      "ministerio": "",
+      "secretariaEstado": "",
+      "nome": "Fundação de Serralves",
+      "contribuinte": "500001173",
+      "direcao1": "Rua Dom João de Castro",
+      "direcao2": "",
+      "numero": "210",
+      "andar": "",
+      "codigoPostal": "4150-417",
+      "localidade": "Porto",
+      "telefone": "226156500",
+      "telemovel": "",
+      "email": "serralves@serralves.pt",
+      "createdAt": "2026-07-31T16:30:00.000Z",
+      "pais": "Portugal",
+      "notas": "Temas: culture, fostering environmental awareness a través del arte",
+      "userId": "usr-admin-001",
+      "comercialAtribuidoId": "usr-admin-001",
+      "comercialAtribuidoNome": "José Centúrio"
     },
     {
       "id": "cli-1787038283893-566",
@@ -3231,7 +3266,7 @@
     },
     {
       "id": "con-imp-033",
-      "clienteId": "cli-imp-077",
+      "clienteId": "cli-imp-009",
       "nome": "Joao",
       "apelido": "Ceriz",
       "cargo": "Head of Product Marketing",
@@ -3412,7 +3447,7 @@
     },
     {
       "id": "con-imp-050",
-      "clienteId": "cli-imp-024",
+      "clienteId": "cli-imp-068",
       "subTabIndex": 0,
       "nome": "Manuel",
       "apelido": "Ferreira da Silva",
@@ -3517,7 +3552,7 @@
     },
     {
       "id": "con-imp-113",
-      "clienteId": "cli-imp-024",
+      "clienteId": "cli-imp-068",
       "nome": "Carina",
       "apelido": "Bastos",
       "cargo": "Diretora de Comunicação, Marketing e Mecenato",
@@ -3609,7 +3644,7 @@
     },
     {
       "id": "con-imp-123",
-      "clienteId": "cli-imp-077",
+      "clienteId": "cli-imp-009",
       "subTabIndex": 1,
       "nome": "António",
       "apelido": "Fuzeta da Ponte",
@@ -3652,7 +3687,7 @@
     },
     {
       "id": "con-imp-128",
-      "clienteId": "cli-imp-080",
+      "clienteId": "cli-imp-076",
       "nome": "Ricardo",
       "apelido": "Melo",
       "cargo": "Project Manager",
@@ -3698,7 +3733,7 @@
     },
     {
       "id": "con-imp-136",
-      "clienteId": "cli-imp-084",
+      "clienteId": "cli-1787038283894-699",
       "subTabIndex": 2,
       "nome": "Gabriela",
       "apelido": "Leite",
@@ -3859,10 +3894,10 @@
     },
     {
       "id": "con-1787049428085-378",
-      "clienteId": "Ministério da saúde",
+      "clienteId": "cli-1787038283893-725",
       "tratamento": "",
-      "nome": "Rita Sá Machado",
-      "apelido": "",
+      "nome": "Rita",
+      "apelido": "Sá Machado",
       "cargo": "Diretor Geral",
       "departamento": "",
       "telefone": "",
@@ -3870,7 +3905,9 @@
       "email": "geral@dgs.min-saude.pt",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "subTabIndex": 0,
+      "notas": ""
     },
     {
       "id": "con-1787049428085-629",
@@ -3907,10 +3944,10 @@
     },
     {
       "id": "con-1787049428085-799",
-      "clienteId": "Ministério do Ambiente e Energia",
+      "clienteId": "cli-1787038283893-788",
       "tratamento": "",
-      "nome": "Paulo Carmona",
-      "apelido": "",
+      "nome": "Paulo",
+      "apelido": "Carmona",
       "cargo": "Diretor Geral da DGEG",
       "departamento": "",
       "telefone": "",
@@ -3918,14 +3955,16 @@
       "email": "geral@dgeg.gov.pt",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "subTabIndex": 0,
+      "notas": ""
     },
     {
       "id": "con-1787049428085-518",
-      "clienteId": "Ministério do Ambiente e Energia",
-      "subTabIndex": 1,
-      "nome": "Jean Barroca",
-      "apelido": "",
+      "clienteId": "cli-1787038283893-788",
+      "subTabIndex": 0,
+      "nome": "Jean",
+      "apelido": "Barroca",
       "cargo": "Secretário de Estado adjunto e da energia",
       "telefone": "",
       "telemovel": "",
@@ -4020,10 +4059,10 @@
     },
     {
       "id": "con-1787049428085-992",
-      "clienteId": "Ministério Finanças",
+      "clienteId": "cli-1787038283893-566",
       "tratamento": "",
-      "nome": "Joaquim Miranda Sarmento",
-      "apelido": "",
+      "nome": "Joaquim",
+      "apelido": "Miranda Sarmento",
       "cargo": "Ministro",
       "departamento": "",
       "telefone": "",
@@ -4031,7 +4070,9 @@
       "email": "gabinete.Ministro@mf.gov.pt",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "subTabIndex": 0,
+      "notas": ""
     },
     {
       "id": "con-1787049428085-306",
@@ -4134,10 +4175,10 @@
     },
     {
       "id": "con-1787049428085-608",
-      "clienteId": "Ministério do Trabalho, Solidariedade e Segurança Social",
+      "clienteId": "cli-1787038283894-858",
       "subTabIndex": 0,
-      "nome": "João Manuel Grossinho Gonçalves",
-      "apelido": "",
+      "nome": "João Manuel",
+      "apelido": "Grossinho Gonçalves",
       "cargo": "Diretor Geral da Segurança Social",
       "telefone": "",
       "telemovel": "",
@@ -4151,10 +4192,10 @@
     },
     {
       "id": "con-1787049428085-609",
-      "clienteId": "Ministério da Administração Interna",
+      "clienteId": "cli-1787038283894-41",
       "tratamento": "",
-      "nome": "Joana Espírito Santo de Araújo",
-      "apelido": "",
+      "nome": "Joana",
+      "apelido": "Espírito Santo de Araújo",
       "cargo": "Chefe de Gabinete",
       "departamento": "",
       "telefone": "",
@@ -4162,14 +4203,16 @@
       "email": "gabinete.mai@mai.gov.pt",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "subTabIndex": 0,
+      "notas": ""
     },
     {
       "id": "con-1787049428085-87",
-      "clienteId": "Ministério da Administração Interna",
+      "clienteId": "cli-1787038283894-41",
       "tratamento": "",
-      "nome": "Telmo Correia",
-      "apelido": "",
+      "nome": "Telmo",
+      "apelido": "Correia",
       "cargo": "Secretária de Estado de Administração interna",
       "departamento": "",
       "telefone": "",
@@ -4177,7 +4220,9 @@
       "email": "gabinete.seai@mai.gov.pt",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "subTabIndex": 0,
+      "notas": ""
     },
     {
       "id": "con-1787049428085-386",
@@ -4198,7 +4243,7 @@
     },
     {
       "id": "con-1787049428085-932",
-      "clienteId": "Ministério das Infraestruturas e Habitação",
+      "clienteId": "cli-1787038283894-101",
       "subTabIndex": 1,
       "nome": "Hugo Espírito Santo",
       "apelido": "",
@@ -4215,10 +4260,10 @@
     },
     {
       "id": "con-1787049428085-943",
-      "clienteId": "Ministério da Justiça",
+      "clienteId": "cli-1787038283894-51",
       "tratamento": "",
-      "nome": "Rita Júdice",
-      "apelido": "",
+      "nome": "Rita",
+      "apelido": "Júdice",
       "cargo": "Ministra",
       "departamento": "",
       "telefone": "",
@@ -4226,7 +4271,9 @@
       "email": "gabinete.mj@mj.gov.pt",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "subTabIndex": 0,
+      "notas": ""
     },
     {
       "id": "con-1787049428085-715",
@@ -4410,10 +4457,10 @@
     },
     {
       "id": "con-1787049428085-212",
-      "clienteId": "Ministério da Presidência",
+      "clienteId": "cli-1787050401189-194",
       "subTabIndex": 0,
-      "nome": "Joao Martins de Carvalho",
-      "apelido": "",
+      "nome": "Joao",
+      "apelido": "Martins de Carvalho",
       "cargo": "Chefe de Gabinete",
       "telefone": "",
       "telemovel": "",
@@ -4427,10 +4474,10 @@
     },
     {
       "id": "con-1787049428085-210",
-      "clienteId": "Ministério de Estado e dos Negócios Estrangeiros",
+      "clienteId": "cli-1787038283894-876",
       "tratamento": "",
-      "nome": "Paulo Rangel",
-      "apelido": "",
+      "nome": "Paulo",
+      "apelido": "Rangel",
       "cargo": "Ministro",
       "departamento": "",
       "telefone": "",
@@ -4438,7 +4485,9 @@
       "email": "gabinete.Ministro@mne.gov.pt",
       "createdAt": "2026-08-18T10:37:08.085Z",
       "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "comercialAtribuidoId": "usr-admin-001",
+      "subTabIndex": 0,
+      "notas": ""
     },
     {
       "id": "con-1787049428085-325",
@@ -4741,8 +4790,8 @@
       "subTabIndex": null,
       "contacto1Id": "con-1785515106421-857",
       "contacto2Id": "con-imp-137",
-      "dataInicio": "2026-07-27",
-      "dataFim": "2026-08-31",
+      "dataInicio": "2026-08-11",
+      "dataFim": "2026-10-11",
       "estado": "Aguarda decisão",
       "viatura": "Iveco Eurocargo 12000Kg ()",
       "matricula": "BC-10-NV",
@@ -4775,8 +4824,8 @@
       "subTabIndex": null,
       "contacto1Id": "con-1785515106421-857",
       "contacto2Id": "con-imp-137",
-      "dataInicio": "2026-07-27",
-      "dataFim": "2026-08-31",
+      "dataInicio": "2026-08-11",
+      "dataFim": "2026-10-11",
       "estado": "Aguarda decisão",
       "viatura": "Iveco Daily 5000Kg ()",
       "matricula": "BC-20-NV",
@@ -5310,52 +5359,59 @@
       "active": true,
       "createdAt": "2026-08-22T10:06:38.433Z",
       "chefia": false
+    },
+    {
+      "id": "usr-1789046577312",
+      "nome": "Carlos Campos",
+      "primeiroNome": "Carlos",
+      "apelido": "Campos",
+      "email": "Carlos@carlos.pt",
+      "cargo": "Comercial",
+      "idioma": "Português",
+      "pin": "J*cen*1971",
+      "role": "user",
+      "active": false,
+      "createdAt": "2026-09-10T13:22:57.312Z"
     }
   ],
   "userLogs": [
     {
-      "id": "log-1789046342733-664",
+      "id": "log-1789046578728-73",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
       "tipoAcao": "Notificação por Email",
-      "descricao": "Alerta de registo emitido com sucesso para josecenturio@gmail.com (José Centúrio (Teste de Sistema)).",
+      "descricao": "Alerta de registo emitido com sucesso para jmcenturio@alegria-activity.com (Carlos Campos).",
       "pagina": "Base de Dados",
       "detalhes": null,
-      "timestamp": "2026-09-10T13:19:02.733Z"
+      "timestamp": "2026-09-10T13:22:58.729Z"
     },
     {
-      "id": "log-1789046251761-797",
+      "id": "log-1789046577398-378",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Notificação por Email",
-      "descricao": "Alerta de registo emitido com sucesso para josecenturio@gmail.com (José Centúrio (Teste de Sistema)).",
+      "tipoAcao": "Gestão de Utilizadores",
+      "descricao": "Utilizador Carlos Campos (Carlos@carlos.pt) adicionado à administração do sistema com idioma Português.",
       "pagina": "Base de Dados",
       "detalhes": null,
-      "timestamp": "2026-09-10T13:17:31.761Z"
+      "timestamp": "2026-09-10T13:22:57.398Z"
     },
     {
-      "id": "log-1789046248267-202",
+      "id": "log-1789046497629-630",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-09-10T13:17:28.267Z"
-    },
-    {
-      "id": "log-1789046214867-207",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Notificação por Email",
-      "descricao": "Alerta de registo emitido com sucesso para jmcenturio@alegria-activity.com (José Centúrio (Teste de Sistema)).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-09-10T13:16:54.867Z"
+      "tipoAcao": "Início de Sessão",
+      "descricao": "Acesso autorizado efetuado por José Centúrio.",
+      "pagina": "Dashboard / Início",
+      "detalhes": {
+        "utilizador": "José Centúrio",
+        "email": "jmcenturio@alegria-activity.com",
+        "cargo": "Administrador do Sistema",
+        "dispositivo": "Computador"
+      },
+      "timestamp": "2026-09-10T13:21:37.629Z"
     }
   ],
   "orcamentos": [
