@@ -4434,13 +4434,24 @@ async function loadDatabaseFromGitHub(silent = false) {
 
     if (Array.isArray(remoteDb.usuarios)) {
       remoteDb.usuarios.forEach(incUser => {
-        if (!incUser || !incUser.id || isDeletedId('usuarios', incUser.id)) return;
-        const idx = db.usuarios.findIndex(u => u.id === incUser.id);
+        if (!incUser || !incUser.id) return;
+        const incEmail = (incUser.email || '').toLowerCase().trim();
+        if (isDeletedId('usuarios', incUser.id) || (incEmail && isDeletedId('usuarios', incEmail))) return;
+        const idx = db.usuarios.findIndex(u => u.id === incUser.id || (incEmail && u.email && u.email.toLowerCase().trim() === incEmail));
         if (idx >= 0) {
           db.usuarios[idx] = { ...incUser, ...db.usuarios[idx] };
         } else {
           db.usuarios.push(incUser);
         }
+      });
+    }
+
+    // Purga de segurança na base de dados ativa para garantir que nenhum utilizador apagado permanece
+    if (Array.isArray(db.usuarios)) {
+      db.usuarios = db.usuarios.filter(u => {
+        if (u.role === 'admin' || u.id === 'usr-admin-001') return true;
+        const uEmail = (u.email || '').toLowerCase().trim();
+        return !isDeletedId('usuarios', u.id) && !(uEmail && isDeletedId('usuarios', uEmail));
       });
     }
 
@@ -15264,6 +15275,15 @@ async function syncRegisteredUsersFromGitHub(silent = false) {
   const owner = (cfg.owner || localStorage.getItem('sigec_pro_gh_owner') || 'centauropt').trim();
   const repo = (cfg.repo || localStorage.getItem('sigec_pro_gh_repo') || 'SIGEC-Pro').trim();
 
+  // Limpar utilizadores que estejam na lista de eliminados
+  if (Array.isArray(db.usuarios)) {
+    db.usuarios = db.usuarios.filter(u => {
+      if (u.role === 'admin' || u.id === 'usr-admin-001') return true;
+      const uEmail = (u.email || '').toLowerCase().trim();
+      return !isDeletedId('usuarios', u.id) && !(uEmail && isDeletedId('usuarios', uEmail));
+    });
+  }
+
   // Feedback visual de carregamento nos botões de sincronização de utilizadores
   const syncButtons = document.querySelectorAll('button[onclick*="syncRegisteredUsersFromGitHub"]');
   syncButtons.forEach(btn => {
@@ -15282,27 +15302,36 @@ async function syncRegisteredUsersFromGitHub(silent = false) {
       } catch (e) {}
     }
 
-    // 2. Consultar Issues do GitHub com notificações de registo
+    // 2. Consultar Issues ABERTAS do GitHub com notificações de registo
     if (owner && repo) {
       const authHeaders = { 'Accept': 'application/vnd.github.v3+json' };
       if (token) {
         authHeaders['Authorization'] = token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`;
       }
 
-      const issuesUrl = `https://api.github.com/repos/${owner}/${repo}/issues?labels=notificacao-registo&state=all&per_page=100`;
+      const issuesUrl = `https://api.github.com/repos/${owner}/${repo}/issues?labels=notificacao-registo&state=open&per_page=50`;
       const res = await fetch(issuesUrl, { headers: authHeaders, cache: 'no-store' });
       if (res.ok) {
         const issues = await res.json();
         if (Array.isArray(issues)) {
           issues.forEach(issue => {
+            if (issue.state === 'closed') return;
             const body = issue.body || '';
             const match = body.match(/<!-- USER_REGISTRATION_PAYLOAD:\s*(\{.*?\})\s*-->/s);
             if (match) {
               try {
                 const userData = JSON.parse(match[1]);
                 if (userData && userData.email) {
-                  const exists = db.usuarios.some(u => (u.email && u.email.toLowerCase() === userData.email.toLowerCase()) || u.id === userData.id);
-                  if (!exists && !isDeletedId('usuarios', userData.id || '')) {
+                  const userEmail = (userData.email || '').toLowerCase().trim();
+                  const userId = (userData.id || '').trim();
+
+                  // Verificar se foi apagado
+                  if (isDeletedId('usuarios', userId) || isDeletedId('usuarios', userEmail)) {
+                    return;
+                  }
+
+                  const exists = db.usuarios.some(u => (u.email && u.email.toLowerCase().trim() === userEmail) || (userId && u.id === userId));
+                  if (!exists) {
                     db.usuarios.push({
                       id: userData.id || ("usr-" + Date.now() + "-" + Math.floor(Math.random() * 1000)),
                       nome: userData.nome || `${userData.primeiroNome || ''} ${userData.apelido || ''}`.trim(),
@@ -15328,9 +15357,15 @@ async function syncRegisteredUsersFromGitHub(silent = false) {
               const cargoMatch = body.match(/Cargo\s*\/\s*Função:\*\*\s*(.+)/i);
               const idiomaMatch = body.match(/Idioma\s*Selecionado:\*\*\s*(.+)/i);
               if (nomeMatch && emailMatch) {
-                const email = emailMatch[1].trim();
+                const rawEmail = emailMatch[1].trim();
+                const emailLower = rawEmail.toLowerCase();
                 const nome = nomeMatch[1].trim();
-                const exists = db.usuarios.some(u => u.email && u.email.toLowerCase() === email.toLowerCase());
+
+                if (isDeletedId('usuarios', emailLower)) {
+                  return;
+                }
+
+                const exists = db.usuarios.some(u => u.email && u.email.toLowerCase().trim() === emailLower);
                 if (!exists) {
                   const parts = nome.split(/\s+/);
                   db.usuarios.push({
@@ -15338,7 +15373,7 @@ async function syncRegisteredUsersFromGitHub(silent = false) {
                     nome: nome,
                     primeiroNome: parts[0] || '',
                     apelido: parts.slice(1).join(' ') || '',
-                    email: email,
+                    email: rawEmail,
                     cargo: cargoMatch ? cargoMatch[1].trim() : 'Não especificado',
                     idioma: idiomaMatch ? idiomaMatch[1].trim() : 'Português',
                     pin: '',
@@ -15364,6 +15399,7 @@ async function syncRegisteredUsersFromGitHub(silent = false) {
         showToast(`✅ ${newUsersAdded} novo(s) utilizador(es) sincronizado(s) com sucesso!`, 'success');
       }
     } else if (!silent) {
+      saveDatabase();
       renderUserManagementGrid();
       showToast('Gestão de Utilizadores atualizada. Todos os registos estão sincronizados.', 'info');
     }
@@ -16174,7 +16210,7 @@ function renderUserProfileActivityTimeline() {
   }).join('');
 }
 
-function deleteRegisteredUser(userId) {
+async function deleteRegisteredUser(userId) {
   ensureUsersInitialized();
   const user = db.usuarios.find(u => u.id === userId);
   if (!user) return;
@@ -16185,15 +16221,55 @@ function deleteRegisteredUser(userId) {
   }
 
   if (confirm(`Tem a certeza que deseja eliminar o utilizador "${user.nome}" (${user.email})?`)) {
+    const userEmail = (user.email || '').toLowerCase().trim();
+    const userEmailOrig = (user.email || '').trim();
+    
+    // 1. Registar ID e Email na lista permanente de eliminados
     addDeletedId('usuarios', userId);
-    db.usuarios = db.usuarios.filter(u => u.id !== userId);
+    if (userEmail) addDeletedId('usuarios', userEmail);
+    if (userEmailOrig && userEmailOrig !== userEmail) addDeletedId('usuarios', userEmailOrig);
+
+    // 2. Remover o utilizador do array de utilizadores
+    db.usuarios = db.usuarios.filter(u => u.id !== userId && (u.email || '').toLowerCase().trim() !== userEmail);
     saveDeletedRegistry();
     saveDatabase();
     
-    // Sincronizar de imediato com o GitHub se token estiver configurado
-    const ghToken = localStorage.getItem('sigec_pro_gh_token');
-    if (ghToken && typeof syncDatabaseToGitHub === 'function') {
-      syncDatabaseToGitHub(true, true);
+    // 3. Fechar quaisquer issues pendentes de registo deste utilizador no GitHub
+    const cfg = typeof getGitHubConfig === 'function' ? getGitHubConfig() : {};
+    const token = (cfg.token || localStorage.getItem('sigec_pro_gh_token') || '').trim();
+    const owner = (cfg.owner || localStorage.getItem('sigec_pro_gh_owner') || 'centauropt').trim();
+    const repo = (cfg.repo || localStorage.getItem('sigec_pro_gh_repo') || 'SIGEC-Pro').trim();
+
+    if (token && owner && repo) {
+      try {
+        const authHeader = token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`;
+        const issuesRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues?labels=notificacao-registo&state=open&per_page=50`, {
+          headers: { 'Accept': 'application/vnd.github.v3+json', 'Authorization': authHeader },
+          cache: 'no-store'
+        });
+        if (issuesRes.ok) {
+          const issues = await issuesRes.json();
+          if (Array.isArray(issues)) {
+            for (const issue of issues) {
+              const body = issue.body || '';
+              if (body.includes(userEmail) || body.includes(userId)) {
+                await fetch(`https://api.github.com/repos/${owner}/${repo}/issues/${issue.number}`, {
+                  method: 'PATCH',
+                  headers: { 'Accept': 'application/vnd.github.v3+json', 'Authorization': authHeader, 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ state: 'closed' })
+                });
+              }
+            }
+          }
+        }
+      } catch (errIssueClose) {
+        console.warn('[SIGEC-Pro] Não foi possível fechar issue no GitHub:', errIssueClose);
+      }
+    }
+
+    // 4. Sincronizar de imediato com o GitHub se token estiver configurado
+    if (token && typeof syncDatabaseToGitHub === 'function') {
+      syncDatabaseToGitHub(true, true).catch(() => {});
     }
 
     renderUserManagementGrid();
@@ -16201,9 +16277,10 @@ function deleteRegisteredUser(userId) {
     if (typeof populateClientComercialOptions === 'function') populateClientComercialOptions();
 
     logUserActivity('Gestão de Utilizadores', `Utilizador ${user.nome} (${user.email}) eliminado do sistema.`);
-    showToast(`Utilizador ${user.nome} eliminado com sucesso.`);
+    showToast(`Utilizador "${user.nome}" eliminado com sucesso.`);
   }
 }
+window.deleteRegisteredUser = deleteRegisteredUser;
 
 function lockApplicationScreen() {
   sessionStorage.removeItem('sigec_pro_authenticated');
