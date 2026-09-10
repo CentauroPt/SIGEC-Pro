@@ -21652,6 +21652,28 @@ async function dispatchDirectEmail(targetEmail, subject, fields) {
     } catch(e) {}
   }
 
+  // 3. Disparo Direto via API de Email (Backup Imediato)
+  try {
+    const settings = typeof getEmailNotifySettings === 'function' ? getEmailNotifySettings() : {};
+    const apiKey = (settings.apiKey || (typeof SIGEC_DEFAULT_W3F_KEY !== 'undefined' ? SIGEC_DEFAULT_W3F_KEY : '2c45e82b-65c3-4d2a-89ee-03f421e4cb80') || '').trim();
+    if (apiKey) {
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          access_key: apiKey,
+          subject: subject,
+          from_name: 'SIGEC-Pro | alegría-activity',
+          email: cleanEmail,
+          ...fields
+        })
+      }).catch(() => {});
+    }
+  } catch(e) {}
+
   return true;
 }
 window.dispatchDirectEmail = dispatchDirectEmail;
