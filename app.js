@@ -21369,6 +21369,8 @@ window.extractPackageTimestamp = extractPackageTimestamp;
 function getEmailNotifySettings() {
   const addressEl = document.getElementById('cfgEmailNotifyAddress');
   const enabledEl = document.getElementById('cfgEmailNotifyEnabled');
+  const providerEl = document.getElementById('cfgEmailProvider');
+  const apiKeyEl = document.getElementById('cfgEmailApiKey');
 
   let email = (addressEl && addressEl.value.trim()) ? addressEl.value.trim() : '';
   if (!email) {
@@ -21389,7 +21391,10 @@ function getEmailNotifySettings() {
     enabled = db.config.emailNotifyEnabled !== false;
   }
 
-  return { enabled, email };
+  const provider = (providerEl && providerEl.value) ? providerEl.value : (localStorage.getItem('sigec_pro_email_provider') || 'web3forms');
+  const apiKey = (apiKeyEl && apiKeyEl.value.trim()) ? apiKeyEl.value.trim() : (localStorage.getItem('sigec_pro_email_api_key') || '');
+
+  return { enabled, email, provider, apiKey };
 }
 window.getEmailNotifySettings = getEmailNotifySettings;
 
@@ -21397,139 +21402,273 @@ function renderEmailNotifySettingsUI() {
   const settings = getEmailNotifySettings();
   const enabledEl = document.getElementById('cfgEmailNotifyEnabled');
   const addressEl = document.getElementById('cfgEmailNotifyAddress');
+  const providerEl = document.getElementById('cfgEmailProvider');
+  const apiKeyEl = document.getElementById('cfgEmailApiKey');
+
   if (enabledEl) enabledEl.checked = settings.enabled;
   if (addressEl) addressEl.value = settings.email;
+  if (providerEl) providerEl.value = settings.provider || 'web3forms';
+  if (apiKeyEl) apiKeyEl.value = settings.apiKey || '';
 }
 window.renderEmailNotifySettingsUI = renderEmailNotifySettingsUI;
 
 function handleSaveEmailNotifySettings(showToastMsg = false) {
   const enabledEl = document.getElementById('cfgEmailNotifyEnabled');
   const addressEl = document.getElementById('cfgEmailNotifyAddress');
+  const providerEl = document.getElementById('cfgEmailProvider');
+  const apiKeyEl = document.getElementById('cfgEmailApiKey');
 
   const enabled = enabledEl ? enabledEl.checked : true;
   const email = addressEl ? (addressEl.value.trim() || 'jmcenturio@alegria-activity.com') : 'jmcenturio@alegria-activity.com';
+  const provider = providerEl ? providerEl.value : 'web3forms';
+  const apiKey = apiKeyEl ? apiKeyEl.value.trim() : '';
 
   localStorage.setItem('sigec_pro_admin_notify_enabled', enabled ? 'true' : 'false');
   localStorage.setItem('sigec_pro_admin_notify_email', email);
+  localStorage.setItem('sigec_pro_email_provider', provider);
+  localStorage.setItem('sigec_pro_email_api_key', apiKey);
 
   if (typeof db !== 'undefined') {
     db.config = db.config || {};
     db.config.emailNotifyAddress = email;
     db.config.emailNotifyEnabled = enabled;
+    db.config.emailProvider = provider;
+    db.config.emailApiKey = apiKey;
     if (typeof saveDatabase === 'function') {
       saveDatabase();
     }
   }
 
   if (showToastMsg) {
-    showToast(`Definições de notificação guardadas! Destino: ${email}`, 'success');
+    showToast(`Definições de email transacional guardadas com sucesso!`, 'success');
   }
 }
 window.handleSaveEmailNotifySettings = handleSaveEmailNotifySettings;
 
 // ======================================================================
-// MOTOR DE DISPARO DE EMAIL EM SEGUNDO PLANO (COMPATÍVEL COM FILE:/// E LOCAL)
+// MOTOR DE EMAIL TRANSACIONAL DIRETO (SEM CONFIRMAÇÃO DE FORMULÁRIOS)
 // ======================================================================
-function dispatchDirectEmail(targetEmail, subject, fields) {
+const SIGEC_DEFAULT_W3F_KEY = "2c45e82b-65c3-4d2a-89ee-03f421e4cb80";
+
+function generateEmailHTMLTemplate(subject, fields) {
+  const title = fields.mensagem_titulo || subject || 'Notificação SIGEC-Pro';
+  const greeting = fields.saudacao || '';
+  const message = fields.mensagem || fields.mensagem_introducao || fields.mensagem_alerta || '';
+  const instructions = fields.instrucoes || fields.instrucoes_administrador || '';
+  const company = fields.empresa || 'alegría-activity, S.L. - Sistema Integrado de Gestão Comercial SIGEC-Pro';
+
+  // Extract structured rows
+  const ignoredKeys = new Set(['_subject', '_captcha', '_template', '_honey', '_replyto', '_autoresponse', 'mensagem_titulo', 'saudacao', 'mensagem', 'mensagem_introducao', 'mensagem_alerta', 'instrucoes', 'instrucoes_administrador', 'empresa', 'is_html']);
+  
+  const rowsHTML = Object.entries(fields)
+    .filter(([k, v]) => !ignoredKeys.has(k) && v !== undefined && v !== null && String(v).trim() !== '')
+    .map(([label, value]) => {
+      const isStatus = label.toLowerCase().includes('estado') || label.toLowerCase().includes('status');
+      const isPin = label.toLowerCase().includes('pin') || label.toLowerCase().includes('passe') || label.toLowerCase().includes('hasło') || label.toLowerCase().includes('mot de passe');
+      
+      let valDisplay = String(value);
+      if (isStatus) {
+        const isActive = valDisplay.toLowerCase().includes('ativo') || valDisplay.toLowerCase().includes('activo') || valDisplay.toLowerCase().includes('active') || valDisplay.toLowerCase().includes('actif') || valDisplay.toLowerCase().includes('aktywn');
+        valDisplay = `<span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;background:${isActive ? '#dcfce7' : '#fef3c7'};color:${isActive ? '#15803d' : '#b45309'};border:1px solid ${isActive ? '#86efac' : '#fde68a'};">${valDisplay}</span>`;
+      } else if (isPin) {
+        valDisplay = `<code style="background:#f1f5f9;color:#0f172a;padding:3px 8px;border-radius:4px;font-family:monospace;font-weight:700;font-size:13px;border:1px solid #cbd5e1;">${valDisplay}</code>`;
+      }
+
+      return `
+        <tr>
+          <td style="padding:10px 14px;background:#f8fafc;border-bottom:1px solid #e2e8f0;color:#475569;font-weight:600;font-size:13px;width:38%;">${label}</td>
+          <td style="padding:10px 14px;background:#ffffff;border-bottom:1px solid #e2e8f0;color:#0f172a;font-size:13.5px;font-weight:500;">${valDisplay}</td>
+        </tr>
+      `;
+    }).join('');
+
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${subject}</title>
+</head>
+<body style="margin:0;padding:24px 12px;background-color:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1e293b;-webkit-font-smoothing:antialiased;">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td align="center">
+        <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.06);border:1px solid #e2e8f0;">
+          <!-- Header -->
+          <tr>
+            <td style="background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%);padding:24px 28px;text-align:left;">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td>
+                    <div style="font-size:20px;font-weight:800;color:#ffffff;letter-spacing:0.5px;margin:0;">SIGEC-Pro</div>
+                    <div style="font-size:12px;color:#bae6fd;margin-top:2px;font-weight:500;">alegría-activity, S.L. &bull; Sistema Integrado de Gestão Comercial</div>
+                  </td>
+                  <td align="right">
+                    <span style="display:inline-block;padding:4px 10px;background:rgba(255,255,255,0.18);color:#ffffff;border-radius:6px;font-size:11px;font-weight:600;letter-spacing:0.5px;">SISTEMA OFICIAL</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Body Content -->
+          <tr>
+            <td style="padding:28px 28px 20px 28px;">
+              <h2 style="margin:0 0 14px 0;font-size:18px;font-weight:700;color:#0f172a;">${title}</h2>
+              ${greeting ? `<p style="margin:0 0 12px 0;font-size:14px;color:#334155;font-weight:600;">${greeting}</p>` : ''}
+              ${message ? `<p style="margin:0 0 18px 0;font-size:14px;line-height:1.55;color:#475569;">${message}</p>` : ''}
+
+              <!-- Credentials Table -->
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin:16px 0 20px 0;border-radius:8px;overflow:hidden;border:1px solid #cbd5e1;border-collapse:separate;border-spacing:0;">
+                ${rowsHTML}
+              </table>
+
+              ${instructions ? `
+              <div style="background:#f0f9ff;border-left:4px solid #0284c7;padding:12px 16px;border-radius:0 8px 8px 0;margin:18px 0 12px 0;">
+                <p style="margin:0;font-size:13px;line-height:1.5;color:#0369a1;font-weight:500;">
+                  <strong>Informação Importante:</strong><br>${instructions}
+                </p>
+              </div>` : ''}
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background:#f8fafc;padding:18px 28px;border-top:1px solid #e2e8f0;text-align:center;">
+              <p style="margin:0 0 4px 0;font-size:12px;color:#64748b;font-weight:600;">${company}</p>
+              <p style="margin:0;font-size:11px;color:#94a3b8;">Mensagem automática de segurança. Por favor não responda diretamente a este correio eletrónico.</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `.trim();
+}
+
+async function dispatchDirectEmail(targetEmail, subject, fields) {
   if (!targetEmail || typeof targetEmail !== 'string') return Promise.resolve(false);
 
-  return new Promise((resolve) => {
+  const cleanEmail = targetEmail.trim();
+  const settings = typeof getEmailNotifySettings === 'function' ? getEmailNotifySettings() : { provider: 'web3forms', apiKey: '' };
+  const provider = settings.provider || 'web3forms';
+  const customApiKey = (settings.apiKey || '').trim();
+  const htmlContent = generateEmailHTMLTemplate(subject, fields);
+
+  // Fallback plain text representation
+  const plainTextLines = Object.entries(fields)
+    .filter(([k]) => !k.startsWith('_'))
+    .map(([k, v]) => `${k}: ${v}`)
+    .join('\n');
+
+  console.info(`[SIGEC-Pro] A disparar email transacional direto para ${cleanEmail} (Provedor: ${provider})...`);
+
+  let dispatchedSuccessfully = false;
+
+  // 1. DISPARO VIA WEB3FORMS (API REST Direta e Gratuita - Sem Ativação de Formulários)
+  if (provider === 'web3forms' || !customApiKey) {
+    const accessKey = customApiKey || SIGEC_DEFAULT_W3F_KEY;
     try {
-      const cleanEmail = targetEmail.trim();
-      const baseFields = {
-        _subject: subject,
-        _captcha: 'false',
-        _template: 'table',
-        _honey: '',
-        ...fields
+      const payload = {
+        access_key: accessKey,
+        subject: subject,
+        to_email: cleanEmail,
+        email: cleanEmail,
+        from_name: 'SIGEC-Pro | alegría-activity',
+        message: plainTextLines,
+        html: htmlContent,
+        botcheck: ''
       };
 
-      // 1. Canal Primário: Submissão via Formulário em Iframe Isolado (sem encoding do email na rota)
-      if (typeof document !== 'undefined' && document.body) {
-        const iframeName = `_sigec_relay_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
-        const iframe = document.createElement('iframe');
-        iframe.name = iframeName;
-        iframe.style.display = 'none';
-        iframe.style.width = '1px';
-        iframe.style.height = '1px';
-        iframe.style.opacity = '0';
-        document.body.appendChild(iframe);
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      });
 
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = `https://formsubmit.co/${cleanEmail}`;
-        form.target = iframeName;
-        form.style.display = 'none';
-
-        Object.entries(baseFields).forEach(([key, val]) => {
-          if (val !== undefined && val !== null) {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = key;
-            input.value = String(val);
-            form.appendChild(input);
-          }
-        });
-
-        document.body.appendChild(form);
-
-        let isCleaned = false;
-        const cleanup = () => {
-          if (isCleaned) return;
-          isCleaned = true;
-          try { if (form.parentNode) form.parentNode.removeChild(form); } catch (e) {}
-          try { if (iframe.parentNode) iframe.parentNode.removeChild(iframe); } catch (e) {}
-          resolve(true);
-        };
-
-        iframe.onload = cleanup;
-        iframe.onerror = cleanup;
-        setTimeout(cleanup, 3500);
-
-        form.submit();
-        console.info(`[SIGEC-Pro] Notificação por email disparada via formulário para ${cleanEmail}`);
+      if (res.ok) {
+        const json = await res.json().catch(() => ({}));
+        if (json.success !== false) {
+          dispatchedSuccessfully = true;
+          console.info(`[SIGEC-Pro] Email transacional entregue com sucesso via Web3Forms para ${cleanEmail}`);
+        }
       }
-
-      // 2. Canal Secundário (Redundância AJAX em segundo plano com JSON)
-      if (typeof fetch === 'function') {
-        fetch(`https://formsubmit.co/ajax/${cleanEmail}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify(baseFields),
-          mode: 'cors',
-          cache: 'no-store'
-        }).then(res => {
-          if (res.ok) console.info(`[SIGEC-Pro] AJAX Relay confirmado para ${cleanEmail}`);
-        }).catch(() => {});
-
-        // 3. Canal Terciário (FormData para clientes com restrição JSON)
-        try {
-          if (typeof FormData !== 'undefined') {
-            const fd = new FormData();
-            Object.entries(baseFields).forEach(([k, v]) => {
-              if (v !== undefined && v !== null) fd.append(k, String(v));
-            });
-            fetch(`https://formsubmit.co/ajax/${cleanEmail}`, {
-              method: 'POST',
-              body: fd,
-              mode: 'cors',
-              cache: 'no-store'
-            }).catch(() => {});
-          }
-        } catch(e) {}
-      }
-
-      if (typeof document === 'undefined' || !document.body) {
-        resolve(true);
-      }
-    } catch (err) {
-      console.warn('[SIGEC-Pro] Erro no disparo de email:', err);
-      resolve(false);
+    } catch (e) {
+      console.warn('[SIGEC-Pro] Tentativa Web3Forms:', e);
     }
-  });
+  }
+
+  // 2. DISPARO VIA BREVO API v3 (Se chave Brevo configurada)
+  if (!dispatchedSuccessfully && (provider === 'brevo' || customApiKey.startsWith('xkeysib-'))) {
+    try {
+      const brevoKey = customApiKey;
+      const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'accept': 'application/json',
+          'api-key': brevoKey,
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          sender: { name: 'SIGEC-Pro | alegría-activity', email: 'jmcenturio@alegria-activity.com' },
+          to: [{ email: cleanEmail, name: fields.nome_utilizador || cleanEmail }],
+          subject: subject,
+          htmlContent: htmlContent
+        })
+      });
+      if (res.ok) {
+        dispatchedSuccessfully = true;
+        console.info(`[SIGEC-Pro] Email entregue via Brevo para ${cleanEmail}`);
+      }
+    } catch(e) {}
+  }
+
+  // 3. DISPARO VIA RESEND API (Se chave Resend configurada)
+  if (!dispatchedSuccessfully && (provider === 'resend' || customApiKey.startsWith('re_'))) {
+    try {
+      const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${customApiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: 'SIGEC-Pro <onboarding@resend.dev>',
+          to: [cleanEmail],
+          subject: subject,
+          html: htmlContent
+        })
+      });
+      if (res.ok) {
+        dispatchedSuccessfully = true;
+        console.info(`[SIGEC-Pro] Email entregue via Resend para ${cleanEmail}`);
+      }
+    } catch(e) {}
+  }
+
+  // 4. CANAL DE CONTINGÊNCIA: FormSubmit AJAX em segundo plano
+  if (!dispatchedSuccessfully) {
+    try {
+      await fetch(`https://formsubmit.co/ajax/${cleanEmail}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          _subject: subject,
+          _captcha: 'false',
+          _template: 'table',
+          ...fields
+        })
+      });
+      dispatchedSuccessfully = true;
+    } catch (e) {}
+  }
+
+  return dispatchedSuccessfully;
 }
 window.dispatchDirectEmail = dispatchDirectEmail;
-
 async function sendNewUserRegistrationEmailNotification(userData, isTest = false) {
   const settings = getEmailNotifySettings();
   const targetEmail = settings.email || 'jmcenturio@alegria-activity.com';

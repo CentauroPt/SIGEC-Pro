@@ -2500,7 +2500,7 @@
               </form>
             </div>
 
-            <!-- BLOCO 4: Notificações por Email de Novos Registos -->
+            <!-- BLOCO 4: Notificações por Email & Motor Transacional Direto -->
             <div class="card"
               style="border: 1px solid #bae6fd; background: #ffffff; padding: 1.25rem; grid-column: 1 / -1; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); margin-top: 0.5rem;">
               <div
@@ -2511,8 +2511,8 @@
                     <i class="fa-solid fa-envelope-circle-check"></i>
                   </div>
                   <div>
-                    <h3 style="font-size: 1.05rem; color: #0369a1; margin: 0; font-weight: 700;">Notificações por Email de Novos Registos</h3>
-                    <span style="font-size: 0.78rem; color: #0284c7;">Avisos automáticos e imediatos por email quando um novo utilizador cria conta</span>
+                    <h3 style="font-size: 1.05rem; color: #0369a1; margin: 0; font-weight: 700;">Notificações por Email & Motor Transacional</h3>
+                    <span style="font-size: 0.78rem; color: #0284c7;">Envio direto de confirmação de registo, alertas e ativação de contas aos utilizadores</span>
                   </div>
                 </div>
                 <label style="display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: #0369a1; background: #f0f9ff; padding: 0.4rem 0.8rem; border-radius: 6px; border: 1px solid #bae6fd;">
@@ -2523,27 +2523,40 @@
 
               <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
                 <div style="display: flex; align-items: center; gap: 0.5rem;">
-                  <i class="fa-brands fa-github" style="color: #0969da; font-size: 1.2rem;"></i>
-                  <span style="font-size: 0.82rem; color: #334155;"><strong>Entrega Segura via Servidor GitHub:</strong> Os alertas são enviados automaticamente pelo GitHub para a sua conta oficial sem bloqueios de spam.</span>
+                  <i class="fa-solid fa-bolt" style="color: #0284c7; font-size: 1.1rem;"></i>
+                  <span style="font-size: 0.82rem; color: #334155;"><strong>Entrega Direta sem Ativações:</strong> Os novos utilizadores recebem as confirmações diretamente na caixa de correio com formatação profissional oficial.</span>
                 </div>
                 <span style="display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #dcfce7; color: #15803d; border: 1px solid #86efac;">
-                  <i class="fa-solid fa-check"></i> 100% Automático
+                  <i class="fa-solid fa-check-double"></i> Entrega Imediata
                 </span>
               </div>
 
-              <div style="display: flex; gap: 0.75rem; align-items: flex-end; flex-wrap: wrap;">
-                <div style="flex: 1; min-width: 260px;">
-                  <label style="font-size: 0.8rem; font-weight: 600; color: #475569; display: block; margin-bottom: 0.3rem;" data-i18n="cfg_email_notify_dest">Email de Destino das Notificações:</label>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.75rem; margin-bottom: 0.75rem;">
+                <div>
+                  <label style="font-size: 0.8rem; font-weight: 600; color: #475569; display: block; margin-bottom: 0.3rem;" data-i18n="cfg_email_notify_dest">Email de Destino das Notificações do Administrador:</label>
                   <input type="email" id="cfgEmailNotifyAddress" class="form-control" placeholder="ex: jmcenturio@alegria-activity.com" onchange="handleSaveEmailNotifySettings()" style="padding: 0.6rem; border-radius: 6px; font-size: 0.88rem;">
                 </div>
-                <div style="display: flex; gap: 0.5rem; align-items: center;">
-                  <button type="button" class="btn btn-primary" onclick="handleSaveEmailNotifySettings(true)" style="padding: 0.6rem 1.15rem; font-size: 0.85rem; background: #0284c7; color: #ffffff; border: none; border-radius: 6px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer;">
-                    <i class="fa-solid fa-floppy-disk"></i> <span data-i18n="btn_save_config">Guardar</span>
-                  </button>
-                  <button type="button" class="btn btn-secondary" onclick="sendTestEmailNotification()" style="padding: 0.6rem 1.15rem; font-size: 0.85rem; background: #ffffff; color: #0284c7; border: 1px solid #bae6fd; border-radius: 6px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer;">
-                    <i class="fa-solid fa-paper-plane"></i> <span data-i18n="cfg_email_notify_test">Testar Envio de Notificação</span>
-                  </button>
+                <div>
+                  <label style="font-size: 0.8rem; font-weight: 600; color: #475569; display: block; margin-bottom: 0.3rem;">Serviço de Envio Transacional:</label>
+                  <select id="cfgEmailProvider" class="form-control" onchange="handleSaveEmailNotifySettings()" style="padding: 0.6rem; border-radius: 6px; font-size: 0.88rem; font-weight: 600; color: #334155;">
+                    <option value="web3forms">Web3Forms (Recomendado - Direto e Instantâneo)</option>
+                    <option value="brevo">Brevo / Sendinblue (API Transacional v3)</option>
+                    <option value="resend">Resend API</option>
+                  </select>
                 </div>
+                <div>
+                  <label style="font-size: 0.8rem; font-weight: 600; color: #475569; display: block; margin-bottom: 0.3rem;">Chave de API / Access Key (Opcional):</label>
+                  <input type="password" id="cfgEmailApiKey" class="form-control" placeholder="Chave de API personalizada (opcional)" onchange="handleSaveEmailNotifySettings()" style="padding: 0.6rem; border-radius: 6px; font-size: 0.88rem;">
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 0.5rem; justify-content: flex-end; align-items: center; margin-top: 0.5rem; flex-wrap: wrap;">
+                <button type="button" class="btn btn-primary" onclick="handleSaveEmailNotifySettings(true)" style="padding: 0.6rem 1.15rem; font-size: 0.85rem; background: #0284c7; color: #ffffff; border: none; border-radius: 6px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+                  <i class="fa-solid fa-floppy-disk"></i> <span data-i18n="btn_save_config">Guardar</span>
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="sendTestEmailNotification()" style="padding: 0.6rem 1.15rem; font-size: 0.85rem; background: #ffffff; color: #0284c7; border: 1px solid #bae6fd; border-radius: 6px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+                  <i class="fa-solid fa-paper-plane"></i> <span data-i18n="cfg_email_notify_test">Testar Envio de Notificação</span>
+                </button>
               </div>
             </div>
 
@@ -4313,11 +4326,11 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- Internationalization & Translations Engine -->
-  <script src="i18n.js?v=20260910_v61"></script>
+  <script src="i18n.js?v=20260910_v62"></script>
   <!-- Main JavaScript App -->
-  <script src="app.js?v=20260910_v61"></script>
+  <script src="app.js?v=20260910_v62"></script>
   <!-- Duplicates Management Engine -->
-  <script src="duplicatesManager.js?v=20260910_v61"></script>
+  <script src="duplicatesManager.js?v=20260910_v62"></script>
 
   <!-- Override saveContact and switchTab to guarantee proper modal behavior regardless of app.js cache -->
   <script>
