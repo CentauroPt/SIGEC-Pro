@@ -5359,9 +5359,53 @@
       "active": true,
       "createdAt": "2026-08-22T10:06:38.433Z",
       "chefia": false
+    },
+    {
+      "id": "usr-1789072928344",
+      "nome": "antonio Campos",
+      "primeiroNome": "antonio",
+      "apelido": "Campos",
+      "email": "jjota26@gmail.com",
+      "cargo": "Comercial",
+      "idioma": "Português",
+      "pin": "J*cen*1971",
+      "role": "user",
+      "chefia": false,
+      "active": true,
+      "createdAt": "2026-09-10T20:42:08.344Z"
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1789073053726-806",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Gestão de Utilizadores",
+      "detalhes": "Estado do utilizador antonio Campos (jjota26@gmail.com) alterado para Ativo / Aprovado.",
+      "extra": {},
+      "timestamp": "2026-09-10T20:44:13.726Z"
+    },
+    {
+      "id": "log-1789073053725-914",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Conta Ativada",
+      "detalhes": "Email de confirmação de conta ativa enviado para jjota26@gmail.com (antonio Campos) no idioma Português.",
+      "extra": {},
+      "timestamp": "2026-09-10T20:44:13.725Z"
+    },
+    {
+      "id": "log-1789072887203-25",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Servidor GitHub",
+      "detalhes": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "extra": {},
+      "timestamp": "2026-09-10T20:41:27.203Z"
+    },
     {
       "id": "log-1789072883903-294",
       "usuarioId": "usr-admin-001",
@@ -5815,9 +5859,9 @@
       "usr-1789058923481",
       "José Antonio",
       "usr-1789070838707",
-      "jjota26@gmail.com",
       "jose Campos",
-      "usr-1789072378981"
+      "usr-1789072378981",
+      "jjota26@gmail.com"
     ]
   }
 }
