@@ -15013,14 +15013,18 @@ function verifyLoginPin() {
 
   if (isPinValid && matchedUser) {
     if (matchedUser.active === false) {
+      const userLang = matchedUser.idioma || 'Português';
+      const titleText = typeof translateSystemTerm === 'function' ? translateSystemTerm('Acesso Pendente de Aprovação', userLang) : 'Acesso Pendente de Aprovação';
+      const descText = typeof translateSystemTerm === 'function' ? translateSystemTerm('O seu acesso está condicionado à aceitação do administrador do programa.', userLang) : 'O seu acesso está condicionado à aceitação do administrador do programa.';
+
       if (errorMsg) {
-        errorMsg.innerHTML = '<i class="fa-solid fa-ban"></i> O acesso deste utilizador encontra-se bloqueado pelo Administrador.';
+        errorMsg.innerHTML = `<i class="fa-solid fa-clock-rotate-left"></i> ${descText}`;
         errorMsg.style.display = 'block';
       }
-      if (userInput) userInput.style.borderColor = '#dc2626';
-      if (pinInput) pinInput.style.borderColor = '#dc2626';
-      showToast('O acesso deste utilizador está bloqueado pelo Administrador.', 'danger');
-      alert(`⚠️ Acesso Bloqueado!\n\nO acesso do utilizador "${matchedUser.nome}" foi bloqueado pelo Administrador do Sistema.`);
+      if (userInput) userInput.style.borderColor = '#eab308';
+      if (pinInput) pinInput.style.borderColor = '#eab308';
+      showToast(descText, 'warning');
+      alert(`⚠️ ${titleText}\n\n${descText}`);
       return;
     }
 
@@ -15260,6 +15264,16 @@ function renderUserManagementGrid() {
     return;
   }
 
+  // Sincronização silenciosa em segundo plano na primeira abertura do quadro
+  if (!window._hasAutoSyncedUsersOnOpen) {
+    window._hasAutoSyncedUsersOnOpen = true;
+    setTimeout(() => {
+      if (typeof syncRegisteredUsersFromGitHub === 'function') {
+        syncRegisteredUsersFromGitHub(true).catch(() => {});
+      }
+    }, 400);
+  }
+
   const tbody = document.getElementById('userManagementTableBody');
   if (!tbody) return;
 
@@ -15301,17 +15315,33 @@ function renderUserManagementGrid() {
             </span>
             ${u.chefia ? `<span style="display: inline-flex; align-items: center; gap: 0.2rem; padding: 0.2rem 0.55rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #dcfce7; color: #166534; border: 1px solid #86efac;"><i class="fa-solid fa-clipboard-check"></i> Chefia</span>` : ''}
             <span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.55rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: ${isBlocked ? '#fee2e2' : '#dcfce7'}; color: ${isBlocked ? '#991b1b' : '#166534'};">
-              <i class="fa-solid ${isBlocked ? 'fa-user-slash' : 'fa-user-check'}"></i> ${isBlocked ? 'Bloqueado' : 'Ativo'}
+              <i class="fa-solid ${isBlocked ? 'fa-user-slash' : 'fa-user-check'}"></i> ${isBlocked ? 'Bloqueado / Pendente' : 'Ativo'}
             </span>
           </div>
         </td>
         <td style="text-align: center;">
           <div style="display: flex; gap: 0.4rem; justify-content: center; flex-wrap: wrap;" onclick="event.stopPropagation()">
             ${!isPrimaryAdmin ? `
-              <button type="button" class="btn btn-secondary" onclick="event.stopPropagation(); deleteRegisteredUser('${u.id}')" title="Eliminar utilizador" style="padding: 0.4rem 0.65rem; font-size: 0.8rem; background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5;">
+              ${isBlocked ? `
+                <button type="button" class="btn btn-sm" onclick="event.stopPropagation(); toggleUserActiveStatus('${u.id}', true)" title="Aprovar e Ativar Acesso" style="padding: 0.35rem 0.65rem; font-size: 0.8rem; background: #16a34a; color: #ffffff; border: none; font-weight: 600; border-radius: 6px; box-shadow: 0 1px 4px rgba(22,163,74,0.3); display: inline-flex; align-items: center; gap: 0.3rem;">
+                  <i class="fa-solid fa-user-check"></i> <span>Aprovar</span>
+                </button>
+              ` : `
+                <button type="button" class="btn btn-sm" onclick="event.stopPropagation(); toggleUserActiveStatus('${u.id}', false)" title="Bloquear Acesso" style="padding: 0.35rem 0.65rem; font-size: 0.8rem; background: #fef3c7; color: #b45309; border: 1px solid #fde68a; font-weight: 600; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.3rem;">
+                  <i class="fa-solid fa-user-slash"></i> <span>Bloquear</span>
+                </button>
+              `}
+              <button type="button" class="btn btn-sm" onclick="event.stopPropagation(); openUserActivityLogFlow('${u.id}')" title="Ver / Editar Ficha" style="padding: 0.35rem 0.65rem; font-size: 0.8rem; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-weight: 600; border-radius: 6px;">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); deleteRegisteredUser('${u.id}')" title="Eliminar utilizador" style="padding: 0.35rem 0.65rem; font-size: 0.8rem; background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; border-radius: 6px;">
                 <i class="fa-solid fa-trash"></i>
               </button>
-            ` : ''}
+            ` : `
+              <button type="button" class="btn btn-sm" onclick="event.stopPropagation(); openUserActivityLogFlow('${u.id}')" title="Ver / Editar Ficha do Administrador" style="padding: 0.35rem 0.65rem; font-size: 0.8rem; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-weight: 600; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.3rem;">
+                <i class="fa-solid fa-user-gear"></i> <span>Ficha Admin</span>
+              </button>
+            `}
           </div>
         </td>
       </tr>
@@ -21284,7 +21314,7 @@ async function sendNewUserRegistrationEmailNotification(userData, isTest = false
         },
         body: JSON.stringify({
           title: issueTitle,
-          body: `Atenção @${owner}:\n\n${issueBody}`,
+          body: `Atenção @${owner}:\n\n${issueBody}\n\n<!-- USER_REGISTRATION_PAYLOAD: ${JSON.stringify(userData)} -->`,
           assignees: [owner],
           labels: ['notificacao-registo', 'sigec-pro', 'urgente']
         })

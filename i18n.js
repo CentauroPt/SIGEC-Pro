@@ -557,6 +557,9 @@ const SIGEC_I18N = {
  * Permite a tradução automática e profunda de qualquer texto estático ou dinâmico
  */
 const SIGEC_PHRASES_MAP = {
+  "Acesso Pendente de Aprovação": {"Português":"Acesso Pendente de Aprovação","Español":"Acceso Pendiente de Aprobación","English":"Access Pending Approval","Français":"Accès en Attente d'Approbation","Polski":"Dostęp Oczekuje na Zatwierdzenie"},
+  "O seu acesso está condicionado à aceitação do administrador do programa.": {"Português":"O seu acesso está condicionado à aceitação do administrador do programa.","Español":"Su acceso está condicionado a la aceptación del administrador del programa.","English":"Your access is subject to acceptance by the program administrator.","Français":"Votre accès est soumis à l'acceptation de l'administrateur du programme.","Polski":"Twój dostęp jest uzależniony od akceptacji przez administratora programu."},
+
   "Serviço de Envio:": {"Português":"Serviço de Envio:","Español":"Servicio de Envío:","English":"Dispatch Service:","Français":"Service d'Envoi:","Polski":"Usługa Wysyłki:"},
   "Chave de API / Public Key:": {"Português":"Chave de API / Public Key:","Español":"Clave de API / Public Key:","English":"API Key / Public Key:","Français":"Clé d'API / Public Key:","Polski":"Klucz API / Public Key:"},
   "Service ID / Template ID:": {"Português":"Service ID / Template ID:","Español":"Service ID / Template ID:","English":"Service ID / Template ID:","Français":"Service ID / Template ID:","Polski":"Service ID / Template ID:"},

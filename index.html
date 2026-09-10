@@ -2252,7 +2252,6 @@
       </div>
     </section>
 
-    <!-- TAB: CONFIGURAÇÃO DO SISTEMA (inclui sub-tab Duplicados) -->
     <section id="tab-database" class="tab-content">
 
       <!-- SUB-NAV INTERNA DA CONFIGURAÇÃO -->
@@ -2425,18 +2424,62 @@
             <div class="card"
               style="border: 1px solid #bae6fd; background: #ffffff; padding: 1.25rem; grid-column: 1 / -1; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); margin-top: 0.5rem;">
               <div
+                style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <div
+                    style="width: 42px; height: 42px; border-radius: 8px; background: #dbeafe; color: #1d4ed8; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                    <i class="fa-solid fa-users-gear"></i>
+                  </div>
+                  <div>
+                    <h3 style="font-size: 1.05rem; color: #1e40af; margin: 0; font-weight: 700;">Gestão de Utilizadores & Registos de Acesso</h3>
+                    <span style="font-size: 0.78rem; color: #2563eb;">Registo, Definição de PIN/Password e Histórico de Atividade Real por Utilizador</span>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                  <button type="button" class="btn" onclick="syncRegisteredUsersFromGitHub(false)"
+                    title="Sincronizar utilizadores registados a partir do servidor GitHub"
+                    style="background: #10b981; color: #ffffff; font-weight: 600; border: none; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);">
+                    <i class="fa-solid fa-arrows-rotate"></i> <span>Sincronizar Registos</span>
+                  </button>
+                  <button type="button" class="btn" onclick="lockApplicationScreen()"
+                    title="Bloquear ecrã de acesso do programa"
+                    style="background: #eab308; color: #ffffff; font-weight: 600; border: none; box-shadow: 0 2px 6px rgba(234, 179, 8, 0.3);">
+                    <i class="fa-solid fa-lock"></i> Bloquear Programa
+                  </button>
+                  <button type="button" class="btn btn-primary" onclick="openRegisterUserModal()"
+                    style="background: #2563eb;">
+                    <i class="fa-solid fa-user-plus"></i> Registrar Novo Utilizador
+                  </button>
+                </div>
+              </div>
+
+              <!-- Tabela de Utilizadores Registados -->
+              <div class="table-responsive" style="background: #ffffff; border-radius: 8px; border: 1px solid #cbd5e1; padding: 0.5rem; margin-bottom: 0.5rem;">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Utilizador</th>
+                      <th>Email</th>
+                      <th>Cargo / Função</th>
+                      <th>Idioma</th>
+                      <th>Tipo de Conta</th>
+                      <th style="text-align: center;">Ações & Atividade Real</th>
+                    </tr>
+                  </thead>
+                  <tbody id="userManagementTableBody">
+                    <!-- Rendered dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- BLOCO: Sincronização em Tempo Real com o Servidor GitHub -->
+            <div class="card"
+              style="border: 1px solid #cbd5e1; background: #ffffff; padding: 1.25rem; grid-column: 1 / -1;">
+              <div
                 style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.85rem; flex-wrap: wrap;">
                 <div style="display: flex; align-items: center; gap: 0.75rem;">
                   <div
-                    style="width: 42px; height: 42px; border-radius: 8px; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
-                    <i class="fa-solid fa-envelope-circle-check"></i>
-                  </div>
-                  <div>
-                    <h3 style="font-size: 1.05rem; color: #0369a1; margin: 0; font-weight: 700;" data-i18n="cfg_email_notify_title">Notificações por Email de Novos Registos</h3>
-                    <span style="font-size: 0.78rem; color: #57606a;" data-i18n="cfg_email_notify_subtitle">Receba um alerta no seu email oficial sempre que um novo utilizador se registar no programa</span>
-                  </div>
-                </div>
-                <label style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 600; color: #0369a1; cursor: pointer; margin: 0;">
                   <input type="checkbox" id="cfgEmailNotifyEnabled" onchange="handleSaveEmailNotifySettings()" style="width: 16px; height: 16px; accent-color: #0284c7;" checked>
                   <span data-i18n="cfg_email_notify_active">Notificações Ativas</span>
                 </label>
@@ -2557,37 +2600,30 @@
             <!-- BLOCO 5: Gestão de Utilizadores & Controlo de Acesso Multi-Utilizador -->
             <div id="adminUserManagementBlock" class="card"
               style="border: 1px solid #93c5fd; background: #eff6ff; padding: 1.25rem; grid-column: 1 / -1;">
-              <div
-                style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
                 <div style="display: flex; align-items: center; gap: 0.75rem;">
-                  <div
-                    style="width: 42px; height: 42px; border-radius: 8px; background: #dbeafe; color: #1d4ed8; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                  <div style="width: 42px; height: 42px; border-radius: 8px; background: #dbeafe; color: #1d4ed8; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
                     <i class="fa-solid fa-users-gear"></i>
                   </div>
                   <div>
-                    <h3 style="font-size: 1.05rem; color: #1e40af; margin: 0; font-weight: 700;">Gestão de Utilizadores
-                      &
-                      Registos de Acesso</h3>
-                    <span style="font-size: 0.78rem; color: #2563eb;">Registo, Definição de PIN/Password e Histórico de
-                      Atividade Real por Utilizador</span>
+                    <h3 style="font-size: 1.05rem; color: #1e40af; margin: 0; font-weight: 700;">Gestão de Utilizadores & Registos de Acesso</h3>
+                    <span style="font-size: 0.78rem; color: #2563eb;">Registo, Definição de PIN/Password e Histórico de Atividade Real por Utilizador</span>
                   </div>
                 </div>
                 <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                  <button type="button" class="btn" onclick="lockApplicationScreen()"
-                    title="Bloquear ecrã de acesso do programa"
-                    style="background: #eab308; color: #ffffff; font-weight: 600; border: none; box-shadow: 0 2px 6px rgba(234, 179, 8, 0.3);">
+                  <button type="button" class="btn" onclick="syncRegisteredUsersFromGitHub(false)" title="Sincronizar utilizadores registados a partir do servidor GitHub" style="background: #10b981; color: #ffffff; font-weight: 600; border: none; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);">
+                    <i class="fa-solid fa-arrows-rotate"></i> <span>Sincronizar Registos</span>
+                  </button>
+                  <button type="button" class="btn" onclick="lockApplicationScreen()" title="Bloquear ecrã de acesso do programa" style="background: #eab308; color: #ffffff; font-weight: 600; border: none; box-shadow: 0 2px 6px rgba(234, 179, 8, 0.3);">
                     <i class="fa-solid fa-lock"></i> Bloquear Programa
                   </button>
-                  <button type="button" class="btn btn-primary" onclick="openRegisterUserModal()"
-                    style="background: #2563eb;">
+                  <button type="button" class="btn btn-primary" onclick="openRegisterUserModal()" style="background: #2563eb;">
                     <i class="fa-solid fa-user-plus"></i> Registrar Novo Utilizador
                   </button>
                 </div>
               </div>
-
               <!-- Tabela de Utilizadores Registados -->
-              <div class="table-responsive"
-                style="background: #ffffff; border-radius: 8px; border: 1px solid #cbd5e1; padding: 0.5rem; margin-bottom: 0.5rem;">
+              <div class="table-responsive" style="background: #ffffff; border-radius: 8px; border: 1px solid #cbd5e1; padding: 0.5rem; margin-bottom: 0.5rem;">
                 <table class="data-table">
                   <thead>
                     <tr>
