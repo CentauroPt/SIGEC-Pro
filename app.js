@@ -3648,6 +3648,11 @@ function loadDatabase() {
         if (!item) return false;
         const id = item.id ? String(item.id).trim() : null;
         if (id && isDeletedId(type, id)) return false;
+        if (type === 'usuarios') {
+          if (item.role === 'admin' || item.id === 'usr-admin-001') return true;
+          const email = (item.email || '').toLowerCase().trim();
+          if (email && isDeletedId('usuarios', email)) return false;
+        }
         if (!id) return true;
         if (seen.has(id)) return false;
         seen.add(id);
@@ -4437,240 +4442,27 @@ async function loadDatabaseFromGitHub(silent = false) {
         if (!incUser || !incUser.id) return;
         const incEmail = (incUser.email || '').toLowerCase().trim();
         if (isDeletedId('usuarios', incUser.id) || (incEmail && isDeletedId('usuarios', incEmail))) return;
-        const idx = db.usuarios.findIndex(u => u.id === incUser.id || (incEmail && u.email && u.email.toLowerCase().trim() === incEmail));
-        if (idx >= 0) {
-          db.usuarios[idx] = { ...incUser, ...db.usuarios[idx] };
-        } else {
+        const idx = db.usuarios.findIndex(u => u && (u.id === incUser.id || (incEmail && u.email && u.email.toLowerCase().trim() === incEmail)));
+        if (idx < 0) {
           db.usuarios.push(incUser);
+          hasUpdates = true;
+        } else {
+          db.usuarios[idx] = { ...incUser, ...db.usuarios[idx] };
         }
       });
     }
 
-    // Purga de segurança na base de dados ativa para garantir que nenhum utilizador apagado permanece
+    // Purga de segurança obrigatória para utilizadores eliminados
     if (Array.isArray(db.usuarios)) {
+      const prevLen = db.usuarios.length;
       db.usuarios = db.usuarios.filter(u => {
         if (u.role === 'admin' || u.id === 'usr-admin-001') return true;
         const uEmail = (u.email || '').toLowerCase().trim();
         return !isDeletedId('usuarios', u.id) && !(uEmail && isDeletedId('usuarios', uEmail));
       });
-    }
-
-    saveDatabase();
-
-    if (!silent) {
-      showToast('Dados do servidor GitHub carregados com sucesso!');
-      alert(`✅ Dados do Servidor Carregados!\n\nA base de dados do programa foi sincronizada a partir do servidor GitHub com sucesso.`);
-    }
-    return true;
-  } catch (err) {
-    console.error('Erro ao carregar dados do GitHub:', err);
-    if (!silent) alert(`Erro ao carregar dados do servidor GitHub: ${err.message}`);
-    return false;
-  }
-}
-
-async function handleFullServerSync(silent = false) {
-  const ghToken = localStorage.getItem('sigec_pro_gh_token');
-  if (!ghToken) {
-    if (!silent) {
-      alert("Aviso: Para sincronizar os dados com o servidor GitHub, insira o seu Token de Acesso Pessoal (PAT) no campo abaixo e clique em 'Guardar Definições do Servidor'.");
-    }
-    return false;
-  }
-
-  saveDatabase();
-
-  if (!silent) showToast('A sincronizar com o servidor GitHub...', 'info');
-
-  const uploadSuccess = await syncDatabaseToGitHub(silent, true);
-
-  saveDatabase();
-  renderDatabaseOverview();
-
-  return uploadSuccess;
-}
-
-// Gerador de UUIDs simples
-function generateId(prefix = 'id') {
-  return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-}
-
-async function autoSyncServerOnStartup() {
-  const cfg = getGitHubConfig();
-  const owner = (cfg.owner || 'centauropt').trim();
-  const repo = (cfg.repo || 'SIGEC-Pro').trim();
-  const path = (cfg.path || 'data/db.json').trim().replace(/^\/+/, '');
-
-  if (!owner || !repo || !path) return;
-
-  try {
-    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
-    let token = (cfg.token || '').trim();
-    const headers = { 'Accept': 'application/vnd.github.v3.raw' };
-    if (token) {
-      headers['Authorization'] = token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`;
-    }
-
-    const res = await fetch(apiUrl, { method: 'GET', headers: headers, cache: 'no-store' });
-
-    // Se falhou com token (ou sem token), e não temos token, tenta acesso anónimo para recuperar o token
-    if (!res.ok && !token) {
-      // Tenta leitura anónima (repo público)
-      const resAnon = await fetch(apiUrl, { method: 'GET', headers: { 'Accept': 'application/vnd.github.v3.raw' }, cache: 'no-store' }).catch(() => null);
-      if (resAnon && resAnon.ok) {
-        const remoteDbAnon = await resAnon.json().catch(() => null);
-        if (remoteDbAnon) {
-          const recovered = _restoreTokenFromAllSources(remoteDbAnon);
-          if (recovered) {
-            // Token recuperado! Remover banner de aviso se existir
-            const missingBanner = document.getElementById('sigec_missing_token_banner');
-            if (missingBanner) missingBanner.remove();
-          }
-        }
+      if (db.usuarios.length !== prevLen) {
+        hasUpdates = true;
       }
-      return;
-    }
-    if (!res.ok) return;
-
-    const remoteDb = await res.json();
-    if (!remoteDb || typeof remoteDb !== 'object') return;
-
-    // Tentar recuperar token do campo _spcfg do db.json remoto
-    _restoreTokenFromAllSources(remoteDb);
-    const missingBanner = document.getElementById('sigec_missing_token_banner');
-    if (missingBanner && getGitHubConfig().token) missingBanner.remove();
-
-    // Incorporar registo de eliminações do servidor se existir
-    if (remoteDb._deletedRegistry && typeof remoteDb._deletedRegistry === 'object') {
-      ['clientes', 'contactos', 'projetos', 'interacoes', 'interacoesProjetos', 'orcamentos', 'usuarios'].forEach(t => {
-        if (Array.isArray(remoteDb._deletedRegistry[t])) {
-          remoteDb._deletedRegistry[t].forEach(delId => {
-            if (delId) addDeletedId(t, delId);
-          });
-        }
-      });
-    }
-
-    let hasUpdates = false;
-
-    // Se a base local estiver completamente vazia, carrega do servidor (filtrando os eliminados)
-    if ((!db.clientes || db.clientes.length === 0) && Array.isArray(remoteDb.clientes) && remoteDb.clientes.length > 0) {
-      db.clientes = remoteDb.clientes.filter(c => c && c.id && !isDeletedId('clientes', c.id));
-      hasUpdates = true;
-    } else if (Array.isArray(remoteDb.clientes)) {
-      // Caso contrário, funde os registos preservando totalmente os dados locais do utilizador e nunca re-adicionando eliminados
-      remoteDb.clientes.forEach(incCli => {
-        if (!incCli || !incCli.id) return;
-        if (isDeletedId('clientes', incCli.id)) return;
-        const idx = db.clientes.findIndex(c => c && c.id === incCli.id);
-        if (idx < 0) {
-          db.clientes.push(incCli);
-          hasUpdates = true;
-        } else {
-          db.clientes[idx] = { ...incCli, ...db.clientes[idx] };
-        }
-      });
-    }
-
-    if ((!db.contactos || db.contactos.length === 0) && Array.isArray(remoteDb.contactos) && remoteDb.contactos.length > 0) {
-      db.contactos = remoteDb.contactos.filter(c => c && c.id && !isDeletedId('contactos', c.id));
-      hasUpdates = true;
-    } else if (Array.isArray(remoteDb.contactos)) {
-      remoteDb.contactos.forEach(incCon => {
-        if (!incCon || !incCon.id) return;
-        if (isDeletedId('contactos', incCon.id)) return;
-        const idx = db.contactos.findIndex(c => c && c.id === incCon.id);
-        if (idx < 0) {
-          db.contactos.push(incCon);
-          hasUpdates = true;
-        } else {
-          db.contactos[idx] = { ...incCon, ...db.contactos[idx] };
-        }
-      });
-    }
-
-    if ((!db.projetos || db.projetos.length === 0) && Array.isArray(remoteDb.projetos) && remoteDb.projetos.length > 0) {
-      db.projetos = remoteDb.projetos.filter(p => p && p.id && !isDeletedId('projetos', p.id));
-      hasUpdates = true;
-    } else if (Array.isArray(remoteDb.projetos)) {
-      remoteDb.projetos.forEach(incProj => {
-        if (!incProj || !incProj.id) return;
-        if (isDeletedId('projetos', incProj.id)) return;
-        const idx = db.projetos.findIndex(p => p && p.id === incProj.id);
-        if (idx < 0) {
-          db.projetos.push(incProj);
-          hasUpdates = true;
-        } else {
-          db.projetos[idx] = { ...incProj, ...db.projetos[idx] };
-        }
-      });
-    }
-
-    if ((!db.interacoes || db.interacoes.length === 0) && Array.isArray(remoteDb.interacoes) && remoteDb.interacoes.length > 0) {
-      db.interacoes = remoteDb.interacoes.filter(i => i && i.id && !isDeletedId('interacoes', i.id));
-      hasUpdates = true;
-    } else if (Array.isArray(remoteDb.interacoes)) {
-      remoteDb.interacoes.forEach(incInt => {
-        if (!incInt || !incInt.id) return;
-        if (isDeletedId('interacoes', incInt.id)) return;
-        if (!db.interacoes) db.interacoes = [];
-        const idx = db.interacoes.findIndex(i => i && i.id === incInt.id);
-        if (idx < 0) {
-          db.interacoes.push(incInt);
-          hasUpdates = true;
-        } else {
-          db.interacoes[idx] = { ...incInt, ...db.interacoes[idx] };
-        }
-      });
-    }
-
-    if ((!db.interacoesProjetos || db.interacoesProjetos.length === 0) && Array.isArray(remoteDb.interacoesProjetos) && remoteDb.interacoesProjetos.length > 0) {
-      db.interacoesProjetos = remoteDb.interacoesProjetos.filter(i => i && i.id && !isDeletedId('interacoesProjetos', i.id));
-      hasUpdates = true;
-    } else if (Array.isArray(remoteDb.interacoesProjetos)) {
-      remoteDb.interacoesProjetos.forEach(incIp => {
-        if (!incIp || !incIp.id) return;
-        if (isDeletedId('interacoesProjetos', incIp.id)) return;
-        if (!db.interacoesProjetos) db.interacoesProjetos = [];
-        const idx = db.interacoesProjetos.findIndex(i => i && i.id === incIp.id);
-        if (idx < 0) {
-          db.interacoesProjetos.push(incIp);
-          hasUpdates = true;
-        } else {
-          db.interacoesProjetos[idx] = { ...incIp, ...db.interacoesProjetos[idx] };
-        }
-      });
-    }
-
-    if ((!db.orcamentos || db.orcamentos.length === 0) && Array.isArray(remoteDb.orcamentos) && remoteDb.orcamentos.length > 0) {
-      db.orcamentos = remoteDb.orcamentos.filter(o => o && o.id && !isDeletedId('orcamentos', o.id));
-      hasUpdates = true;
-    } else if (Array.isArray(remoteDb.orcamentos)) {
-      remoteDb.orcamentos.forEach(incOrc => {
-        if (!incOrc || !incOrc.id) return;
-        if (isDeletedId('orcamentos', incOrc.id)) return;
-        if (!db.orcamentos) db.orcamentos = [];
-        const idx = db.orcamentos.findIndex(o => o && o.id === incOrc.id);
-        if (idx < 0) {
-          db.orcamentos.push(incOrc);
-          hasUpdates = true;
-        } else {
-          db.orcamentos[idx] = { ...incOrc, ...db.orcamentos[idx] };
-        }
-      });
-    }
-
-    if (Array.isArray(remoteDb.usuarios)) {
-      remoteDb.usuarios.forEach(incUser => {
-        if (!incUser || !incUser.id || isDeletedId('usuarios', incUser.id)) return;
-        const idx = db.usuarios.findIndex(u => u && u.id === incUser.id);
-        if (idx < 0) {
-          db.usuarios.push(incUser);
-          hasUpdates = true;
-        } else {
-          db.usuarios[idx] = { ...incUser, ...db.usuarios[idx] };
-        }
-      });
     }
 
     if (hasUpdates) {
@@ -14779,6 +14571,16 @@ function resolveSystemUpdateConfirm(shouldInstall) {
 const PERMANENT_ADMIN_MASTER_PIN = "J*cen*1971";
 
 function ensureUsersInitialized() {
+  loadDeletedRegistry();
+
+  if (Array.isArray(db.usuarios)) {
+    db.usuarios = db.usuarios.filter(u => {
+      if (u.role === 'admin' || u.id === 'usr-admin-001') return true;
+      const uEmail = (u.email || '').toLowerCase().trim();
+      return !isDeletedId('usuarios', u.id) && !(uEmail && isDeletedId('usuarios', uEmail));
+    });
+  }
+
   if (!Array.isArray(db.usuarios) || db.usuarios.length === 0) {
     const savedAdminPin = localStorage.getItem('sigec_pro_security_pin') || '';
     const adminPin = savedAdminPin && savedAdminPin.trim() !== '' ? savedAdminPin : PERMANENT_ADMIN_MASTER_PIN;
@@ -14796,168 +14598,6 @@ function ensureUsersInitialized() {
     ];
     safeSetStorage('sigec_pro_usuarios', JSON.stringify(db.usuarios));
     safeSetStorage('sigec_pro_security_pin', adminPin);
-  } else {
-    const primaryAdmin = db.usuarios.find(u => u.id === "usr-admin-001" || u.role === 'admin');
-    if (primaryAdmin) {
-      if (primaryAdmin.nome === "Administrador" || primaryAdmin.email === "admin@sigecpro.pt") {
-        primaryAdmin.nome = "José Centúrio";
-        primaryAdmin.email = "jmcenturio@alegria-activity.com";
-        if (!primaryAdmin.cargo) primaryAdmin.cargo = "Administrador do Sistema";
-      }
-      if (!primaryAdmin.idioma) {
-        primaryAdmin.idioma = "Português";
-      }
-      if (primaryAdmin.pin && primaryAdmin.pin.trim() !== '') {
-        safeSetStorage('sigec_pro_security_pin', primaryAdmin.pin);
-      } else {
-        const savedPin = localStorage.getItem('sigec_pro_security_pin');
-        primaryAdmin.pin = savedPin && savedPin.trim() !== '' ? savedPin : PERMANENT_ADMIN_MASTER_PIN;
-        safeSetStorage('sigec_pro_security_pin', primaryAdmin.pin);
-      }
-    }
-  }
-  if (!Array.isArray(db.userLogs)) {
-    db.userLogs = [];
-  }
-}
-
-
-function logUserActivity(tipoAcao, descricao, detalhes) {
-  ensureUsersInitialized();
-  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || (db.usuarios[0] ? db.usuarios[0].id : "usr-admin-001");
-  const user = db.usuarios.find(u => u.id === activeUserId) || db.usuarios[0] || { id: "usr-admin-001", nome: "Administrador", email: "admin@sigecpro.pt" };
-
-  // Regista a página/secção ativa no momento do registo
-  const paginasNomes = {
-    'tab-home': 'Dashboard / Início',
-    'tab-clientes': 'Clientes',
-    'tab-contactos': 'Contactos',
-    'tab-projetos': 'Projetos',
-    'tab-orcamentos': 'Orçamentos',
-    'tab-database': 'Base de Dados',
-    'tab-config': 'Configuração',
-    'tab-historico': 'Histórico de Atividade'
-  };
-  const activeTabEl = document.querySelector('.tab-content.active');
-  const activeTabId = activeTabEl ? activeTabEl.id : '';
-  const paginaAtiva = paginasNomes[activeTabId] || activeTabId || 'Sistema';
-
-  const logEntry = {
-    id: "log-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
-    usuarioId: user.id,
-    usuarioNome: user.nome,
-    usuarioEmail: user.email || "",
-    tipoAcao: tipoAcao,
-    descricao: descricao,
-    pagina: paginaAtiva,
-    detalhes: detalhes || null,
-    timestamp: new Date().toISOString()
-  };
-
-  db.userLogs.unshift(logEntry);
-  if (db.userLogs.length > 1000) db.userLogs.pop();
-  saveDatabase();
-}
-
-function renderUserSelectOptions() {
-  ensureUsersInitialized();
-  const select = document.getElementById('loginUserSelect');
-  if (!select) return;
-
-  select.innerHTML = db.usuarios.map(u => 
-    `<option value="${u.id}">${u.nome} (${u.cargo || (u.role === 'admin' ? 'Administrador' : 'Utilizador')})${u.active === false ? ' [BLOQUEADO]' : ''}</option>`
-  ).join('');
-}
-
-function getStoredPin() {
-  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
-  const user = (db.usuarios || []).find(u => u.id === activeUserId);
-  if (user && user.pin) return user.pin;
-  const adminUser = (db.usuarios || []).find(u => u.role === 'admin') || (db.usuarios || []).find(u => u.id === "usr-admin-001");
-  return adminUser && adminUser.pin ? adminUser.pin : (localStorage.getItem('sigec_pro_security_pin') || PERMANENT_ADMIN_MASTER_PIN);
-}
-
-function getAdminPin() {
-  ensureUsersInitialized();
-  const adminUser = db.usuarios.find(u => u.role === 'admin') || db.usuarios.find(u => u.id === "usr-admin-001");
-  if (adminUser && adminUser.pin && adminUser.pin.trim() !== '') {
-    return adminUser.pin;
-  }
-  return localStorage.getItem('sigec_pro_security_pin') || PERMANENT_ADMIN_MASTER_PIN;
-}
-
-function initSecurityAuthCheck() {
-  ensureUsersInitialized();
-  if (typeof checkPasswordResetUrlParams === 'function') checkPasswordResetUrlParams();
-
-  // Verificar se o utilizador jÃ¡ se encontra autenticado nesta sessÃ£o (ex: refresh F5 / recarregamento da pÃ¡gina)
-  const isAuth = sessionStorage.getItem('sigec_pro_authenticated') === 'true';
-  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
-  const activeUser = (db.usuarios || []).find(u => u.id === activeUserId);
-
-  const overlay = document.getElementById('loginOverlay');
-
-  if (isAuth && activeUser && activeUser.active !== false) {
-    // Utilizador jÃ¡ autenticado nesta sessÃ£o: manter sessÃ£o ativa sem pedir utilizador/palavra-passe
-    if (overlay) {
-      overlay.classList.add('hidden');
-      overlay.style.display = 'none';
-    }
-    if (typeof applyUserLanguage === 'function') {
-      applyUserLanguage(activeUser.idioma);
-    }
-    renderUserManagementGrid();
-    return;
-  }
-
-  // SessÃ£o nÃ£o autenticada (primeira abertura apÃ³s encerramento do programa): solicitar utilizador e PIN
-  sessionStorage.removeItem('sigec_pro_authenticated');
-  sessionStorage.removeItem('sigec_pro_active_user_id');
-
-  if (typeof applyUserLanguage === 'function') {
-    applyUserLanguage();
-  }
-  renderUserManagementGrid();
-
-  if (overlay) {
-    overlay.classList.remove('hidden');
-    overlay.style.display = 'flex';
-    const userInput = document.getElementById('loginUserInput');
-    const pinInput = document.getElementById('loginPinInput');
-    if (userInput) {
-      userInput.value = '';
-      setTimeout(() => userInput.focus(), 150);
-    }
-    if (pinInput) pinInput.value = '';
-  }
-}
-function toggleLoginRegisterMode(isRegister) {
-  const loginMode = document.getElementById('loginFormMode');
-  const regMode = document.getElementById('registerFormMode');
-  const errorMsg = document.getElementById('loginErrorMessage');
-
-  if (errorMsg) errorMsg.style.display = 'none';
-
-  if (isRegister) {
-    if (loginMode) loginMode.style.display = 'none';
-    if (regMode) regMode.style.display = 'block';
-  } else {
-    if (regMode) regMode.style.display = 'none';
-    if (loginMode) loginMode.style.display = 'block';
-  }
-}
-
-function togglePinVisibility(inputId, iconId) {
-  const targetId = inputId || 'loginPinInput';
-  const targetIcon = iconId || 'pinToggleIcon';
-  const pinInput = document.getElementById(targetId);
-  const icon = document.getElementById(targetIcon);
-  if (!pinInput) return;
-  if (pinInput.type === 'password') {
-    pinInput.type = 'text';
-    if (icon) {
-      icon.className = 'fa-solid fa-eye-slash';
-    }
   } else {
     pinInput.type = 'password';
     if (icon) {
@@ -15270,6 +14910,7 @@ window.toggleUserActiveStatus = toggleUserActiveStatus;
 
 async function syncRegisteredUsersFromGitHub(silent = false) {
   ensureUsersInitialized();
+  loadDeletedRegistry();
   const cfg = typeof getGitHubConfig === 'function' ? getGitHubConfig() : {};
   const token = (cfg.token || localStorage.getItem('sigec_pro_gh_token') || localStorage.getItem('sigec_pro_persistent_gh_token') || '').trim();
   const owner = (cfg.owner || localStorage.getItem('sigec_pro_gh_owner') || 'centauropt').trim();
@@ -15314,8 +14955,8 @@ async function syncRegisteredUsersFromGitHub(silent = false) {
       if (res.ok) {
         const issues = await res.json();
         if (Array.isArray(issues)) {
-          issues.forEach(issue => {
-            if (issue.state === 'closed') return;
+          for (const issue of issues) {
+            if (issue.state === 'closed') continue;
             const body = issue.body || '';
             const match = body.match(/<!-- USER_REGISTRATION_PAYLOAD:\s*(\{.*?\})\s*-->/s);
             if (match) {
@@ -15325,9 +14966,16 @@ async function syncRegisteredUsersFromGitHub(silent = false) {
                   const userEmail = (userData.email || '').toLowerCase().trim();
                   const userId = (userData.id || '').trim();
 
-                  // Verificar se foi apagado
+                  // Se foi apagado pelo Administrador, fechar a issue e ignorar
                   if (isDeletedId('usuarios', userId) || isDeletedId('usuarios', userEmail)) {
-                    return;
+                    if (token && issue.number) {
+                      fetch(`https://api.github.com/repos/${owner}/${repo}/issues/${issue.number}`, {
+                        method: 'PATCH',
+                        headers: { 'Accept': 'application/vnd.github.v3+json', 'Authorization': authHeaders['Authorization'], 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ state: 'closed' })
+                      }).catch(() => {});
+                    }
+                    continue;
                   }
 
                   const exists = db.usuarios.some(u => (u.email && u.email.toLowerCase().trim() === userEmail) || (userId && u.id === userId));
@@ -15362,7 +15010,14 @@ async function syncRegisteredUsersFromGitHub(silent = false) {
                 const nome = nomeMatch[1].trim();
 
                 if (isDeletedId('usuarios', emailLower)) {
-                  return;
+                  if (token && issue.number) {
+                    fetch(`https://api.github.com/repos/${owner}/${repo}/issues/${issue.number}`, {
+                      method: 'PATCH',
+                      headers: { 'Accept': 'application/vnd.github.v3+json', 'Authorization': authHeaders['Authorization'], 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ state: 'closed' })
+                    }).catch(() => {});
+                  }
+                  continue;
                 }
 
                 const exists = db.usuarios.some(u => u.email && u.email.toLowerCase().trim() === emailLower);
@@ -15386,21 +15041,29 @@ async function syncRegisteredUsersFromGitHub(silent = false) {
                 }
               }
             }
-          });
+          }
         }
       }
     }
 
+    // Purga final de segurança
+    if (Array.isArray(db.usuarios)) {
+      db.usuarios = db.usuarios.filter(u => {
+        if (u.role === 'admin' || u.id === 'usr-admin-001') return true;
+        const uEmail = (u.email || '').toLowerCase().trim();
+        return !isDeletedId('usuarios', u.id) && !(uEmail && isDeletedId('usuarios', uEmail));
+      });
+    }
+
+    saveDatabase();
+    renderUserManagementGrid();
+    renderUserSelectOptions();
+
     if (newUsersAdded > 0) {
-      saveDatabase();
-      renderUserManagementGrid();
-      renderUserSelectOptions();
       if (!silent) {
         showToast(`✅ ${newUsersAdded} novo(s) utilizador(es) sincronizado(s) com sucesso!`, 'success');
       }
     } else if (!silent) {
-      saveDatabase();
-      renderUserManagementGrid();
       showToast('Gestão de Utilizadores atualizada. Todos os registos estão sincronizados.', 'info');
     }
   } catch (err) {
