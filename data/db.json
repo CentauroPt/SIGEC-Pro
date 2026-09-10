@@ -5359,11 +5359,25 @@
       "active": true,
       "createdAt": "2026-08-22T10:06:38.433Z",
       "chefia": false
+    },
+    {
+      "id": "usr-1789055132652-600",
+      "nome": "Carlos Campos",
+      "primeiroNome": "Carlos",
+      "apelido": "Campos",
+      "email": "Carlos@carlos.pt",
+      "cargo": "Comercial",
+      "idioma": "Português",
+      "pin": "",
+      "role": "user",
+      "chefia": false,
+      "active": false,
+      "createdAt": "2026-09-10T13:37:04Z"
     }
   ],
   "userLogs": [
     {
-      "id": "log-1789055113882-445",
+      "id": "log-1789055132483-355",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
@@ -5371,40 +5385,7 @@
       "descricao": "Utilizador Carlos Campos (Carlos@carlos.pt) eliminado do sistema.",
       "pagina": "Base de Dados",
       "detalhes": null,
-      "timestamp": "2026-09-10T15:45:13.882Z"
-    },
-    {
-      "id": "log-1789055108865-207",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-09-10T15:45:08.865Z"
-    },
-    {
-      "id": "log-1789055093279-102",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-09-10T15:44:53.279Z"
-    },
-    {
-      "id": "log-1789055090030-3",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Gestão de Utilizadores",
-      "descricao": "Utilizador Carlos Campos (Carlos@carlos.pt) eliminado do sistema.",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-09-10T15:44:50.030Z"
+      "timestamp": "2026-09-10T15:45:32.483Z"
     }
   ],
   "orcamentos": [
@@ -5785,7 +5766,8 @@
       "usr-1789054759868-750",
       "usr-1789055053499-805",
       "usr-1789055067182-755",
-      "usr-1789055095572-476"
+      "usr-1789055095572-476",
+      "usr-1789055121493-768"
     ]
   }
 }
