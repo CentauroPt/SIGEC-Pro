@@ -14604,6 +14604,17 @@ function ensureUsersInitialized() {
              !(uEmail && isDeletedId('usuarios', uEmail)) &&
              !(uName && isDeletedId('usuarios', uName));
     });
+
+    // Garantir que todas as contas de José Centúrio / Administrador têm acesso total ativo
+    db.usuarios.forEach(u => {
+      const uEmail = (u.email || '').toLowerCase().trim();
+      const uName = (u.nome || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+      if (u.id === 'usr-admin-001' || u.role === 'admin' || uName.includes('jose centurio') || uName.includes('administrador') || uEmail.includes('josecenturio') || uEmail.includes('jmcenturio')) {
+        u.role = 'admin';
+        u.chefia = true;
+        u.active = true;
+      }
+    });
   }
 
   if (!Array.isArray(db.usuarios) || db.usuarios.length === 0) {
@@ -14618,6 +14629,8 @@ function ensureUsersInitialized() {
         idioma: "Português",
         pin: adminPin,
         role: "admin",
+        chefia: true,
+        active: true,
         createdAt: "2026-08-10T09:45:00.000Z"
       }
     ];
@@ -15211,14 +15224,15 @@ function renderUserManagementGrid() {
   }
 
   tbody.innerHTML = db.usuarios.map(u => {
-    const isPrimaryAdmin = u.role === 'admin' || u.id === 'usr-admin-001';
-    const isBlocked = u.active === false;
+    const isMainAdmin = u.id === 'usr-admin-001';
+    const isAdmin = u.role === 'admin' || isMainAdmin;
+    const isBlocked = u.active === false && !isAdmin;
     const userIdioma = u.idioma || 'Português';
     const logCount = (db.userLogs || []).filter(l => l.usuarioId === u.id).length;
 
     // Iniciais do utilizador para o avatar
     const initials = (u.nome || 'U').split(/\s+/).filter(Boolean).map(n => n[0]).slice(0, 2).join('').toUpperCase();
-    const avatarBg = isPrimaryAdmin ? '#2563eb' : (isBlocked ? '#94a3b8' : '#0284c7');
+    const avatarBg = isAdmin ? '#2563eb' : (isBlocked ? '#94a3b8' : '#0284c7');
 
     return `
       <tr onclick="openUserActivityLogFlow('${u.id}')" style="cursor: pointer; transition: background 0.15s ease-in-out; border-bottom: 1px solid #f1f5f9;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
@@ -15250,8 +15264,8 @@ function renderUserManagementGrid() {
         <td style="padding: 0.85rem 1rem; vertical-align: middle; text-align: center;">
           <div style="display: inline-flex; flex-direction: column; gap: 0.3rem; align-items: center;">
             <div style="display: inline-flex; gap: 0.3rem; align-items: center; flex-wrap: nowrap;">
-              <span style="display: inline-block; padding: 0.2rem 0.55rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 600; background: ${isPrimaryAdmin ? '#dbeafe' : '#f1f5f9'}; color: ${isPrimaryAdmin ? '#1e40af' : '#475569'}; border: 1px solid ${isPrimaryAdmin ? '#bfdbfe' : '#e2e8f0'}; white-space: nowrap;">
-                ${isPrimaryAdmin ? 'Administrador' : 'Utilizador Padrão'}
+              <span style="display: inline-block; padding: 0.2rem 0.55rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 600; background: ${isAdmin ? '#dbeafe' : '#f1f5f9'}; color: ${isAdmin ? '#1e40af' : '#475569'}; border: 1px solid ${isAdmin ? '#bfdbfe' : '#e2e8f0'}; white-space: nowrap;">
+                ${isAdmin ? 'Administrador' : 'Utilizador Padrão'}
               </span>
               ${u.chefia ? `<span style="display: inline-flex; align-items: center; gap: 0.2rem; padding: 0.2rem 0.5rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 600; background: #dcfce7; color: #166534; border: 1px solid #86efac; white-space: nowrap;"><i class="fa-solid fa-clipboard-check"></i> Chefia</span>` : ''}
             </div>
@@ -15262,7 +15276,11 @@ function renderUserManagementGrid() {
         </td>
         <td style="padding: 0.85rem 1rem; vertical-align: middle; text-align: center;">
           <div style="display: inline-flex; gap: 0.4rem; justify-content: center; align-items: center; flex-wrap: nowrap; white-space: nowrap;" onclick="event.stopPropagation()">
-            ${!isPrimaryAdmin ? `
+            ${isMainAdmin ? `
+              <button type="button" class="btn btn-sm" onclick="event.stopPropagation(); openUserActivityLogFlow('${u.id}')" title="Ver / Editar Ficha do Administrador Principal" style="height: 32px; padding: 0 0.85rem; font-size: 0.8rem; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-weight: 600; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer; white-space: nowrap;">
+                <i class="fa-solid fa-user-gear"></i> <span>Ficha Admin</span>
+              </button>
+            ` : `
               ${isBlocked ? `
                 <button type="button" class="btn btn-sm" onclick="event.stopPropagation(); toggleUserActiveStatus('${u.id}', true)" title="Aprovar e Ativar Acesso" style="height: 32px; padding: 0 0.65rem; font-size: 0.78rem; background: #16a34a; color: #ffffff; border: none; font-weight: 600; border-radius: 6px; box-shadow: 0 1px 4px rgba(22,163,74,0.3); display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; white-space: nowrap;">
                   <i class="fa-solid fa-user-check"></i> <span>Aprovar</span>
@@ -15272,15 +15290,11 @@ function renderUserManagementGrid() {
                   <i class="fa-solid fa-user-slash"></i> <span>Bloquear</span>
                 </button>
               `}
-              <button type="button" class="btn btn-sm" onclick="event.stopPropagation(); openUserActivityLogFlow('${u.id}')" title="Ver Ficha e Atividade Real" style="height: 32px; width: 32px; padding: 0; font-size: 0.85rem; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-weight: 600; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;">
-                <i class="fa-solid fa-pen-to-square"></i>
+              <button type="button" class="btn btn-sm" onclick="event.stopPropagation(); openUserActivityLogFlow('${u.id}')" title="${isAdmin ? 'Ver / Editar Ficha de Administrador' : 'Ver Ficha e Atividade Real'}" style="height: 32px; width: 32px; padding: 0; font-size: 0.85rem; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-weight: 600; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;">
+                <i class="fa-solid ${isAdmin ? 'fa-user-gear' : 'fa-pen-to-square'}"></i>
               </button>
               <button type="button" class="btn btn-sm" onclick="event.stopPropagation(); deleteRegisteredUser('${u.id}')" title="Eliminar utilizador" style="height: 32px; width: 32px; padding: 0; font-size: 0.85rem; background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;">
                 <i class="fa-solid fa-trash"></i>
-              </button>
-            ` : `
-              <button type="button" class="btn btn-sm" onclick="event.stopPropagation(); openUserActivityLogFlow('${u.id}')" title="Ver / Editar Ficha do Administrador" style="height: 32px; padding: 0 0.85rem; font-size: 0.8rem; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-weight: 600; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer; white-space: nowrap;">
-                <i class="fa-solid fa-user-gear"></i> <span>Ficha Admin</span>
               </button>
             `}
           </div>
@@ -15959,7 +15973,7 @@ async function deleteRegisteredUser(userId) {
   const user = db.usuarios.find(u => u.id === userId);
   if (!user) return;
 
-  if (user.role === 'admin' || user.id === 'usr-admin-001') {
+  if (user.id === 'usr-admin-001') {
     alert("Não é possível eliminar a conta do Administrador principal.");
     return;
   }
@@ -15979,7 +15993,7 @@ async function deleteRegisteredUser(userId) {
 
     // 2. Remover o utilizador do array de utilizadores com filtragem estrita
     db.usuarios = db.usuarios.filter(u => {
-      if (u.role === 'admin' || u.id === 'usr-admin-001') return true;
+      if (u.id === 'usr-admin-001') return true;
       const uEmail = (u.email || '').toLowerCase().trim();
       const uName = (u.nome || '').toLowerCase().trim();
       const uId = (u.id || '').trim().toLowerCase();
