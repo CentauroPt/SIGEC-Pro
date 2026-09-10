@@ -15687,6 +15687,7 @@ function handleSaveUserProfile(event) {
   }
 
   const activeCheckbox = document.getElementById('profileUserActive');
+  const wasInactive = (db.usuarios[userIndex].active === false);
   let newActiveState = activeCheckbox ? activeCheckbox.checked : (db.usuarios[userIndex].active !== false);
 
   const chefiaCheckbox = document.getElementById('profileUserChefia');
@@ -15722,6 +15723,11 @@ function handleSaveUserProfile(event) {
   saveDatabase();
   renderUserManagementGrid();
   renderUserSelectOptions();
+
+  // Se o utilizador foi ativado pelo Administrador, enviar email no respetivo idioma
+  if (wasInactive && newActiveState && typeof sendUserAccountActivatedEmail === 'function') {
+    sendUserAccountActivatedEmail(db.usuarios[userIndex]).catch(() => {});
+  }
 
   if (activeUserId === userId && typeof applyUserLanguage === 'function') {
     applyUserLanguage(idioma);
@@ -21794,7 +21800,7 @@ async function sendUserAccountActivatedEmail(user) {
       bodyMsg: `Su cuenta de usuario en el sistema SIGEC-Pro ha sido activada con éxito por el Administrador. Ya puede iniciar sesión en el programa con su Correo Electrónico y Contraseña / PIN.`,
       lblNome: `Nombre Completo`,
       lblEmail: `Correo Electrónico de Acceso`,
-      lblCargo: `Cargo / Função`,
+      lblCargo: `Cargo / Función`,
       lblIdioma: `Idioma de Trabajo`,
       lblPin: `Contraseña / PIN de Acceso`,
       lblEstado: `Estado de la Cuenta`,
