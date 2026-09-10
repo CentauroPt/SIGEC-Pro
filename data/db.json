@@ -5363,7 +5363,7 @@
   ],
   "userLogs": [
     {
-      "id": "log-1789055060669-733",
+      "id": "log-1789055090030-3",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
@@ -5371,7 +5371,7 @@
       "descricao": "Utilizador Carlos Campos (Carlos@carlos.pt) eliminado do sistema.",
       "pagina": "Base de Dados",
       "detalhes": null,
-      "timestamp": "2026-09-10T15:44:20.669Z"
+      "timestamp": "2026-09-10T15:44:50.030Z"
     }
   ],
   "orcamentos": [
@@ -5750,7 +5750,8 @@
       "usr-1789054416576-555",
       "usr-1789054748706-278",
       "usr-1789054759868-750",
-      "usr-1789055053499-805"
+      "usr-1789055053499-805",
+      "usr-1789055067182-755"
     ]
   }
 }
