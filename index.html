@@ -308,7 +308,7 @@
   <!-- ECRÃ DE AUTENTICAÇÃO E SEGURANÇA (LOGIN PIN / PALAVRA-PASSE) -->
   <div id="loginOverlay" class="login-overlay">
     <script>
-      if (sessionStorage.getItem('sigec_pro_authenticated') === 'true') {
+      if (sessionStorage.getItem('sigec_pro_authenticated') === 'true' || localStorage.getItem('sigec_pro_authenticated') === 'true') {
         var _lo = document.getElementById('loginOverlay');
         if (_lo) { _lo.style.display = 'none'; _lo.classList.add('hidden'); }
       }
