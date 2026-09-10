@@ -5359,9 +5359,53 @@
       "active": true,
       "createdAt": "2026-08-22T10:06:38.433Z",
       "chefia": false
+    },
+    {
+      "id": "usr-1789075169789",
+      "nome": "antonio campos",
+      "primeiroNome": "antonio",
+      "apelido": "campos",
+      "email": "jjota26@gmail.com",
+      "cargo": "Comercial",
+      "idioma": "Português",
+      "pin": "J*cen*1971",
+      "role": "user",
+      "chefia": false,
+      "active": true,
+      "createdAt": "2026-09-10T21:19:29.789Z"
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1789075200420-96",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Gestão de Utilizadores",
+      "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Ativo / Aprovado.",
+      "extra": {},
+      "timestamp": "2026-09-10T21:20:00.420Z"
+    },
+    {
+      "id": "log-1789075200419-563",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Conta Ativada",
+      "detalhes": "Email de confirmação de conta ativa enviado para jjota26@gmail.com (antonio campos) no idioma Português.",
+      "extra": {},
+      "timestamp": "2026-09-10T21:20:00.419Z"
+    },
+    {
+      "id": "log-1789075141374-806",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Servidor GitHub",
+      "detalhes": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "extra": {},
+      "timestamp": "2026-09-10T21:19:01.374Z"
+    },
     {
       "id": "log-1789075138223-759",
       "usuarioId": "usr-admin-001",
@@ -5825,9 +5869,9 @@
       "usr-1789072378981",
       "usr-1789072928344",
       "usr-1789073688954",
+      "usr-1789074358245",
       "jjota26@gmail.com",
-      "antonio campos",
-      "usr-1789074358245"
+      "antonio campos"
     ]
   }
 }
