@@ -5371,11 +5371,31 @@
       "pin": "J*cen*1971",
       "role": "user",
       "chefia": false,
-      "active": true,
+      "active": false,
       "createdAt": "2026-09-10T21:19:29.789Z"
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1789075604300-994",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Gestão de Utilizadores",
+      "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Bloqueado.",
+      "extra": {},
+      "timestamp": "2026-09-10T21:26:44.300Z"
+    },
+    {
+      "id": "log-1789075203417-804",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Servidor GitHub",
+      "detalhes": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "extra": {},
+      "timestamp": "2026-09-10T21:20:03.417Z"
+    },
     {
       "id": "log-1789075200420-96",
       "usuarioId": "usr-admin-001",
