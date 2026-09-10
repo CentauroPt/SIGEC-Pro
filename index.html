@@ -2420,98 +2420,7 @@
               </div>
             </div>
 
-            <!-- BLOCO: Notificações por Email de Novos Registos -->
-            <div class="card"
-              style="border: 1px solid #bae6fd; background: #ffffff; padding: 1.25rem; grid-column: 1 / -1; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); margin-top: 0.5rem;">
-              <div
-                style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
-                <div style="display: flex; align-items: center; gap: 0.75rem;">
-                  <div
-                    style="width: 42px; height: 42px; border-radius: 8px; background: #dbeafe; color: #1d4ed8; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
-                    <i class="fa-solid fa-users-gear"></i>
-                  </div>
-                  <div>
-                    <h3 style="font-size: 1.05rem; color: #1e40af; margin: 0; font-weight: 700;">Gestão de Utilizadores & Registos de Acesso</h3>
-                    <span style="font-size: 0.78rem; color: #2563eb;">Registo, Definição de PIN/Password e Histórico de Atividade Real por Utilizador</span>
-                  </div>
-                </div>
-                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                  <button type="button" class="btn" onclick="syncRegisteredUsersFromGitHub(false)"
-                    title="Sincronizar utilizadores registados a partir do servidor GitHub"
-                    style="background: #10b981; color: #ffffff; font-weight: 600; border: none; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);">
-                    <i class="fa-solid fa-arrows-rotate"></i> <span>Sincronizar Registos</span>
-                  </button>
-                  <button type="button" class="btn" onclick="lockApplicationScreen()"
-                    title="Bloquear ecrã de acesso do programa"
-                    style="background: #eab308; color: #ffffff; font-weight: 600; border: none; box-shadow: 0 2px 6px rgba(234, 179, 8, 0.3);">
-                    <i class="fa-solid fa-lock"></i> Bloquear Programa
-                  </button>
-                  <button type="button" class="btn btn-primary" onclick="openRegisterUserModal()"
-                    style="background: #2563eb;">
-                    <i class="fa-solid fa-user-plus"></i> Registrar Novo Utilizador
-                  </button>
-                </div>
-              </div>
-
-              <!-- Tabela de Utilizadores Registados -->
-              <div class="table-responsive" style="background: #ffffff; border-radius: 8px; border: 1px solid #cbd5e1; padding: 0.5rem; margin-bottom: 0.5rem;">
-                <table class="data-table">
-                  <thead>
-                    <tr>
-                      <th>Utilizador</th>
-                      <th>Email</th>
-                      <th>Cargo / Função</th>
-                      <th>Idioma</th>
-                      <th>Tipo de Conta</th>
-                      <th style="text-align: center;">Ações & Atividade Real</th>
-                    </tr>
-                  </thead>
-                  <tbody id="userManagementTableBody">
-                    <!-- Rendered dynamically -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <!-- BLOCO: Sincronização em Tempo Real com o Servidor GitHub -->
-            <div class="card"
-              style="border: 1px solid #cbd5e1; background: #ffffff; padding: 1.25rem; grid-column: 1 / -1;">
-              <div
-                style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.85rem; flex-wrap: wrap;">
-                <div style="display: flex; align-items: center; gap: 0.75rem;">
-                  <div
-                  <input type="checkbox" id="cfgEmailNotifyEnabled" onchange="handleSaveEmailNotifySettings()" style="width: 16px; height: 16px; accent-color: #0284c7;" checked>
-                  <span data-i18n="cfg_email_notify_active">Notificações Ativas</span>
-                </label>
-              </div>
-
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                  <i class="fa-brands fa-github" style="color: #0969da; font-size: 1.2rem;"></i>
-                  <span style="font-size: 0.82rem; color: #334155;"><strong>Entrega Segura via Servidor GitHub:</strong> Os alertas são enviados automaticamente pelo GitHub para a sua conta oficial sem bloqueios de spam.</span>
-                </div>
-                <span style="display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #dcfce7; color: #15803d; border: 1px solid #86efac;">
-                  <i class="fa-solid fa-check"></i> 100% Automático
-                </span>
-              </div>
-
-              <div style="display: flex; gap: 0.75rem; align-items: flex-end; flex-wrap: wrap;">
-                <div style="flex: 1; min-width: 260px;">
-                  <label style="font-size: 0.8rem; font-weight: 600; color: #475569; display: block; margin-bottom: 0.3rem;" data-i18n="cfg_email_notify_dest">Email de Destino das Notificações:</label>
-                  <input type="email" id="cfgEmailNotifyAddress" class="form-control" placeholder="jmcenturio@alegria-activity.com" value="jmcenturio@alegria-activity.com" onchange="handleSaveEmailNotifySettings()" style="padding: 0.6rem; border-radius: 6px; font-size: 0.88rem;">
-                </div>
-                <div style="display: flex; gap: 0.5rem; align-items: center;">
-                  <button type="button" class="btn btn-primary" onclick="handleSaveEmailNotifySettings(true)" style="padding: 0.6rem 1.15rem; font-size: 0.85rem; background: #0284c7; color: #ffffff; border: none; border-radius: 6px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer;">
-                    <i class="fa-solid fa-floppy-disk"></i> <span data-i18n="btn_save_config">Guardar</span>
-                  </button>
-                  <button type="button" class="btn btn-secondary" onclick="sendTestEmailNotification()" style="padding: 0.6rem 1.15rem; font-size: 0.85rem; background: #ffffff; color: #0284c7; border: 1px solid #bae6fd; border-radius: 6px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer;">
-                    <i class="fa-solid fa-paper-plane"></i> <span data-i18n="cfg_email_notify_test">Testar Envio de Notificação</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- BLOCO: Sincronização em Tempo Real com o Servidor GitHub -->
+            <!-- BLOCO 5: Sincronização em Tempo Real com o Servidor GitHub -->
             <div class="card"
               style="border: 1px solid #cbd5e1; background: #ffffff; padding: 1.25rem; grid-column: 1 / -1;">
               <div
@@ -2597,7 +2506,54 @@
               </form>
             </div>
 
-            <!-- BLOCO 5: Gestão de Utilizadores & Controlo de Acesso Multi-Utilizador -->
+            <!-- BLOCO 4: Notificações por Email de Novos Registos -->
+            <div class="card"
+              style="border: 1px solid #bae6fd; background: #ffffff; padding: 1.25rem; grid-column: 1 / -1; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); margin-top: 0.5rem;">
+              <div
+                style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <div
+                    style="width: 42px; height: 42px; border-radius: 8px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                    <i class="fa-solid fa-envelope-circle-check"></i>
+                  </div>
+                  <div>
+                    <h3 style="font-size: 1.05rem; color: #0369a1; margin: 0; font-weight: 700;">Notificações por Email de Novos Registos</h3>
+                    <span style="font-size: 0.78rem; color: #0284c7;">Avisos automáticos e imediatos por email quando um novo utilizador cria conta</span>
+                  </div>
+                </div>
+                <label style="display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: #0369a1; background: #f0f9ff; padding: 0.4rem 0.8rem; border-radius: 6px; border: 1px solid #bae6fd;">
+                  <input type="checkbox" id="cfgEmailNotifyEnabled" onchange="handleSaveEmailNotifySettings()" style="width: 16px; height: 16px; accent-color: #0284c7;" checked>
+                  <span data-i18n="cfg_email_notify_active">Notificações Ativas</span>
+                </label>
+              </div>
+
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <i class="fa-brands fa-github" style="color: #0969da; font-size: 1.2rem;"></i>
+                  <span style="font-size: 0.82rem; color: #334155;"><strong>Entrega Segura via Servidor GitHub:</strong> Os alertas são enviados automaticamente pelo GitHub para a sua conta oficial sem bloqueios de spam.</span>
+                </div>
+                <span style="display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #dcfce7; color: #15803d; border: 1px solid #86efac;">
+                  <i class="fa-solid fa-check"></i> 100% Automático
+                </span>
+              </div>
+
+              <div style="display: flex; gap: 0.75rem; align-items: flex-end; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 260px;">
+                  <label style="font-size: 0.8rem; font-weight: 600; color: #475569; display: block; margin-bottom: 0.3rem;" data-i18n="cfg_email_notify_dest">Email de Destino das Notificações:</label>
+                  <input type="email" id="cfgEmailNotifyAddress" class="form-control" placeholder="ex: jmcenturio@alegria-activity.com" onchange="handleSaveEmailNotifySettings()" style="padding: 0.6rem; border-radius: 6px; font-size: 0.88rem;">
+                </div>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                  <button type="button" class="btn btn-primary" onclick="handleSaveEmailNotifySettings(true)" style="padding: 0.6rem 1.15rem; font-size: 0.85rem; background: #0284c7; color: #ffffff; border: none; border-radius: 6px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+                    <i class="fa-solid fa-floppy-disk"></i> <span data-i18n="btn_save_config">Guardar</span>
+                  </button>
+                  <button type="button" class="btn btn-secondary" onclick="sendTestEmailNotification()" style="padding: 0.6rem 1.15rem; font-size: 0.85rem; background: #ffffff; color: #0284c7; border: 1px solid #bae6fd; border-radius: 6px; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+                    <i class="fa-solid fa-paper-plane"></i> <span data-i18n="cfg_email_notify_test">Testar Envio de Notificação</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- BLOCO 6: Gestão de Utilizadores & Registos de Acesso (ÚNICO - NO FINAL DA PÁGINA) -->
             <div id="adminUserManagementBlock" class="card"
               style="border: 1px solid #93c5fd; background: #eff6ff; padding: 1.25rem; grid-column: 1 / -1;">
               <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
@@ -2623,16 +2579,16 @@
                 </div>
               </div>
               <!-- Tabela de Utilizadores Registados -->
-              <div class="table-responsive" style="background: #ffffff; border-radius: 8px; border: 1px solid #cbd5e1; padding: 0.5rem; margin-bottom: 0.5rem;">
-                <table class="data-table">
+              <div class="table-responsive" style="background: #ffffff; border-radius: 10px; border: 1px solid #cbd5e1; padding: 0; overflow: hidden; margin-bottom: 0.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.02);">
+                <table class="data-table" style="width: 100%; border-collapse: collapse;">
                   <thead>
-                    <tr>
-                      <th>Utilizador</th>
-                      <th>Email</th>
-                      <th>Cargo / Função</th>
-                      <th>Idioma</th>
-                      <th>Tipo de Conta</th>
-                      <th style="text-align: center;">Ações & Atividade Real</th>
+                    <tr style="background: #f8fafc; border-bottom: 1.5px solid #e2e8f0;">
+                      <th style="padding: 0.85rem 1rem; font-size: 0.82rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.03em; width: 22%;">Utilizador</th>
+                      <th style="padding: 0.85rem 1rem; font-size: 0.82rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.03em; width: 20%;">Email</th>
+                      <th style="padding: 0.85rem 1rem; font-size: 0.82rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.03em; width: 16%;">Cargo / Função</th>
+                      <th style="padding: 0.85rem 1rem; font-size: 0.82rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.03em; text-align: center; width: 12%;">Idioma</th>
+                      <th style="padding: 0.85rem 1rem; font-size: 0.82rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.03em; text-align: center; width: 16%;">Tipo de Conta & Estado</th>
+                      <th style="padding: 0.85rem 1rem; font-size: 0.82rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.03em; text-align: center; width: 14%;">Ações & Ficha</th>
                     </tr>
                   </thead>
                   <tbody id="userManagementTableBody">

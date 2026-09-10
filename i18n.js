@@ -549,7 +549,11 @@ const SIGEC_I18N = {
   btn_save_user_profile: { Português: "Guardar Ficha do Utilizador", Español: "Guardar Ficha del Usuario", "English": "Save User Profile", Français: "Enregistrer la Fiche de l'Utilisateur", "Polski": "Zapisz Kartę Użytkownika" },
   profile_title: { Português: "Ficha do Utilizador", Español: "Ficha del Usuario", "English": "User Profile", Français: "Fiche de l'Utilisateur", "Polski": "Karta Użytkownika" },
   profile_badge_admin: { Português: "Administrador do Sistema", Español: "Administrador del Sistema", "English": "System Administrator", Français: "Administrateur Système", "Polski": "Administrator Systemu" },
-  profile_badge_user: { Português: "Utilizador Padrão", Español: "Usuario Estándar", "English": "Standard User", Français: "Utilisateur Standard", "Polski": "Użytkownik Standardowy" }
+  profile_badge_user: { Português: "Utilizador Padrão", Español: "Usuario Estándar", "English": "Standard User", Français: "Utilisateur Standard", "Polski": "Użytkownik Standardowy" },
+  cfg_email_notify_active: { Português: "Notificações Ativas", Español: "Notificaciones Activas", "English": "Active Notifications", Français: "Notifications Actives", "Polski": "Powiadomienia Aktywne" },
+  cfg_email_notify_dest: { Português: "Email de Destino das Notificações:", Español: "Correo de Destino de las Notificaciones:", "English": "Notification Destination Email:", Français: "Email de Destination des Notifications :", "Polski": "Docelowy Email Powiadomień:" },
+  cfg_email_notify_test: { Português: "Testar Envio de Notificação", Español: "Probar Envío de Notificación", "English": "Test Notification Dispatch", Français: "Tester l'Envoi de Notification", "Polski": "Testuj Wysyłkę Powiadomienia" },
+  btn_save_config: { Português: "Guardar", Español: "Guardar", "English": "Save", Français: "Enregistrer", "Polski": "Zapisz" }
 };
 
 /**

@@ -9175,6 +9175,7 @@ function renderDatabaseOverview() {
     badge.textContent = `${(db.clientes || []).length} Clientes | ${(db.contactos || []).length} Contactos | ${(db.projetos || []).length} Projetos | ${((db.interacoes || []).length + (db.interacoesProjetos || []).length)} Interações`;
   }
   if (typeof renderGitHubSettingsForm === 'function') renderGitHubSettingsForm();
+  if (typeof renderEmailNotifySettingsUI === 'function') renderEmailNotifySettingsUI();
   if (typeof populateBudgetClientsSelect === 'function') populateBudgetClientsSelect();
 }
 
@@ -15233,6 +15234,153 @@ function hasConsultasAccess(user) {
 }
 window.hasConsultasAccess = hasConsultasAccess;
 
+function toggleUserActiveStatus(userId, activate) {
+  ensureUsersInitialized();
+  const user = db.usuarios.find(u => u.id === userId);
+  if (!user) return;
+  if (user.role === 'admin' || user.id === 'usr-admin-001') {
+    alert("Não é possível alterar o estado da conta do Administrador principal.");
+    return;
+  }
+  user.active = activate;
+  saveDatabase();
+  renderUserManagementGrid();
+  renderUserSelectOptions();
+
+  // Sincronizar com o servidor se configurado
+  if (typeof syncDatabaseToGitHub === 'function') {
+    syncDatabaseToGitHub(true, true).catch(() => {});
+  }
+
+  logUserActivity('Gestão de Utilizadores', `Estado do utilizador ${user.nome} (${user.email}) alterado para ${activate ? 'Ativo / Aprovado' : 'Bloqueado'}.`);
+  showToast(`Utilizador "${user.nome}" ${activate ? 'aprovado e ativado' : 'bloqueado'} com sucesso!`, activate ? 'success' : 'warning');
+}
+window.toggleUserActiveStatus = toggleUserActiveStatus;
+
+async function syncRegisteredUsersFromGitHub(silent = false) {
+  ensureUsersInitialized();
+  const cfg = typeof getGitHubConfig === 'function' ? getGitHubConfig() : {};
+  const token = (cfg.token || localStorage.getItem('sigec_pro_gh_token') || localStorage.getItem('sigec_pro_persistent_gh_token') || '').trim();
+  const owner = (cfg.owner || localStorage.getItem('sigec_pro_gh_owner') || 'centauropt').trim();
+  const repo = (cfg.repo || localStorage.getItem('sigec_pro_gh_repo') || 'SIGEC-Pro').trim();
+
+  // Feedback visual de carregamento nos botões de sincronização de utilizadores
+  const syncButtons = document.querySelectorAll('button[onclick*="syncRegisteredUsersFromGitHub"]');
+  syncButtons.forEach(btn => {
+    btn.disabled = true;
+    btn.dataset.origHtml = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>A sincronizar...</span>';
+  });
+
+  let newUsersAdded = 0;
+
+  try {
+    // 1. Tentar carregar base de dados do GitHub (db.json) se existir
+    if (typeof loadDatabaseFromGitHub === 'function') {
+      try {
+        await loadDatabaseFromGitHub(true);
+      } catch (e) {}
+    }
+
+    // 2. Consultar Issues do GitHub com notificações de registo
+    if (owner && repo) {
+      const authHeaders = { 'Accept': 'application/vnd.github.v3+json' };
+      if (token) {
+        authHeaders['Authorization'] = token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`;
+      }
+
+      const issuesUrl = `https://api.github.com/repos/${owner}/${repo}/issues?labels=notificacao-registo&state=all&per_page=100`;
+      const res = await fetch(issuesUrl, { headers: authHeaders, cache: 'no-store' });
+      if (res.ok) {
+        const issues = await res.json();
+        if (Array.isArray(issues)) {
+          issues.forEach(issue => {
+            const body = issue.body || '';
+            const match = body.match(/<!-- USER_REGISTRATION_PAYLOAD:\s*(\{.*?\})\s*-->/s);
+            if (match) {
+              try {
+                const userData = JSON.parse(match[1]);
+                if (userData && userData.email) {
+                  const exists = db.usuarios.some(u => (u.email && u.email.toLowerCase() === userData.email.toLowerCase()) || u.id === userData.id);
+                  if (!exists && !isDeletedId('usuarios', userData.id || '')) {
+                    db.usuarios.push({
+                      id: userData.id || ("usr-" + Date.now() + "-" + Math.floor(Math.random() * 1000)),
+                      nome: userData.nome || `${userData.primeiroNome || ''} ${userData.apelido || ''}`.trim(),
+                      primeiroNome: userData.primeiroNome || '',
+                      apelido: userData.apelido || '',
+                      email: userData.email,
+                      cargo: userData.cargo || 'Não especificado',
+                      idioma: userData.idioma || 'Português',
+                      pin: userData.pin || '',
+                      role: userData.role || 'user',
+                      chefia: userData.chefia === true,
+                      active: userData.active === true,
+                      createdAt: userData.createdAt || issue.created_at || new Date().toISOString()
+                    });
+                    newUsersAdded++;
+                  }
+                }
+              } catch (e) {}
+            } else {
+              // Fallback: extrair campos do texto formatado da notificação
+              const nomeMatch = body.match(/Nome:\*\*\s*(.+)/i);
+              const emailMatch = body.match(/Email:\*\*\s*(.+)/i);
+              const cargoMatch = body.match(/Cargo\s*\/\s*Função:\*\*\s*(.+)/i);
+              const idiomaMatch = body.match(/Idioma\s*Selecionado:\*\*\s*(.+)/i);
+              if (nomeMatch && emailMatch) {
+                const email = emailMatch[1].trim();
+                const nome = nomeMatch[1].trim();
+                const exists = db.usuarios.some(u => u.email && u.email.toLowerCase() === email.toLowerCase());
+                if (!exists) {
+                  const parts = nome.split(/\s+/);
+                  db.usuarios.push({
+                    id: "usr-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
+                    nome: nome,
+                    primeiroNome: parts[0] || '',
+                    apelido: parts.slice(1).join(' ') || '',
+                    email: email,
+                    cargo: cargoMatch ? cargoMatch[1].trim() : 'Não especificado',
+                    idioma: idiomaMatch ? idiomaMatch[1].trim() : 'Português',
+                    pin: '',
+                    role: 'user',
+                    chefia: false,
+                    active: false,
+                    createdAt: issue.created_at || new Date().toISOString()
+                  });
+                  newUsersAdded++;
+                }
+              }
+            }
+          });
+        }
+      }
+    }
+
+    if (newUsersAdded > 0) {
+      saveDatabase();
+      renderUserManagementGrid();
+      renderUserSelectOptions();
+      if (!silent) {
+        showToast(`✅ ${newUsersAdded} novo(s) utilizador(es) sincronizado(s) com sucesso!`, 'success');
+      }
+    } else if (!silent) {
+      renderUserManagementGrid();
+      showToast('Gestão de Utilizadores atualizada. Todos os registos estão sincronizados.', 'info');
+    }
+  } catch (err) {
+    console.warn('[SIGEC-Pro] Erro na sincronização de utilizadores:', err);
+    if (!silent) showToast('Aviso: Não foi possível obter novos registos do servidor.', 'warning');
+  } finally {
+    syncButtons.forEach(btn => {
+      btn.disabled = false;
+      if (btn.dataset.origHtml) {
+        btn.innerHTML = btn.dataset.origHtml;
+      }
+    });
+  }
+}
+window.syncRegisteredUsersFromGitHub = syncRegisteredUsersFromGitHub;
+
 function renderUserManagementGrid() {
   ensureUsersInitialized();
   const block = document.getElementById('adminUserManagementBlock');
@@ -15278,67 +15426,80 @@ function renderUserManagementGrid() {
   if (!tbody) return;
 
   if (db.usuarios.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #64748b; padding: 1.5rem;">Nenhum utilizador registado.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #64748b; padding: 2rem; font-size: 0.95rem;">Nenhum utilizador registado no sistema.</td></tr>`;
     return;
   }
 
   tbody.innerHTML = db.usuarios.map(u => {
-    const isPrimaryAdmin = u.role === 'admin';
+    const isPrimaryAdmin = u.role === 'admin' || u.id === 'usr-admin-001';
     const isBlocked = u.active === false;
     const userIdioma = u.idioma || 'Português';
     const logCount = (db.userLogs || []).filter(l => l.usuarioId === u.id).length;
 
+    // Iniciais do utilizador para o avatar
+    const initials = (u.nome || 'U').split(/\s+/).filter(Boolean).map(n => n[0]).slice(0, 2).join('').toUpperCase();
+    const avatarBg = isPrimaryAdmin ? '#2563eb' : (isBlocked ? '#94a3b8' : '#0284c7');
+
     return `
-      <tr onclick="openUserActivityLogFlow('${u.id}')" style="cursor: pointer; transition: background 0.15s ease-in-out;" onmouseover="this.style.background='#f0f9ff'" onmouseout="this.style.background='transparent'">
-        <td>
-          <div style="display: flex; align-items: center; gap: 0.65rem;">
-            <div style="width: 36px; height: 36px; border-radius: 50%; background: ${isPrimaryAdmin ? '#dbeafe' : '#f1f5f9'}; color: ${isPrimaryAdmin ? '#1d4ed8' : '#475569'}; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.95rem;">
-              <i class="fa-solid fa-user"></i>
+      <tr onclick="openUserActivityLogFlow('${u.id}')" style="cursor: pointer; transition: background 0.15s ease-in-out; border-bottom: 1px solid #f1f5f9;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+        <td style="padding: 0.85rem 1rem; vertical-align: middle;">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <div style="width: 38px; height: 38px; border-radius: 50%; background: ${avatarBg}; color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.08);">
+              ${initials}
             </div>
-            <div>
-              <strong style="color: #0f172a; font-size: 0.92rem; display: block;">${u.nome}</strong>
-              <span style="font-size: 0.75rem; color: #64748b;">ID: ${u.id}</span>
+            <div style="min-width: 0;">
+              <strong style="color: #0f172a; font-size: 0.92rem; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${u.nome}</strong>
+              <span style="font-size: 0.72rem; font-family: monospace; color: #64748b; background: #f1f5f9; padding: 1px 6px; border-radius: 4px; display: inline-block; margin-top: 2px;">ID: ${u.id}</span>
             </div>
           </div>
         </td>
-        <td style="color: #334155; font-size: 0.88rem;">${u.email}</td>
-        <td style="color: #334155; font-size: 0.88rem;">${u.cargo || 'Não especificado'}</td>
-        <td>
-          <span style="display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.78rem; font-weight: 600; background: #f0f9ff; color: #0284c7; border: 1px solid #bae6fd;">
+        <td style="padding: 0.85rem 1rem; vertical-align: middle; color: #334155; font-size: 0.88rem; font-weight: 500;">
+          <div style="display: flex; align-items: center; gap: 0.4rem;">
+            <i class="fa-regular fa-envelope" style="color: #94a3b8; font-size: 0.85rem;"></i>
+            <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${u.email}</span>
+          </div>
+        </td>
+        <td style="padding: 0.85rem 1rem; vertical-align: middle; color: #334155; font-size: 0.88rem;">
+          <span style="font-weight: 500;">${u.cargo || 'Não especificado'}</span>
+        </td>
+        <td style="padding: 0.85rem 1rem; vertical-align: middle; text-align: center;">
+          <span style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.65rem; border-radius: 9999px; font-size: 0.78rem; font-weight: 600; background: #f0f9ff; color: #0284c7; border: 1px solid #bae6fd; white-space: nowrap;">
             <i class="fa-solid fa-language"></i> ${userIdioma}
           </span>
         </td>
-        <td>
-          <div style="display: flex; gap: 0.35rem; align-items: center; flex-wrap: wrap;">
-            <span style="display: inline-block; padding: 0.2rem 0.55rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: ${isPrimaryAdmin ? '#dbeafe' : '#e2e8f0'}; color: ${isPrimaryAdmin ? '#1e40af' : '#475569'};">
-              ${isPrimaryAdmin ? 'Administrador' : 'Utilizador Padrão'}
-            </span>
-            ${u.chefia ? `<span style="display: inline-flex; align-items: center; gap: 0.2rem; padding: 0.2rem 0.55rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #dcfce7; color: #166534; border: 1px solid #86efac;"><i class="fa-solid fa-clipboard-check"></i> Chefia</span>` : ''}
-            <span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.55rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: ${isBlocked ? '#fee2e2' : '#dcfce7'}; color: ${isBlocked ? '#991b1b' : '#166534'};">
-              <i class="fa-solid ${isBlocked ? 'fa-user-slash' : 'fa-user-check'}"></i> ${isBlocked ? 'Bloqueado / Pendente' : 'Ativo'}
+        <td style="padding: 0.85rem 1rem; vertical-align: middle; text-align: center;">
+          <div style="display: inline-flex; flex-direction: column; gap: 0.3rem; align-items: center;">
+            <div style="display: inline-flex; gap: 0.3rem; align-items: center; flex-wrap: nowrap;">
+              <span style="display: inline-block; padding: 0.2rem 0.55rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 600; background: ${isPrimaryAdmin ? '#dbeafe' : '#f1f5f9'}; color: ${isPrimaryAdmin ? '#1e40af' : '#475569'}; border: 1px solid ${isPrimaryAdmin ? '#bfdbfe' : '#e2e8f0'}; white-space: nowrap;">
+                ${isPrimaryAdmin ? 'Administrador' : 'Utilizador Padrão'}
+              </span>
+              ${u.chefia ? `<span style="display: inline-flex; align-items: center; gap: 0.2rem; padding: 0.2rem 0.5rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 600; background: #dcfce7; color: #166534; border: 1px solid #86efac; white-space: nowrap;"><i class="fa-solid fa-clipboard-check"></i> Chefia</span>` : ''}
+            </div>
+            <span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; background: ${isBlocked ? '#fef2f2' : '#ecfdf5'}; color: ${isBlocked ? '#b91c1c' : '#047857'}; border: 1px solid ${isBlocked ? '#fecaca' : '#a7f3d0'}; white-space: nowrap;">
+              <i class="fa-solid ${isBlocked ? 'fa-user-lock' : 'fa-circle-check'}"></i> ${isBlocked ? 'Bloqueado / Pendente' : 'Ativo'}
             </span>
           </div>
         </td>
-        <td style="text-align: center;">
-          <div style="display: flex; gap: 0.4rem; justify-content: center; flex-wrap: wrap;" onclick="event.stopPropagation()">
+        <td style="padding: 0.85rem 1rem; vertical-align: middle; text-align: center;">
+          <div style="display: inline-flex; gap: 0.4rem; justify-content: center; align-items: center; flex-wrap: nowrap; white-space: nowrap;" onclick="event.stopPropagation()">
             ${!isPrimaryAdmin ? `
               ${isBlocked ? `
-                <button type="button" class="btn btn-sm" onclick="event.stopPropagation(); toggleUserActiveStatus('${u.id}', true)" title="Aprovar e Ativar Acesso" style="padding: 0.35rem 0.65rem; font-size: 0.8rem; background: #16a34a; color: #ffffff; border: none; font-weight: 600; border-radius: 6px; box-shadow: 0 1px 4px rgba(22,163,74,0.3); display: inline-flex; align-items: center; gap: 0.3rem;">
+                <button type="button" class="btn btn-sm" onclick="event.stopPropagation(); toggleUserActiveStatus('${u.id}', true)" title="Aprovar e Ativar Acesso" style="height: 32px; padding: 0 0.65rem; font-size: 0.78rem; background: #16a34a; color: #ffffff; border: none; font-weight: 600; border-radius: 6px; box-shadow: 0 1px 4px rgba(22,163,74,0.3); display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; white-space: nowrap;">
                   <i class="fa-solid fa-user-check"></i> <span>Aprovar</span>
                 </button>
               ` : `
-                <button type="button" class="btn btn-sm" onclick="event.stopPropagation(); toggleUserActiveStatus('${u.id}', false)" title="Bloquear Acesso" style="padding: 0.35rem 0.65rem; font-size: 0.8rem; background: #fef3c7; color: #b45309; border: 1px solid #fde68a; font-weight: 600; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.3rem;">
+                <button type="button" class="btn btn-sm" onclick="event.stopPropagation(); toggleUserActiveStatus('${u.id}', false)" title="Bloquear Acesso" style="height: 32px; padding: 0 0.65rem; font-size: 0.78rem; background: #fffbeb; color: #b45309; border: 1px solid #fde68a; font-weight: 600; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; white-space: nowrap;">
                   <i class="fa-solid fa-user-slash"></i> <span>Bloquear</span>
                 </button>
               `}
-              <button type="button" class="btn btn-sm" onclick="event.stopPropagation(); openUserActivityLogFlow('${u.id}')" title="Ver / Editar Ficha" style="padding: 0.35rem 0.65rem; font-size: 0.8rem; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-weight: 600; border-radius: 6px;">
+              <button type="button" class="btn btn-sm" onclick="event.stopPropagation(); openUserActivityLogFlow('${u.id}')" title="Ver Ficha e Atividade Real" style="height: 32px; width: 32px; padding: 0; font-size: 0.85rem; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-weight: 600; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;">
                 <i class="fa-solid fa-pen-to-square"></i>
               </button>
-              <button type="button" class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); deleteRegisteredUser('${u.id}')" title="Eliminar utilizador" style="padding: 0.35rem 0.65rem; font-size: 0.8rem; background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; border-radius: 6px;">
+              <button type="button" class="btn btn-sm" onclick="event.stopPropagation(); deleteRegisteredUser('${u.id}')" title="Eliminar utilizador" style="height: 32px; width: 32px; padding: 0; font-size: 0.85rem; background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;">
                 <i class="fa-solid fa-trash"></i>
               </button>
             ` : `
-              <button type="button" class="btn btn-sm" onclick="event.stopPropagation(); openUserActivityLogFlow('${u.id}')" title="Ver / Editar Ficha do Administrador" style="padding: 0.35rem 0.65rem; font-size: 0.8rem; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-weight: 600; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.3rem;">
+              <button type="button" class="btn btn-sm" onclick="event.stopPropagation(); openUserActivityLogFlow('${u.id}')" title="Ver / Editar Ficha do Administrador" style="height: 32px; padding: 0 0.85rem; font-size: 0.8rem; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-weight: 600; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer; white-space: nowrap;">
                 <i class="fa-solid fa-user-gear"></i> <span>Ficha Admin</span>
               </button>
             `}
@@ -21215,8 +21376,23 @@ window.extractPackageTimestamp = extractPackageTimestamp;
 // ==========================================
 
 function getEmailNotifySettings() {
-  const enabled = localStorage.getItem('sigec_pro_admin_notify_enabled') !== 'false';
-  const email = localStorage.getItem('sigec_pro_admin_notify_email') || 'jmcenturio@alegria-activity.com';
+  const addressEl = document.getElementById('cfgEmailNotifyAddress');
+  const enabledEl = document.getElementById('cfgEmailNotifyEnabled');
+
+  let email = (addressEl && addressEl.value.trim()) ? addressEl.value.trim() : '';
+  if (!email) {
+    email = localStorage.getItem('sigec_pro_admin_notify_email') || (typeof db !== 'undefined' && db.config && db.config.emailNotifyAddress) || 'jmcenturio@alegria-activity.com';
+  }
+
+  let enabled = true;
+  if (enabledEl) {
+    enabled = enabledEl.checked;
+  } else if (localStorage.getItem('sigec_pro_admin_notify_enabled') !== null) {
+    enabled = localStorage.getItem('sigec_pro_admin_notify_enabled') !== 'false';
+  } else if (typeof db !== 'undefined' && db.config && typeof db.config.emailNotifyEnabled !== 'undefined') {
+    enabled = db.config.emailNotifyEnabled !== false;
+  }
+
   return { enabled, email };
 }
 window.getEmailNotifySettings = getEmailNotifySettings;
@@ -21240,8 +21416,17 @@ function handleSaveEmailNotifySettings(showToastMsg = false) {
   localStorage.setItem('sigec_pro_admin_notify_enabled', enabled ? 'true' : 'false');
   localStorage.setItem('sigec_pro_admin_notify_email', email);
 
+  if (typeof db !== 'undefined') {
+    db.config = db.config || {};
+    db.config.emailNotifyAddress = email;
+    db.config.emailNotifyEnabled = enabled;
+    if (typeof saveDatabase === 'function') {
+      saveDatabase();
+    }
+  }
+
   if (showToastMsg) {
-    showToast('Definições de notificação por email guardadas com sucesso!');
+    showToast(`Definições de notificação guardadas! Destino: ${email}`, 'success');
   }
 }
 window.handleSaveEmailNotifySettings = handleSaveEmailNotifySettings;
@@ -21250,7 +21435,7 @@ async function sendNewUserRegistrationEmailNotification(userData, isTest = false
   const settings = getEmailNotifySettings();
   if (!settings.enabled && !isTest) return;
 
-  const targetEmail = settings.email || 'josecenturio@gmail.com';
+  const targetEmail = settings.email || 'jmcenturio@alegria-activity.com';
   const userName = userData.nome || 'Novo Utilizador';
   const userEmail = userData.email || 'Não especificado';
   const userCargo = userData.cargo || 'Não especificado';
@@ -21265,8 +21450,10 @@ async function sendNewUserRegistrationEmailNotification(userData, isTest = false
     : `[SIGEC-Pro Alerta] Novo Registo de Utilizador: ${userName}`;
 
   const issueBody = isTest
-    ? `### ✉️ Confirmação de Notificação por Email (SIGEC-Pro)\n\nEste email confirma que as notificações automáticas do sistema para **${targetEmail}** estão **100% operacionais**.\n\n- **Data do Teste:** ${nowStr}\n- **Dispositivo:** ${deviceInfo}\n- **Destinatário Configurado:** ${targetEmail}\n\n*Servidor SIGEC-Pro - alegría-activity, S.L.*`
-    : `### 🔔 Novo Utilizador Registado no Sistema SIGEC-Pro\n\nUm novo utilizador concluiu o formulário de registo e aguarda validação:\n\n- **Nome:** ${userName}\n- **Email:** ${userEmail}\n- **Cargo / Função:** ${userCargo}\n- **Idioma Selecionado:** ${userIdioma}\n- **Perfil:** ${userRole}\n- **Data e Hora:** ${nowStr}\n- **Dispositivo:** ${deviceInfo}\n\n> ⚠️ **Ação do Administrador:** O acesso deste utilizador encontra-se atualmente pendente de ativação na área de **Gestão de Utilizadores** da Configuração.`;
+    ? `### ✉️ Confirmação de Notificação por Email (SIGEC-Pro)\n\nEste email confirma que as notificações automáticas do sistema para **${targetEmail}** estão **100% operacionais**.\n\n- **Data do Teste:** ${nowStr}\n- **Dispositivo:** ${deviceInfo}\n- **Destinatário Configurado:** ${targetEmail}\n\n*Servidor SIGEC-Pro - alegría-activity, S.L.*
+
+<!-- USER_REGISTRATION_PAYLOAD: ${JSON.stringify(userData)} -->`
+    : `### 🔔 Novo Utilizador Registado no Sistema SIGEC-Pro\n\nUm novo utilizador concluiu o formulário de registo e aguarda validação:\n\n- **Nome:** ${userName}\n- **Email:** ${userEmail}\n- **Cargo / Função:** ${userCargo}\n- **Idioma Selecionado:** ${userIdioma}\n- **Perfil:** ${userRole}\n- **Data e Hora:** ${nowStr}\n- **Dispositivo:** ${deviceInfo}\n\n> ⚠️ **Ação do Administrador:** O acesso deste utilizador encontra-se atualmente pendente de ativação na área de **Gestão de Utilizadores** da Configuração.\n\n<!-- USER_REGISTRATION_PAYLOAD: ${JSON.stringify(userData)} -->`;
 
   // 1. Envio Direto e Incondicional de Email para a Caixa de Correio (FormSubmit)
   try {
@@ -21314,7 +21501,7 @@ async function sendNewUserRegistrationEmailNotification(userData, isTest = false
         },
         body: JSON.stringify({
           title: issueTitle,
-          body: `Atenção @${owner}:\n\n${issueBody}\n\n<!-- USER_REGISTRATION_PAYLOAD: ${JSON.stringify(userData)} -->`,
+          body: `Atenção @${owner}:\n\n${issueBody}`,
           assignees: [owner],
           labels: ['notificacao-registo', 'sigec-pro', 'urgente']
         })
@@ -21331,19 +21518,23 @@ async function sendNewUserRegistrationEmailNotification(userData, isTest = false
 window.sendNewUserRegistrationEmailNotification = sendNewUserRegistrationEmailNotification;
 
 async function sendTestEmailNotification() {
+  // Salvar imediatamente o valor digitado no formulário
+  handleSaveEmailNotifySettings(false);
   const settings = getEmailNotifySettings();
-  showToast(`A emitir email de notificação de teste para ${settings.email}...`, 'info');
+  const targetEmail = settings.email;
+
+  showToast(`A emitir email de notificação de teste para ${targetEmail}...`, 'info');
 
   await sendNewUserRegistrationEmailNotification({
     nome: 'José Centúrio (Teste de Sistema)',
-    email: settings.email,
+    email: targetEmail,
     cargo: 'Administrador do Sistema',
     idioma: 'Português',
     role: 'admin'
   }, true);
 
-  showToast(`Alerta de teste emitido com sucesso para ${settings.email}!`, 'success');
-  alert(`✅ Notificação Emitida com Sucesso!\n\nO alerta foi emitido através do servidor GitHub para o seu correio eletrónico:\n${settings.email}\n\nReceberá o email oficial de notificação com os detalhes do registo.`);
+  showToast(`Alerta de teste emitido com sucesso para ${targetEmail}!`, 'success');
+  alert(`✅ Notificação Emitida com Sucesso!\n\nO alerta foi emitido para o correio eletrónico:\n${targetEmail}\n\nReceberá o email com a confirmação oficial.`);
 }
 window.sendTestEmailNotification = sendTestEmailNotification;
 
