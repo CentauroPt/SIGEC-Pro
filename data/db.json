@@ -5359,9 +5359,44 @@
       "active": true,
       "createdAt": "2026-08-22T10:06:38.433Z",
       "chefia": false
+    },
+    {
+      "id": "usr-1789070838707",
+      "nome": "jose Campos",
+      "primeiroNome": "jose",
+      "apelido": "Campos",
+      "email": "jjota26@gmail.com",
+      "cargo": "Comercial",
+      "idioma": "Português",
+      "pin": "J*cen*1971",
+      "role": "user",
+      "chefia": false,
+      "active": true,
+      "createdAt": "2026-09-10T20:07:18.707Z"
     }
   ],
-  "userLogs": [],
+  "userLogs": [
+    {
+      "id": "log-1789071110843-837",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Gestão de Utilizadores",
+      "detalhes": "Estado do utilizador jose Campos (jjota26@gmail.com) alterado para Ativo / Aprovado.",
+      "extra": {},
+      "timestamp": "2026-09-10T20:11:50.843Z"
+    },
+    {
+      "id": "log-1789071110842-548",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Conta Ativada",
+      "detalhes": "Email de confirmação de conta ativa enviado para jjota26@gmail.com (jose Campos) no idioma Português.",
+      "extra": {},
+      "timestamp": "2026-09-10T20:11:50.842Z"
+    }
+  ],
   "orcamentos": [
     {
       "id": "orc-norte-2040-004",
