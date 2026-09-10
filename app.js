@@ -21314,7 +21314,12 @@ function getEmailNotifySettings() {
 
   let email = (addressEl && addressEl.value.trim()) ? addressEl.value.trim() : '';
   if (!email) {
-    email = localStorage.getItem('sigec_pro_admin_notify_email') || (typeof db !== 'undefined' && db.config && db.config.emailNotifyAddress) || 'jmcenturio@alegria-activity.com';
+    const adminUser = (typeof db !== 'undefined' && Array.isArray(db.usuarios)) 
+      ? db.usuarios.find(u => u && (u.role === 'admin' || u.id === 'usr-admin-001' || (u.nome || '').toLowerCase().includes('centurio')))
+      : null;
+    email = localStorage.getItem('sigec_pro_admin_notify_email') || 
+            (typeof db !== 'undefined' && db.config && db.config.emailNotifyAddress) || 
+            (adminUser && adminUser.email ? adminUser.email.trim() : 'jmcenturio@alegria-activity.com');
   }
 
   let enabled = true;
@@ -21364,6 +21369,83 @@ function handleSaveEmailNotifySettings(showToastMsg = false) {
 }
 window.handleSaveEmailNotifySettings = handleSaveEmailNotifySettings;
 
+// ======================================================================
+// MOTOR DE DISPARO DE EMAIL EM SEGUNDO PLANO (COMPATÍVEL COM FILE:/// E LOCAL)
+// ======================================================================
+function dispatchDirectEmail(targetEmail, subject, fields) {
+  if (!targetEmail || typeof targetEmail !== 'string') return Promise.resolve(false);
+  const cleanEmail = targetEmail.trim();
+  if (!cleanEmail || !cleanEmail.includes('@')) return Promise.resolve(false);
+
+  return new Promise((resolve) => {
+    try {
+      const baseFields = {
+        _subject: subject,
+        _template: 'table',
+        _captcha: 'false',
+        ...fields
+      };
+
+      if (typeof document !== 'undefined' && document.body) {
+        const iframeName = '_sigec_relay_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+        const iframe = document.createElement('iframe');
+        iframe.name = iframeName;
+        iframe.style.display = 'none';
+        iframe.style.position = 'absolute';
+        iframe.style.left = '-9999px';
+        iframe.style.width = '1px';
+        iframe.style.height = '1px';
+        iframe.style.opacity = '0';
+        document.body.appendChild(iframe);
+
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `https://formsubmit.co/${encodeURIComponent(cleanEmail)}`;
+        form.target = iframeName;
+        form.style.display = 'none';
+
+        Object.entries(baseFields).forEach(([key, val]) => {
+          if (val !== undefined && val !== null) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = String(val);
+            form.appendChild(input);
+          }
+        });
+
+        document.body.appendChild(form);
+
+        let isCleaned = false;
+        const cleanup = () => {
+          if (isCleaned) return;
+          isCleaned = true;
+          try { if (form.parentNode) form.parentNode.removeChild(form); } catch (e) {}
+          try { if (iframe.parentNode) iframe.parentNode.removeChild(iframe); } catch (e) {}
+          resolve(true);
+        };
+
+        iframe.onload = cleanup;
+        iframe.onerror = cleanup;
+        setTimeout(cleanup, 3500);
+
+        form.submit();
+        console.info(`[SIGEC-Pro] Notificação por email disparada para ${cleanEmail}`);
+      } else {
+        fetch(`https://formsubmit.co/ajax/${encodeURIComponent(cleanEmail)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(baseFields)
+        }).then(() => resolve(true)).catch(() => resolve(false));
+      }
+    } catch (err) {
+      console.warn('[SIGEC-Pro] Erro no disparo de email:', err);
+      resolve(false);
+    }
+  });
+}
+window.dispatchDirectEmail = dispatchDirectEmail;
+
 async function sendNewUserRegistrationEmailNotification(userData, isTest = false) {
   const settings = getEmailNotifySettings();
   if (!settings.enabled && !isTest) return;
@@ -21388,30 +21470,26 @@ async function sendNewUserRegistrationEmailNotification(userData, isTest = false
 <!-- USER_REGISTRATION_PAYLOAD: ${JSON.stringify(userData)} -->`
     : `### 🔔 Novo Utilizador Registado no Sistema SIGEC-Pro\n\nUm novo utilizador concluiu o formulário de registo e aguarda validação:\n\n- **Nome:** ${userName}\n- **Email:** ${userEmail}\n- **Cargo / Função:** ${userCargo}\n- **Idioma Selecionado:** ${userIdioma}\n- **Perfil:** ${userRole}\n- **Data e Hora:** ${nowStr}\n- **Dispositivo:** ${deviceInfo}\n\n> ⚠️ **Ação do Administrador:** O acesso deste utilizador encontra-se atualmente pendente de ativação na área de **Gestão de Utilizadores** da Configuração.\n\n<!-- USER_REGISTRATION_PAYLOAD: ${JSON.stringify(userData)} -->`;
 
-  // 1. Envio Direto e Incondicional de Email para a Caixa de Correio (FormSubmit)
-  try {
-    await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(targetEmail)}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({
-        _subject: issueTitle,
-        _template: 'table',
-        _captcha: 'false',
-        utilizador_nome: userName,
-        utilizador_email: userEmail,
-        utilizador_cargo: userCargo,
-        utilizador_idioma: userIdioma,
-        utilizador_perfil: userRole,
-        data_registo: nowStr,
-        dispositivo: deviceInfo,
-        mensagem: isTest
-          ? `Este é um email de teste confirmando que o envio de notificações para ${targetEmail} está 100% ativo.`
-          : `Novo utilizador registado no programa SIGEC-Pro. O acesso encontra-se atualmente pendente de aprovação/ativação pelo Administrador.`
-      })
-    });
-    console.info(`[SIGEC-Pro] Email de notificação enviado para ${targetEmail}`);
-  } catch (errDirect) {
-    console.warn('[SIGEC-Pro] Erro no envio direto de email:', errDirect);
+  const emailFields = {
+    utilizador_nome: userName,
+    utilizador_email: userEmail,
+    utilizador_cargo: userCargo,
+    utilizador_idioma: userIdioma,
+    utilizador_perfil: userRole,
+    data_registo: nowStr,
+    dispositivo: deviceInfo,
+    mensagem: isTest
+      ? `Este é um email de teste confirmando que o envio de notificações para ${targetEmail} está 100% ativo.`
+      : `Novo utilizador registado no programa SIGEC-Pro. O acesso encontra-se atualmente pendente de aprovação/ativação pelo Administrador.`
+  };
+
+  // 1. Envio Direto via Relay Resiliente em Segundo Plano para o Administrador Principal
+  dispatchDirectEmail(targetEmail, issueTitle, emailFields);
+
+  // Envio redundante para o email secundário de José Centúrio caso configurado
+  const secondaryAdminEmail = 'josecenturio@gmail.com';
+  if (targetEmail.toLowerCase() !== secondaryAdminEmail.toLowerCase()) {
+    dispatchDirectEmail(secondaryAdminEmail, issueTitle, emailFields);
   }
 
   // 2. Registo de Histórico no Servidor GitHub
@@ -21451,7 +21529,6 @@ async function sendNewUserRegistrationEmailNotification(userData, isTest = false
 window.sendNewUserRegistrationEmailNotification = sendNewUserRegistrationEmailNotification;
 
 async function sendTestEmailNotification() {
-  // Salvar imediatamente o valor digitado no formulário
   handleSaveEmailNotifySettings(false);
   const settings = getEmailNotifySettings();
   const targetEmail = settings.email;
@@ -21470,7 +21547,6 @@ async function sendTestEmailNotification() {
   alert(`✅ Notificação Emitida com Sucesso!\n\nO alerta foi emitido para o correio eletrónico:\n${targetEmail}\n\nReceberá o email com a confirmação oficial.`);
 }
 window.sendTestEmailNotification = sendTestEmailNotification;
-
 
 // ALERTA VISUAL DE NOVOS REGISTOS PENDENTES NO PROGRAMA
 // ==========================================
@@ -21603,34 +21679,22 @@ async function sendUserRegistrationConfirmationEmail(userData) {
   const t = i18nRegEmail[userLang] || i18nRegEmail['Português'];
   const statusText = isActive ? t.statusActive : t.statusPending;
 
-  try {
-    const payload = {
-      _subject: t.subject,
-      _template: 'table',
-      _captcha: 'false',
-      mensagem_titulo: t.title,
-      saudacao: t.greeting,
-      mensagem_introducao: t.intro,
-      [t.lblNome]: userName,
-      [t.lblEmail]: targetEmail,
-      [t.lblCargo]: userCargo,
-      [t.lblIdioma]: userLang,
-      [t.lblPin]: userPin,
-      [t.lblEstado]: statusText,
-      [t.lblData]: nowStr,
-      instrucoes: t.instructions,
-      empresa: t.company
-    };
+  const payload = {
+    mensagem_titulo: t.title,
+    saudacao: t.greeting,
+    mensagem_introducao: t.intro,
+    [t.lblNome]: userName,
+    [t.lblEmail]: targetEmail,
+    [t.lblCargo]: userCargo,
+    [t.lblIdioma]: userLang,
+    [t.lblPin]: userPin,
+    [t.lblEstado]: statusText,
+    [t.lblData]: nowStr,
+    instrucoes: t.instructions,
+    empresa: t.company
+  };
 
-    await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(targetEmail)}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    console.info(`[SIGEC-Pro] Email de dados de registo enviado diretamente para ${targetEmail} (${userLang})`);
-  } catch (err) {
-    console.warn('[SIGEC-Pro] Erro no envio direto de confirmação de registo ao utilizador:', err);
-  }
+  dispatchDirectEmail(targetEmail, t.subject, payload);
 
   if (typeof logUserActivity === 'function') {
     logUserActivity('Email de Confirmação', `Dados de registo enviados para ${targetEmail} (${userName}) no idioma ${userLang}.`);
@@ -21677,7 +21741,7 @@ async function sendUserAccountActivatedEmail(user) {
       bodyMsg: `Su cuenta de usuario en el sistema SIGEC-Pro ha sido activada con éxito por el Administrador. Ya puede iniciar sesión en el programa con su Correo Electrónico y Contraseña / PIN.`,
       lblNome: `Nombre Completo`,
       lblEmail: `Correo Electrónico de Acceso`,
-      lblCargo: `Cargo / Función`,
+      lblCargo: `Cargo / Função`,
       lblIdioma: `Idioma de Trabajo`,
       lblPin: `Contraseña / PIN de Acceso`,
       lblEstado: `Estado de la Cuenta`,
@@ -21738,34 +21802,22 @@ async function sendUserAccountActivatedEmail(user) {
 
   const t = i18nActEmail[userLang] || i18nActEmail['Português'];
 
-  try {
-    const payload = {
-      _subject: t.subject,
-      _template: 'table',
-      _captcha: 'false',
-      mensagem_titulo: t.title,
-      saudacao: t.greeting,
-      mensagem: t.bodyMsg,
-      [t.lblNome]: userName,
-      [t.lblEmail]: targetEmail,
-      [t.lblCargo]: userCargo,
-      [t.lblIdioma]: userLang,
-      [t.lblPin]: userPin,
-      [t.lblEstado]: t.statusActive,
-      [t.lblData]: nowStr,
-      instrucoes: t.instructions,
-      empresa: t.company
-    };
+  const payload = {
+    mensagem_titulo: t.title,
+    saudacao: t.greeting,
+    mensagem: t.bodyMsg,
+    [t.lblNome]: userName,
+    [t.lblEmail]: targetEmail,
+    [t.lblCargo]: userCargo,
+    [t.lblIdioma]: userLang,
+    [t.lblPin]: userPin,
+    [t.lblEstado]: t.statusActive,
+    [t.lblData]: nowStr,
+    instrucoes: t.instructions,
+    empresa: t.company
+  };
 
-    await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(targetEmail)}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    console.info(`[SIGEC-Pro] Email de ativação enviado diretamente para ${targetEmail} (${userLang})`);
-  } catch (err) {
-    console.warn('[SIGEC-Pro] Erro no envio direto de ativação ao utilizador:', err);
-  }
+  dispatchDirectEmail(targetEmail, t.subject, payload);
 
   if (typeof logUserActivity === 'function') {
     logUserActivity('Conta Ativada', `Email de confirmação de conta ativa enviado para ${targetEmail} (${userName}) no idioma ${userLang}.`);
