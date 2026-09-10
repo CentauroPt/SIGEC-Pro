@@ -5371,30 +5371,20 @@
       "pin": "J*cen*1971",
       "role": "user",
       "chefia": false,
-      "active": true,
+      "active": false,
       "createdAt": "2026-09-10T21:19:29.789Z"
     }
   ],
   "userLogs": [
     {
-      "id": "log-1789076260392-64",
+      "id": "log-1789076295200-545",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
       "acao": "Gestão de Utilizadores",
-      "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Ativo / Aprovado.",
+      "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Bloqueado.",
       "extra": {},
-      "timestamp": "2026-09-10T21:37:40.392Z"
-    },
-    {
-      "id": "log-1789076260391-928",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Conta Ativada",
-      "detalhes": "Email de confirmação de conta ativa enviado para jjota26@gmail.com (antonio campos) no idioma Português.",
-      "extra": {},
-      "timestamp": "2026-09-10T21:37:40.391Z"
+      "timestamp": "2026-09-10T21:38:15.200Z"
     }
   ],
   "orcamentos": [
