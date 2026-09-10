@@ -5359,23 +5359,29 @@
       "active": true,
       "createdAt": "2026-08-22T10:06:38.433Z",
       "chefia": false
-    },
-    {
-      "id": "usr-1789070838707",
-      "nome": "jose Campos",
-      "primeiroNome": "jose",
-      "apelido": "Campos",
-      "email": "jjota26@gmail.com",
-      "cargo": "Comercial",
-      "idioma": "Português",
-      "pin": "J*cen*1971",
-      "role": "user",
-      "chefia": false,
-      "active": true,
-      "createdAt": "2026-09-10T20:07:18.707Z"
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1789071119565-900",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Gestão de Utilizadores",
+      "detalhes": "Utilizador jose Campos (jjota26@gmail.com) eliminado do sistema.",
+      "extra": {},
+      "timestamp": "2026-09-10T20:11:59.565Z"
+    },
+    {
+      "id": "log-1789071114866-908",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Servidor GitHub",
+      "detalhes": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "extra": {},
+      "timestamp": "2026-09-10T20:11:54.866Z"
+    },
     {
       "id": "log-1789071110843-837",
       "usuarioId": "usr-admin-001",
@@ -5794,7 +5800,9 @@
       "José Centúrio (Teste de Sistema)",
       "usr-1789058923481",
       "José Antonio",
-      "jjota26@gmail.com"
+      "jjota26@gmail.com",
+      "usr-1789070838707",
+      "jose Campos"
     ]
   }
 }
