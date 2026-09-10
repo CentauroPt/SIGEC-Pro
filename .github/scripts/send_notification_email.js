@@ -147,6 +147,15 @@ async function run() {
   const statusText = isActivation ? t.statusActive : t.statusPending;
   const instText = isActivation ? t.instAct : t.instReg;
 
+  const headerSubtitles = {
+    'Português': 'alegría-activity, S.L. &bull; Sistema Integrado de Gestão de Clientes &amp; Projetos',
+    'Español': 'alegría-activity, S.L. &bull; Sistema Integrado de Gestión de Clientes &amp; Proyectos',
+    'English': 'alegría-activity, S.L. &bull; Integrated Customer &amp; Project Management System',
+    'Français': 'alegría-activity, S.L. &bull; Système Intégré de Gestion des Clients &amp; Projets',
+    'Polski': 'alegría-activity, S.L. &bull; Zintegrowany System Zarządzania Klientami i Projektami'
+  };
+  const headerSubtitle = headerSubtitles[userLang] || headerSubtitles['Português'];
+
   const htmlContent = `
 <!DOCTYPE html>
 <html>
@@ -162,7 +171,7 @@ async function run() {
           <tr>
             <td style="background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%);padding:24px 28px;text-align:left;">
               <div style="font-size:20px;font-weight:800;color:#ffffff;letter-spacing:0.5px;margin:0;">SIGEC-Pro</div>
-              <div style="font-size:12px;color:#bae6fd;margin-top:2px;font-weight:500;">alegría-activity, S.L. &bull; Sistema Integrado de Gestão Comercial</div>
+              <div style="font-size:12px;color:#bae6fd;margin-top:2px;font-weight:500;">${headerSubtitle}</div>
             </td>
           </tr>
           <tr>
@@ -213,7 +222,7 @@ async function run() {
           </tr>
           <tr>
             <td style="background:#f8fafc;padding:18px 28px;border-top:1px solid #e2e8f0;text-align:center;">
-              <p style="margin:0 0 4px 0;font-size:12px;color:#64748b;font-weight:600;">alegría-activity, S.L. &bull; SIGEC-Pro</p>
+              <p style="margin:0 0 4px 0;font-size:12px;color:#64748b;font-weight:600;">alegría-activity, S.L. - Sistema Integrado de Gestão de Clientes & Projetos SIGEC-Pro</p>
               <p style="margin:0;font-size:11px;color:#94a3b8;">Mensagem automática gerada pelo servidor GitHub.</p>
             </td>
           </tr>
@@ -293,6 +302,11 @@ ${instText}
     if (!gmailUser || !gmailPass) {
       console.log('⚠️ [AVISO DE CONFIGURAÇÃO SMTP]:');
       console.log('As credenciais de envio SMTP não estão configuradas nos Secrets do repositório GitHub.');
+      console.log('Para ativar o envio direto de emails para qualquer endereço:');
+      console.log('1. Aceda ao seu repositório GitHub > Settings > Secrets and variables > Actions');
+      console.log('2. Adicione os Secrets:');
+      console.log('   - GMAIL_USER (ex: o seu email Gmail)');
+      console.log('   - GMAIL_APP_PASSWORD (a Palavra-passe de Aplicação de 16 caracteres gerada na sua conta Google)');
     }
   }
 
