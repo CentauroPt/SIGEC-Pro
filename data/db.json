@@ -5371,20 +5371,50 @@
       "pin": "J*cen*1971",
       "role": "user",
       "chefia": false,
-      "active": false,
+      "active": true,
       "createdAt": "2026-09-10T21:19:29.789Z"
     }
   ],
   "userLogs": [
     {
-      "id": "log-1789076295200-545",
+      "id": "log-1789076440403-680",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
       "acao": "Gestão de Utilizadores",
-      "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Bloqueado.",
+      "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Ativo / Aprovado.",
       "extra": {},
-      "timestamp": "2026-09-10T21:38:15.200Z"
+      "timestamp": "2026-09-10T21:40:40.403Z"
+    },
+    {
+      "id": "log-1789076440402-918",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Conta Ativada",
+      "detalhes": "Email de confirmação de conta ativa enviado para jjota26@gmail.com (antonio campos) no idioma Português.",
+      "extra": {},
+      "timestamp": "2026-09-10T21:40:40.402Z"
+    },
+    {
+      "id": "log-1789076417197-26",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Notificação por Email",
+      "detalhes": "Alerta de registo emitido para jmcenturio@alegria-activity.com (José Centúrio (Teste de Sistema)).",
+      "extra": {},
+      "timestamp": "2026-09-10T21:40:17.197Z"
+    },
+    {
+      "id": "log-1789076395358-566",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Notificação por Email",
+      "detalhes": "Alerta de registo emitido para jmcenturio@alegria-activity.com (José Centúrio (Teste de Sistema)).",
+      "extra": {},
+      "timestamp": "2026-09-10T21:39:55.358Z"
     }
   ],
   "orcamentos": [
@@ -5467,6 +5497,12 @@
     }
   ],
   "ignoredDuplicates": [],
+  "config": {
+    "emailNotifyAddress": "jmcenturio@alegria-activity.com",
+    "emailNotifyEnabled": true,
+    "emailProvider": "web3forms",
+    "emailApiKey": ""
+  },
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
   "_deletedRegistry": {
     "clientes": [
