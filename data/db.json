@@ -5361,28 +5361,7 @@
       "chefia": false
     }
   ],
-  "userLogs": [
-    {
-      "id": "log-1789080734045-87",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Gestão de Utilizadores",
-      "detalhes": "Utilizador antonio campos (jjota26@gmail.com) eliminado do sistema.",
-      "extra": {},
-      "timestamp": "2026-09-10T22:52:14.045Z"
-    },
-    {
-      "id": "log-1789080718614-184",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Configuração Servidor",
-      "detalhes": "Definições do servidor GitHub e Token PAT guardados pelo Administrador (4 chaves redundantes).",
-      "extra": {},
-      "timestamp": "2026-09-10T22:51:58.614Z"
-    }
-  ],
+  "userLogs": [],
   "orcamentos": [
     {
       "id": "orc-norte-2040-004",
