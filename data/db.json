@@ -5371,60 +5371,40 @@
       "pin": "J*cen*1971",
       "role": "user",
       "chefia": false,
-      "active": false,
+      "active": true,
       "createdAt": "2026-09-10T21:19:29.789Z"
     }
   ],
   "userLogs": [
     {
-      "id": "log-1789077982787-892",
+      "id": "log-1789079650007-705",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
       "acao": "Gestão de Utilizadores",
-      "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Bloqueado.",
+      "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Ativo / Aprovado.",
       "extra": {},
-      "timestamp": "2026-09-10T22:06:22.787Z"
+      "timestamp": "2026-09-10T22:34:10.007Z"
     },
     {
-      "id": "log-1789077946256-520",
+      "id": "log-1789079650006-969",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Conta Ativada",
+      "detalhes": "Email de confirmação de conta ativa enviado para jjota26@gmail.com (antonio campos) no idioma Português.",
+      "extra": {},
+      "timestamp": "2026-09-10T22:34:10.006Z"
+    },
+    {
+      "id": "log-1789079570880-285",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
       "acao": "Notificação por Email",
       "detalhes": "Alerta de registo emitido para jmcenturio@alegria-activity.com (José Centúrio (Teste de Sistema)).",
       "extra": {},
-      "timestamp": "2026-09-10T22:05:46.256Z"
-    },
-    {
-      "id": "log-1789077828674-477",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Notificação por Email",
-      "detalhes": "Alerta de registo emitido para jmcenturio@alegria-activity.com (José Centúrio (Teste de Sistema)).",
-      "extra": {},
-      "timestamp": "2026-09-10T22:03:48.674Z"
-    },
-    {
-      "id": "log-1789077808553-941",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Notificação por Email",
-      "detalhes": "Alerta de registo emitido para jmcenturio@alegria-activity.com (José Centúrio (Teste de Sistema)).",
-      "extra": {},
-      "timestamp": "2026-09-10T22:03:28.553Z"
-    },
-    {
-      "id": "log-1789077776191-861",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Notificação por Email",
-      "detalhes": "Alerta de registo emitido para jmcenturio@alegria-activity.com (José Centúrio (Teste de Sistema)).",
-      "extra": {},
-      "timestamp": "2026-09-10T22:02:56.191Z"
+      "timestamp": "2026-09-10T22:32:50.880Z"
     }
   ],
   "orcamentos": [
