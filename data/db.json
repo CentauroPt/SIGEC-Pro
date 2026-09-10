@@ -5371,170 +5371,30 @@
       "pin": "J*cen*1971",
       "role": "user",
       "chefia": false,
-      "active": false,
+      "active": true,
       "createdAt": "2026-09-10T21:19:29.789Z"
     }
   ],
   "userLogs": [
     {
-      "id": "log-1789076190497-533",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Gestão de Utilizadores",
-      "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Bloqueado.",
-      "extra": {},
-      "timestamp": "2026-09-10T21:36:30.497Z"
-    },
-    {
-      "id": "log-1789075617468-948",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Servidor GitHub",
-      "detalhes": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "extra": {},
-      "timestamp": "2026-09-10T21:26:57.468Z"
-    },
-    {
-      "id": "log-1789075614786-680",
+      "id": "log-1789076260392-64",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
       "acao": "Gestão de Utilizadores",
       "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Ativo / Aprovado.",
       "extra": {},
-      "timestamp": "2026-09-10T21:26:54.786Z"
+      "timestamp": "2026-09-10T21:37:40.392Z"
     },
     {
-      "id": "log-1789075614786-66",
+      "id": "log-1789076260391-928",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
       "acao": "Conta Ativada",
       "detalhes": "Email de confirmação de conta ativa enviado para jjota26@gmail.com (antonio campos) no idioma Português.",
       "extra": {},
-      "timestamp": "2026-09-10T21:26:54.786Z"
-    },
-    {
-      "id": "log-1789075607733-629",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Servidor GitHub",
-      "detalhes": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "extra": {},
-      "timestamp": "2026-09-10T21:26:47.733Z"
-    },
-    {
-      "id": "log-1789075604300-994",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Gestão de Utilizadores",
-      "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Bloqueado.",
-      "extra": {},
-      "timestamp": "2026-09-10T21:26:44.300Z"
-    },
-    {
-      "id": "log-1789075203417-804",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Servidor GitHub",
-      "detalhes": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "extra": {},
-      "timestamp": "2026-09-10T21:20:03.417Z"
-    },
-    {
-      "id": "log-1789075200420-96",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Gestão de Utilizadores",
-      "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Ativo / Aprovado.",
-      "extra": {},
-      "timestamp": "2026-09-10T21:20:00.420Z"
-    },
-    {
-      "id": "log-1789075200419-563",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Conta Ativada",
-      "detalhes": "Email de confirmação de conta ativa enviado para jjota26@gmail.com (antonio campos) no idioma Português.",
-      "extra": {},
-      "timestamp": "2026-09-10T21:20:00.419Z"
-    },
-    {
-      "id": "log-1789075141374-806",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Servidor GitHub",
-      "detalhes": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "extra": {},
-      "timestamp": "2026-09-10T21:19:01.374Z"
-    },
-    {
-      "id": "log-1789075138223-759",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Gestão de Utilizadores",
-      "detalhes": "Utilizador antonio campos (jjota26@gmail.com) eliminado do sistema.",
-      "extra": {},
-      "timestamp": "2026-09-10T21:18:58.223Z"
-    },
-    {
-      "id": "log-1789075079237-329",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Servidor GitHub",
-      "detalhes": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "extra": {},
-      "timestamp": "2026-09-10T21:17:59.237Z"
-    },
-    {
-      "id": "log-1789075075946-568",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Gestão de Utilizadores",
-      "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Ativo / Aprovado.",
-      "extra": {},
-      "timestamp": "2026-09-10T21:17:55.946Z"
-    },
-    {
-      "id": "log-1789075075945-566",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Conta Ativada",
-      "detalhes": "Email de confirmação de conta ativa enviado para jjota26@gmail.com (antonio campos) no idioma Português.",
-      "extra": {},
-      "timestamp": "2026-09-10T21:17:55.945Z"
-    },
-    {
-      "id": "log-1789075072857-461",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Servidor GitHub",
-      "detalhes": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "extra": {},
-      "timestamp": "2026-09-10T21:17:52.857Z"
-    },
-    {
-      "id": "log-1789075069119-526",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Gestão de Utilizadores",
-      "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Bloqueado.",
-      "extra": {},
-      "timestamp": "2026-09-10T21:17:49.119Z"
+      "timestamp": "2026-09-10T21:37:40.391Z"
     }
   ],
   "orcamentos": [
