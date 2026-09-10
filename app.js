@@ -14627,6 +14627,23 @@ function togglePinVisibility(inputId, iconId) {
 }
 window.togglePinVisibility = togglePinVisibility;
 
+function getAdminPin() {
+  const savedPin = localStorage.getItem('sigec_pro_security_pin');
+  if (savedPin && savedPin.trim() !== '') return savedPin.trim();
+  const adminUser = (typeof db !== 'undefined' && Array.isArray(db.usuarios)) ? db.usuarios.find(u => u && (u.role === 'admin' || u.id === 'usr-admin-001')) : null;
+  if (adminUser && adminUser.pin && adminUser.pin.trim() !== '') return adminUser.pin.trim();
+  return PERMANENT_ADMIN_MASTER_PIN;
+}
+window.getAdminPin = getAdminPin;
+
+function renderUserSelectOptions() {
+  const select = document.getElementById('loginUserSelect') || document.getElementById('filterUserSelect');
+  if (!select) return;
+  const users = (typeof db !== 'undefined' && Array.isArray(db.usuarios)) ? db.usuarios.filter(u => u && u.active !== false) : [];
+  select.innerHTML = users.map(u => `<option value="${u.id}">${u.nome}</option>`).join('');
+}
+window.renderUserSelectOptions = renderUserSelectOptions;
+
 function verifyLoginPin() {
   ensureUsersInitialized();
   const userInput = document.getElementById('loginUserInput');
