@@ -5371,40 +5371,30 @@
       "pin": "J*cen*1971",
       "role": "user",
       "chefia": false,
-      "active": true,
+      "active": false,
       "createdAt": "2026-09-10T21:19:29.789Z"
     }
   ],
   "userLogs": [
     {
-      "id": "log-1789079650007-705",
+      "id": "log-1789080433666-946",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
       "acao": "Gestão de Utilizadores",
-      "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Ativo / Aprovado.",
+      "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Bloqueado.",
       "extra": {},
-      "timestamp": "2026-09-10T22:34:10.007Z"
+      "timestamp": "2026-09-10T22:47:13.666Z"
     },
     {
-      "id": "log-1789079650006-969",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Conta Ativada",
-      "detalhes": "Email de confirmação de conta ativa enviado para jjota26@gmail.com (antonio campos) no idioma Português.",
-      "extra": {},
-      "timestamp": "2026-09-10T22:34:10.006Z"
-    },
-    {
-      "id": "log-1789079570880-285",
+      "id": "log-1789080381928-362",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
       "acao": "Notificação por Email",
       "detalhes": "Alerta de registo emitido para jmcenturio@alegria-activity.com (José Centúrio (Teste de Sistema)).",
       "extra": {},
-      "timestamp": "2026-09-10T22:32:50.880Z"
+      "timestamp": "2026-09-10T22:46:21.928Z"
     }
   ],
   "orcamentos": [
