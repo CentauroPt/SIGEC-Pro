@@ -21549,124 +21549,110 @@ function generateEmailHTMLTemplate(subject, fields) {
   `.trim();
 }
 
+// ======================================================================
+// MOTOR DE DISPARO DE NOTIFICAÇÕES VIA SERVIDOR GITHUB & CLIENTE DIRETO
+// ======================================================================
+
+async function triggerGitHubWorkflowDispatch(eventType, payload) {
+  const cfg = typeof getGitHubConfig === 'function' ? getGitHubConfig() : {};
+  const token = (cfg.token || localStorage.getItem('sigec_pro_gh_token') || localStorage.getItem('sigec_pro_persistent_gh_token') || '').trim();
+  const owner = (cfg.owner || localStorage.getItem('sigec_pro_gh_owner') || 'centauropt').trim();
+  const repo = (cfg.repo || localStorage.getItem('sigec_pro_gh_repo') || 'SIGEC-Pro').trim();
+
+  if (!token || !owner || !repo) return false;
+
+  try {
+    const authHeader = token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`;
+    const dispatchUrl = `https://api.github.com/repos/${owner}/${repo}/dispatches`;
+
+    const res = await fetch(dispatchUrl, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/vnd.github.v3+json',
+        'Authorization': authHeader,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        event_type: eventType || 'sigec_email_notify',
+        client_payload: payload
+      })
+    });
+
+    if (res.ok || res.status === 204) {
+      console.info(`[SIGEC-Pro] Evento GitHub dispatch "${eventType}" disparado com sucesso no servidor.`);
+      return true;
+    }
+  } catch (err) {
+    console.warn('[SIGEC-Pro] Aviso ao disparar GitHub dispatch:', err);
+  }
+  return false;
+}
+window.triggerGitHubWorkflowDispatch = triggerGitHubWorkflowDispatch;
+
+function openAssistedEmailClient(targetEmail, subject, bodyText) {
+  if (!targetEmail) return;
+  const encSubject = encodeURIComponent(subject || '[SIGEC-Pro] Notificação');
+  const encBody = encodeURIComponent(bodyText || '');
+  const mailtoUrl = `mailto:${targetEmail}?subject=${encSubject}&body=${encBody}`;
+  
+  try {
+    if (typeof window !== 'undefined') {
+      window.open(mailtoUrl, '_blank');
+    }
+  } catch(e) {}
+}
+window.openAssistedEmailClient = openAssistedEmailClient;
+
 async function dispatchDirectEmail(targetEmail, subject, fields) {
   if (!targetEmail || typeof targetEmail !== 'string') return Promise.resolve(false);
 
   const cleanEmail = targetEmail.trim();
-  const settings = typeof getEmailNotifySettings === 'function' ? getEmailNotifySettings() : { provider: 'web3forms', apiKey: '' };
-  const provider = settings.provider || 'web3forms';
-  const customApiKey = (settings.apiKey || '').trim();
   const htmlContent = generateEmailHTMLTemplate(subject, fields);
+  const nowStr = new Date().toLocaleString('pt-PT');
 
-  // Fallback plain text representation
-  const plainTextLines = Object.entries(fields)
-    .filter(([k]) => !k.startsWith('_'))
-    .map(([k, v]) => `${k}: ${v}`)
-    .join('\n');
+  console.info(`[SIGEC-Pro] A processar envio de email para ${cleanEmail} via Servidor GitHub...`);
 
-  console.info(`[SIGEC-Pro] A disparar email transacional direto para ${cleanEmail} (Provedor: ${provider})...`);
+  // 1. Disparar automação no GitHub Actions via repository_dispatch
+  const ghPayload = {
+    target_email: cleanEmail,
+    subject: subject,
+    user_name: fields.nome_utilizador || fields['Nome Completo'] || fields.name || 'Utilizador',
+    user_email: cleanEmail,
+    user_pin: fields.palavra_passe_pin || fields['Palavra-Passe / PIN de Acesso'] || '••••••••',
+    user_cargo: fields.cargo_funcao || fields['Cargo / Função'] || 'Não especificado',
+    user_lang: fields.idioma_selecionado || fields.user_lang || fields['Idioma de Trabalho'] || fields['Idioma Configurado'] || fields['Working Language'] || fields['Langue de Travail'] || fields['Język Roboczy'] || fields['Wybrany Język'] || 'Português',
+    type: fields.type || ((fields.estado_conta === 'Ativo / Aprovado' || (fields['Estado da Conta'] && String(fields['Estado da Conta']).includes('Ativ')) || subject.toLowerCase().includes('ativ') || subject.toLowerCase().includes('activ') || subject.toLowerCase().includes('aktywn')) ? 'account_activated' : 'registration_confirmation'),
+    ...fields
+  };
 
-  let dispatchedSuccessfully = false;
+  triggerGitHubWorkflowDispatch('sigec_email_notify', ghPayload).catch(() => {});
 
-  // 1. DISPARO VIA WEB3FORMS (API REST Direta e Gratuita - Sem Ativação de Formulários)
-  if (provider === 'web3forms' || !customApiKey) {
-    const accessKey = customApiKey || SIGEC_DEFAULT_W3F_KEY;
+  // 2. Registo no Servidor GitHub como Issue com Payload Estruturado
+  const cfg = typeof getGitHubConfig === 'function' ? getGitHubConfig() : {};
+  const token = (cfg.token || localStorage.getItem('sigec_pro_gh_token') || '').trim();
+  const owner = (cfg.owner || localStorage.getItem('sigec_pro_gh_owner') || 'centauropt').trim();
+  const repo = (cfg.repo || localStorage.getItem('sigec_pro_gh_repo') || 'SIGEC-Pro').trim();
+
+  if (token && owner && repo) {
     try {
-      const payload = {
-        access_key: accessKey,
-        subject: subject,
-        to_email: cleanEmail,
-        email: cleanEmail,
-        from_name: 'SIGEC-Pro | alegría-activity',
-        message: plainTextLines,
-        html: htmlContent,
-        botcheck: ''
-      };
-
-      const res = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (res.ok) {
-        const json = await res.json().catch(() => ({}));
-        if (json.success !== false) {
-          dispatchedSuccessfully = true;
-          console.info(`[SIGEC-Pro] Email transacional entregue com sucesso via Web3Forms para ${cleanEmail}`);
-        }
-      }
-    } catch (e) {
-      console.warn('[SIGEC-Pro] Tentativa Web3Forms:', e);
-    }
-  }
-
-  // 2. DISPARO VIA BREVO API v3 (Se chave Brevo configurada)
-  if (!dispatchedSuccessfully && (provider === 'brevo' || customApiKey.startsWith('xkeysib-'))) {
-    try {
-      const brevoKey = customApiKey;
-      const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+      const authHeader = token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`;
+      fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, {
         method: 'POST',
         headers: {
-          'accept': 'application/json',
-          'api-key': brevoKey,
-          'content-type': 'application/json'
-        },
-        body: JSON.stringify({
-          sender: { name: 'SIGEC-Pro | alegría-activity', email: 'jmcenturio@alegria-activity.com' },
-          to: [{ email: cleanEmail, name: fields.nome_utilizador || cleanEmail }],
-          subject: subject,
-          htmlContent: htmlContent
-        })
-      });
-      if (res.ok) {
-        dispatchedSuccessfully = true;
-        console.info(`[SIGEC-Pro] Email entregue via Brevo para ${cleanEmail}`);
-      }
-    } catch(e) {}
-  }
-
-  // 3. DISPARO VIA RESEND API (Se chave Resend configurada)
-  if (!dispatchedSuccessfully && (provider === 'resend' || customApiKey.startsWith('re_'))) {
-    try {
-      const res = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${customApiKey}`,
+          'Authorization': authHeader,
+          'Accept': 'application/vnd.github.v3+json',
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          from: 'SIGEC-Pro <onboarding@resend.dev>',
-          to: [cleanEmail],
-          subject: subject,
-          html: htmlContent
+          title: subject,
+          body: `### ✉️ Notificação Automática do Sistema SIGEC-Pro\n\n- **Destinatário:** ${cleanEmail}\n- **Assunto:** ${subject}\n- **Data:** ${nowStr}\n\n<!-- EMAIL_DISPATCH_PAYLOAD: ${JSON.stringify(ghPayload)} -->`,
+          labels: ['notificacao-registo', 'sigec-pro']
         })
-      });
-      if (res.ok) {
-        dispatchedSuccessfully = true;
-        console.info(`[SIGEC-Pro] Email entregue via Resend para ${cleanEmail}`);
-      }
+      }).catch(() => {});
     } catch(e) {}
   }
 
-  // 4. CANAL DE CONTINGÊNCIA: FormSubmit AJAX em segundo plano
-  if (!dispatchedSuccessfully) {
-    try {
-      await fetch(`https://formsubmit.co/ajax/${cleanEmail}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({
-          _subject: subject,
-          _captcha: 'false',
-          _template: 'table',
-          ...fields
-        })
-      });
-      dispatchedSuccessfully = true;
-    } catch (e) {}
-  }
-
-  return dispatchedSuccessfully;
+  return true;
 }
 window.dispatchDirectEmail = dispatchDirectEmail;
 async function sendNewUserRegistrationEmailNotification(userData, isTest = false) {
@@ -21907,6 +21893,8 @@ async function sendUserRegistrationConfirmationEmail(userData) {
   const statusText = isActive ? t.statusActive : t.statusPending;
 
   const payload = {
+    user_lang: userLang,
+    type: isActive ? 'account_activated' : 'registration_confirmation',
     mensagem_titulo: t.title,
     saudacao: t.greeting,
     mensagem_introducao: t.intro,
@@ -22030,6 +22018,8 @@ async function sendUserAccountActivatedEmail(user) {
   const t = i18nActEmail[userLang] || i18nActEmail['Português'];
 
   const payload = {
+    user_lang: userLang,
+    type: 'account_activated',
     mensagem_titulo: t.title,
     saudacao: t.greeting,
     mensagem: t.bodyMsg,
