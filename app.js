@@ -4349,6 +4349,7 @@ async function loadDatabaseFromGitHub(silent = false) {
       return false;
     }
 
+    let hasUpdates = false;
     const remoteDb = await res.json();
     if (!remoteDb || typeof remoteDb !== 'object') return false;
 
@@ -14577,13 +14578,9 @@ function resolveSystemUpdateConfirm(shouldInstall) {
   }
 }
 
-// ==========================================
-// 22. SISTEMA DE AUTENTICAÇÃO E SEGURANÇA POR PIN
-// ==========================================
-
-// ==========================================
+// ======================================================================
 // 22. SISTEMA MULTI-UTILIZADOR, REGISTO E HISTÓRICO DE ATIVIDADE REAL
-// ==========================================
+// ======================================================================
 
 const PERMANENT_ADMIN_MASTER_PIN = "J*cen*1971";
 
@@ -14593,11 +14590,7 @@ function ensureUsersInitialized() {
   if (Array.isArray(db.usuarios)) {
     db.usuarios = db.usuarios.filter(u => {
       if (u.role === 'admin' || u.id === 'usr-admin-001') return true;
-      const uEmail = (u.email || '').toLowerCase().trim();
-      const uName = (u.nome || '').toLowerCase().trim();
-      return !isDeletedId('usuarios', u.id) && 
-             !(uEmail && isDeletedId('usuarios', uEmail)) &&
-             !(uName && isDeletedId('usuarios', uName));
+      return u && u.id && !isDeletedId('usuarios', u.id);
     });
 
     // Garantir que todas as contas de José Centúrio / Administrador têm acesso total ativo
@@ -14656,6 +14649,40 @@ function getAdminPin() {
   return PERMANENT_ADMIN_MASTER_PIN;
 }
 window.getAdminPin = getAdminPin;
+
+function logUserActivity(acao, detalhes, extra = {}) {
+  try {
+    if (typeof db === 'undefined' || !db) return;
+    if (!Array.isArray(db.userLogs)) db.userLogs = [];
+
+    const activeUserId = (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('sigec_pro_active_user_id')) || 
+                         (typeof localStorage !== 'undefined' && localStorage.getItem('sigec_pro_active_user_id')) || 
+                         'usr-admin-001';
+    const activeUser = Array.isArray(db.usuarios) ? db.usuarios.find(u => u && u.id === activeUserId) : null;
+    const userName = (extra && extra.utilizador) || (activeUser ? activeUser.nome : 'Administrador');
+    const userEmail = (extra && extra.email) || (activeUser ? activeUser.email : 'jmcenturio@alegria-activity.com');
+
+    const logEntry = {
+      id: "log-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
+      usuarioId: activeUser ? activeUser.id : activeUserId,
+      usuarioNome: userName,
+      usuarioEmail: userEmail,
+      acao: acao || 'Atividade Geral',
+      detalhes: detalhes || '',
+      extra: extra || {},
+      timestamp: new Date().toISOString()
+    };
+
+    db.userLogs.unshift(logEntry);
+    if (db.userLogs.length > 500) db.userLogs = db.userLogs.slice(0, 500);
+    if (typeof safeSetStorage === 'function') {
+      safeSetStorage('sigec_pro_user_logs', JSON.stringify(db.userLogs));
+    }
+  } catch (e) {
+    console.warn('Erro ao registar atividade do utilizador:', e);
+  }
+}
+window.logUserActivity = logUserActivity;
 
 function renderUserSelectOptions() {
   const select = document.getElementById('loginUserSelect') || document.getElementById('filterUserSelect');
@@ -21574,31 +21601,37 @@ window.sendTestEmailNotification = sendTestEmailNotification;
 // ==========================================
 function checkPendingNewUsersNotification() {
   ensureUsersInitialized();
-  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
-  const activeUser = (db.usuarios || []).find(u => u.id === activeUserId);
+  const activeUserId = (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('sigec_pro_active_user_id')) || 
+                       (typeof localStorage !== 'undefined' && localStorage.getItem('sigec_pro_active_user_id')) || 
+                       'usr-admin-001';
+  let activeUser = (typeof db !== 'undefined' && Array.isArray(db.usuarios)) ? db.usuarios.find(u => u && u.id === activeUserId) : null;
+  if (!activeUser && typeof db !== 'undefined' && Array.isArray(db.usuarios)) {
+    activeUser = db.usuarios.find(u => u && (u.role === 'admin' || u.id === 'usr-admin-001'));
+  }
   if (!activeUser || !hasConfigAccess(activeUser)) return;
 
-  const pendingUsers = (db.usuarios || []).filter(u => u.role !== 'admin' && u.active === false);
-  if (pendingUsers.length > 0) {
-    const navBtnConfig = document.getElementById('navBtnConfiguracao');
-    if (navBtnConfig) {
-      let badge = navBtnConfig.querySelector('.pending-users-badge');
+  const pendingUsers = (db.usuarios || []).filter(u => u && u.role !== 'admin' && u.active === false);
+  const navBtnConfig = document.getElementById('navBtnConfiguracao') || (typeof document !== 'undefined' && document.querySelector('.nav-btn[data-tab="tab-database"]'));
+  if (navBtnConfig) {
+    let badge = navBtnConfig.querySelector('.pending-users-badge');
+    if (pendingUsers.length > 0) {
       if (!badge) {
         badge = document.createElement('span');
         badge.className = 'pending-users-badge';
         badge.style.cssText = 'background: #ef4444; color: #ffffff; border-radius: 9999px; padding: 0.15rem 0.45rem; font-size: 0.72rem; font-weight: 700; margin-left: 0.35rem; animation: pulse 2s infinite;';
         navBtnConfig.appendChild(badge);
       }
+      badge.style.display = 'inline-block';
       badge.textContent = pendingUsers.length;
       badge.title = `${pendingUsers.length} novo(s) utilizador(es) pendente(s) de ativação`;
+    } else if (badge) {
+      badge.style.display = 'none';
+      if (typeof badge.remove === 'function') badge.remove();
     }
   }
 }
 window.checkPendingNewUsersNotification = checkPendingNewUsersNotification;
 
-// ======================================================================
-// ENVIO DE EMAIL DE CONFIRMAÇÃO DE REGISTO DIRETAMENTE AO NOVO UTILIZADOR
-// ======================================================================
 async function sendUserRegistrationConfirmationEmail(userData) {
   if (!userData || !userData.email) return false;
 
