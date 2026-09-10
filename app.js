@@ -3511,7 +3511,8 @@ function addDeletedId(type, id) {
   const strId = String(id).trim();
   if (!strId) return;
   if (!deletedRegistry[type]) deletedRegistry[type] = [];
-  if (!deletedRegistry[type].includes(strId)) {
+  const lower = strId.toLowerCase();
+  if (!deletedRegistry[type].some(x => String(x).trim().toLowerCase() === lower)) {
     deletedRegistry[type].push(strId);
     saveDeletedRegistry();
   }
@@ -3519,16 +3520,16 @@ function addDeletedId(type, id) {
 
 function isDeletedId(type, id) {
   if (!type || !id) return false;
-  const strId = String(id).trim();
-  if (!deletedRegistry[type]) return false;
-  return deletedRegistry[type].includes(strId);
+  const strId = String(id).trim().toLowerCase();
+  if (!deletedRegistry[type] || !Array.isArray(deletedRegistry[type])) return false;
+  return deletedRegistry[type].some(del => String(del).trim().toLowerCase() === strId);
 }
 
 function removeDeletedId(type, id) {
   if (!type || !id) return;
-  const strId = String(id).trim();
-  if (!strId || !deletedRegistry[type]) return;
-  const idx = deletedRegistry[type].indexOf(strId);
+  const strId = String(id).trim().toLowerCase();
+  if (!strId || !deletedRegistry[type] || !Array.isArray(deletedRegistry[type])) return;
+  const idx = deletedRegistry[type].findIndex(del => String(del).trim().toLowerCase() === strId);
   if (idx >= 0) {
     deletedRegistry[type].splice(idx, 1);
     saveDeletedRegistry();
@@ -4441,7 +4442,12 @@ async function loadDatabaseFromGitHub(silent = false) {
       remoteDb.usuarios.forEach(incUser => {
         if (!incUser || !incUser.id) return;
         const incEmail = (incUser.email || '').toLowerCase().trim();
-        if (isDeletedId('usuarios', incUser.id) || (incEmail && isDeletedId('usuarios', incEmail))) return;
+        const incName = (incUser.nome || '').toLowerCase().trim();
+        if (
+          isDeletedId('usuarios', incUser.id) || 
+          (incEmail && isDeletedId('usuarios', incEmail)) ||
+          (incName && isDeletedId('usuarios', incName))
+        ) return;
         const idx = db.usuarios.findIndex(u => u && (u.id === incUser.id || (incEmail && u.email && u.email.toLowerCase().trim() === incEmail)));
         if (idx < 0) {
           db.usuarios.push(incUser);
@@ -4458,7 +4464,10 @@ async function loadDatabaseFromGitHub(silent = false) {
       db.usuarios = db.usuarios.filter(u => {
         if (u.role === 'admin' || u.id === 'usr-admin-001') return true;
         const uEmail = (u.email || '').toLowerCase().trim();
-        return !isDeletedId('usuarios', u.id) && !(uEmail && isDeletedId('usuarios', uEmail));
+        const uName = (u.nome || '').toLowerCase().trim();
+        return !isDeletedId('usuarios', u.id) && 
+               !(uEmail && isDeletedId('usuarios', uEmail)) &&
+               !(uName && isDeletedId('usuarios', uName));
       });
       if (db.usuarios.length !== prevLen) {
         hasUpdates = true;
@@ -14577,7 +14586,10 @@ function ensureUsersInitialized() {
     db.usuarios = db.usuarios.filter(u => {
       if (u.role === 'admin' || u.id === 'usr-admin-001') return true;
       const uEmail = (u.email || '').toLowerCase().trim();
-      return !isDeletedId('usuarios', u.id) && !(uEmail && isDeletedId('usuarios', uEmail));
+      const uName = (u.nome || '').toLowerCase().trim();
+      return !isDeletedId('usuarios', u.id) && 
+             !(uEmail && isDeletedId('usuarios', uEmail)) &&
+             !(uName && isDeletedId('usuarios', uName));
     });
   }
 
@@ -14598,11 +14610,19 @@ function ensureUsersInitialized() {
     ];
     safeSetStorage('sigec_pro_usuarios', JSON.stringify(db.usuarios));
     safeSetStorage('sigec_pro_security_pin', adminPin);
+  }
+}
+
+function togglePinVisibility(inputId, iconId) {
+  const pinInput = document.getElementById(inputId);
+  const icon = document.getElementById(iconId);
+  if (!pinInput) return;
+  if (pinInput.type === 'password') {
+    pinInput.type = 'text';
+    if (icon) icon.className = 'fa-solid fa-eye-slash';
   } else {
     pinInput.type = 'password';
-    if (icon) {
-      icon.className = 'fa-solid fa-eye';
-    }
+    if (icon) icon.className = 'fa-solid fa-eye';
   }
 }
 window.togglePinVisibility = togglePinVisibility;
@@ -14921,7 +14941,10 @@ async function syncRegisteredUsersFromGitHub(silent = false) {
     db.usuarios = db.usuarios.filter(u => {
       if (u.role === 'admin' || u.id === 'usr-admin-001') return true;
       const uEmail = (u.email || '').toLowerCase().trim();
-      return !isDeletedId('usuarios', u.id) && !(uEmail && isDeletedId('usuarios', uEmail));
+      const uName = (u.nome || '').toLowerCase().trim();
+      return !isDeletedId('usuarios', u.id) && 
+             !(uEmail && isDeletedId('usuarios', uEmail)) &&
+             !(uName && isDeletedId('usuarios', uName));
     });
   }
 
@@ -14966,8 +14989,14 @@ async function syncRegisteredUsersFromGitHub(silent = false) {
                   const userEmail = (userData.email || '').toLowerCase().trim();
                   const userId = (userData.id || '').trim();
 
+                  const userName = (userData.nome || `${userData.primeiroNome || ''} ${userData.apelido || ''}` || '').toLowerCase().trim();
+
                   // Se foi apagado pelo Administrador, fechar a issue e ignorar
-                  if (isDeletedId('usuarios', userId) || isDeletedId('usuarios', userEmail)) {
+                  if (
+                    (userId && isDeletedId('usuarios', userId)) || 
+                    (userEmail && isDeletedId('usuarios', userEmail)) ||
+                    (userName && isDeletedId('usuarios', userName))
+                  ) {
                     if (token && issue.number) {
                       fetch(`https://api.github.com/repos/${owner}/${repo}/issues/${issue.number}`, {
                         method: 'PATCH',
@@ -15009,7 +15038,13 @@ async function syncRegisteredUsersFromGitHub(silent = false) {
                 const emailLower = rawEmail.toLowerCase();
                 const nome = nomeMatch[1].trim();
 
-                if (isDeletedId('usuarios', emailLower)) {
+                const nomeLower = nome.toLowerCase();
+                if (
+                  isDeletedId('usuarios', emailLower) || 
+                  isDeletedId('usuarios', rawEmail) || 
+                  isDeletedId('usuarios', nomeLower) || 
+                  isDeletedId('usuarios', nome)
+                ) {
                   if (token && issue.number) {
                     fetch(`https://api.github.com/repos/${owner}/${repo}/issues/${issue.number}`, {
                       method: 'PATCH',
@@ -15051,7 +15086,10 @@ async function syncRegisteredUsersFromGitHub(silent = false) {
       db.usuarios = db.usuarios.filter(u => {
         if (u.role === 'admin' || u.id === 'usr-admin-001') return true;
         const uEmail = (u.email || '').toLowerCase().trim();
-        return !isDeletedId('usuarios', u.id) && !(uEmail && isDeletedId('usuarios', uEmail));
+        const uName = (u.nome || '').toLowerCase().trim();
+        return !isDeletedId('usuarios', u.id) && 
+               !(uEmail && isDeletedId('usuarios', uEmail)) &&
+               !(uName && isDeletedId('usuarios', uName));
       });
     }
 
@@ -15886,27 +15924,44 @@ async function deleteRegisteredUser(userId) {
   if (confirm(`Tem a certeza que deseja eliminar o utilizador "${user.nome}" (${user.email})?`)) {
     const userEmail = (user.email || '').toLowerCase().trim();
     const userEmailOrig = (user.email || '').trim();
+    const userName = (user.nome || '').trim();
+    const userNameLower = (user.nome || '').toLowerCase().trim();
     
-    // 1. Registar ID e Email na lista permanente de eliminados
+    // 1. Registar ID, Email e Nome na lista permanente de eliminados
     addDeletedId('usuarios', userId);
     if (userEmail) addDeletedId('usuarios', userEmail);
     if (userEmailOrig && userEmailOrig !== userEmail) addDeletedId('usuarios', userEmailOrig);
+    if (userName) addDeletedId('usuarios', userName);
+    if (userNameLower && userNameLower !== userName) addDeletedId('usuarios', userNameLower);
 
-    // 2. Remover o utilizador do array de utilizadores
-    db.usuarios = db.usuarios.filter(u => u.id !== userId && (u.email || '').toLowerCase().trim() !== userEmail);
+    // 2. Remover o utilizador do array de utilizadores com filtragem estrita
+    db.usuarios = db.usuarios.filter(u => {
+      if (u.role === 'admin' || u.id === 'usr-admin-001') return true;
+      const uEmail = (u.email || '').toLowerCase().trim();
+      const uName = (u.nome || '').toLowerCase().trim();
+      const uId = (u.id || '').trim().toLowerCase();
+      return u.id !== userId &&
+             uId !== userId.toLowerCase() &&
+             (!userEmail || uEmail !== userEmail) &&
+             (!userNameLower || uName !== userNameLower) &&
+             !isDeletedId('usuarios', u.id) &&
+             !(uEmail && isDeletedId('usuarios', uEmail)) &&
+             !(uName && isDeletedId('usuarios', uName));
+    });
+
     saveDeletedRegistry();
     saveDatabase();
     
     // 3. Fechar quaisquer issues pendentes de registo deste utilizador no GitHub
     const cfg = typeof getGitHubConfig === 'function' ? getGitHubConfig() : {};
-    const token = (cfg.token || localStorage.getItem('sigec_pro_gh_token') || '').trim();
+    const token = (cfg.token || localStorage.getItem('sigec_pro_gh_token') || localStorage.getItem('sigec_pro_persistent_gh_token') || '').trim();
     const owner = (cfg.owner || localStorage.getItem('sigec_pro_gh_owner') || 'centauropt').trim();
     const repo = (cfg.repo || localStorage.getItem('sigec_pro_gh_repo') || 'SIGEC-Pro').trim();
 
     if (token && owner && repo) {
       try {
         const authHeader = token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`;
-        const issuesRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues?labels=notificacao-registo&state=open&per_page=50`, {
+        const issuesRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues?labels=notificacao-registo&state=open&per_page=100`, {
           headers: { 'Accept': 'application/vnd.github.v3+json', 'Authorization': authHeader },
           cache: 'no-store'
         });
@@ -15914,13 +15969,18 @@ async function deleteRegisteredUser(userId) {
           const issues = await issuesRes.json();
           if (Array.isArray(issues)) {
             for (const issue of issues) {
-              const body = issue.body || '';
-              if (body.includes(userEmail) || body.includes(userId)) {
+              const body = (issue.body || '').toLowerCase();
+              const title = (issue.title || '').toLowerCase();
+              if (
+                (userEmail && (body.includes(userEmail) || title.includes(userEmail))) ||
+                (userId && (body.includes(userId.toLowerCase()) || title.includes(userId.toLowerCase()))) ||
+                (userNameLower && (body.includes(userNameLower) || title.includes(userNameLower)))
+              ) {
                 await fetch(`https://api.github.com/repos/${owner}/${repo}/issues/${issue.number}`, {
                   method: 'PATCH',
                   headers: { 'Accept': 'application/vnd.github.v3+json', 'Authorization': authHeader, 'Content-Type': 'application/json' },
                   body: JSON.stringify({ state: 'closed' })
-                });
+                }).catch(() => {});
               }
             }
           }
