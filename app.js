@@ -14603,7 +14603,7 @@ function ensureUsersInitialized() {
     db.usuarios.forEach(u => {
       const uEmail = (u.email || '').toLowerCase().trim();
       const uName = (u.nome || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
-      if (u.id === 'usr-admin-001' || u.role === 'admin' || uName.includes('jose centurio') || uName.includes('administrador') || uEmail.includes('josecenturio') || uEmail.includes('jmcenturio')) {
+      if (u.id === 'usr-admin-001' || (u.role === 'admin' && (uName === 'jose centurio' || uEmail === 'jmcenturio@alegria-activity.com'))) {
         u.role = 'admin';
         u.chefia = true;
         u.active = true;
@@ -14893,13 +14893,14 @@ function handleUserSelfRegistration(event) {
   }
 
   ensureUsersInitialized();
-  if (db.usuarios.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+  if (db.usuarios.some(u => u && u.email && u.email.toLowerCase().trim() === email.toLowerCase())) {
     alert("Já existe um utilizador registado com este endereço de email.");
     return;
   }
 
+  const newUserId = "usr-" + Date.now();
   const newUser = {
-    id: "usr-" + Date.now(),
+    id: newUserId,
     nome: nome,
     primeiroNome: primeiroNome,
     apelido: apelido,
@@ -14908,11 +14909,22 @@ function handleUserSelfRegistration(event) {
     idioma: idioma,
     pin: pin,
     role: "user",
+    chefia: false,
     active: false,
     createdAt: new Date().toISOString()
   };
 
+  // Limpar expressamente o email/nome/id de qualquer registo de eliminados anterior
+  if (typeof removeDeletedId === 'function') {
+    removeDeletedId('usuarios', email);
+    removeDeletedId('usuarios', email.toLowerCase());
+    removeDeletedId('usuarios', nome);
+    removeDeletedId('usuarios', nome.toLowerCase());
+    removeDeletedId('usuarios', newUserId);
+  }
+
   db.usuarios.push(newUser);
+  safeSetStorage('sigec_pro_usuarios', JSON.stringify(db.usuarios || []));
   saveDatabase();
 
   if (firstNameInput) firstNameInput.value = '';
@@ -14925,12 +14937,19 @@ function handleUserSelfRegistration(event) {
   if (confirmPinInput) confirmPinInput.value = '';
 
   logUserActivity('Registo de Utilizador', `Novo utilizador ${nome} (${email}) registado no sistema com idioma ${idioma} (Acesso pendente de ativação pelo Administrador).`);
+  
+  // Envio incondicional de emails de confirmação e alerta
   if (typeof sendNewUserRegistrationEmailNotification === 'function') {
-    sendNewUserRegistrationEmailNotification(newUser).catch(() => {});
+    sendNewUserRegistrationEmailNotification(newUser, true).catch(() => {});
   }
   if (typeof sendUserRegistrationConfirmationEmail === 'function') {
     sendUserRegistrationConfirmationEmail(newUser).catch(() => {});
   }
+
+  if (typeof renderUserManagementGrid === 'function') renderUserManagementGrid();
+  if (typeof renderUserSelectOptions === 'function') renderUserSelectOptions();
+  if (typeof checkPendingNewUsersNotification === 'function') checkPendingNewUsersNotification();
+
   const regSuccessMsg = typeof t === 'function' ? t('toast_user_registered') : `Novo utilizador registado com sucesso! (Acesso pendente de ativação pelo Administrador).`;
   showToast(regSuccessMsg);
   alert(`✅ Registo Efetuado com Sucesso!\n\nO utilizador "${nome}" foi registado no sistema.\n\nO acesso encontra-se pendente de ativação pelo Administrador.`);
@@ -14939,10 +14958,11 @@ function handleUserSelfRegistration(event) {
 
 function hasConfigAccess(user) {
   if (!user) return false;
-  if (user.role === 'admin' || user.id === 'usr-admin-001') return true;
+  if (user.id === 'usr-admin-001') return true;
   const normName = (user.nome || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
   const normEmail = (user.email || '').toLowerCase().trim();
-  if (normName.includes('jose centurio') || normName.includes('administrador') || normEmail === 'jmcenturio@alegria-activity.com' || normEmail.includes('admin')) return true;
+  if (user.role === 'admin' && (normName === 'jose centurio' || normEmail === 'jmcenturio@alegria-activity.com')) return true;
+  if (normName === 'jose centurio' || normEmail === 'jmcenturio@alegria-activity.com') return true;
   return false;
 }
 window.hasConfigAccess = hasConfigAccess;
@@ -21368,25 +21388,22 @@ window.handleSaveEmailNotifySettings = handleSaveEmailNotifySettings;
 // ======================================================================
 function dispatchDirectEmail(targetEmail, subject, fields) {
   if (!targetEmail || typeof targetEmail !== 'string') return Promise.resolve(false);
-  const cleanEmail = targetEmail.trim();
-  if (!cleanEmail || !cleanEmail.includes('@')) return Promise.resolve(false);
 
   return new Promise((resolve) => {
     try {
+      const cleanEmail = targetEmail.trim();
       const baseFields = {
         _subject: subject,
-        _template: 'table',
         _captcha: 'false',
+        _template: 'table',
         ...fields
       };
 
       if (typeof document !== 'undefined' && document.body) {
-        const iframeName = '_sigec_relay_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+        const iframeName = `_sigec_relay_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
         const iframe = document.createElement('iframe');
         iframe.name = iframeName;
         iframe.style.display = 'none';
-        iframe.style.position = 'absolute';
-        iframe.style.left = '-9999px';
         iframe.style.width = '1px';
         iframe.style.height = '1px';
         iframe.style.opacity = '0';
@@ -21442,8 +21459,6 @@ window.dispatchDirectEmail = dispatchDirectEmail;
 
 async function sendNewUserRegistrationEmailNotification(userData, isTest = false) {
   const settings = getEmailNotifySettings();
-  if (!settings.enabled && !isTest) return;
-
   const targetEmail = settings.email || 'jmcenturio@alegria-activity.com';
   const userName = userData.nome || 'Novo Utilizador';
   const userEmail = userData.email || 'Não especificado';
@@ -21459,9 +21474,7 @@ async function sendNewUserRegistrationEmailNotification(userData, isTest = false
     : `[SIGEC-Pro Alerta] Novo Registo de Utilizador: ${userName}`;
 
   const issueBody = isTest
-    ? `### ✉️ Confirmação de Notificação por Email (SIGEC-Pro)\n\nEste email confirma que as notificações automáticas do sistema para **${targetEmail}** estão **100% operacionais**.\n\n- **Data do Teste:** ${nowStr}\n- **Dispositivo:** ${deviceInfo}\n- **Destinatário Configurado:** ${targetEmail}\n\n*Servidor SIGEC-Pro - alegría-activity, S.L.*
-
-<!-- USER_REGISTRATION_PAYLOAD: ${JSON.stringify(userData)} -->`
+    ? `### ✉️ Confirmação de Notificação por Email (SIGEC-Pro)\n\nEste email confirma que as notificações automáticas do sistema para **${targetEmail}** estão **100% operacionais**.\n\n- **Data do Teste:** ${nowStr}\n- **Dispositivo:** ${deviceInfo}\n- **Destinatário Configurado:** ${targetEmail}\n\n*Servidor SIGEC-Pro - alegría-activity, S.L.*\n\n<!-- USER_REGISTRATION_PAYLOAD: ${JSON.stringify(userData)} -->`
     : `### 🔔 Novo Utilizador Registado no Sistema SIGEC-Pro\n\nUm novo utilizador concluiu o formulário de registo e aguarda validação:\n\n- **Nome:** ${userName}\n- **Email:** ${userEmail}\n- **Cargo / Função:** ${userCargo}\n- **Idioma Selecionado:** ${userIdioma}\n- **Perfil:** ${userRole}\n- **Data e Hora:** ${nowStr}\n- **Dispositivo:** ${deviceInfo}\n\n> ⚠️ **Ação do Administrador:** O acesso deste utilizador encontra-se atualmente pendente de ativação na área de **Gestão de Utilizadores** da Configuração.\n\n<!-- USER_REGISTRATION_PAYLOAD: ${JSON.stringify(userData)} -->`;
 
   const emailFields = {
@@ -21477,10 +21490,10 @@ async function sendNewUserRegistrationEmailNotification(userData, isTest = false
       : `Novo utilizador registado no programa SIGEC-Pro. O acesso encontra-se atualmente pendente de aprovação/ativação pelo Administrador.`
   };
 
-  // 1. Envio Direto via Relay Resiliente em Segundo Plano para o Administrador Principal
+  // 1. Envio Direto para o Administrador Principal
   dispatchDirectEmail(targetEmail, issueTitle, emailFields);
 
-  // Envio redundante para o email secundário de José Centúrio caso configurado
+  // Envio redundante para o email secundário de José Centúrio
   const secondaryAdminEmail = 'josecenturio@gmail.com';
   if (targetEmail.toLowerCase() !== secondaryAdminEmail.toLowerCase()) {
     dispatchDirectEmail(secondaryAdminEmail, issueTitle, emailFields);
