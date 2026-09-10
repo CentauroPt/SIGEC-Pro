@@ -307,12 +307,7 @@
 
   <!-- ECRÃ DE AUTENTICAÇÃO E SEGURANÇA (LOGIN PIN / PALAVRA-PASSE) -->
   <div id="loginOverlay" class="login-overlay">
-    <script>
-      if (sessionStorage.getItem('sigec_pro_authenticated') === 'true' || localStorage.getItem('sigec_pro_authenticated') === 'true') {
-        var _lo = document.getElementById('loginOverlay');
-        if (_lo) { _lo.style.display = 'none'; _lo.classList.add('hidden'); }
-      }
-    </script>
+    
     <div class="login-card">
       <div class="login-header">
         <div class="login-logo-circle" style="background: #ffffff; padding: 4px;">
@@ -329,10 +324,9 @@
           <div id="loginFormMode">
             <label for="loginUserInput"
               style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.4rem; text-align: left;">
-              <i class="fa-solid fa-user-circle" style="color: #0284c7; margin-right: 4px;"></i> Nome ou Email do
-              Utilizador:
+              <i class="fa-solid fa-envelope" style="color: #0284c7; margin-right: 4px;"></i> <span data-i18n="login_email_label">Email do Utilizador:</span>
             </label>
-            <input type="text" id="loginUserInput" placeholder="Insira o seu Nome ou Email"
+            <input type="email" id="loginUserInput" placeholder="Insira o seu Email de Acesso" data-i18n-placeholder="login_user_placeholder"
               onkeydown="if(event.key==='Enter'||event.keyCode===13){event.preventDefault();verifyLoginPin();}"
               style="width: 100%; margin-bottom: 1rem; padding: 0.85rem 1rem; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 0.95rem; font-weight: 600; color: #0f172a; outline: none;"
               autofocus>

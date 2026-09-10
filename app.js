@@ -4537,11 +4537,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function switchTab(tabId) {
   if (tabId === 'tab-database' || tabId === 'tab-configuracao') {
-    const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || localStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001';
-    let activeUser = (typeof db !== 'undefined' && Array.isArray(db.usuarios)) ? db.usuarios.find(u => u && u.id === activeUserId) : null;
-    if (!activeUser && typeof db !== 'undefined' && Array.isArray(db.usuarios)) {
-      activeUser = db.usuarios.find(u => u && (u.role === 'admin' || u.id === 'usr-admin-001'));
-    }
+    const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || localStorage.getItem('sigec_pro_active_user_id');
+    let activeUser = (activeUserId && typeof db !== 'undefined' && Array.isArray(db.usuarios)) ? db.usuarios.find(u => u && u.id === activeUserId) : null;
     const canAccess = typeof hasConfigAccess === 'function' ? hasConfigAccess(activeUser) : (activeUser && (activeUser.role === 'admin' || activeUser.id === 'usr-admin-001'));
     if (!canAccess) {
       if (typeof showToast === 'function') showToast('Acesso à Configuração restrito ao Administrador e ao Utilizador José Centúrio.', 'warning');
@@ -4551,11 +4548,8 @@ function switchTab(tabId) {
   }
 
   if (tabId === 'tab-consultas') {
-    const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || localStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001';
-    let activeUser = (typeof db !== 'undefined' && Array.isArray(db.usuarios)) ? db.usuarios.find(u => u && u.id === activeUserId) : null;
-    if (!activeUser && typeof db !== 'undefined' && Array.isArray(db.usuarios)) {
-      activeUser = db.usuarios.find(u => u && (u.role === 'admin' || u.id === 'usr-admin-001'));
-    }
+    const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || localStorage.getItem('sigec_pro_active_user_id');
+  let activeUser = (activeUserId && typeof db !== 'undefined' && Array.isArray(db.usuarios)) ? db.usuarios.find(u => u && u.id === activeUserId) : null;
     const canAccessConsultas = typeof hasConsultasAccess === 'function' ? hasConsultasAccess(activeUser) : (activeUser && (activeUser.role === 'admin' || activeUser.chefia === true || activeUser.id === 'usr-admin-001'));
     if (!canAccessConsultas) {
       if (typeof showToast === 'function') showToast('Acesso ao separador Consultas restrito a utilizadores com perfil de Chefia.', 'warning');
@@ -14677,13 +14671,23 @@ function verifyLoginPin() {
   const errorMsg = document.getElementById('loginErrorMessage');
   const overlay = document.getElementById('loginOverlay');
   
-  if (!pinInput) return;
-  const enteredUserText = userInput ? (typeof normalizeText === 'function' ? normalizeText(userInput.value.trim()) : userInput.value.trim().toLowerCase()) : '';
-  const enteredPin = pinInput.value.trim();
+  if (!userInput || !pinInput) return;
+  const enteredEmail = (userInput.value || '').trim().toLowerCase();
+  const enteredPin = (pinInput.value || '').trim();
+
+  if (!enteredEmail) {
+    if (errorMsg) {
+      errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Por favor, insira o seu Email de acesso.';
+      errorMsg.style.display = 'block';
+    }
+    userInput.style.borderColor = '#dc2626';
+    setTimeout(() => { if (userInput) userInput.style.borderColor = '#cbd5e1'; }, 1500);
+    return;
+  }
 
   if (!enteredPin) {
     if (errorMsg) {
-      errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Por favor, insira o seu PIN / Palavra-passe de acesso.';
+      errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Por favor, insira a sua Palavra-passe / PIN de acesso.';
       errorMsg.style.display = 'block';
     }
     pinInput.style.borderColor = '#dc2626';
@@ -14691,106 +14695,99 @@ function verifyLoginPin() {
     return;
   }
 
-  const masterAdminPin = getAdminPin();
-  const adminUser = db.usuarios.find(u => u.role === 'admin') || db.usuarios[0];
+  // Pesquisa estrita unicamente por correio eletrónico registado em db.usuarios
+  const usersList = (typeof db !== 'undefined' && Array.isArray(db.usuarios)) ? db.usuarios : [];
+  const matchedUser = usersList.find(u => u && u.email && u.email.trim().toLowerCase() === enteredEmail);
 
-  let matchedUser = null;
-
-  if (enteredUserText) {
-    matchedUser = db.usuarios.find(u => {
-      const normName = typeof normalizeText === 'function' ? normalizeText(u.nome || '') : (u.nome || '').toLowerCase();
-      const normEmail = typeof normalizeText === 'function' ? normalizeText(u.email || '') : (u.email || '').toLowerCase();
-      return normName === enteredUserText || normEmail === enteredUserText || normName.includes(enteredUserText) || enteredUserText.includes(normName);
-    });
-
-    if (!matchedUser) {
-      const isMasterAdminKeyword = ['jose', 'centurio', 'administrador', 'admin', 'jmcenturio', 'jm'].some(kw => enteredUserText.includes(kw));
-      if (isMasterAdminKeyword) {
-        matchedUser = adminUser;
-      }
-    }
-  }
-
-  // Se não foi identificado por nome/email, procura apenas por PIN real armazenado
+  // Se o email não constar dos utilizadores registados, o acesso é estritamente bloqueado
   if (!matchedUser) {
-    if (enteredPin === masterAdminPin || enteredPin === PERMANENT_ADMIN_MASTER_PIN || (adminUser && enteredPin === adminUser.pin)) {
-      matchedUser = adminUser;
-    } else {
-      matchedUser = db.usuarios.find(u => u.pin === enteredPin);
+    if (errorMsg) {
+      errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Utilizador não registado ou Palavra-passe incorreta.';
+      errorMsg.style.display = 'block';
     }
+    userInput.style.borderColor = '#dc2626';
+    pinInput.style.borderColor = '#dc2626';
+    if (typeof showToast === 'function') showToast('Email ou Palavra-passe incorreta! Acesso negado.', 'danger');
+    setTimeout(() => {
+      if (userInput) userInput.style.borderColor = '#cbd5e1';
+      if (pinInput) pinInput.style.borderColor = '#cbd5e1';
+    }, 1500);
+    return;
   }
 
-  // Validação estrita: PIN real armazenado ou PIN mestre permanente
-  const isPinValid = matchedUser && (
-    enteredPin === matchedUser.pin ||
-    (matchedUser.role === 'admin' && (enteredPin === masterAdminPin || enteredPin === PERMANENT_ADMIN_MASTER_PIN))
-  );
+  // Validação estrita: a palavra-passe / PIN tem de coincidir exatamente com o PIN do utilizador
+  const masterAdminPin = typeof getAdminPin === 'function' ? getAdminPin() : PERMANENT_ADMIN_MASTER_PIN;
+  const isPinValid = (enteredPin === matchedUser.pin) || 
+    (matchedUser.role === 'admin' && (enteredPin === masterAdminPin || enteredPin === PERMANENT_ADMIN_MASTER_PIN));
 
-  if (isPinValid && matchedUser) {
-    if (matchedUser.active === false) {
-      const userLang = matchedUser.idioma || 'Português';
-      const titleText = typeof translateSystemTerm === 'function' ? translateSystemTerm('Acesso Pendente de Aprovação', userLang) : 'Acesso Pendente de Aprovação';
-      const descText = typeof translateSystemTerm === 'function' ? translateSystemTerm('O seu acesso está condicionado à aceitação do administrador do programa.', userLang) : 'O seu acesso está condicionado à aceitação do administrador do programa.';
-
-      if (errorMsg) {
-        errorMsg.innerHTML = `<i class="fa-solid fa-clock-rotate-left"></i> ${descText}`;
-        errorMsg.style.display = 'block';
-      }
-      if (userInput) userInput.style.borderColor = '#eab308';
-      if (pinInput) pinInput.style.borderColor = '#eab308';
-      showToast(descText, 'warning');
-      alert(`⚠️ ${titleText}\n\n${descText}`);
-      return;
+  if (!isPinValid) {
+    if (errorMsg) {
+      errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Palavra-passe incorreta. Tente novamente.';
+      errorMsg.style.display = 'block';
     }
+    pinInput.style.borderColor = '#dc2626';
+    if (typeof showToast === 'function') showToast('Palavra-passe incorreta! Acesso negado.', 'danger');
+    setTimeout(() => {
+      if (pinInput) pinInput.style.borderColor = '#cbd5e1';
+    }, 1500);
+    return;
+  }
 
-    sessionStorage.setItem('sigec_pro_authenticated', 'true');
-    sessionStorage.setItem('sigec_pro_active_user_id', matchedUser.id);
-    if (typeof safeSetStorage === 'function') {
-      safeSetStorage('sigec_pro_authenticated', 'true');
-      safeSetStorage('sigec_pro_active_user_id', matchedUser.id);
-    } else {
-      localStorage.setItem('sigec_pro_authenticated', 'true');
-      localStorage.setItem('sigec_pro_active_user_id', matchedUser.id);
+  // Bloqueio se a conta estiver pendente de ativação pelo Administrador
+  if (matchedUser.active === false && matchedUser.role !== 'admin') {
+    const userLang = matchedUser.idioma || 'Português';
+    const titleText = typeof translateSystemTerm === 'function' ? translateSystemTerm('Acesso Pendente de Aprovação', userLang) : 'Acesso Pendente de Aprovação';
+    const descText = typeof translateSystemTerm === 'function' ? translateSystemTerm('O seu acesso está condicionado à aceitação do administrador do programa.', userLang) : 'O seu acesso está condicionado à aceitação do administrador do programa.';
+
+    if (errorMsg) {
+      errorMsg.innerHTML = `<i class="fa-solid fa-clock-rotate-left"></i> ${descText}`;
+      errorMsg.style.display = 'block';
     }
+    userInput.style.borderColor = '#eab308';
+    pinInput.style.borderColor = '#eab308';
+    if (typeof showToast === 'function') showToast(descText, 'warning');
+    alert(`⚠️ ${titleText}\n\n${descText}`);
+    return;
+  }
 
-    if (typeof applyUserLanguage === 'function') {
-      applyUserLanguage(matchedUser.idioma);
-    }
+  // Autenticação autorizada
+  sessionStorage.setItem('sigec_pro_authenticated', 'true');
+  sessionStorage.setItem('sigec_pro_active_user_id', matchedUser.id);
+  if (typeof safeSetStorage === 'function') {
+    safeSetStorage('sigec_pro_authenticated', 'true');
+    safeSetStorage('sigec_pro_active_user_id', matchedUser.id);
+  } else {
+    localStorage.setItem('sigec_pro_authenticated', 'true');
+    localStorage.setItem('sigec_pro_active_user_id', matchedUser.id);
+  }
 
-    if (errorMsg) errorMsg.style.display = 'none';
-    if (userInput) userInput.value = '';
-    pinInput.value = '';
-    
-    if (overlay) {
-      overlay.classList.add('hidden');
-      overlay.style.display = 'none';
-    }
+  if (typeof applyUserLanguage === 'function') {
+    applyUserLanguage(matchedUser.idioma);
+  }
 
-    renderUserManagementGrid();
+  if (errorMsg) errorMsg.style.display = 'none';
+  if (userInput) userInput.value = '';
+  pinInput.value = '';
+  
+  if (overlay) {
+    overlay.classList.add('hidden');
+    overlay.style.display = 'none';
+  }
 
-    const userAgent = navigator.userAgent || '';
-    const deviceInfo = /Mobile|Android|iPhone/i.test(userAgent) ? 'Dispositivo Móvel' : 'Computador';
-    logUserActivity('Início de Sessão', `Acesso autorizado efetuado por ${matchedUser.nome}.`, {
+  renderUserManagementGrid();
+
+  const userAgent = (typeof navigator !== 'undefined' && navigator.userAgent) ? navigator.userAgent : '';
+  const deviceInfo = /Mobile|Android|iPhone/i.test(userAgent) ? 'Dispositivo Móvel' : 'Computador';
+  if (typeof logUserActivity === 'function') {
+    logUserActivity('Início de Sessão', `Acesso autorizado efetuado por ${matchedUser.nome} (${matchedUser.email}).`, {
       utilizador: matchedUser.nome,
       email: matchedUser.email || '',
       cargo: matchedUser.cargo || (matchedUser.role === 'admin' ? 'Administrador' : 'Utilizador'),
       dispositivo: deviceInfo
     });
-    const welcomeMsg = typeof t === 'function' ? t('toast_welcome').replace('{name}', matchedUser.nome) : `Acesso autorizado! Bem-vindo(a), ${matchedUser.nome}.`;
-    showToast(welcomeMsg);
-  } else {
-    if (errorMsg) {
-      errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Utilizador ou Palavra-passe incorreta. Tente novamente.';
-      errorMsg.style.display = 'block';
-    }
-    if (userInput) userInput.style.borderColor = '#dc2626';
-    pinInput.style.borderColor = '#dc2626';
-    showToast('Utilizador ou PIN incorreto!', 'danger');
-    setTimeout(() => {
-      if (userInput) userInput.style.borderColor = '#cbd5e1';
-      if (pinInput) pinInput.style.borderColor = '#cbd5e1';
-    }, 1500);
   }
+  const welcomeMsg = typeof t === 'function' ? t('toast_welcome').replace('{name}', matchedUser.nome) : `Acesso autorizado! Bem-vindo(a), ${matchedUser.nome}.`;
+  if (typeof showToast === 'function') showToast(welcomeMsg);
 }
 window.verifyLoginPin = verifyLoginPin;
 window.toggleLoginRegisterMode = toggleLoginRegisterMode;
@@ -16158,28 +16155,19 @@ function initSecurityAuthCheck() {
   const overlay = document.getElementById('loginOverlay');
   const errorMsg = document.getElementById('loginErrorMessage');
 
-  if (isAuth && activeUserId) {
+  let activeUser = (isAuth && activeUserId && typeof db !== 'undefined' && Array.isArray(db.usuarios)) 
+    ? db.usuarios.find(u => u && u.id === activeUserId && (u.active !== false || u.role === 'admin'))
+    : null;
+
+  if (isAuth && activeUser) {
     sessionStorage.setItem('sigec_pro_authenticated', 'true');
-    sessionStorage.setItem('sigec_pro_active_user_id', activeUserId);
+    sessionStorage.setItem('sigec_pro_active_user_id', activeUser.id);
     if (typeof safeSetStorage === 'function') {
       safeSetStorage('sigec_pro_authenticated', 'true');
-      safeSetStorage('sigec_pro_active_user_id', activeUserId);
+      safeSetStorage('sigec_pro_active_user_id', activeUser.id);
     } else {
       localStorage.setItem('sigec_pro_authenticated', 'true');
-      localStorage.setItem('sigec_pro_active_user_id', activeUserId);
-    }
-
-    let activeUser = (typeof db !== 'undefined' && Array.isArray(db.usuarios)) ? db.usuarios.find(u => u && u.id === activeUserId) : null;
-    if (!activeUser && (typeof db !== 'undefined' && Array.isArray(db.usuarios))) {
-      activeUser = db.usuarios.find(u => u && (u.role === 'admin' || u.id === 'usr-admin-001'));
-      if (activeUser) {
-        sessionStorage.setItem('sigec_pro_active_user_id', activeUser.id);
-        if (typeof safeSetStorage === 'function') {
-          safeSetStorage('sigec_pro_active_user_id', activeUser.id);
-        } else {
-          localStorage.setItem('sigec_pro_active_user_id', activeUser.id);
-        }
-      }
+      localStorage.setItem('sigec_pro_active_user_id', activeUser.id);
     }
 
     if (overlay) {
@@ -16188,7 +16176,7 @@ function initSecurityAuthCheck() {
     }
     if (errorMsg) errorMsg.style.display = 'none';
 
-    if (activeUser && activeUser.idioma && typeof applyUserLanguage === 'function') {
+    if (activeUser.idioma && typeof applyUserLanguage === 'function') {
       applyUserLanguage(activeUser.idioma);
     }
 
@@ -16197,6 +16185,12 @@ function initSecurityAuthCheck() {
       checkPendingNewUsersNotification();
     }
   } else {
+    // Sessão inválida ou utilizador não encontrado / inativo: limpar e forçar ecrã de login
+    sessionStorage.removeItem('sigec_pro_authenticated');
+    sessionStorage.removeItem('sigec_pro_active_user_id');
+    localStorage.removeItem('sigec_pro_authenticated');
+    localStorage.removeItem('sigec_pro_active_user_id');
+
     if (overlay) {
       overlay.classList.remove('hidden');
       overlay.style.display = 'flex';

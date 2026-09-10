@@ -132,7 +132,7 @@ const SIGEC_I18N = {
   // --- PESQUISA GLOBAL ---
   search_category_clients: { Português: "Buscar Clientes", Español: "Buscar Clientes", "English": "Search Clients", Français: "Chercher Clients", "Polski": "Szukaj Klientów" },
   search_category_contacts: { Português: "Buscar Contactos", Español: "Buscar Contactos", "English": "Search Contacts", Français: "Chercher Contacts", "Polski": "Szukaj Kontaktów" },
-  search_category_projects: { Português: "Buscar Projetos", Español: "Buscar Proyectos", "English": "Search Projects", Français: "Chercher Projets", "Polski": "Szukaj Projektów" },
+  search_category_projects: { Português: "Buscar Projetos", Español: "Buscar Proyectos", "English": "Search Projects", Français: "Chercher Projets", "Polski": "Szukaj Projetów" },
   search_placeholder: {
     Português: "Escreva aqui o termo de pesquisa...",
     Español: "Escriba aquí el término de búsqueda...",
@@ -151,18 +151,25 @@ const SIGEC_I18N = {
     "Polski": "Ograniczony Dostęp do Systemu"
   },
   login_system_subtitle: {
-    Português: "Por favor, selecione ou insira o seu utilizador e palavra-passe / PIN de segurança para continuar:",
-    Español: "Por favor, seleccione o ingrese su usuario y contraseña / PIN de seguridad para continuar:",
-    "English": "Please select or enter your username and security password / PIN to continue:",
-    Français: "Veuillez sélectionner ou saisir votre nom d'utilisateur et mot de passe / PIN de sécurité pour continuer :",
-    "Polski": "Wybierz lub wprowadź nazwę użytkownika i hasło / PIN bezpieczeństwa, aby kontynuować:"
+    Português: "Por favor, insira o seu email e palavra-passe de segurança para continuar:",
+    Español: "Por favor, ingrese su correo electrónico y contraseña de seguridad para continuar:",
+    "English": "Please enter your email and security password to continue:",
+    Français: "Veuillez saisir votre email et mot de passe de sécurité pour continuer :",
+    "Polski": "Wprowadź swój adres email i hasło bezpieczeństwa, aby kontynuować:"
+  },
+  login_email_label: {
+    Português: "Email do Utilizador:",
+    Español: "Correo Electrónico del Usuario:",
+    "English": "User Email:",
+    Français: "Email de l'Utilisateur :",
+    "Polski": "Email Użytkownika:"
   },
   login_user_placeholder: {
-    Português: "Nome de Utilizador ou Email...",
-    Español: "Nombre de Usuario o Correo...",
-    "English": "Username or Email...",
-    Français: "Nom d'Utilisateur ou Email...",
-    "Polski": "Nazwa Użytkownika lub Email..."
+    Português: "Insira o seu Email de Acesso...",
+    Español: "Ingrese su Correo Electrónico...",
+    "English": "Enter your Access Email...",
+    Français: "Saisissez votre Email d'Accès...",
+    "Polski": "Wpisz swój Adres Email..."
   },
   login_pin_placeholder: {
     Português: "Palavra-Passe de Acesso...",
@@ -1735,6 +1742,11 @@ function translateSpecificInterfaceElements(lang) {
   }
   const loginDesc = document.querySelector('#loginFormMode p');
   if (loginDesc) loginDesc.textContent = t('login_system_subtitle');
+
+  const loginUserLabel = document.querySelector('label[for="loginUserInput"]');
+  if (loginUserLabel) {
+    loginUserLabel.innerHTML = `<i class="fa-solid fa-envelope" style="color: #0284c7; margin-right: 4px;"></i> <span data-i18n="login_email_label">${t('login_email_label')}</span>`;
+  }
 
   const loginUserInput = document.getElementById('loginUserInput');
   if (loginUserInput) loginUserInput.placeholder = t('login_user_placeholder');
