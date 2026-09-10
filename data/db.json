@@ -5363,15 +5363,15 @@
   ],
   "userLogs": [
     {
-      "id": "log-1789047468218-397",
+      "id": "log-1789048827538-157",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "tipoAcao": "Notificação por Email",
+      "descricao": "Alerta de registo emitido para josecenturio@gmail.com (José Centúrio (Teste de Sistema)).",
       "pagina": "Base de Dados",
       "detalhes": null,
-      "timestamp": "2026-09-10T13:37:48.218Z"
+      "timestamp": "2026-09-10T14:00:27.538Z"
     }
   ],
   "orcamentos": [
