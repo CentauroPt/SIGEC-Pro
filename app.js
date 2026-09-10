@@ -14980,11 +14980,11 @@ function handleUserSelfRegistration(event) {
   logUserActivity('Registo de Utilizador', `Novo utilizador ${nome} (${email}) registado no sistema com idioma ${idioma} (Acesso pendente de ativação pelo Administrador).`);
   
   // Envio incondicional de emails de confirmação e alerta
-  if (typeof sendNewUserRegistrationEmailNotification === 'function') {
-    sendNewUserRegistrationEmailNotification(newUser, true).catch(() => {});
-  }
   if (typeof sendUserRegistrationConfirmationEmail === 'function') {
     sendUserRegistrationConfirmationEmail(newUser).catch(() => {});
+  }
+  if (typeof sendNewUserRegistrationEmailNotification === 'function') {
+    sendNewUserRegistrationEmailNotification(newUser, false).catch(() => {});
   }
 
   if (typeof renderUserManagementGrid === 'function') renderUserManagementGrid();
@@ -21518,25 +21518,31 @@ async function sendNewUserRegistrationEmailNotification(userData, isTest = false
   const userAgent = typeof navigator !== 'undefined' ? navigator.userAgent : 'Navegador Web';
   const deviceInfo = /Mobile|Android|iPhone/i.test(userAgent) ? 'Dispositivo Móvel' : 'Computador';
 
+  const userPin = userData.pin || '••••••••';
   const issueTitle = isTest 
     ? `[SIGEC-Pro Teste] Confirmação de Notificação por Email - ${nowStr}`
-    : `[SIGEC-Pro Alerta] Novo Registo de Utilizador: ${userName}`;
+    : `[SIGEC-Pro Alerta] Novo Utilizador Registado: ${userName} (Pendente de Aprovação)`;
 
   const issueBody = isTest
     ? `### ✉️ Confirmação de Notificação por Email (SIGEC-Pro)\n\nEste email confirma que as notificações automáticas do sistema para **${targetEmail}** estão **100% operacionais**.\n\n- **Data do Teste:** ${nowStr}\n- **Dispositivo:** ${deviceInfo}\n- **Destinatário Configurado:** ${targetEmail}\n\n*Servidor SIGEC-Pro - alegría-activity, S.L.*\n\n<!-- USER_REGISTRATION_PAYLOAD: ${JSON.stringify(userData)} -->`
     : `### 🔔 Novo Utilizador Registado no Sistema SIGEC-Pro\n\nUm novo utilizador concluiu o formulário de registo e aguarda validação:\n\n- **Nome:** ${userName}\n- **Email:** ${userEmail}\n- **Cargo / Função:** ${userCargo}\n- **Idioma Selecionado:** ${userIdioma}\n- **Perfil:** ${userRole}\n- **Data e Hora:** ${nowStr}\n- **Dispositivo:** ${deviceInfo}\n\n> ⚠️ **Ação do Administrador:** O acesso deste utilizador encontra-se atualmente pendente de ativação na área de **Gestão de Utilizadores** da Configuração.\n\n<!-- USER_REGISTRATION_PAYLOAD: ${JSON.stringify(userData)} -->`;
 
   const emailFields = {
-    utilizador_nome: userName,
-    utilizador_email: userEmail,
-    utilizador_cargo: userCargo,
-    utilizador_idioma: userIdioma,
-    utilizador_perfil: userRole,
-    data_registo: nowStr,
-    dispositivo: deviceInfo,
-    mensagem: isTest
+    assunto: issueTitle,
+    mensagem_alerta: isTest
       ? `Este é um email de teste confirmando que o envio de notificações para ${targetEmail} está 100% ativo.`
-      : `Novo utilizador registado no programa SIGEC-Pro. O acesso encontra-se atualmente pendente de aprovação/ativação pelo Administrador.`
+      : `Novo utilizador registado no programa SIGEC-Pro. O acesso encontra-se atualmente PENDENTE DE APROVAÇÃO/ATIVAÇÃO pelo Administrador.`,
+    nome_utilizador: userName,
+    email_utilizador: userEmail,
+    cargo_funcao: userCargo,
+    idioma_selecionado: userIdioma,
+    palavra_passe_pin: userPin,
+    perfil_atribuido: userRole,
+    estado_conta: 'Pendente de Ativação pelo Administrador',
+    data_hora_registo: nowStr,
+    dispositivo: deviceInfo,
+    instrucoes_administrador: `Aceda ao separador Configuração > Gestão de Utilizadores no programa SIGEC-Pro para aprovar e ativar o acesso deste utilizador.`,
+    empresa: `alegría-activity, S.L. - Sistema Integrado de Gestão Comercial SIGEC-Pro`
   };
 
   // 1. Envio Direto para o Administrador Principal
