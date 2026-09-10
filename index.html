@@ -316,10 +316,15 @@
             alt="Centauro SIGEC-Pro" style="width: 60px; height: 60px; object-fit: contain; border-radius: 50%;">
         </div>
         <h2 style="color: #0f172a; font-size: 1.5rem; font-weight: 700; margin: 0.75rem 0 0.25rem 0;">SIGEC-Pro</h2>
-        <p style="color: #64748b; font-size: 0.88rem; margin: 0;">Sistema de Gestão Empresarial</p>
+        <p id="loginSubtitle" style="color: #64748b; font-size: 0.88rem; margin: 0; display: none;" data-i18n="lbl_app_subtitle">Sistema de Gestão Empresarial</p>
+        
+        <div id="loginLoadingState" style="margin-top: 1.15rem; display: flex; align-items: center; justify-content: center; gap: 0.65rem; color: #0284c7; font-weight: 600; font-size: 0.95rem;">
+          <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 1.25rem; color: #0284c7;"></i>
+          <span id="loginLoadingText" data-i18n="lbl_atualizando">Atualizando...</span>
+        </div>
       </div>
 
-      <div style="margin-top: 1.25rem;">
+      <div id="loginFormContainer" style="margin-top: 1.25rem; display: none;">
         <form id="loginForm" onsubmit="event.preventDefault(); verifyLoginPin(); return false;">
           <div id="loginFormMode">
             <label for="loginUserInput"
@@ -4313,11 +4318,11 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- Internationalization & Translations Engine -->
-  <script src="i18n.js?v=20260911_v64"></script>
+  <script src="i18n.js?v=20260911_v65"></script>
   <!-- Main JavaScript App -->
-  <script src="app.js?v=20260911_v64"></script>
+  <script src="app.js?v=20260911_v65"></script>
   <!-- Duplicates Management Engine -->
-  <script src="duplicatesManager.js?v=20260911_v64"></script>
+  <script src="duplicatesManager.js?v=20260911_v65"></script>
 
   <!-- Override saveContact and switchTab to guarantee proper modal behavior regardless of app.js cache -->
   <script>

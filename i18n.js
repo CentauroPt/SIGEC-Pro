@@ -143,6 +143,20 @@ const SIGEC_I18N = {
   btn_global_search: { Português: "Pesquisar Global", Español: "Búsqueda Global", "English": "Global Search", Français: "Recherche Globale", "Polski": "Wyszukiwanie Ogólne" },
 
   // --- INÍCIO DE SESSÃO & AUTO-REGISTO ---
+  lbl_atualizando: {
+    "Português": "Atualizando...",
+    "Español": "Actualizando...",
+    "English": "Updating...",
+    "Français": "Mise à jour...",
+    "Polski": "Aktualizowanie..."
+  },
+  lbl_app_subtitle: {
+    "Português": "Sistema de Gestão Empresarial",
+    "Español": "Sistema de Gestión Empresarial",
+    "English": "Business Management System",
+    "Français": "Système de Gestion d'Entreprise",
+    "Polski": "System Zarządzania Przedsiębiorstwem"
+  },
   login_system_title: {
     Português: "Acesso Restrito ao Sistema",
     Español: "Acceso Restringido al Sistema",

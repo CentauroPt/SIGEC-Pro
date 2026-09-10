@@ -16178,6 +16178,16 @@ function lockApplicationScreen() {
 
   const overlay = document.getElementById('loginOverlay');
   const errorMsg = document.getElementById('loginErrorMessage');
+  const loadingState = document.getElementById('loginLoadingState');
+  const formContainer = document.getElementById('loginFormContainer');
+  const loginSubtitle = document.getElementById('loginSubtitle');
+
+  if (loadingState) loadingState.style.display = 'none';
+  if (loginSubtitle) loginSubtitle.style.display = 'block';
+  if (formContainer) {
+    formContainer.style.display = 'block';
+    formContainer.style.opacity = '1';
+  }
   
   if (errorMsg) errorMsg.style.display = 'none';
   if (overlay) {
@@ -16253,6 +16263,9 @@ function initSecurityAuthCheck() {
 
   const overlay = document.getElementById('loginOverlay');
   const errorMsg = document.getElementById('loginErrorMessage');
+  const loadingState = document.getElementById('loginLoadingState');
+  const formContainer = document.getElementById('loginFormContainer');
+  const loginSubtitle = document.getElementById('loginSubtitle');
 
   let activeUser = (isAuth && activeUserId && typeof db !== 'undefined' && Array.isArray(db.usuarios)) 
     ? db.usuarios.find(u => u && u.id === activeUserId && (u.active !== false || u.role === 'admin'))
@@ -16290,6 +16303,18 @@ function initSecurityAuthCheck() {
     if (navBtnConfig) navBtnConfig.style.display = 'none';
     const navBtnConsultas = document.getElementById('navBtnConsultas') || document.querySelector('.nav-btn[data-tab="tab-consultas"]');
     if (navBtnConsultas) navBtnConsultas.style.display = 'none';
+
+    // Apresenta o indicador "Atualizando..." e transita suavemente para o formulário de login
+    setTimeout(() => {
+      if (loadingState) loadingState.style.display = 'none';
+      if (loginSubtitle) loginSubtitle.style.display = 'block';
+      if (formContainer) {
+        formContainer.style.display = 'block';
+        formContainer.style.opacity = '0';
+        formContainer.style.transition = 'opacity 0.25s ease-in-out';
+        setTimeout(() => { formContainer.style.opacity = '1'; }, 20);
+      }
+    }, 350);
   }
 }
 // ==========================================
@@ -21481,7 +21506,17 @@ function generateEmailHTMLTemplate(subject, fields) {
   const greeting = fields.saudacao || '';
   const message = fields.mensagem || fields.mensagem_introducao || fields.mensagem_alerta || '';
   const instructions = fields.instrucoes || fields.instrucoes_administrador || '';
-  const company = fields.empresa || 'alegría-activity, S.L. - Sistema Integrado de Gestão Comercial SIGEC-Pro';
+  const company = fields.empresa || 'alegría-activity, S.L. - Sistema Integrado de Gestão Comercial e Projetos SIGEC-Pro';
+
+  const headerSubtitles = {
+    'Português': 'alegría-activity, S.L. &bull; Sistema Integrado de Gestão Comercial e Projetos',
+    'Español': 'alegría-activity, S.L. &bull; Sistema Integrado de Gestión Comercial y Proyectos',
+    'English': 'alegría-activity, S.L. &bull; Integrated Commercial &amp; Project Management System',
+    'Français': 'alegría-activity, S.L. &bull; Système Intégré de Gestion Commerciale et Projets',
+    'Polski': 'alegría-activity, S.L. &bull; Zintegrowany System Zarządzania Handlowego i Projektami'
+  };
+  const userLang = (fields.user_lang || fields.idioma_selecionado || fields['Idioma de Trabalho'] || fields['Idioma Configurado'] || fields['Working Language'] || fields['Langue de Travail'] || fields['Język Roboczy'] || fields['Wybrany Język'] || 'Português').trim();
+  const headerSubtitle = headerSubtitles[userLang] || headerSubtitles['Português'];
 
   // Extract structured rows
   const ignoredKeys = new Set(['_subject', '_captcha', '_template', '_honey', '_replyto', '_autoresponse', 'mensagem_titulo', 'saudacao', 'mensagem', 'mensagem_introducao', 'mensagem_alerta', 'instrucoes', 'instrucoes_administrador', 'empresa', 'is_html']);
@@ -21528,7 +21563,7 @@ function generateEmailHTMLTemplate(subject, fields) {
                 <tr>
                   <td>
                     <div style="font-size:20px;font-weight:800;color:#ffffff;letter-spacing:0.5px;margin:0;">SIGEC-Pro</div>
-                    <div style="font-size:12px;color:#bae6fd;margin-top:2px;font-weight:500;">alegría-activity, S.L. &bull; Sistema Integrado de Gestão Comercial</div>
+                    <div style="font-size:12px;color:#bae6fd;margin-top:2px;font-weight:500;">${headerSubtitle}</div>
                   </td>
                   <td align="right">
                     <span style="display:inline-block;padding:4px 10px;background:rgba(255,255,255,0.18);color:#ffffff;border-radius:6px;font-size:11px;font-weight:600;letter-spacing:0.5px;">SISTEMA OFICIAL</span>
@@ -21739,7 +21774,7 @@ async function sendNewUserRegistrationEmailNotification(userData, isTest = false
     data_hora_registo: nowStr,
     dispositivo: deviceInfo,
     instrucoes_administrador: `Aceda ao separador Configuração > Gestão de Utilizadores no programa SIGEC-Pro para aprovar e ativar o acesso deste utilizador.`,
-    empresa: `alegría-activity, S.L. - Sistema Integrado de Gestão Comercial SIGEC-Pro`
+    empresa: `alegría-activity, S.L. - Sistema Integrado de Gestão Comercial e Projetos SIGEC-Pro`
   };
 
   // 1. Envio Direto para o Administrador Principal
@@ -21865,7 +21900,7 @@ async function sendUserRegistrationConfirmationEmail(userData) {
       statusPending: `Pendente de Ativação pelo Administrador`,
       statusActive: `Ativo`,
       instructions: `O seu acesso está condicionado à aceitação do administrador do programa. Receberá um novo email assim que a sua conta for ativada.`,
-      company: `alegría-activity, S.L. - Sistema Integrado de Gestão Comercial SIGEC-Pro`
+      company: `alegría-activity, S.L. - Sistema Integrado de Gestão Comercial e Projetos SIGEC-Pro`
     },
     'Español': {
       subject: `[SIGEC-Pro] Confirmación de su Registro de Usuario`,
@@ -21882,7 +21917,7 @@ async function sendUserRegistrationConfirmationEmail(userData) {
       statusPending: `Pendiente de Activación por el Administrador`,
       statusActive: `Activo`,
       instructions: `Su acceso está condicionado a la aceptación del administrador del programa. Recibirá un nuevo correo electrónico tan pronto como su cuenta sea activada.`,
-      company: `alegría-activity, S.L. - Sistema Integrado de Gestión Comercial SIGEC-Pro`
+      company: `alegría-activity, S.L. - Sistema Integrado de Gestión Comercial y Proyectos SIGEC-Pro`
     },
     'English': {
       subject: `[SIGEC-Pro] User Registration Confirmation`,
@@ -21899,7 +21934,7 @@ async function sendUserRegistrationConfirmationEmail(userData) {
       statusPending: `Pending Administrator Activation`,
       statusActive: `Active`,
       instructions: `Your access is subject to acceptance by the system administrator. You will receive an email as soon as your account is activated.`,
-      company: `alegría-activity, S.L. - Commercial Management System SIGEC-Pro`
+      company: `alegría-activity, S.L. - Integrated Commercial & Project Management System SIGEC-Pro`
     },
     'Français': {
       subject: `[SIGEC-Pro] Confirmation de votre Inscription d'Utilisateur`,
@@ -21916,7 +21951,7 @@ async function sendUserRegistrationConfirmationEmail(userData) {
       statusPending: `En Attente d'Activation par l'Administrateur`,
       statusActive: `Actif`,
       instructions: `Votre accès est soumis à l'approbation de l'administrateur du programme. Vous recevrez un nouvel email dès que votre compte sera activé.`,
-      company: `alegría-activity, S.L. - Système Intégré de Gestion Commerciale SIGEC-Pro`
+      company: `alegría-activity, S.L. - Système Intégré de Gestion Commerciale et Projets SIGEC-Pro`
     },
     'Polski': {
       subject: `[SIGEC-Pro] Potwierdzenie Rejestracji Użytkownika`,
@@ -21933,7 +21968,7 @@ async function sendUserRegistrationConfirmationEmail(userData) {
       statusPending: `Oczekuje na Aktywację przez Administratora`,
       statusActive: `Aktywny`,
       instructions: `Twój dostęp wymaga zatwierdzenia przez administratora programu. Otrzymasz wiadomość e-mail, gdy Twoje konto zostanie aktywowane.`,
-      company: `alegría-activity, S.L. - Zintegrowany System Zarządzania Handlowego SIGEC-Pro`
+      company: `alegría-activity, S.L. - Zintegrowany System Zarządzania Handlowego i Projektami SIGEC-Pro`
     }
   };
 
@@ -21995,7 +22030,7 @@ async function sendUserAccountActivatedEmail(user) {
       lblData: `Data de Ativação`,
       statusActive: `Ativo / Aprovado`,
       instructions: `Aceda ao programa SIGEC-Pro e introduza o seu Email e Palavra-Passe para começar a trabalhar.`,
-      company: `alegría-activity, S.L. - Sistema Integrado de Gestão Comercial SIGEC-Pro`
+      company: `alegría-activity, S.L. - Sistema Integrado de Gestão Comercial e Projetos SIGEC-Pro`
     },
     'Español': {
       subject: `[SIGEC-Pro] ¡Su cuenta ya está activa!`,
@@ -22011,7 +22046,7 @@ async function sendUserAccountActivatedEmail(user) {
       lblData: `Fecha de Activación`,
       statusActive: `Activo / Aprobado`,
       instructions: `Acceda al programa SIGEC-Pro e introduzca su Correo Electrónico y Contraseña para comenzar a trabajar.`,
-      company: `alegría-activity, S.L. - Sistema Integrado de Gestión Comercial SIGEC-Pro`
+      company: `alegría-activity, S.L. - Sistema Integrado de Gestión Comercial y Proyectos SIGEC-Pro`
     },
     'English': {
       subject: `[SIGEC-Pro] Your account is now active!`,
@@ -22027,7 +22062,7 @@ async function sendUserAccountActivatedEmail(user) {
       lblData: `Activation Date`,
       statusActive: `Active / Approved`,
       instructions: `Open the SIGEC-Pro application and enter your Email and Password to start working.`,
-      company: `alegría-activity, S.L. - Commercial Management System SIGEC-Pro`
+      company: `alegría-activity, S.L. - Integrated Commercial & Project Management System SIGEC-Pro`
     },
     'Français': {
       subject: `[SIGEC-Pro] Votre compte est maintenant actif !`,
@@ -22043,7 +22078,7 @@ async function sendUserAccountActivatedEmail(user) {
       lblData: `Date d'Activation`,
       statusActive: `Actif / Approuvé`,
       instructions: `Accédez au programme SIGEC-Pro et saisissez votre Email et Mot de Passe pour commencer à travailler.`,
-      company: `alegría-activity, S.L. - Système Intégré de Gestion Commerciale SIGEC-Pro`
+      company: `alegría-activity, S.L. - Système Intégré de Gestion Commerciale et Projets SIGEC-Pro`
     },
     'Polski': {
       subject: `[SIGEC-Pro] Twoje konto jest już aktywne!`,
@@ -22059,7 +22094,7 @@ async function sendUserAccountActivatedEmail(user) {
       lblData: `Data Aktywacji`,
       statusActive: `Aktywny / Zatwierdzony`,
       instructions: `Otwórz program SIGEC-Pro i wpisz swój Email oraz Hasło, aby rozpocząć pracę.`,
-      company: `alegría-activity, S.L. - Zintegrowany System Zarządzania Handlowego SIGEC-Pro`
+      company: `alegría-activity, S.L. - Zintegrowany System Zarządzania Handlowego i Projektami SIGEC-Pro`
     }
   };
 
