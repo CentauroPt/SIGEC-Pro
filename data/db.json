@@ -5359,20 +5359,6 @@
       "active": true,
       "createdAt": "2026-08-22T10:06:38.433Z",
       "chefia": false
-    },
-    {
-      "id": "usr-1789054332308-265",
-      "nome": "Carlos Campos",
-      "primeiroNome": "Carlos",
-      "apelido": "Campos",
-      "email": "Carlos@carlos.pt",
-      "cargo": "Comercial",
-      "idioma": "Português",
-      "pin": "",
-      "role": "user",
-      "chefia": false,
-      "active": false,
-      "createdAt": "2026-09-10T13:37:04Z"
     }
   ],
   "userLogs": [],
@@ -5756,7 +5742,10 @@
       "usr-1787388410312",
       "usr-1787590828349",
       "usr-1789046577312",
-      "usr-1789053406957-975"
+      "usr-1789053406957-975",
+      "usr-1789054332308-265",
+      "carlos@carlos.pt",
+      "Carlos Campos"
     ]
   }
 }
