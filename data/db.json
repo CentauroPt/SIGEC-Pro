@@ -5363,18 +5363,7 @@
   ],
   "userLogs": [
     {
-      "id": "log-1789055472469-988",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-09-10T15:51:12.469Z"
-    },
-    {
-      "id": "log-1789055469076-301",
+      "id": "log-1789055623281-754",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
@@ -5382,29 +5371,7 @@
       "descricao": "Utilizador Carlos Campos (Carlos@carlos.pt) eliminado do sistema.",
       "pagina": "Base de Dados",
       "detalhes": null,
-      "timestamp": "2026-09-10T15:51:09.076Z"
-    },
-    {
-      "id": "log-1789055455053-902",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Servidor GitHub",
-      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-09-10T15:50:55.053Z"
-    },
-    {
-      "id": "log-1789055451095-460",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "tipoAcao": "Gestão de Utilizadores",
-      "descricao": "Utilizador Carlos Campos (Carlos@carlos.pt) eliminado do sistema.",
-      "pagina": "Base de Dados",
-      "detalhes": null,
-      "timestamp": "2026-09-10T15:50:51.095Z"
+      "timestamp": "2026-09-10T15:53:43.281Z"
     }
   ],
   "orcamentos": [
@@ -5794,7 +5761,8 @@
       "usr-1789055412993-203",
       "usr-1789055423231-403",
       "usr-1789055435883-607",
-      "usr-1789055454953-612"
+      "usr-1789055454953-612",
+      "usr-1789055486358-895"
     ]
   }
 }
