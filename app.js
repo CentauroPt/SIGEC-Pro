@@ -14931,6 +14931,9 @@ function handleUserSelfRegistration(event) {
   if (typeof sendNewUserRegistrationEmailNotification === 'function') {
     sendNewUserRegistrationEmailNotification(newUser).catch(() => {});
   }
+  if (typeof sendUserRegistrationConfirmationEmail === 'function') {
+    sendUserRegistrationConfirmationEmail(newUser).catch(() => {});
+  }
   const regSuccessMsg = typeof t === 'function' ? t('toast_user_registered') : `Novo utilizador registado com sucesso! (Acesso pendente de ativação pelo Administrador).`;
   showToast(regSuccessMsg);
   alert(`✅ Registo Efetuado com Sucesso!\n\nO utilizador "${nome}" foi registado no sistema.\n\nO acesso encontra-se pendente de ativação pelo Administrador.`);
@@ -14970,6 +14973,11 @@ function toggleUserActiveStatus(userId, activate) {
   saveDatabase();
   renderUserManagementGrid();
   renderUserSelectOptions();
+
+  // Se ativado pelo administrador, enviar email ao utilizador no seu idioma
+  if (activate && typeof sendUserAccountActivatedEmail === 'function') {
+    sendUserAccountActivatedEmail(user).catch(() => {});
+  }
 
   // Sincronizar com o servidor se configurado
   if (typeof syncDatabaseToGitHub === 'function') {
@@ -15395,6 +15403,9 @@ function handleUserRegistration(event) {
   logUserActivity('Gestão de Utilizadores', `Utilizador ${nome} (${email}) adicionado à administração do sistema com idioma ${idioma}.`);
   if (typeof sendNewUserRegistrationEmailNotification === 'function') {
     sendNewUserRegistrationEmailNotification(newUser).catch(() => {});
+  }
+  if (typeof sendUserRegistrationConfirmationEmail === 'function') {
+    sendUserRegistrationConfirmationEmail(newUser).catch(() => {});
   }
   showToast(`Utilizador ${nome} registado com sucesso!`);
 }
@@ -21486,3 +21497,281 @@ function checkPendingNewUsersNotification() {
   }
 }
 window.checkPendingNewUsersNotification = checkPendingNewUsersNotification;
+
+// ======================================================================
+// ENVIO DE EMAIL DE CONFIRMAÇÃO DE REGISTO DIRETAMENTE AO NOVO UTILIZADOR
+// ======================================================================
+async function sendUserRegistrationConfirmationEmail(userData) {
+  if (!userData || !userData.email) return false;
+
+  const targetEmail = userData.email.trim();
+  const userName = userData.nome || 'Novo Utilizador';
+  const userCargo = userData.cargo || 'Não especificado';
+  const userPin = userData.pin || '••••••••';
+  const userLang = (userData.idioma || 'Português').trim();
+  const isActive = userData.active === true || userData.role === 'admin';
+  const nowStr = new Date().toLocaleString('pt-PT');
+
+  const i18nRegEmail = {
+    'Português': {
+      subject: `[SIGEC-Pro] Confirmação do seu Registo de Utilizador`,
+      title: `Confirmação de Registo no Sistema SIGEC-Pro`,
+      greeting: `Estimado(a) ${userName},`,
+      intro: `O seu registo no sistema SIGEC-Pro foi submetido com sucesso. Seguem abaixo os dados da sua conta:`,
+      lblNome: `Nome Completo`,
+      lblEmail: `Email de Acesso / Utilizador`,
+      lblCargo: `Cargo / Função`,
+      lblIdioma: `Idioma Configurado`,
+      lblPin: `Palavra-Passe / PIN de Acesso`,
+      lblEstado: `Estado da Conta`,
+      lblData: `Data e Hora do Registo`,
+      statusPending: `Pendente de Ativação pelo Administrador`,
+      statusActive: `Ativo`,
+      instructions: `O seu acesso está condicionado à aceitação do administrador do programa. Receberá um novo email assim que a sua conta for ativada.`,
+      company: `alegría-activity, S.L. - Sistema Integrado de Gestão Comercial SIGEC-Pro`
+    },
+    'Español': {
+      subject: `[SIGEC-Pro] Confirmación de su Registro de Usuario`,
+      title: `Confirmación de Registro en el Sistema SIGEC-Pro`,
+      greeting: `Estimado/a ${userName},`,
+      intro: `Su registro en el sistema SIGEC-Pro se ha completado con éxito. A continuación se detallan los datos de su cuenta:`,
+      lblNome: `Nombre Completo`,
+      lblEmail: `Correo Electrónico de Acceso`,
+      lblCargo: `Cargo / Función`,
+      lblIdioma: `Idioma Configurado`,
+      lblPin: `Contraseña / PIN de Acceso`,
+      lblEstado: `Estado de la Cuenta`,
+      lblData: `Fecha y Hora del Registro`,
+      statusPending: `Pendiente de Activación por el Administrador`,
+      statusActive: `Activo`,
+      instructions: `Su acceso está condicionado a la aceptación del administrador del programa. Recibirá un nuevo correo electrónico tan pronto como su cuenta sea activada.`,
+      company: `alegría-activity, S.L. - Sistema Integrado de Gestión Comercial SIGEC-Pro`
+    },
+    'English': {
+      subject: `[SIGEC-Pro] User Registration Confirmation`,
+      title: `Registration Confirmation in SIGEC-Pro System`,
+      greeting: `Dear ${userName},`,
+      intro: `Your registration in the SIGEC-Pro system was successfully submitted. Below are your account details:`,
+      lblNome: `Full Name`,
+      lblEmail: `Access Email / Username`,
+      lblCargo: `Position / Department`,
+      lblIdioma: `Configured Language`,
+      lblPin: `Password / Access PIN`,
+      lblEstado: `Account Status`,
+      lblData: `Registration Date and Time`,
+      statusPending: `Pending Administrator Activation`,
+      statusActive: `Active`,
+      instructions: `Your access is subject to acceptance by the system administrator. You will receive an email as soon as your account is activated.`,
+      company: `alegría-activity, S.L. - Commercial Management System SIGEC-Pro`
+    },
+    'Français': {
+      subject: `[SIGEC-Pro] Confirmation de votre Inscription d'Utilisateur`,
+      title: `Confirmation d'Inscription au Système SIGEC-Pro`,
+      greeting: `Cher/Chère ${userName},`,
+      intro: `Votre inscription au système SIGEC-Pro a été soumise avec succès. Voici les détails de votre compte :`,
+      lblNome: `Nom Complet`,
+      lblEmail: `Email d'Accès / Utilisateur`,
+      lblCargo: `Poste / Fonction`,
+      lblIdioma: `Langue Configurée`,
+      lblPin: `Mot de Passe / PIN d'Accès`,
+      lblEstado: `Statut du Compte`,
+      lblData: `Date et Heure d'Inscription`,
+      statusPending: `En Attente d'Activation par l'Administrateur`,
+      statusActive: `Actif`,
+      instructions: `Votre accès est soumis à l'approbation de l'administrateur du programme. Vous recevrez un nouvel email dès que votre compte sera activé.`,
+      company: `alegría-activity, S.L. - Système Intégré de Gestion Commerciale SIGEC-Pro`
+    },
+    'Polski': {
+      subject: `[SIGEC-Pro] Potwierdzenie Rejestracji Użytkownika`,
+      title: `Potwierdzenie Rejestracji w Systemie SIGEC-Pro`,
+      greeting: `Szanowny/a ${userName},`,
+      intro: `Twoja rejestracja w systemie SIGEC-Pro została pomyślnie przesłana. Poniżej znajdują się szczegóły Twojego konta:`,
+      lblNome: `Imię i Nazwisko`,
+      lblEmail: `Email Dostępowy / Użytkownik`,
+      lblCargo: `Stanowisko / Funkcja`,
+      lblIdioma: `Wybrany Język`,
+      lblPin: `Hasło / PIN Dostępowy`,
+      lblEstado: `Status Konta`,
+      lblData: `Data i Godzina Rejestracji`,
+      statusPending: `Oczekuje na Aktywację przez Administratora`,
+      statusActive: `Aktywny`,
+      instructions: `Twój dostęp wymaga zatwierdzenia przez administratora programu. Otrzymasz wiadomość e-mail, gdy Twoje konto zostanie aktywowane.`,
+      company: `alegría-activity, S.L. - Zintegrowany System Zarządzania Handlowego SIGEC-Pro`
+    }
+  };
+
+  const t = i18nRegEmail[userLang] || i18nRegEmail['Português'];
+  const statusText = isActive ? t.statusActive : t.statusPending;
+
+  try {
+    const payload = {
+      _subject: t.subject,
+      _template: 'table',
+      _captcha: 'false',
+      mensagem_titulo: t.title,
+      saudacao: t.greeting,
+      mensagem_introducao: t.intro,
+      [t.lblNome]: userName,
+      [t.lblEmail]: targetEmail,
+      [t.lblCargo]: userCargo,
+      [t.lblIdioma]: userLang,
+      [t.lblPin]: userPin,
+      [t.lblEstado]: statusText,
+      [t.lblData]: nowStr,
+      instrucoes: t.instructions,
+      empresa: t.company
+    };
+
+    await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(targetEmail)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    console.info(`[SIGEC-Pro] Email de dados de registo enviado diretamente para ${targetEmail} (${userLang})`);
+  } catch (err) {
+    console.warn('[SIGEC-Pro] Erro no envio direto de confirmação de registo ao utilizador:', err);
+  }
+
+  if (typeof logUserActivity === 'function') {
+    logUserActivity('Email de Confirmação', `Dados de registo enviados para ${targetEmail} (${userName}) no idioma ${userLang}.`);
+  }
+
+  return true;
+}
+window.sendUserRegistrationConfirmationEmail = sendUserRegistrationConfirmationEmail;
+
+// ======================================================================
+// ENVIO DE EMAIL DE CONTA ATIVADA DIRETAMENTE AO UTILIZADOR
+// ======================================================================
+async function sendUserAccountActivatedEmail(user) {
+  if (!user || !user.email) return false;
+
+  const targetEmail = user.email.trim();
+  const userName = user.nome || 'Utilizador';
+  const userCargo = user.cargo || 'Não especificado';
+  const userPin = user.pin || '••••••••';
+  const userLang = (user.idioma || 'Português').trim();
+  const nowStr = new Date().toLocaleString('pt-PT');
+
+  const i18nActEmail = {
+    'Português': {
+      subject: `[SIGEC-Pro] A sua conta já está ativa!`,
+      title: `A sua conta já está ativa no SIGEC-Pro`,
+      greeting: `Estimado(a) ${userName},`,
+      bodyMsg: `A sua conta de utilizador no sistema SIGEC-Pro foi ativada com sucesso pelo Administrador. Já pode iniciar sessão no programa com o seu Email e Palavra-Passe / PIN.`,
+      lblNome: `Nome Completo`,
+      lblEmail: `Email de Acesso`,
+      lblCargo: `Cargo / Função`,
+      lblIdioma: `Idioma de Trabalho`,
+      lblPin: `Palavra-Passe / PIN de Acesso`,
+      lblEstado: `Estado da Conta`,
+      lblData: `Data de Ativação`,
+      statusActive: `Ativo / Aprovado`,
+      instructions: `Aceda ao programa SIGEC-Pro e introduza o seu Email e Palavra-Passe para começar a trabalhar.`,
+      company: `alegría-activity, S.L. - Sistema Integrado de Gestão Comercial SIGEC-Pro`
+    },
+    'Español': {
+      subject: `[SIGEC-Pro] ¡Su cuenta ya está activa!`,
+      title: `Su cuenta ya está activa en SIGEC-Pro`,
+      greeting: `Estimado/a ${userName},`,
+      bodyMsg: `Su cuenta de usuario en el sistema SIGEC-Pro ha sido activada con éxito por el Administrador. Ya puede iniciar sesión en el programa con su Correo Electrónico y Contraseña / PIN.`,
+      lblNome: `Nombre Completo`,
+      lblEmail: `Correo Electrónico de Acceso`,
+      lblCargo: `Cargo / Función`,
+      lblIdioma: `Idioma de Trabajo`,
+      lblPin: `Contraseña / PIN de Acceso`,
+      lblEstado: `Estado de la Cuenta`,
+      lblData: `Fecha de Activación`,
+      statusActive: `Activo / Aprobado`,
+      instructions: `Acceda al programa SIGEC-Pro e introduzca su Correo Electrónico y Contraseña para comenzar a trabajar.`,
+      company: `alegría-activity, S.L. - Sistema Integrado de Gestión Comercial SIGEC-Pro`
+    },
+    'English': {
+      subject: `[SIGEC-Pro] Your account is now active!`,
+      title: `Your account is now active on SIGEC-Pro`,
+      greeting: `Dear ${userName},`,
+      bodyMsg: `Your user account in the SIGEC-Pro system has been successfully activated by the Administrator. You can now log in to the application using your Email and Password / PIN.`,
+      lblNome: `Full Name`,
+      lblEmail: `Access Email`,
+      lblCargo: `Position / Department`,
+      lblIdioma: `Working Language`,
+      lblPin: `Password / Access PIN`,
+      lblEstado: `Account Status`,
+      lblData: `Activation Date`,
+      statusActive: `Active / Approved`,
+      instructions: `Open the SIGEC-Pro application and enter your Email and Password to start working.`,
+      company: `alegría-activity, S.L. - Commercial Management System SIGEC-Pro`
+    },
+    'Français': {
+      subject: `[SIGEC-Pro] Votre compte est maintenant actif !`,
+      title: `Votre compte est maintenant actif sur SIGEC-Pro`,
+      greeting: `Cher/Chère ${userName},`,
+      bodyMsg: `Votre compte d'utilisateur dans le système SIGEC-Pro a été activé avec succès par l'Administrateur. Vous pouvez désormais vous connecter à l'application avec votre Email et Mot de Passe / PIN.`,
+      lblNome: `Nom Complet`,
+      lblEmail: `Email d'Accès`,
+      lblCargo: `Poste / Fonction`,
+      lblIdioma: `Langue de Travail`,
+      lblPin: `Mot de Passe / PIN d'Accès`,
+      lblEstado: `Statut du Compte`,
+      lblData: `Date d'Activation`,
+      statusActive: `Actif / Approuvé`,
+      instructions: `Accédez au programme SIGEC-Pro et saisissez votre Email et Mot de Passe pour commencer à travailler.`,
+      company: `alegría-activity, S.L. - Système Intégré de Gestion Commerciale SIGEC-Pro`
+    },
+    'Polski': {
+      subject: `[SIGEC-Pro] Twoje konto jest już aktywne!`,
+      title: `Twoje konto w SIGEC-Pro jest już aktywne`,
+      greeting: `Szanowny/a ${userName},`,
+      bodyMsg: `Twoje konto użytkownika w systemie SIGEC-Pro zostało pomyślnie aktywowane przez Administratora. Możesz teraz zalogować się do programu przy użyciu swojego adresu e-mail oraz Hasła / PIN-u.`,
+      lblNome: `Imię i Nazwisko`,
+      lblEmail: `Email Dostępowy`,
+      lblCargo: `Stanowisko / Funkcja`,
+      lblIdioma: `Język Roboczy`,
+      lblPin: `Hasło / PIN Dostępowy`,
+      lblEstado: `Status Konta`,
+      lblData: `Data Aktywacji`,
+      statusActive: `Aktywny / Zatwierdzony`,
+      instructions: `Otwórz program SIGEC-Pro i wpisz swój Email oraz Hasło, aby rozpocząć pracę.`,
+      company: `alegría-activity, S.L. - Zintegrowany System Zarządzania Handlowego SIGEC-Pro`
+    }
+  };
+
+  const t = i18nActEmail[userLang] || i18nActEmail['Português'];
+
+  try {
+    const payload = {
+      _subject: t.subject,
+      _template: 'table',
+      _captcha: 'false',
+      mensagem_titulo: t.title,
+      saudacao: t.greeting,
+      mensagem: t.bodyMsg,
+      [t.lblNome]: userName,
+      [t.lblEmail]: targetEmail,
+      [t.lblCargo]: userCargo,
+      [t.lblIdioma]: userLang,
+      [t.lblPin]: userPin,
+      [t.lblEstado]: t.statusActive,
+      [t.lblData]: nowStr,
+      instrucoes: t.instructions,
+      empresa: t.company
+    };
+
+    await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(targetEmail)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    console.info(`[SIGEC-Pro] Email de ativação enviado diretamente para ${targetEmail} (${userLang})`);
+  } catch (err) {
+    console.warn('[SIGEC-Pro] Erro no envio direto de ativação ao utilizador:', err);
+  }
+
+  if (typeof logUserActivity === 'function') {
+    logUserActivity('Conta Ativada', `Email de confirmação de conta ativa enviado para ${targetEmail} (${userName}) no idioma ${userLang}.`);
+  }
+
+  return true;
+}
+window.sendUserAccountActivatedEmail = sendUserAccountActivatedEmail;
+
