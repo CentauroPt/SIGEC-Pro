@@ -1428,7 +1428,7 @@
       "secretariaEstado": "",
       "nome": "Galp Energia, SGPS, S.A.",
       "contribuinte": "500001258",
-      "direcao1": "Avenida da Índia",
+      "direcao1": "Avenida da Ãndia",
       "direcao2": "",
       "numero": "8",
       "andar": "",
@@ -1437,7 +1437,7 @@
       "pais": "Portugal",
       "telefone": "217242500",
       "telemovel": "",
-      "email": "galp@galp.pt",
+      "email": "galp@galp.com",
       "userId": "usr-admin-001",
       "comercialAtribuidoId": "usr-admin-001",
       "comercialAtribuidoNome": "José Centúrio",
@@ -5348,9 +5348,9 @@
     },
     {
       "id": "usr-1787393198433",
-      "nome": "Steve Holmes",
+      "nome": "Steve Jobs",
       "primeiroNome": "Steve",
-      "apelido": "Holmes",
+      "apelido": "Jobs",
       "email": "steve@steve.com",
       "cargo": "Comercial",
       "idioma": "English",
@@ -5441,15 +5441,7 @@
       "createdAt": "2026-08-30T11:36:06.325Z"
     }
   ],
-  "ignoredDuplicates": [
-    {
-      "type": "cli-1786604620361-357",
-      "key": "cli-1786727373519-853:::undefined",
-      "id1": "cli-1786727373519-853",
-      "ignoredAt": "2026-08-22T10:13:13.470Z",
-      "ignoredBy": "Sistema"
-    }
-  ],
+  "ignoredDuplicates": [],
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
   "_deletedRegistry": {
     "clientes": [
@@ -5743,9 +5735,6 @@
       "usr-1787590828349",
       "usr-1789046577312",
       "usr-1789053406957-975",
-      "usr-1789054332308-265",
-      "carlos@carlos.pt",
-      "Carlos Campos",
       "usr-1789054416576-555",
       "usr-1789054748706-278",
       "usr-1789054759868-750",
@@ -5762,6 +5751,9 @@
       "usr-1789055435883-607",
       "usr-1789055454953-612",
       "usr-1789055486358-895",
+      "usr-1789054332308-265",
+      "carlos@carlos.pt",
+      "Carlos Campos",
       "usr-1789057174081-262",
       "josecenturio@gmail.com",
       "José Centúrio (Teste de Sistema)"
