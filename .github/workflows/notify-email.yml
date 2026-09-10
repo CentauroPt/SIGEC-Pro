@@ -1,0 +1,71 @@
+name: SIGEC-Pro - Envio Automático de Notificações por Email
+
+on:
+  repository_dispatch:
+    types: [sigec_email_notify, user_registration, user_activation]
+  workflow_dispatch:
+    inputs:
+      target_email:
+        description: 'Email de Destino'
+        required: true
+        default: 'jmcenturio@alegria-activity.com'
+      subject:
+        description: 'Assunto do Email'
+        required: true
+        default: '[SIGEC-Pro Teste] Notificação do Sistema'
+      user_name:
+        description: 'Nome do Utilizador'
+        required: false
+        default: 'Utilizador SIGEC-Pro'
+      user_lang:
+        description: 'Idioma'
+        required: false
+        default: 'Português'
+      user_pin:
+        description: 'Palavra-Passe / PIN'
+        required: false
+        default: '••••••••'
+      user_cargo:
+        description: 'Cargo / Função'
+        required: false
+        default: 'Não especificado'
+      type:
+        description: 'Tipo de Notificação'
+        required: false
+        default: 'registration_confirmation'
+  issues:
+    types: [opened, labeled]
+
+jobs:
+  send_email_notification:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - name: 📥 Obter Código do Repositório
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 📦 Instalar Dependências de Envio de Email
+        run: |
+          npm install nodemailer --no-save
+
+      - name: ✉️ Processar e Enviar Notificação por Email
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_PAYLOAD: ${{ toJson(github.event) }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          SMTP_FROM: ${{ secrets.SMTP_FROM }}
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: |
+          node .github/scripts/send_notification_email.js
