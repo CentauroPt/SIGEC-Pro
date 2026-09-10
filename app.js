@@ -14791,16 +14791,11 @@ function verifyLoginPin() {
     return;
   }
 
-  // Autenticação autorizada
+  // Autenticação autorizada estritamente em sessionStorage (memória volátil da sessão)
   sessionStorage.setItem('sigec_pro_authenticated', 'true');
   sessionStorage.setItem('sigec_pro_active_user_id', matchedUser.id);
-  if (typeof safeSetStorage === 'function') {
-    safeSetStorage('sigec_pro_authenticated', 'true');
-    safeSetStorage('sigec_pro_active_user_id', matchedUser.id);
-  } else {
-    localStorage.setItem('sigec_pro_authenticated', 'true');
-    localStorage.setItem('sigec_pro_active_user_id', matchedUser.id);
-  }
+  localStorage.removeItem('sigec_pro_authenticated');
+  localStorage.removeItem('sigec_pro_active_user_id');
 
   if (typeof applyUserLanguage === 'function') {
     applyUserLanguage(matchedUser.idioma);
@@ -15247,11 +15242,9 @@ function renderUserManagementGrid() {
   ensureUsersInitialized();
   const block = document.getElementById('adminUserManagementBlock');
   const navBtnConfig = document.getElementById('navBtnConfiguracao') || document.querySelector('.nav-btn[data-tab="tab-database"]');
-  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || localStorage.getItem('sigec_pro_active_user_id') || 'usr-admin-001';
-  let activeUser = (typeof db !== 'undefined' && Array.isArray(db.usuarios)) ? db.usuarios.find(u => u && u.id === activeUserId) : null;
-  if (!activeUser && typeof db !== 'undefined' && Array.isArray(db.usuarios)) {
-    activeUser = db.usuarios.find(u => u && (u.role === 'admin' || u.id === 'usr-admin-001'));
-  }
+  const isAuth = sessionStorage.getItem('sigec_pro_authenticated') === 'true';
+  const activeUserId = isAuth ? sessionStorage.getItem('sigec_pro_active_user_id') : null;
+  let activeUser = (activeUserId && typeof db !== 'undefined' && Array.isArray(db.usuarios)) ? db.usuarios.find(u => u && u.id === activeUserId) : null;
 
   const canAccess = hasConfigAccess(activeUser);
 
@@ -16156,6 +16149,7 @@ function lockApplicationScreen() {
   
   if (errorMsg) errorMsg.style.display = 'none';
   if (overlay) {
+    overlay.style.display = 'flex';
     overlay.classList.remove('hidden');
     renderUserSelectOptions();
     toggleLoginRegisterMode(false);
@@ -16168,7 +16162,6 @@ function lockApplicationScreen() {
   }
   showToast('Ecrã de acesso bloqueado com sucesso.', 'info');
 }
-
 function changeSystemAccessPin(event) {
   if (event && event.preventDefault) event.preventDefault();
 
@@ -16218,8 +16211,13 @@ function changeSystemAccessPin(event) {
 
 function initSecurityAuthCheck() {
   ensureUsersInitialized();
-  const isAuth = sessionStorage.getItem('sigec_pro_authenticated') === 'true' || localStorage.getItem('sigec_pro_authenticated') === 'true';
-  let activeUserId = sessionStorage.getItem('sigec_pro_active_user_id') || localStorage.getItem('sigec_pro_active_user_id');
+
+  // Limpeza obrigatória de segurança: NUNCA permitir sessão persistente no localStorage
+  localStorage.removeItem('sigec_pro_authenticated');
+  localStorage.removeItem('sigec_pro_active_user_id');
+
+  const isAuth = sessionStorage.getItem('sigec_pro_authenticated') === 'true';
+  const activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
 
   const overlay = document.getElementById('loginOverlay');
   const errorMsg = document.getElementById('loginErrorMessage');
@@ -16231,13 +16229,6 @@ function initSecurityAuthCheck() {
   if (isAuth && activeUser) {
     sessionStorage.setItem('sigec_pro_authenticated', 'true');
     sessionStorage.setItem('sigec_pro_active_user_id', activeUser.id);
-    if (typeof safeSetStorage === 'function') {
-      safeSetStorage('sigec_pro_authenticated', 'true');
-      safeSetStorage('sigec_pro_active_user_id', activeUser.id);
-    } else {
-      localStorage.setItem('sigec_pro_authenticated', 'true');
-      localStorage.setItem('sigec_pro_active_user_id', activeUser.id);
-    }
 
     if (overlay) {
       overlay.classList.add('hidden');
@@ -16254,11 +16245,9 @@ function initSecurityAuthCheck() {
       checkPendingNewUsersNotification();
     }
   } else {
-    // Sessão inválida ou utilizador não encontrado / inativo: limpar e forçar ecrã de login
+    // Sessão inválida ou não autenticada: FORÇAR BLOQUEIO TOTAL E APRESENTAR ECRÃ DE LOGIN
     sessionStorage.removeItem('sigec_pro_authenticated');
     sessionStorage.removeItem('sigec_pro_active_user_id');
-    localStorage.removeItem('sigec_pro_authenticated');
-    localStorage.removeItem('sigec_pro_active_user_id');
 
     if (overlay) {
       overlay.classList.remove('hidden');
@@ -16271,13 +16260,13 @@ function initSecurityAuthCheck() {
     if (navBtnConsultas) navBtnConsultas.style.display = 'none';
   }
 }
+// ==========================================
 window.initSecurityAuthCheck = initSecurityAuthCheck;
 
 document.addEventListener('DOMContentLoaded', function() {
   initSecurityAuthCheck();
 });
 
-// ==========================================
 // 23. SISTEMA DE BACKUP E RESTAURO NO SERVIDOR GITHUB (PASTA BACKUP)
 // ==========================================
 
@@ -21614,13 +21603,9 @@ window.sendTestEmailNotification = sendTestEmailNotification;
 // ==========================================
 function checkPendingNewUsersNotification() {
   ensureUsersInitialized();
-  const activeUserId = (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('sigec_pro_active_user_id')) || 
-                       (typeof localStorage !== 'undefined' && localStorage.getItem('sigec_pro_active_user_id')) || 
-                       'usr-admin-001';
-  let activeUser = (typeof db !== 'undefined' && Array.isArray(db.usuarios)) ? db.usuarios.find(u => u && u.id === activeUserId) : null;
-  if (!activeUser && typeof db !== 'undefined' && Array.isArray(db.usuarios)) {
-    activeUser = db.usuarios.find(u => u && (u.role === 'admin' || u.id === 'usr-admin-001'));
-  }
+  const isAuth = typeof sessionStorage !== 'undefined' && sessionStorage.getItem('sigec_pro_authenticated') === 'true';
+  const activeUserId = isAuth ? sessionStorage.getItem('sigec_pro_active_user_id') : null;
+  let activeUser = (activeUserId && typeof db !== 'undefined' && Array.isArray(db.usuarios)) ? db.usuarios.find(u => u && u.id === activeUserId) : null;
   if (!activeUser || !hasConfigAccess(activeUser)) return;
 
   const pendingUsers = (db.usuarios || []).filter(u => u && u.role !== 'admin' && u.active === false);

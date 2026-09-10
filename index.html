@@ -4313,18 +4313,19 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- Internationalization & Translations Engine -->
-  <script src="i18n.js?v=20260910_v59"></script>
+  <script src="i18n.js?v=20260910_v60"></script>
   <!-- Main JavaScript App -->
-  <script src="app.js?v=20260910_v59"></script>
+  <script src="app.js?v=20260910_v60"></script>
   <!-- Duplicates Management Engine -->
-  <script src="duplicatesManager.js?v=20260910_v59"></script>
+  <script src="duplicatesManager.js?v=20260910_v60"></script>
 
   <!-- Override saveContact and switchTab to guarantee proper modal behavior regardless of app.js cache -->
   <script>
     window.switchTab = function (tabId) {
       if (tabId === 'tab-database' || tabId === 'tab-configuracao') {
-        var activeUserId = sessionStorage.getItem('sigec_pro_active_user_id');
-        var activeUser = (typeof db !== 'undefined' && db.usuarios) ? db.usuarios.find(function (u) { return u.id === activeUserId; }) : null;
+        var isAuth = sessionStorage.getItem('sigec_pro_authenticated') === 'true';
+        var activeUserId = isAuth ? sessionStorage.getItem('sigec_pro_active_user_id') : null;
+        var activeUser = (activeUserId && typeof db !== 'undefined' && db.usuarios) ? db.usuarios.find(function (u) { return u.id === activeUserId; }) : null;
         var hasAccess = false;
         if (typeof window.hasConfigAccess === 'function') {
           hasAccess = window.hasConfigAccess(activeUser);
