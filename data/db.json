@@ -5377,6 +5377,46 @@
   ],
   "userLogs": [
     {
+      "id": "log-1789080458798-261",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Gestão de Utilizadores",
+      "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Bloqueado.",
+      "extra": {},
+      "timestamp": "2026-09-10T22:47:38.798Z"
+    },
+    {
+      "id": "log-1789080436867-827",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Servidor GitHub",
+      "detalhes": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "extra": {},
+      "timestamp": "2026-09-10T22:47:16.867Z"
+    },
+    {
+      "id": "log-1789080436357-380",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Gestão de Utilizadores",
+      "detalhes": "Estado do utilizador antonio campos (jjota26@gmail.com) alterado para Ativo / Aprovado.",
+      "extra": {},
+      "timestamp": "2026-09-10T22:47:16.357Z"
+    },
+    {
+      "id": "log-1789080436357-413",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Conta Ativada",
+      "detalhes": "Email de confirmação de conta ativa enviado para jjota26@gmail.com (antonio campos) no idioma Português.",
+      "extra": {},
+      "timestamp": "2026-09-10T22:47:16.357Z"
+    },
+    {
       "id": "log-1789080433666-946",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
