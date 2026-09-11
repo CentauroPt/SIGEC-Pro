@@ -3465,6 +3465,11 @@ let deletedRegistry = {
 
 let deletedProjectIds = [];
 
+function generateId(prefix = 'id') {
+  return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+}
+window.generateId = generateId;
+
 function loadDeletedRegistry() {
   try {
     const parseKey = (key, fallbackKey = null) => {
@@ -3663,8 +3668,8 @@ function loadDatabase() {
     db.clientes = deduplicateAndFilter(rawClientes !== null ? JSON.parse(rawClientes) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? [...(INITIAL_EXCEL_DATABASE.clientes || [])] : []), 'clientes');
     db.contactos = deduplicateAndFilter(rawContactos !== null ? JSON.parse(rawContactos) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? [...(INITIAL_EXCEL_DATABASE.contactos || [])] : []), 'contactos');
     db.projetos = deduplicateAndFilter(rawProjetos !== null ? JSON.parse(rawProjetos) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' ? [...(INITIAL_EXCEL_DATABASE.projetos || [])] : []), 'projetos');
-    db.interacoes = deduplicateAndFilter(rawInteracoes !== null ? JSON.parse(rawInteracoes) : [], 'interacoes');
-    db.interacoesProjetos = deduplicateAndFilter(rawInteracoesProjetos !== null ? JSON.parse(rawInteracoesProjetos) : [], 'interacoesProjetos');
+    db.interacoes = deduplicateAndFilter(rawInteracoes !== null ? JSON.parse(rawInteracoes) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' && Array.isArray(INITIAL_EXCEL_DATABASE.interacoes) ? [...INITIAL_EXCEL_DATABASE.interacoes] : []), 'interacoes');
+    db.interacoesProjetos = deduplicateAndFilter(rawInteracoesProjetos !== null ? JSON.parse(rawInteracoesProjetos) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' && Array.isArray(INITIAL_EXCEL_DATABASE.interacoesProjetos) ? [...INITIAL_EXCEL_DATABASE.interacoesProjetos] : []), 'interacoesProjetos');
     db.usuarios = deduplicateAndFilter(rawUsuarios !== null ? JSON.parse(rawUsuarios) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' && INITIAL_EXCEL_DATABASE.usuarios ? [...INITIAL_EXCEL_DATABASE.usuarios] : []), 'usuarios');
     if (rawUserLogs !== null) {
       try {
@@ -3709,7 +3714,7 @@ function loadDatabase() {
     }
 
     if (typeof ensureUsersInitialized === 'function') ensureUsersInitialized();
-    // Garantir que todos os clientes e contactos de referÃªncia estÃ£o presentes na base de dados ativa
+    // Garantir que todos os clientes, contactos e interações de referência estão presentes na base de dados ativa
     if (typeof INITIAL_EXCEL_DATABASE !== 'undefined') {
       if (Array.isArray(INITIAL_EXCEL_DATABASE.clientes)) {
         INITIAL_EXCEL_DATABASE.clientes.forEach(initCli => {
@@ -3727,6 +3732,16 @@ function loadDatabase() {
             const exists = db.contactos.some(con => con && con.id === initCon.id);
             if (!exists) {
               db.contactos.push({ ...initCon });
+            }
+          }
+        });
+      }
+      if (Array.isArray(INITIAL_EXCEL_DATABASE.interacoes)) {
+        INITIAL_EXCEL_DATABASE.interacoes.forEach(initInt => {
+          if (initInt && initInt.id && !isDeletedId('interacoes', initInt.id)) {
+            const exists = db.interacoes.some(i => i && i.id === initInt.id);
+            if (!exists) {
+              db.interacoes.push({ ...initInt });
             }
           }
         });
@@ -8726,10 +8741,128 @@ function toggleContactPersonInteractionsSort() {
   if (iconEl) iconEl.className = (contactPersonInteractionsSortOrder === 'desc' ? 'fa-solid fa-arrow-down-wide-short' : 'fa-solid fa-arrow-up-wide-short');
   if (typeof currentContactIdForModal !== 'undefined' && currentContactIdForModal) {
     const inters = (db.interacoes || []).filter(i => i.contactoId === currentContactIdForModal);
-    if (typeof renderContactPersonInteractionsGrid === 'function') renderContactPersonInteractionsGrid(inters);
+    renderContactPersonInteractionsGrid(inters);
   }
 }
 window.toggleContactPersonInteractionsSort = toggleContactPersonInteractionsSort;
+
+function renderContactPersonInteractionsGrid(interactions) {
+  const grid = document.getElementById('contactPersonInteractionsGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  const quickDateInput = document.getElementById('quickContactInteractionData');
+  if (quickDateInput && !quickDateInput.value) {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    quickDateInput.value = now.toISOString().slice(0, 16);
+  }
+
+  if (!interactions || interactions.length === 0) {
+    grid.innerHTML = '<span class="empty-state">Nenhum contacto/interação registada com este contacto.</span>';
+    return;
+  }
+
+  const isAsc = (typeof contactPersonInteractionsSortOrder !== 'undefined' && contactPersonInteractionsSortOrder === 'asc');
+  const sorted = [...interactions].sort((a, b) => isAsc ? (new Date(a.data || 0) - new Date(b.data || 0)) : (new Date(b.data || 0) - new Date(a.data || 0)));
+
+  sorted.forEach(item => {
+    const formattedDate = item.data ? new Date(item.data).toLocaleString('pt-PT', { dateStyle: 'short', timeStyle: 'short' }) : '-';
+
+    const card = document.createElement('div');
+    card.className = 'interaction-card';
+    card.innerHTML = `
+      <div class="contact-card-actions">
+        <button type="button" class="action-icon-btn danger" onclick="deleteContactPersonInteractionInline('${item.id}')" title="Apagar Registo">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
+      <div class="interaction-card-row">
+        <div class="interaction-card-date">
+          <i class="fa-regular fa-calendar-days"></i> ${formattedDate}
+        </div>
+        <div class="interaction-card-content">${escapeHtml(item.descricao || '')}</div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+window.renderContactPersonInteractionsGrid = renderContactPersonInteractionsGrid;
+
+function addQuickContactInteraction() {
+  if (!currentContactIdForModal) {
+    showToast('Guarde ou selecione um Contacto primeiro!', 'danger');
+    return;
+  }
+
+  const dateVal = document.getElementById('quickContactInteractionData')?.value;
+  const textEl = document.getElementById('quickContactInteractionText');
+  const textVal = textEl ? textEl.value.trim() : '';
+
+  if (!textVal) {
+    showToast('Escreva o texto do contacto efetuado.', 'danger');
+    return;
+  }
+
+  const id = generateId('cpi');
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  const finalDate = dateVal || now.toISOString().slice(0, 16);
+
+  if (!db.interacoes) db.interacoes = [];
+
+  const contact = (db.contactos || []).find(c => c.id === currentContactIdForModal);
+  const clienteId = contact ? contact.clienteId : currentClientId;
+
+  const intObj = {
+    id,
+    contactoId: currentContactIdForModal,
+    clienteId: clienteId || null,
+    subTabIndex: (contact && contact.subTabIndex !== undefined) ? contact.subTabIndex : null,
+    data: finalDate,
+    descricao: textVal,
+    createdAt: new Date().toISOString()
+  };
+
+  db.interacoes.push(intObj);
+  saveDatabase();
+
+  if (textEl) {
+    textEl.value = '';
+    textEl.style.height = 'auto';
+  }
+
+  const inters = (db.interacoes || []).filter(i => i.contactoId === currentContactIdForModal);
+  renderContactPersonInteractionsGrid(inters);
+  if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
+  if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
+  if (typeof renderConsultasUserData === 'function') renderConsultasUserData();
+  if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
+    syncDatabaseToGitHub(true, true).catch(() => {});
+  }
+  showToast('Registo de contacto adicionado com sucesso!');
+}
+window.addQuickContactInteraction = addQuickContactInteraction;
+
+function deleteContactPersonInteractionInline(id) {
+  if (confirm('Tem a certeza que deseja apagar este registo de contacto?')) {
+    addDeletedId('interacoes', id);
+    db.interacoes = (db.interacoes || []).filter(i => i.id !== id);
+    saveDatabase();
+    if (typeof currentContactIdForModal !== 'undefined' && currentContactIdForModal) {
+      const inters = (db.interacoes || []).filter(i => i.contactoId === currentContactIdForModal);
+      renderContactPersonInteractionsGrid(inters);
+    }
+    if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
+    if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
+    if (typeof renderConsultasUserData === 'function') renderConsultasUserData();
+    if (typeof syncDatabaseToGitHub === 'function' && localStorage.getItem('sigec_pro_gh_token')) {
+      syncDatabaseToGitHub(true, true).catch(() => {});
+    }
+    showToast('Registo de contacto apagado.', 'danger');
+  }
+}
+window.deleteContactPersonInteractionInline = deleteContactPersonInteractionInline;
 
 let projectInteractionsSortOrder = 'desc';
 function toggleProjectInteractionsSort() {
