@@ -6663,42 +6663,71 @@ function isItemOwnedByTargetUser(item, targetUser) {
 
   var isTargetAdmin = (targetId === 'usr-admin-001') || (targetUser.role === 'admin') || (targetNorm.indexOf('centurio') !== -1) || (targetNorm.indexOf('administrador') !== -1);
 
-  // Apenas o campo Comercial Atribuido explicito define a titularidade comercial
-  var cAtribId = String(item.comercialAtribuidoId || '').trim();
-  var cAtribNome = String(item.comercialAtribuidoNome || item.comercial || '').toLowerCase().trim();
+  // 1. Identificadores explícitos no próprio item (comercialAtribuidoId, userId, criadoPorId, comercialId)
+  var cAtribId = String(item.comercialAtribuidoId || item.userId || item.criadoPorId || item.comercialId || item.comercial_id || '').trim();
+  var cAtribNome = String(item.comercialAtribuidoNome || item.comercial || item.comercialNome || item.responsavel || '').toLowerCase().trim();
   var cAtribNorm = typeof normalizeText === 'function' ? normalizeText(item.comercialAtribuidoNome || item.comercial || '') : cAtribNome;
 
-  // 1. Se o campo Comercial Atribuido aponta explicitamente para o utilizador alvo:
+  // 1.1 Se o próprio item aponta diretamente para o utilizador alvo:
   if (cAtribId && targetId && cAtribId === targetId) return true;
   if (cAtribNome && targetNome && (cAtribNome === targetNome || cAtribNorm === targetNorm || cAtribNorm.indexOf(targetNorm) !== -1 || targetNorm.indexOf(cAtribNorm) !== -1)) return true;
 
-  // 2. Se o utilizador alvo for o Administrador (Jose Centurio):
-  if (isTargetAdmin) {
-    if (cAtribId === 'usr-admin-001' || cAtribId === 'admin') return true;
-    if (cAtribNorm.indexOf('centurio') !== -1 || cAtribNorm.indexOf('administrador') !== -1 || cAtribNorm.indexOf('admin') !== -1) return true;
+  // 1.2 Se o próprio item aponta explicitamente para outro utilizador registado (não-alvo):
+  var allUsers = Array.isArray(db.usuarios) ? db.usuarios : [];
+  var isExplicitlyAssignedToOther = allUsers.some(function(u) {
+    if (!u || u.id === targetId) return false;
+    var uId = String(u.id || '').trim();
+    var uNorm = typeof normalizeText === 'function' ? normalizeText(u.nome || '') : (u.nome || '').toLowerCase().trim();
+    if (cAtribId && uId && cAtribId === uId) return true;
+    if (cAtribNorm && uNorm && (cAtribNorm === uNorm || cAtribNorm.indexOf(uNorm) !== -1 || uNorm.indexOf(cAtribNorm) !== -1)) return true;
+    return false;
+  });
+  if (isExplicitlyAssignedToOther) return false;
 
-    // Verificar se esta explicitamente atribuido a outro comercial registado (nao-admin)
-    var allUsers = Array.isArray(db.usuarios) ? db.usuarios : [];
-    var isAssignedToOther = allUsers.some(function(u) {
+  // 2. Se o item tiver ligação a um Cliente Pai (clienteId, empresa, cliente, clientName, nomeCliente):
+  var parentClient = null;
+  if (item.clienteId) {
+    parentClient = (db.clientes || []).find(function(c) { return c && String(c.id).trim() === String(item.clienteId).trim(); });
+  }
+  if (!parentClient) {
+    var cliName = item.empresa || item.cliente || item.clientName || item.nomeCliente || item.clienteAssociado;
+    if (cliName) {
+      var normCliName = typeof normalizeText === 'function' ? normalizeText(cliName) : String(cliName).toLowerCase().trim();
+      parentClient = (db.clientes || []).find(function(c) {
+        if (!c || !c.nome) return false;
+        var cNorm = typeof normalizeText === 'function' ? normalizeText(c.nome) : c.nome.toLowerCase().trim();
+        return cNorm === normCliName || cNorm.indexOf(normCliName) !== -1 || normCliName.indexOf(cNorm) !== -1;
+      });
+    }
+  }
+
+  if (parentClient) {
+    var pAtribId = String(parentClient.comercialAtribuidoId || parentClient.userId || parentClient.criadoPorId || '').trim();
+    var pAtribNome = String(parentClient.comercialAtribuidoNome || parentClient.comercial || '').toLowerCase().trim();
+    var pAtribNorm = typeof normalizeText === 'function' ? normalizeText(parentClient.comercialAtribuidoNome || parentClient.comercial || '') : pAtribNome;
+
+    // Se o cliente pai aponta para o utilizador alvo:
+    if (pAtribId && targetId && pAtribId === targetId) return true;
+    if (pAtribNome && targetNome && (pAtribNome === targetNome || pAtribNorm === targetNorm || pAtribNorm.indexOf(targetNorm) !== -1 || targetNorm.indexOf(pAtribNorm) !== -1)) return true;
+
+    // Se o cliente pai aponta explicitamente para outro utilizador:
+    var isParentAssignedToOther = allUsers.some(function(u) {
       if (!u || u.id === targetId) return false;
       var uId = String(u.id || '').trim();
       var uNorm = typeof normalizeText === 'function' ? normalizeText(u.nome || '') : (u.nome || '').toLowerCase().trim();
-      var isUAdmin = (uId === 'usr-admin-001') || (u.role === 'admin') || (uNorm.indexOf('centurio') !== -1) || (uNorm.indexOf('administrador') !== -1);
-      if (isUAdmin) return false;
-
-      if (cAtribId && uId && cAtribId === uId) return true;
-      if (cAtribNorm && uNorm && (cAtribNorm === uNorm || cAtribNorm.indexOf(uNorm) !== -1)) return true;
+      if (pAtribId && uId && pAtribId === uId) return true;
+      if (pAtribNome && uNorm && (pAtribNome === uNorm || pAtribNorm.indexOf(uNorm) !== -1)) return true;
       return false;
     });
+    if (isParentAssignedToOther) return false;
 
-    // Se nao esta atribuido a nenhum outro comercial registado, pertence a Jose Centurio
-    if (!isAssignedToOther) return true;
+    // Se o cliente pai não tem atribuição a outro, e o utilizador alvo é o Administrador:
+    if (isTargetAdmin && !isParentAssignedToOther) return true;
   }
 
-  // 3. Se for outro comercial (nao-admin) e o item nao tem comercial atribuido, mas foi criado por ele:
-  if (!isTargetAdmin && !cAtribId && !cAtribNome) {
-    var creatorId = String(item.userId || item.criadoPorId || '').trim();
-    if (creatorId && creatorId === targetId) return true;
+  // 3. Se o item não tem cliente pai e não tem atribuição a ninguém, pertence por defeito ao Administrador:
+  if (isTargetAdmin && !cAtribId && !cAtribNome) {
+    return true;
   }
 
   return false;
@@ -6707,23 +6736,7 @@ window.isItemOwnedByTargetUser = isItemOwnedByTargetUser;
 
 function isChildOwnedByTargetUser(child, targetUser) {
   if (!child || !targetUser) return false;
-  if (isItemOwnedByTargetUser(child, targetUser)) return true;
-
-  if (child.clienteId) {
-    var parentClient = (db.clientes || []).find(function(c) { return c && String(c.id).trim() === String(child.clienteId).trim(); });
-    if (parentClient && isItemOwnedByTargetUser(parentClient, targetUser)) return true;
-  }
-  if (child.empresa || child.cliente) {
-    var cliName = child.empresa || child.cliente;
-    var normCliName = typeof normalizeText === 'function' ? normalizeText(cliName) : String(cliName).toLowerCase().trim();
-    var parentClient2 = (db.clientes || []).find(function(c) {
-      if (!c || !c.nome) return false;
-      var cNorm = typeof normalizeText === 'function' ? normalizeText(c.nome) : c.nome.toLowerCase().trim();
-      return cNorm === normCliName;
-    });
-    if (parentClient2 && isItemOwnedByTargetUser(parentClient2, targetUser)) return true;
-  }
-  return false;
+  return isItemOwnedByTargetUser(child, targetUser);
 }
 window.isChildOwnedByTargetUser = isChildOwnedByTargetUser;
 
@@ -16380,6 +16393,18 @@ function renderUserManagementGrid() {
   }).join('');
 }
 
+function toggleLoginRegisterMode(showRegister) {
+  const modal = document.getElementById('userRegisterModal');
+  if (modal) {
+    if (showRegister) {
+      modal.classList.add('active');
+    } else {
+      modal.classList.remove('active');
+    }
+  }
+}
+window.toggleLoginRegisterMode = toggleLoginRegisterMode;
+
 function openRegisterUserModal() {
   const modal = document.getElementById('userRegisterModal');
   if (modal) modal.classList.add('active');
@@ -21629,6 +21654,44 @@ window.exportDuplicatesReport = exportDuplicatesReport;
 // ==========================================
 // MÓDULO DE CONSULTAS & SUPERVISÃO DE CHEFIA
 // ==========================================
+
+function getProjectStatusBadgeStyle(estado) {
+  const norm = String(estado || '').toLowerCase().trim();
+  if (norm.includes('concluido') || norm.includes('ganho') || norm.includes('aprovado') || norm.includes('finalizado')) {
+    return 'display: inline-block; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: #dcfce7; color: #166534;';
+  }
+  if (norm.includes('cancelado') || norm.includes('perdido') || norm.includes('recusado') || norm.includes('anulado')) {
+    return 'display: inline-block; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: #fee2e2; color: #991b1b;';
+  }
+  if (norm.includes('curso') || norm.includes('andamento') || norm.includes('producao') || norm.includes('desenvolvimento')) {
+    return 'display: inline-block; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: #fef3c7; color: #92400e;';
+  }
+  return 'display: inline-block; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: #e0f2fe; color: #075985;';
+}
+window.getProjectStatusBadgeStyle = getProjectStatusBadgeStyle;
+
+function formatDate(dateStr) {
+  if (!dateStr || !String(dateStr).trim()) return '-';
+  try {
+    const s = String(dateStr).trim();
+    if (s.includes('T')) {
+      const d = new Date(s);
+      if (!isNaN(d.getTime())) return d.toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    }
+    const parts = s.split(/[-/]/);
+    if (parts.length === 3) {
+      if (parts[0].length === 4) {
+        return `${parts[2].padStart(2, '0')}/${parts[1].padStart(2, '0')}/${parts[0]}`;
+      }
+      return `${parts[0].padStart(2, '0')}/${parts[1].padStart(2, '0')}/${parts[2]}`;
+    }
+    const d = new Date(s);
+    return !isNaN(d.getTime()) ? d.toLocaleDateString('pt-PT') : s;
+  } catch (e) {
+    return dateStr || '-';
+  }
+}
+window.formatDate = formatDate;
 
 function populateConsultasUserSelect(selectedUserId = null) {
   ensureUsersInitialized();
