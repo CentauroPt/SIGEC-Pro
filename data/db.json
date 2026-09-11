@@ -5340,7 +5340,7 @@
       "chefia": true,
       "theme": "default_blue",
       "themeIntensity": 100,
-      "customThemeColor": "#f5003d"
+      "customThemeColor": "#0284c7"
     },
     {
       "id": "usr-1787381168601",
@@ -5373,6 +5373,74 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1789132839869-92285",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Encerramento",
+      "tipoAcao": "Encerramento",
+      "descricao": "Sessão encerrada com gravação segura de todos os dados do perfil de José Centúrio.",
+      "detalhes": {
+        "utilizador": "José Centúrio",
+        "userId": "usr-admin-001"
+      },
+      "extra": {
+        "utilizador": "José Centúrio",
+        "userId": "usr-admin-001"
+      },
+      "timestamp": "2026-09-11T13:20:39.869Z"
+    },
+    {
+      "id": "log-1789132837044-59756",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Gravação Manual",
+      "tipoAcao": "Gravação Manual",
+      "descricao": "Todas as alterações foram guardadas com sucesso no perfil de José Centúrio.",
+      "detalhes": {
+        "utilizador": "José Centúrio",
+        "userId": "usr-admin-001"
+      },
+      "extra": {
+        "utilizador": "José Centúrio",
+        "userId": "usr-admin-001"
+      },
+      "timestamp": "2026-09-11T13:20:37.044Z"
+    },
+    {
+      "id": "log-1789132834095-96512",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Definições do Utilizador",
+      "tipoAcao": "Definições do Utilizador",
+      "descricao": "Esquema de cores alterado para \"Azul Clássico SIGEC-Pro (Padrão)\" (Intensidade: 100%).",
+      "detalhes": {
+        "tema": "default_blue",
+        "intensidade": 100,
+        "corCustom": "#0284c7"
+      },
+      "extra": {
+        "tema": "default_blue",
+        "intensidade": 100,
+        "corCustom": "#0284c7"
+      },
+      "timestamp": "2026-09-11T13:20:34.095Z"
+    },
+    {
+      "id": "log-1789132682639-59080",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Servidor GitHub",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "detalhes": {},
+      "extra": {},
+      "timestamp": "2026-09-11T13:18:02.639Z"
+    },
     {
       "id": "log-1789132672784-76445",
       "usuarioId": "usr-admin-001",
