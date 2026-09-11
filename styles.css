@@ -3077,3 +3077,26 @@ img, video, canvas, svg {
     font-size: 1rem;
   }
 }
+
+/* Botão do Perfil e Definições do Utilizador no Cabeçalho */
+.header-user-profile-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.14);
+  padding: 0.35rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  transition: all 0.2s ease;
+  user-select: none;
+}
+.header-user-profile-badge:hover {
+  background: rgba(255, 255, 255, 0.24) !important;
+  border-color: rgba(255, 255, 255, 0.45) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+}
+.header-user-profile-badge:active {
+  transform: translateY(0);
+}

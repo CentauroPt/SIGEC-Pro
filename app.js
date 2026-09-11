@@ -4590,8 +4590,850 @@ window.initPeriodicBackgroundSync = initPeriodicBackgroundSync;
 // 2. INICIALIZAÇÃO DA INTERFACE & NAVEGAÇÃO
 // ==========================================
 
+
+// ======================================================================
+// SECÇÃO DE DEFINIÇÕES PESSOAIS DO UTILIZADOR (PERFIL, PASSWORD, BACKUP & TEMAS)
+// ======================================================================
+
+// Funções utilitárias para manipulação e intensidade de cores (HSL / RGB / HEX)
+function hexToRgb(hex) {
+  let c = (hex || '#2563eb').replace('#', '');
+  if (c.length === 3) c = c.split('').map(x => x + x).join('');
+  const num = parseInt(c, 16);
+  return {
+    r: (num >> 16) & 255,
+    g: (num >> 8) & 255,
+    b: num & 255
+  };
+}
+
+function rgbToHex(r, g, b) {
+  const clamp = (v) => Math.max(0, Math.min(255, Math.round(v)));
+  return '#' + [clamp(r), clamp(g), clamp(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+}
+
+function rgbToHsl(r, g, b) {
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h, s, l = (max + min) / 2;
+
+  if (max === min) {
+    h = s = 0;
+  } else {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
+    }
+    h /= 6;
+  }
+  return { h: h * 360, s: s * 100, l: l * 100 };
+}
+
+function hslToRgb(h, s, l) {
+  h /= 360; s /= 100; l /= 100;
+  let r, g, b;
+
+  if (s === 0) {
+    r = g = b = l;
+  } else {
+    const hue2rgb = (p, q, t) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1/3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1/3);
+  }
+  return { r: r * 255, g: g * 255, b: b * 255 };
+}
+
+function hslToHex(h, s, l) {
+  const { r, g, b } = hslToRgb(h, s, l);
+  return rgbToHex(r, g, b);
+}
+
+function generateThemeFromBaseHex(baseHex, intensity = 100) {
+  const rgb = hexToRgb(baseHex);
+  const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+  
+  const factor = (parseInt(intensity, 10) || 100) / 100;
+  
+  let adjL = hsl.l;
+  let adjS = Math.min(100, hsl.s * (0.6 + 0.4 * factor));
+
+  if (factor < 1) {
+    adjL = hsl.l + (100 - hsl.l) * (1 - factor) * 0.4;
+  } else {
+    adjL = hsl.l * (1 - (factor - 1) * 0.25);
+  }
+  adjL = Math.max(15, Math.min(85, adjL));
+
+  const primary = hslToHex(hsl.h, adjS, adjL);
+  const hover = hslToHex(hsl.h, adjS, Math.max(10, adjL * 0.85));
+  const light = hslToHex(hsl.h, adjS * 0.35, 96);
+  const accent = hslToHex(hsl.h, Math.min(100, adjS * 1.1), Math.min(80, adjL * 1.15));
+  const softBg = hslToHex(hsl.h, adjS * 0.5, 93);
+  const softBorder = hslToHex(hsl.h, adjS * 0.5, 82);
+  const darkGrad = hslToHex(hsl.h, Math.min(100, adjS * 1.15), Math.max(10, adjL * 0.6));
+  const headerBg = `linear-gradient(135deg, ${darkGrad} 0%, ${primary} 100%)`;
+
+  return {
+    primary,
+    hover,
+    light,
+    accent,
+    softBg,
+    softBorder,
+    darkGrad,
+    headerBg
+  };
+}
+
+const SIGEC_THEMES = {
+  'default_blue': {
+    id: 'default_blue',
+    colorHex: '#2563eb',
+    name: {
+      'Português': 'Azul Clássico SIGEC-Pro (Padrão)',
+      'Español': 'Azul Clásico SIGEC-Pro (Predeterminado)',
+      'English': 'Classic Blue SIGEC-Pro (Default)',
+      'Français': 'Bleu Classique SIGEC-Pro (Par Défaut)',
+      'Polski': 'Klasyczny Błękit SIGEC-Pro (Domyślny)'
+    }
+  },
+  'navy_ocean': {
+    id: 'navy_ocean',
+    colorHex: '#1e3a8a',
+    name: {
+      'Português': 'Azul Marinho / Navy Corporativo',
+      'Español': 'Azul Marino / Navy Corporativo',
+      'English': 'Corporate Navy Blue',
+      'Français': 'Bleu Marine Corporatif',
+      'Polski': 'Granat Korporacyjny'
+    }
+  },
+  'emerald_green': {
+    id: 'emerald_green',
+    colorHex: '#059669',
+    name: {
+      'Português': 'Verde Esmeralda Industrial',
+      'Español': 'Verde Esmeralda Industrial',
+      'English': 'Industrial Emerald Green',
+      'Français': 'Vert Émeraude Industriel',
+      'Polski': 'Szmaragdowa Zieleń Przemysłowa'
+    }
+  },
+  'royal_purple': {
+    id: 'royal_purple',
+    colorHex: '#7c3aed',
+    name: {
+      'Português': 'Violeta / Púrpura Real',
+      'Español': 'Violeta / Púrpura Real',
+      'English': 'Royal Purple / Violet',
+      'Français': 'Pourpre Royal / Violet',
+      'Polski': 'Królewski Fiolet'
+    }
+  },
+  'warm_amber': {
+    id: 'warm_amber',
+    colorHex: '#d97706',
+    name: {
+      'Português': 'Âmbar / Laranja Executivo',
+      'Español': 'Ámbar / Naranja Ejecutivo',
+      'English': 'Executive Amber / Orange',
+      'Français': 'Ambre / Orange Exécutif',
+      'Polski': 'Bursztynowy / Pomarańczowy'
+    }
+  },
+  'dark_slate': {
+    id: 'dark_slate',
+    colorHex: '#334155',
+    name: {
+      'Português': 'Ardósia / Dark Slate Moderno',
+      'Español': 'Pizarra / Dark Slate Moderno',
+      'English': 'Modern Dark Slate',
+      'Français': 'Ardoise / Dark Slate Moderne',
+      'Polski': 'Grafit / Nowoczesny Łupek'
+    }
+  },
+  'ruby_red': {
+    id: 'ruby_red',
+    colorHex: '#dc2626',
+    name: {
+      'Português': 'Bordeaux / Rubi Elegante',
+      'Español': 'Burdeos / Rubí Elegante',
+      'English': 'Elegant Ruby / Bordeaux',
+      'Français': 'Bordeaux / Rubis Élégant',
+      'Polski': 'Elegancki Rubin / Bordowy'
+    }
+  }
+};
+
+let currentUserSelectedThemeId = 'default_blue';
+let currentUserThemeIntensities = {};
+let currentUserCustomHex = '#0284c7';
+
+function getActiveLoggedInUser() {
+  ensureUsersInitialized();
+  const activeUserId = (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('sigec_pro_active_user_id')) || 
+                       (typeof localStorage !== 'undefined' && localStorage.getItem('sigec_pro_active_user_id')) || 
+                       'usr-admin-001';
+  return (Array.isArray(db.usuarios) ? db.usuarios.find(u => u && u.id === activeUserId) : null) ||
+         (Array.isArray(db.usuarios) ? db.usuarios.find(u => u && (u.role === 'admin' || u.id === 'usr-admin-001')) : null);
+}
+
+function updateHeaderActiveUserBadge() {
+  const user = getActiveLoggedInUser();
+  if (!user) return;
+
+  const nameEl = document.getElementById('headerActiveUserDisplayName');
+  const roleEl = document.getElementById('headerActiveUserRoleName');
+  if (nameEl) nameEl.textContent = user.nome || 'Utilizador';
+  if (roleEl) {
+    if (user.role === 'admin' || user.id === 'usr-admin-001') {
+      roleEl.textContent = typeof t === 'function' ? t('profile_badge_admin') : 'Administrador do Sistema';
+    } else {
+      roleEl.textContent = user.cargo || (typeof t === 'function' ? t('profile_badge_user') : 'Utilizador');
+    }
+  }
+
+  // Carregar tema personalizado do utilizador
+  const savedTheme = user.theme || localStorage.getItem('sigec_pro_user_theme_' + user.id) || 'default_blue';
+  const savedIntensity = user.themeIntensity || parseInt(localStorage.getItem('sigec_pro_user_theme_intensity_' + user.id) || '100', 10);
+  const savedCustomHex = user.customThemeColor || localStorage.getItem('sigec_pro_user_theme_custom_hex_' + user.id) || '#0284c7';
+
+  currentUserSelectedThemeId = savedTheme;
+  currentUserThemeIntensities[savedTheme] = savedIntensity;
+  currentUserCustomHex = savedCustomHex;
+
+  applyUserThemeColor(savedTheme, savedIntensity, savedCustomHex);
+}
+window.updateHeaderActiveUserBadge = updateHeaderActiveUserBadge;
+
+function getThemeShadesForTheme(themeId, intensity, customHex) {
+  const intVal = intensity || currentUserThemeIntensities[themeId] || 100;
+  if (themeId === 'custom') {
+    const hex = customHex || currentUserCustomHex || '#0284c7';
+    return generateThemeFromBaseHex(hex, intVal);
+  }
+  const preset = SIGEC_THEMES[themeId] || SIGEC_THEMES['default_blue'];
+  return generateThemeFromBaseHex(preset.colorHex, intVal);
+}
+
+function applyUserThemeColor(themeId, intensity, customHex) {
+  const shades = getThemeShadesForTheme(themeId, intensity, customHex);
+  const root = document.documentElement;
+  if (!root) return;
+
+  root.style.setProperty('--primary-blue', shades.primary);
+  root.style.setProperty('--primary-blue-hover', shades.hover);
+  root.style.setProperty('--primary-blue-light', shades.light);
+  root.style.setProperty('--accent-blue', shades.accent);
+  root.style.setProperty('--soft-blue-bg', shades.softBg);
+  root.style.setProperty('--soft-blue-border', shades.softBorder);
+  root.style.setProperty('--header-bg', shades.headerBg);
+
+  const header = document.querySelector('.app-header');
+  if (header) {
+    header.style.background = shades.headerBg;
+  }
+}
+window.applyUserThemeColor = applyUserThemeColor;
+
+function handleThemeIntensityChange(themeId, newIntensity, event) {
+  if (event && event.stopPropagation) event.stopPropagation();
+  const val = parseInt(newIntensity, 10) || 100;
+  currentUserThemeIntensities[themeId] = val;
+
+  // Atualizar visual do card específico
+  const labelValEl = document.getElementById('intensityVal_' + themeId);
+  if (labelValEl) labelValEl.textContent = val + '%';
+
+  const shades = getThemeShadesForTheme(themeId, val, currentUserCustomHex);
+  const card = document.getElementById('themeCard_' + themeId);
+  if (card) {
+    const previewEl = card.querySelector('.theme-header-preview');
+    if (previewEl) previewEl.style.background = shades.headerBg;
+    const dot1 = card.querySelector('.theme-dot-1');
+    const dot2 = card.querySelector('.theme-dot-2');
+    const dot3 = card.querySelector('.theme-dot-3');
+    if (dot1) dot1.style.background = shades.primary;
+    if (dot2) dot2.style.background = shades.accent;
+    if (dot3) dot3.style.background = shades.softBorder;
+    if (currentUserSelectedThemeId === themeId) {
+      card.style.borderColor = shades.primary;
+    }
+  }
+
+  // Se o tema em ajuste for o atualmente selecionado, aplicar em tempo real na página
+  if (currentUserSelectedThemeId === themeId) {
+    applyUserThemeColor(themeId, val, currentUserCustomHex);
+  }
+}
+window.handleThemeIntensityChange = handleThemeIntensityChange;
+
+function handleCustomColorChange(newHex, event) {
+  if (event && event.stopPropagation) event.stopPropagation();
+  currentUserCustomHex = newHex || '#0284c7';
+  currentUserSelectedThemeId = 'custom';
+
+  const intVal = currentUserThemeIntensities['custom'] || 100;
+  const shades = generateThemeFromBaseHex(currentUserCustomHex, intVal);
+
+  const hexDisplay = document.getElementById('customHexCodeDisplay');
+  if (hexDisplay) hexDisplay.textContent = currentUserCustomHex.toUpperCase();
+
+  applyUserThemeColor('custom', intVal, currentUserCustomHex);
+  renderUserThemePaletteGrid();
+}
+window.handleCustomColorChange = handleCustomColorChange;
+
+function renderUserThemePaletteGrid() {
+  const container = document.getElementById('userThemePaletteGrid');
+  if (!container) return;
+
+  const user = getActiveLoggedInUser();
+  const userLang = (user && user.idioma) || (typeof getActiveUserLanguage === 'function' ? getActiveUserLanguage() : 'Português');
+  const activeThemeId = currentUserSelectedThemeId || (user && user.theme) || 'default_blue';
+
+  const intensityLabel = typeof t === 'function' ? t('user_settings_lbl_intensity', 'Intensidade da Cor') : 'Intensidade da Cor';
+  const customThemeLabel = typeof t === 'function' ? t('user_settings_custom_theme', 'Cor Personalizada') : 'Cor Personalizada';
+
+  // 1. Renderizar os 7 temas padrão
+  let cardsHtml = Object.values(SIGEC_THEMES).map(th => {
+    const isSelected = (th.id === activeThemeId);
+    const displayName = th.name[userLang] || th.name['Português'];
+    const intensity = currentUserThemeIntensities[th.id] || 100;
+    const shades = generateThemeFromBaseHex(th.colorHex, intensity);
+
+    return `
+      <div onclick="selectUserThemePreview('${th.id}')" id="themeCard_${th.id}" style="border: 2px solid ${isSelected ? shades.primary : '#e2e8f0'}; background: #ffffff; border-radius: 10px; padding: 0.85rem; cursor: pointer; transition: all 0.2s; box-shadow: ${isSelected ? '0 4px 12px rgba(0,0,0,0.12)' : 'none'}; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div class="theme-header-preview" style="height: 38px; border-radius: 6px; background: ${shades.headerBg}; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: center; color: #ffffff; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);">
+            ${isSelected ? '<i class="fa-solid fa-circle-check" style="font-size: 1.15rem;"></i>' : ''}
+          </div>
+          <div style="font-size: 0.82rem; font-weight: 700; color: #1e293b; line-height: 1.3; margin-bottom: 0.35rem; min-height: 2.4em;">${displayName}</div>
+          <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 0.4rem;">
+            <span class="theme-dot-1" style="width: 15px; height: 15px; border-radius: 50%; background: ${shades.primary}; display: inline-block; border: 1px solid rgba(0,0,0,0.08);"></span>
+            <span class="theme-dot-2" style="width: 15px; height: 15px; border-radius: 50%; background: ${shades.accent}; display: inline-block; border: 1px solid rgba(0,0,0,0.08);"></span>
+            <span class="theme-dot-3" style="width: 15px; height: 15px; border-radius: 50%; background: ${shades.softBorder}; display: inline-block; border: 1px solid rgba(0,0,0,0.08);"></span>
+          </div>
+        </div>
+
+        <!-- Linha horizontal e barra deslizante de intensidade -->
+        <div style="margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px solid #f1f5f9;" onclick="event.stopPropagation()">
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; color: #64748b; margin-bottom: 3px;">
+            <span>${intensityLabel}</span>
+            <span id="intensityVal_${th.id}" style="font-weight: 700; color: #334155;">${intensity}%</span>
+          </div>
+          <input type="range" min="50" max="150" value="${intensity}" 
+            oninput="handleThemeIntensityChange('${th.id}', this.value, event)" 
+            onclick="event.stopPropagation()"
+            style="width: 100%; height: 5px; border-radius: 3px; cursor: pointer; accent-color: ${shades.primary};">
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // 2. Renderizar o cartão de Cor Personalizada
+  const isCustomSelected = (activeThemeId === 'custom');
+  const customIntensity = currentUserThemeIntensities['custom'] || 100;
+  const customShades = generateThemeFromBaseHex(currentUserCustomHex, customIntensity);
+
+  const customCardHtml = `
+    <div onclick="selectUserThemePreview('custom')" id="themeCard_custom" style="border: 2px solid ${isCustomSelected ? customShades.primary : '#cbd5e1'}; background: ${isCustomSelected ? '#f8fafc' : '#ffffff'}; border-radius: 10px; padding: 0.85rem; cursor: pointer; transition: all 0.2s; box-shadow: ${isCustomSelected ? '0 4px 12px rgba(0,0,0,0.12)' : 'none'}; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div class="theme-header-preview" style="height: 38px; border-radius: 6px; background: ${customShades.headerBg}; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: center; color: #ffffff; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);">
+          ${isCustomSelected ? '<i class="fa-solid fa-circle-check" style="font-size: 1.15rem;"></i>' : '<i class="fa-solid fa-palette" style="opacity: 0.7;"></i>'}
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem; min-height: 2.4em;">
+          <span style="font-size: 0.82rem; font-weight: 700; color: #1e293b; line-height: 1.3;">${customThemeLabel}</span>
+          <div style="display: flex; align-items: center; gap: 4px;" onclick="event.stopPropagation()">
+            <input type="color" id="customColorPickerInput" value="${currentUserCustomHex}" 
+              oninput="handleCustomColorChange(this.value, event)" 
+              onchange="handleCustomColorChange(this.value, event)"
+              onclick="event.stopPropagation()"
+              title="Clique para escolher qualquer cor na paleta"
+              style="width: 26px; height: 26px; padding: 0; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer; background: transparent;">
+          </div>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+          <div style="display: flex; gap: 5px; align-items: center;">
+            <span class="theme-dot-1" style="width: 15px; height: 15px; border-radius: 50%; background: ${customShades.primary}; display: inline-block; border: 1px solid rgba(0,0,0,0.08);"></span>
+            <span class="theme-dot-2" style="width: 15px; height: 15px; border-radius: 50%; background: ${customShades.accent}; display: inline-block; border: 1px solid rgba(0,0,0,0.08);"></span>
+            <span class="theme-dot-3" style="width: 15px; height: 15px; border-radius: 50%; background: ${customShades.softBorder}; display: inline-block; border: 1px solid rgba(0,0,0,0.08);"></span>
+          </div>
+          <span id="customHexCodeDisplay" style="font-size: 0.75rem; font-family: monospace; font-weight: 700; color: #475569;">${currentUserCustomHex.toUpperCase()}</span>
+        </div>
+      </div>
+
+      <!-- Linha horizontal e barra deslizante de intensidade -->
+      <div style="margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px solid #f1f5f9;" onclick="event.stopPropagation()">
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; color: #64748b; margin-bottom: 3px;">
+          <span>${intensityLabel}</span>
+          <span id="intensityVal_custom" style="font-weight: 700; color: #334155;">${customIntensity}%</span>
+        </div>
+        <input type="range" min="50" max="150" value="${customIntensity}" 
+          oninput="handleThemeIntensityChange('custom', this.value, event)" 
+          onclick="event.stopPropagation()"
+          style="width: 100%; height: 5px; border-radius: 3px; cursor: pointer; accent-color: ${customShades.primary};">
+      </div>
+    </div>
+  `;
+
+  container.innerHTML = cardsHtml + customCardHtml;
+}
+
+function selectUserThemePreview(themeId) {
+  currentUserSelectedThemeId = themeId;
+  const intensity = currentUserThemeIntensities[themeId] || 100;
+  applyUserThemeColor(themeId, intensity, currentUserCustomHex);
+  renderUserThemePaletteGrid();
+}
+window.selectUserThemePreview = selectUserThemePreview;
+
+function saveUserThemeSelection() {
+  const user = getActiveLoggedInUser();
+  if (!user) return;
+
+  const chosenTheme = currentUserSelectedThemeId || 'default_blue';
+  const chosenIntensity = currentUserThemeIntensities[chosenTheme] || 100;
+  const chosenCustomHex = currentUserCustomHex || '#0284c7';
+
+  user.theme = chosenTheme;
+  user.themeIntensity = chosenIntensity;
+  user.customThemeColor = chosenCustomHex;
+
+  localStorage.setItem('sigec_pro_user_theme_' + user.id, chosenTheme);
+  localStorage.setItem('sigec_pro_user_theme_intensity_' + user.id, chosenIntensity.toString());
+  localStorage.setItem('sigec_pro_user_theme_custom_hex_' + user.id, chosenCustomHex);
+  saveDatabase();
+
+  const themeName = chosenTheme === 'custom' ? 'Cor Personalizada (' + chosenCustomHex + ')' : (SIGEC_THEMES[chosenTheme]?.name['Português'] || chosenTheme);
+
+  if (typeof logUserActivity === 'function') {
+    logUserActivity('Definições do Utilizador', `Esquema de cores alterado para "${themeName}" (Intensidade: ${chosenIntensity}%).`, {
+      tema: chosenTheme,
+      intensidade: chosenIntensity,
+      corCustom: chosenCustomHex
+    });
+  }
+
+  showToast('Escolha de cores guardada com sucesso no seu perfil!', 'success');
+  closeCurrentUserSettingsModal();
+}
+window.saveUserThemeSelection = saveUserThemeSelection;
+
+function resetUserThemeToDefault() {
+  currentUserSelectedThemeId = 'default_blue';
+  currentUserThemeIntensities = {};
+  currentUserCustomHex = '#0284c7';
+  selectUserThemePreview('default_blue');
+  saveUserThemeSelection();
+}
+window.resetUserThemeToDefault = resetUserThemeToDefault;
+
+function openCurrentUserSettingsModal() {
+  const user = getActiveLoggedInUser();
+  if (!user) {
+    if (typeof showToast === 'function') showToast('Inicie sessão para aceder às definições.', 'warning');
+    return;
+  }
+
+  const modal = document.getElementById('currentUserSettingsModal');
+  const titleEl = document.getElementById('userSettingsModalTitle');
+  const subEl = document.getElementById('userSettingsModalSubtitle');
+
+  if (titleEl) titleEl.textContent = typeof t === 'function' ? t('user_settings_title', 'Definições do Utilizador') : 'Definições do Utilizador';
+  if (subEl) {
+    const roleText = (user.role === 'admin' || user.id === 'usr-admin-001') ? 
+      (typeof t === 'function' ? t('profile_badge_admin') : 'Administrador do Sistema') : 
+      (user.cargo || (typeof t === 'function' ? t('profile_badge_user') : 'Utilizador'));
+    subEl.textContent = `${user.nome} • ${roleText}`;
+  }
+
+  // Reset form
+  const form = document.getElementById('formUserChangeOwnPassword');
+  if (form) form.reset();
+  const alertMismatch = document.getElementById('userSettingsPasswordMismatchAlert');
+  if (alertMismatch) alertMismatch.style.display = 'none';
+
+  renderUserThemePaletteGrid();
+  switchUserSettingsTab('security');
+
+  if (modal) {
+    modal.style.display = 'flex';
+    modal.classList.add('active');
+  }
+}
+window.openCurrentUserSettingsModal = openCurrentUserSettingsModal;
+
+function closeCurrentUserSettingsModal() {
+  const modal = document.getElementById('currentUserSettingsModal');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.style.display = 'none';
+  }
+}
+window.closeCurrentUserSettingsModal = closeCurrentUserSettingsModal;
+
+function switchUserSettingsTab(tabKey) {
+  const tabs = ['security', 'backup', 'theme'];
+  tabs.forEach(k => {
+    const content = document.getElementById('userSettingsTab' + k.charAt(0).toUpperCase() + k.slice(1));
+    const btn = document.getElementById('tabBtnUserSettings' + k.charAt(0).toUpperCase() + k.slice(1));
+    if (content) content.style.display = (k === tabKey) ? 'block' : 'none';
+    if (btn) {
+      if (k === tabKey) {
+        btn.classList.add('active');
+        btn.style.borderBottomColor = 'var(--primary-blue, #2563eb)';
+        btn.style.color = 'var(--primary-blue, #2563eb)';
+      } else {
+        btn.classList.remove('active');
+        btn.style.borderBottomColor = 'transparent';
+        btn.style.color = '#64748b';
+      }
+    }
+  });
+}
+window.switchUserSettingsTab = switchUserSettingsTab;
+
+function checkUserSettingsPasswordMatch() {
+  const newPass = (document.getElementById('userSettingsNewPassword')?.value || '');
+  const confPass = (document.getElementById('userSettingsConfirmPassword')?.value || '');
+  const alertEl = document.getElementById('userSettingsPasswordMismatchAlert');
+  
+  if (!alertEl) return;
+  if (confPass.length > 0 && newPass !== confPass) {
+    alertEl.style.display = 'block';
+  } else {
+    alertEl.style.display = 'none';
+  }
+}
+window.checkUserSettingsPasswordMatch = checkUserSettingsPasswordMatch;
+
+function handleUserChangeOwnPassword(event) {
+  if (event && event.preventDefault) event.preventDefault();
+
+  const user = getActiveLoggedInUser();
+  if (!user) return;
+
+  const currPass = (document.getElementById('userSettingsCurrentPassword')?.value || '').trim();
+  const newPass = (document.getElementById('userSettingsNewPassword')?.value || '').trim();
+  const confPass = (document.getElementById('userSettingsConfirmPassword')?.value || '').trim();
+  const alertEl = document.getElementById('userSettingsPasswordMismatchAlert');
+
+  // 1. Validar palavra-passe atual
+  const masterPin = typeof getAdminPin === 'function' ? getAdminPin() : 'Centauro2026';
+  const isCurrValid = (currPass === user.pin) || 
+                      (user.role === 'admin' && (currPass === masterPin || currPass === 'Centauro2026'));
+
+  if (!isCurrValid) {
+    showToast('A Palavra-Passe Atual introduzida está incorreta.', 'danger');
+    alert('Acesso Recusado:\nA Palavra-Passe Atual introduzida não coincide com a palavra-passe registada na sua conta.');
+    return;
+  }
+
+  // 2. Validar se a nova password e a confirmação coincidem
+  if (newPass !== confPass) {
+    if (alertEl) alertEl.style.display = 'block';
+    showToast('Aviso: A Nova Palavra-Passe e a Confirmação não coincidem!', 'danger');
+    alert('Erro de Confirmação:\nA Nova Palavra-Passe e o campo de Confirmação não coincidem. Por favor, verifique e corrija ambos os campos.');
+    return;
+  }
+
+  // 3. Validar requisitos de segurança
+  if (typeof validatePasswordStrength === 'function') {
+    const strength = validatePasswordStrength(newPass);
+    if (!strength.valid) {
+      showToast(strength.message, 'warning');
+      alert(`Segurança da Palavra-Passe:
+
+${strength.message}`);
+      return;
+    }
+  }
+
+  // 4. Gravar nova palavra-passe
+  user.pin = newPass;
+  if (user.role === 'admin' || user.id === 'usr-admin-001') {
+    localStorage.setItem('sigec_pro_security_pin', newPass);
+  }
+  saveDatabase();
+
+  if (typeof logUserActivity === 'function') {
+    logUserActivity('Segurança', `Palavra-passe alterada pelo utilizador ${user.nome} (${user.email}) com reautenticação obrigatória.`, {
+      utilizador: user.nome,
+      email: user.email
+    });
+  }
+
+  closeCurrentUserSettingsModal();
+
+  // 5. Encerramento de sessão e reautenticação imediata obrigatória
+  sessionStorage.removeItem('sigec_pro_authenticated');
+  sessionStorage.removeItem('sigec_pro_active_user_id');
+  localStorage.removeItem('sigec_pro_authenticated');
+  localStorage.removeItem('sigec_pro_active_user_id');
+
+  const overlay = document.getElementById('loginOverlay');
+  const userInput = document.getElementById('loginUserInput');
+  const pinInput = document.getElementById('loginPinInput');
+  const errorMsg = document.getElementById('loginErrorMessage');
+
+  if (userInput) userInput.value = user.email || '';
+  if (pinInput) pinInput.value = '';
+  if (errorMsg) errorMsg.style.display = 'none';
+
+  if (overlay) {
+    overlay.classList.remove('hidden');
+    overlay.style.display = 'flex';
+  }
+
+  showToast('Palavra-passe alterada com sucesso! Por favor, inicie sessão com a sua nova palavra-passe.', 'success');
+  alert('✅ Palavra-Passe Alterada com Sucesso!\n\nA sua palavra-passe foi atualizada.\nPor motivos de segurança, a sessão atual foi terminada.\n\nPor favor, introduza a sua nova palavra-passe para iniciar sessão no programa.');
+}
+window.handleUserChangeOwnPassword = handleUserChangeOwnPassword;
+
+// ==========================================
+// BACKUP E RESTAURO ISOLADO POR PERFIL
+// ==========================================
+
+function exportCurrentProfileBackup() {
+  const user = getActiveLoggedInUser();
+  if (!user) return;
+
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+
+  const cleanUserName = (user.nome || 'Utilizador').replace(/[^a-zA-Z0-9_-]/g, '_');
+  const fileName = `Backup_Perfil_${cleanUserName}_${day}-${month}-${year}_${hours}-${minutes}-${seconds}.json`;
+
+  const userClients = (db.clientes || []).filter(c => c && (c.userId === user.id || c.comercialAtribuidoId === user.id));
+  const userContacts = (db.contactos || []).filter(ct => ct && (ct.userId === user.id || ct.comercialAtribuidoId === user.id));
+  const userProjects = (db.projetos || []).filter(p => p && (p.userId === user.id || p.comercialAtribuidoId === user.id));
+  const userBudgets = (db.orcamentos || []).filter(o => o && (o.userId === user.id || o.comercialAtribuidoId === user.id));
+  const userInteractions = (db.interacoes || []).filter(i => i && (i.userId === user.id || i.usuarioId === user.id));
+  const userLogs = (db.userLogs || []).filter(l => l && l.usuarioId === user.id);
+
+  const backupData = {
+    tipoFicheiro: "BACKUP_PERFIL_EXCLUSIVO_SIGEC_PRO",
+    versaoSoftware: "20260911_v70",
+    dataExportacao: now.toISOString(),
+    dataHoraFormatada: `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`,
+    perfilUtilizador: {
+      id: user.id,
+      nome: user.nome,
+      email: user.email,
+      cargo: user.cargo,
+      idioma: user.idioma,
+      role: user.role
+    },
+    resumo: {
+      clientes: userClients.length,
+      contactos: userContacts.length,
+      projetos: userProjects.length,
+      orcamentos: userBudgets.length,
+      interacoes: userInteractions.length,
+      historicoAtividade: userLogs.length
+    },
+    database: {
+      clientes: JSON.parse(JSON.stringify(userClients)),
+      contactos: JSON.parse(JSON.stringify(userContacts)),
+      projetos: JSON.parse(JSON.stringify(userProjects)),
+      orcamentos: JSON.parse(JSON.stringify(userBudgets)),
+      interacoes: JSON.parse(JSON.stringify(userInteractions)),
+      userLogs: JSON.parse(JSON.stringify(userLogs))
+    }
+  };
+
+  const jsonStr = JSON.stringify(backupData, null, 2);
+  const blob = new Blob([jsonStr], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  if (typeof logUserActivity === 'function') {
+    logUserActivity('Cópia de Segurança', `Cópia de segurança do perfil "${fileName}" descarregada com sucesso (${userClients.length} Clientes, ${userProjects.length} Projetos).`);
+  }
+
+  showToast('Cópia de segurança do perfil criada com sucesso!', 'success');
+  alert(`✅ Cópia de Segurança do Perfil Concluída!
+
+Ficheiro: ${fileName}
+
+Conteúdo Registado no Seu Perfil:
+- ${userClients.length} Clientes
+- ${userContacts.length} Contactos
+- ${userProjects.length} Projetos
+- ${userBudgets.length} Orçamentos
+- ${userInteractions.length} Interações
+
+O ficheiro foi descarregado para o seu computador.`);
+}
+window.exportCurrentProfileBackup = exportCurrentProfileBackup;
+
+function handleUserProfileBackupFileSelected(event) {
+  const file = event?.target?.files?.[0];
+  if (!file) return;
+
+  const user = getActiveLoggedInUser();
+  if (!user) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data || typeof data !== 'object') {
+        throw new Error('Formato de ficheiro JSON inválido.');
+      }
+
+      const sourceDb = data.database || data;
+      let restoredCount = 0;
+
+      // 1. Restaurar Clientes
+      if (Array.isArray(sourceDb.clientes)) {
+        if (!Array.isArray(db.clientes)) db.clientes = [];
+        sourceDb.clientes.forEach(incCli => {
+          if (!incCli || !incCli.id) return;
+          incCli.userId = user.id;
+          incCli.comercialAtribuidoId = user.id;
+          incCli.comercialAtribuidoNome = user.nome;
+          const idx = db.clientes.findIndex(c => c && c.id === incCli.id);
+          if (idx >= 0) {
+            db.clientes[idx] = { ...incCli };
+          } else {
+            db.clientes.push(incCli);
+          }
+          restoredCount++;
+        });
+      }
+
+      // 2. Restaurar Contactos
+      if (Array.isArray(sourceDb.contactos)) {
+        if (!Array.isArray(db.contactos)) db.contactos = [];
+        sourceDb.contactos.forEach(incCon => {
+          if (!incCon || !incCon.id) return;
+          incCon.userId = user.id;
+          incCon.comercialAtribuidoId = user.id;
+          const idx = db.contactos.findIndex(ct => ct && ct.id === incCon.id);
+          if (idx >= 0) {
+            db.contactos[idx] = { ...incCon };
+          } else {
+            db.contactos.push(incCon);
+          }
+        });
+      }
+
+      // 3. Restaurar Projetos
+      if (Array.isArray(sourceDb.projetos)) {
+        if (!Array.isArray(db.projetos)) db.projetos = [];
+        sourceDb.projetos.forEach(incProj => {
+          if (!incProj || !incProj.id) return;
+          incProj.userId = user.id;
+          incProj.comercialAtribuidoId = user.id;
+          const idx = db.projetos.findIndex(p => p && p.id === incProj.id);
+          if (idx >= 0) {
+            db.projetos[idx] = { ...incProj };
+          } else {
+            db.projetos.push(incProj);
+          }
+        });
+      }
+
+      // 4. Restaurar Orçamentos
+      if (Array.isArray(sourceDb.orcamentos)) {
+        if (!Array.isArray(db.orcamentos)) db.orcamentos = [];
+        sourceDb.orcamentos.forEach(incOrc => {
+          if (!incOrc || !incOrc.id) return;
+          incOrc.userId = user.id;
+          incOrc.comercialAtribuidoId = user.id;
+          const idx = db.orcamentos.findIndex(o => o && o.id === incOrc.id);
+          if (idx >= 0) {
+            db.orcamentos[idx] = { ...incOrc };
+          } else {
+            db.orcamentos.push(incOrc);
+          }
+        });
+      }
+
+      // 5. Restaurar Interações
+      if (Array.isArray(sourceDb.interacoes)) {
+        if (!Array.isArray(db.interacoes)) db.interacoes = [];
+        sourceDb.interacoes.forEach(incInt => {
+          if (!incInt || !incInt.id) return;
+          incInt.userId = user.id;
+          incInt.usuarioId = user.id;
+          const idx = db.interacoes.findIndex(i => i && i.id === incInt.id);
+          if (idx >= 0) {
+            db.interacoes[idx] = { ...incInt };
+          } else {
+            db.interacoes.push(incInt);
+          }
+        });
+      }
+
+      // 6. Restaurar Histórico de Atividade
+      if (Array.isArray(sourceDb.userLogs)) {
+        if (!Array.isArray(db.userLogs)) db.userLogs = [];
+        sourceDb.userLogs.forEach(incLog => {
+          if (!incLog || !incLog.id) return;
+          incLog.usuarioId = user.id;
+          if (!db.userLogs.some(l => l && l.id === incLog.id)) {
+            db.userLogs.push(incLog);
+          }
+        });
+      }
+
+      saveDatabase();
+
+      if (typeof logUserActivity === 'function') {
+        logUserActivity('Restauro de Backup', `Cópia de segurança do perfil restaurada com sucesso no perfil de ${user.nome}.`);
+      }
+
+      showToast('Cópia de segurança do perfil restaurada com sucesso!', 'success');
+      alert(`✅ Restauro de Perfil Concluído com Sucesso!
+
+Os registos foram restaurados e salvaguardados exclusivamente na sua área de trabalho.
+
+Todos os dados de outros perfis permanecem intactos.`);
+
+      closeCurrentUserSettingsModal();
+      if (typeof renderClientPageMainGrid === 'function') renderClientPageMainGrid();
+      if (typeof renderProjectPageMainGrid === 'function') renderProjectPageMainGrid();
+      if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
+      if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
+    } catch (err) {
+      showToast('Erro ao processar ficheiro de backup: ' + err.message, 'danger');
+      alert('Erro no Ficheiro de Cópia de Segurança:\n\n' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+window.handleUserProfileBackupFileSelected = handleUserProfileBackupFileSelected;
+
 document.addEventListener('DOMContentLoaded', () => {
   loadDatabase();
+  if (typeof updateHeaderActiveUserBadge === 'function') {
+    updateHeaderActiveUserBadge();
+  }
   if (typeof initSecurityAuthCheck === 'function') {
     initSecurityAuthCheck();
   }
@@ -9124,45 +9966,88 @@ function closeDriveModal() {
 
 function saveProgramChangesInternal() {
   try {
+    const user = typeof getActiveLoggedInUser === 'function' ? getActiveLoggedInUser() : null;
+    const userName = user ? (user.nome || 'Utilizador') : 'Utilizador';
+
+    // Gravar base de dados
     saveDatabase();
     clearFormDirty();
 
+    // Registo de auditoria no histórico exclusivo do perfil
+    if (typeof logUserActivity === 'function') {
+      logUserActivity('Gravação Manual', `Todas as alterações foram guardadas com sucesso no perfil de ${userName}.`, {
+        utilizador: userName,
+        userId: user ? user.id : null
+      });
+    }
+
+    // Atualizar os componentes visuais do perfil
     if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
     if (typeof renderDatabaseOverview === 'function') renderDatabaseOverview();
     if (typeof renderClientPageMainGrid === 'function') renderClientPageMainGrid();
     if (typeof renderContactPageMainGrid === 'function') renderContactPageMainGrid();
     if (typeof renderProjectPageMainGrid === 'function') renderProjectPageMainGrid();
 
-    showToast('Todas as alterações foram registadas na base de dados interna do programa com sucesso!');
+    const successMsg = typeof t === 'function' ? 
+      t('msg_changes_saved_profile', 'Todas as alterações foram guardadas no seu perfil com sucesso!') : 
+      'Todas as alterações foram guardadas no seu perfil com sucesso!';
+    showToast(successMsg, 'success');
   } catch (err) {
-    console.error('Erro ao guardar alterações internas no programa:', err);
-    showToast('Erro ao guardar alterações no programa.', 'danger');
+    console.error('Erro ao guardar alterações no perfil:', err);
+    showToast('Erro ao guardar alterações no perfil.', 'danger');
   }
 }
+window.saveProgramChangesInternal = saveProgramChangesInternal;
 
 function saveAllChangesManual() {
   saveProgramChangesInternal();
 }
+window.saveAllChangesManual = saveAllChangesManual;
 
 async function closeApplicationWithSave() {
+  const user = typeof getActiveLoggedInUser === 'function' ? getActiveLoggedInUser() : null;
+  const userName = user ? (user.nome || 'Utilizador') : 'Utilizador';
+
+  // 1. Registo de auditoria no histórico do utilizador
+  if (typeof logUserActivity === 'function') {
+    logUserActivity('Encerramento', `Sessão encerrada com gravação segura de todos os dados do perfil de ${userName}.`, {
+      utilizador: userName,
+      userId: user ? user.id : null
+    });
+  }
+
+  // 2. Gravar base de dados
   saveDatabase();
   clearFormDirty();
 
-  // Limpeza de sessão ao encerrar
+  // 3. Sincronização segura se configurada
+  const ghToken = localStorage.getItem('sigec_pro_gh_token');
+  if (ghToken && typeof syncDatabaseToGitHub === 'function') {
+    const syncMsg = typeof t === 'function' ? 
+      t('msg_syncing_before_close', 'A sincronizar dados do perfil com o servidor antes de fechar...') : 
+      'A sincronizar dados do perfil com o servidor antes de fechar...';
+    showToast(syncMsg, 'info');
+    await syncDatabaseToGitHub(false, true);
+  }
+
+  // 4. Limpeza isolada da sessão
   sessionStorage.removeItem('sigec_pro_authenticated');
   sessionStorage.removeItem('sigec_pro_active_user_id');
   localStorage.removeItem('sigec_pro_authenticated');
   localStorage.removeItem('sigec_pro_active_user_id');
 
-  const ghToken = localStorage.getItem('sigec_pro_gh_token');
-  if (ghToken && typeof syncDatabaseToGitHub === 'function') {
-    showToast('A sincronizar com o servidor GitHub antes de fechar...', 'info');
-    await syncDatabaseToGitHub(false, true);
-  }
+  const closeSuccessMsg = typeof t === 'function' ? 
+    t('msg_data_saved_close_success', 'Todos os dados do seu perfil foram guardados com sucesso!') : 
+    'Todos os dados do seu perfil foram guardados com sucesso!';
+  showToast(closeSuccessMsg, 'success');
 
-  showToast('Todos os dados foram guardados e sincronizados com sucesso!');
   setTimeout(() => {
     const overlay = document.getElementById('closeAppOverlay');
+    const userSub = document.getElementById('closeAppUserSubtitle');
+    if (userSub) {
+      userSub.textContent = `Perfil de ${userName}`;
+      userSub.style.display = 'inline-block';
+    }
     if (overlay) overlay.classList.add('active');
     try {
       window.close();
@@ -9171,6 +10056,7 @@ async function closeApplicationWithSave() {
     }
   }, 300);
 }
+window.closeApplicationWithSave = closeApplicationWithSave;
 
 function forceCloseWindowTab() {
   try {
@@ -14941,6 +15827,9 @@ function verifyLoginPin() {
   }
 
   renderUserManagementGrid();
+  if (typeof updateHeaderActiveUserBadge === 'function') {
+    updateHeaderActiveUserBadge();
+  }
 
   const userAgent = (typeof navigator !== 'undefined' && navigator.userAgent) ? navigator.userAgent : '';
   const deviceInfo = /Mobile|Android|iPhone/i.test(userAgent) ? 'Dispositivo Móvel' : 'Computador';
@@ -16497,8 +17386,11 @@ async function exportDatabaseJSON() {
       clientes: Array.isArray(db.clientes) ? db.clientes.length : 0,
       contactos: Array.isArray(db.contactos) ? db.contactos.length : 0,
       projetos: Array.isArray(db.projetos) ? db.projetos.length : 0,
+      orcamentos: Array.isArray(db.orcamentos) ? db.orcamentos.length : 0,
       interacoes: Array.isArray(db.interacoes) ? db.interacoes.length : 0,
-      interacoesProjetos: Array.isArray(db.interacoesProjetos) ? db.interacoesProjetos.length : 0
+      interacoesProjetos: Array.isArray(db.interacoesProjetos) ? db.interacoesProjetos.length : 0,
+      usuarios: Array.isArray(db.usuarios) ? db.usuarios.length : 0,
+      historicoAtividade: Array.isArray(db.userLogs) ? db.userLogs.length : 0
     },
     // Campo de configuração codificado: garante que o token PAT pode ser recuperado
     // a partir deste ficheiro de backup (XOR+Base64, não detetado como token por scanners)
@@ -16507,8 +17399,11 @@ async function exportDatabaseJSON() {
       clientes: JSON.parse(JSON.stringify(db.clientes || [])),
       contactos: JSON.parse(JSON.stringify(db.contactos || [])),
       projetos: JSON.parse(JSON.stringify(db.projetos || [])),
+      orcamentos: JSON.parse(JSON.stringify(db.orcamentos || [])),
       interacoes: JSON.parse(JSON.stringify(db.interacoes || [])),
       interacoesProjetos: JSON.parse(JSON.stringify(db.interacoesProjetos || [])),
+      usuarios: JSON.parse(JSON.stringify(db.usuarios || [])),
+      userLogs: JSON.parse(JSON.stringify(db.userLogs || [])),
       deletedProjectIds: JSON.parse(JSON.stringify(deletedProjectIds || []))
     }
   };

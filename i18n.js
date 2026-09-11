@@ -27,7 +27,7 @@ const SIGEC_I18N = {
   btn_view_all: { "Portugu\u00EAs": "Ver Todos", "Espa\u00F1ol": "Ver Todos", "English": "View All", "Fran\u00E7ais": "Voir Tout", "Polski": "Zobacz Wszystko" },
   global_search_btn: { "Portugu\u00EAs": "Pesquisar Global", "Espa\u00F1ol": "B\u00FAsqueda Global", "English": "Global Search", "Fran\u00E7ais": "Recherche Globale", "Polski": "Szukaj Globalnie" },
   global_search_placeholder: { "Portugu\u00EAs": "Escreva aqui o termo de pesquisa...", "Espa\u00F1ol": "Escriba aquÃ­ el tÃ©rmino de bÃºsqueda...", "English": "Type your search query here...", "Fran\u00E7ais": "Ã‰crivez le terme de recherche ici...", "Polski": "Wpisz tutaj szukanÄ… frazÄ™..." },
-  search_clients_opt: { "Portugu\u00EAs": "Buscar Clientes", "Espa\u00F1ol": "Buscar Clientes", "English": "Search Clients", "Fran\u00E7ais": "Rechercher Clients", "Polski": "Szukaj KlientÃ³w" },
+  search_clients_opt: { "Português": "Buscar Clientes", "Español": "Buscar Clientes", "English": "Search Clients", "Français": "Rechercher Clients", "Polski": "Szukaj Klientów" },
   search_contacts_opt: { "Portugu\u00EAs": "Buscar Contactos", "Espa\u00F1ol": "Buscar Contactos", "English": "Search Contacts", "Fran\u00E7ais": "Rechercher Contacts", "Polski": "Szukaj KontaktÃ³w" },
   search_projects_opt: { "Portugu\u00EAs": "Buscar Projetos", "Espa\u00F1ol": "Buscar Proyectos", "English": "Search Projects", "Fran\u00E7ais": "Rechercher Projets", "Polski": "Szukaj ProjektÃ³w" },
   client_list_title: { "Portugu\u00EAs": "Lista de Clientes", "Espa\u00F1ol": "Lista de Clientes", "English": "Client List", "Fran\u00E7ais": "Liste des Clients", "Polski": "Lista KlientÃ³w" },
@@ -126,8 +126,215 @@ const SIGEC_I18N = {
     Français: "Système Intégré de Gestion des Clients et Projets",
     "Polski": "Zintegrowany System Zarządzania Klientami i Projektami"
   },
-  btn_save_changes: { Português: "Guardar Alterações", Español: "Guardar Cambios", "English": "Save Changes", Français: "Enregistrer Modifications", "Polski": "Zapisz Zmiany" },
+  // --- DEFINIÇÕES DO UTILIZADOR (CONFIGURAÇÃO PESSOAL, PALAVRA-PASSE, BACKUP, TEMAS) ---
+  user_settings_title: {
+    Português: "Definições do Utilizador",
+    Español: "Configuración del Usuario",
+    "English": "User Settings",
+    Français: "Paramètres de l'Utilisateur",
+    "Polski": "Ustawienia Użytkownika"
+  },
+  user_settings_tab_password: {
+    Português: "Alterar Palavra-Passe",
+    Español: "Cambiar Contraseña",
+    "English": "Change Password",
+    Français: "Modifier le Mot de Passe",
+    "Polski": "Zmień Hasło"
+  },
+  user_settings_tab_backup: {
+    Português: "Cópia & Restauro",
+    Español: "Copia y Restauración",
+    "English": "Backup & Restore",
+    Français: "Sauvegarde et Restauration",
+    "Polski": "Kopia Zapasowa i Przywracanie"
+  },
+  user_settings_tab_theme: {
+    Português: "Cores do Programa",
+    Español: "Colores del Programa",
+    "English": "Program Colors",
+    Français: "Couleurs du Programme",
+    "Polski": "Kolory Programu"
+  },
+  user_settings_sec_req_title: {
+    Português: "Requisitos de Segurança:",
+    Español: "Requisitos de Seguridad:",
+    "English": "Security Requirements:",
+    Français: "Exigences de Sécurité :",
+    "Polski": "Wymagania Bezpieczeństwa:"
+  },
+  user_settings_sec_req_text: {
+    Português: "A nova palavra-passe deve ter entre 8 e 12 caracteres, com pelo menos uma maiúscula e um número. Ao alterar com sucesso, o programa solicitará que inicie sessão novamente.",
+    Español: "La nueva contraseña debe tener entre 8 y 12 caracteres, con al menos una mayúscula y un número. Al cambiarla con éxito, deberá iniciar sesión nuevamente.",
+    "English": "The new password must be between 8 and 12 characters, with at least one uppercase letter and one number. Upon successful change, you will be prompted to log in again.",
+    Français: "Le nouveau mot de passe doit comporter entre 8 et 12 caractères, avec au moins une majuscule et un chiffre. Une fois modifié avec succès, vous devrez vous reconnecter.",
+    "Polski": "Nowe hasło musi zawierać od 8 do 12 znaków, w tym co najmniej jedną wielką literę i jedną cyfrę. Po udanej zmianie wymagane będzie ponowne zalogowanie."
+  },
+  user_settings_lbl_current_pin: {
+    Português: "Palavra-Passe Atual (Velha) *",
+    Español: "Contraseña Actual (Antigua) *",
+    "English": "Current Password (Old) *",
+    Français: "Mot de Passe Actuel (Ancien) *",
+    "Polski": "Aktualne Hasło (Stare) *"
+  },
+  user_settings_lbl_new_pin: {
+    Português: "Nova Palavra-Passe (8 a 12 caracteres) *",
+    Español: "Nueva Contraseña (8 a 12 caracteres) *",
+    "English": "New Password (8 to 12 characters) *",
+    Français: "Nouveau Mot de Passe (8 à 12 caractères) *",
+    "Polski": "Nowe Hasło (8 do 12 znaków) *"
+  },
+  user_settings_lbl_confirm_pin: {
+    Português: "Repetir / Confirmar Nova Palavra-Passe *",
+    Español: "Repetir / Confirmar Nueva Contraseña *",
+    "English": "Repeat / Confirm New Password *",
+    Français: "Répéter / Confirmer le Nouveau Mot de Passe *",
+    "Polski": "Powtórz / Potwierdź Nowe Hasło *"
+  },
+  user_settings_msg_mismatch: {
+    Português: "Aviso: A Nova Palavra-Passe e a Confirmação não coincidem. Por favor, verifique e corrija.",
+    Español: "Aviso: La Nueva Contraseña y la Confirmación no coinciden. Por favor, verifique y corrija.",
+    "English": "Warning: New Password and Confirmation do not match. Please check and correct.",
+    Français: "Avertissement : Le nouveau mot de passe et la confirmation ne correspondent pas. Veuillez vérifier et corriger.",
+    "Polski": "Ostrzeżenie: Nowe hasło i potwierdzenie nie są zgodne. Sprawdź i popraw."
+  },
+  user_settings_btn_save_password: {
+    Português: "Gravar Nova Palavra-Passe",
+    Español: "Guardar Nueva Contraseña",
+    "English": "Save New Password",
+    Français: "Enregistrer le Nouveau Mot de Passe",
+    "Polski": "Zapisz Nowe Hasło"
+  },
+  user_settings_export_title: {
+    Português: "Exportar Cópia do Perfil",
+    Español: "Exportar Copia del Perfil",
+    "English": "Export Profile Backup",
+    Français: "Exporter la Sauvegarde du Profil",
+    "Polski": "Eksportuj Kopię Profilu"
+  },
+  user_settings_export_desc: {
+    Português: "Gera e descarrega um ficheiro JSON com todos os registos exclusivos deste perfil de utilizador.",
+    Español: "Genera y descarga un archivo JSON con todos los registros exclusivos de este perfil de usuario.",
+    "English": "Generates and downloads a JSON file containing all exclusive records for this user profile.",
+    Français: "Génère et télécharge un fichier JSON avec tous les enregistrements exclusifs de ce profil d'utilisateur.",
+    "Polski": "Generuje i pobiera plik JSON zawierający wszystkie wyłączne rekordy tego profilu użytkownika."
+  },
+  user_settings_btn_export_profile: {
+    Português: "Fazer Backup dos Meus Registos",
+    Español: "Hacer Copia de Mis Registros",
+    "English": "Backup My Records",
+    Français: "Sauvegarder Mes Enregistrements",
+    "Polski": "Utwórz Kopię Moich Rekordów"
+  },
+  user_settings_restore_title: {
+    Português: "Restaurar Cópia no Perfil",
+    Español: "Restaurar Copia en el Perfil",
+    "English": "Restore Backup to Profile",
+    Français: "Restaurer la Sauvegarde sur le Profil",
+    "Polski": "Przywróć Kopię do Profilu"
+  },
+  user_settings_restore_desc: {
+    Português: "Restaura registos previamente exportados diretamente no seu perfil, sem afetar dados de outros utilizadores.",
+    Español: "Restaura registros previamente exportados directamente en su perfil, sin afectar datos de otros usuarios.",
+    "English": "Restores previously exported records directly to your profile, without affecting other users' data.",
+    Français: "Restaure les enregistrements précédemment exportés directement sur votre profil, sans affecter les données des autres utilisateurs.",
+    "Polski": "Przywraca wcześniej wyeksportowane rekordy bezpośrednio do Twojego profilu, bez wpływu na dane innych użytkowników."
+  },
+  user_settings_btn_restore_profile: {
+    Português: "Restaurar Ficheiro JSON",
+    Español: "Restaurar Archivo JSON",
+    "English": "Restore JSON File",
+    Français: "Restaurer le Fichier JSON",
+    "Polski": "Przywróć Plik JSON"
+  },
+  user_settings_theme_desc: {
+    Português: "Selecione a paleta de cores para personalizar o aspeto do programa de acordo com a sua preferência. A cor por defeito é o Azul Corporativo SIGEC-Pro.",
+    Español: "Seleccione la paleta de colores para personalizar el aspecto del programa según su preferencia. El color predeterminado es el Azul Corporativo SIGEC-Pro.",
+    "English": "Select a color palette to customize the program appearance according to your preference. The default color is SIGEC-Pro Corporate Blue.",
+    Français: "Sélectionnez une palette de couleurs pour personnaliser l'apparence du programme selon vos préférences. La couleur par défaut est Bleu Entreprise SIGEC-Pro.",
+    "Polski": "Wybierz paletę kolorów, aby dostosować wygląd programu do swoich preferencji. Domyślnym kolorem jest Błękit Korporacyjny SIGEC-Pro."
+  },
+  user_settings_btn_reset_theme: {
+    Português: "Restaurar Cor Padrão",
+    Español: "Restaurar Color Predeterminado",
+    "English": "Restore Default Color",
+    Français: "Restaurer la Couleur par Défaut",
+    "Polski": "Przywróć Domyślny Kolor"
+  },
+  user_settings_btn_save_theme: {
+    Português: "Guardar Escolha de Cor",
+    Español: "Guardar Elección de Color",
+    "English": "Save Color Choice",
+    Français: "Enregistrer le Choix de Couleur",
+    "Polski": "Zapisz Wybór Koloru"
+  },
+  user_settings_lbl_intensity: {
+    Português: "Intensidade da Cor",
+    Español: "Intensidad del Color",
+    "English": "Color Intensity",
+    Français: "Intensité de la Couleur",
+    "Polski": "Intensywność Koloru"
+  },
+  user_settings_custom_theme: {
+    Português: "Cor Personalizada",
+    Español: "Color Personalizado",
+    "English": "Custom Color",
+    Français: "Couleur Personnalisée",
+    "Polski": "Kolor Niestandardowy"
+  },
+  user_settings_custom_desc: {
+    Português: "Escolha qualquer tonalidade à sua preferência",
+    Español: "Elija cualquier tonalidad según su preferencia",
+    "English": "Choose any shade to your preference",
+    Français: "Choisissez n'importe quelle nuance selon vos préférences",
+    "Polski": "Wybierz dowolny odcień według własnych preferencji"
+  },
+
+
+  btn_save_changes: {
+    user_settings_title: 'Configuración de Mi Cuenta',
+    user_settings_tab_password: 'Cambiar Contraseña',
+    user_settings_tab_backup: 'Copia y Restauración',
+    user_settings_tab_theme: 'Colores del Programa',
+    user_settings_sec_req_title: 'Requisitos de Seguridad:',
+    user_settings_sec_req_text: 'La nueva contraseña debe tener entre 8 y 12 caracteres, con al menos una mayúscula y un número. Al cambiarla con éxito, deberá iniciar sesión nuevamente.',
+    user_settings_lbl_current_pin: 'Contraseña Actual (Antigua) *',
+    user_settings_lbl_new_pin: 'Nueva Contraseña (8 a 12 caracteres) *',
+    user_settings_lbl_confirm_pin: 'Repetir / Confirmar Nueva Contraseña *',
+    user_settings_msg_mismatch: 'Aviso: La Nueva Contraseña y la Confirmación no coinciden. Por favor, verifique y corrija.',
+    user_settings_btn_save_password: 'Guardar Nueva Contraseña',
+    user_settings_export_title: 'Exportar Copia del Perfil',
+    user_settings_export_desc: 'Genera y descarga un archivo JSON con todos los registros exclusivos de este perfil de usuario.',
+    user_settings_btn_export_profile: 'Hacer Copia de Mis Registros',
+    user_settings_restore_title: 'Restaurar Copia en el Perfil',
+    user_settings_restore_desc: 'Restaura registros previamente exportados directamente en su perfil, sin afectar datos de otros usuarios.',
+    user_settings_btn_restore_profile: 'Restaurar Archivo JSON',
+    user_settings_theme_desc: 'Seleccione la paleta de colores para personalizar el aspecto del programa según su preferencia. El color predeterminado es el Azul Corporativo SIGEC-Pro.',
+    user_settings_btn_reset_theme: 'Restaurar Color Predeterminado',
+    user_settings_btn_save_theme: 'Guardar Elección de Color',
+ Português: "Guardar Alterações", Español: "Guardar Cambios", "English": "Save Changes", Français: "Enregistrer Modifications", "Polski": "Zapisz Zmiany" },
   btn_save_close: { Português: "Guardar e Fechar", Español: "Guardar y Cerrar", "English": "Save and Close", Français: "Enregistrer et Fermer", "Polski": "Zapisz i Zamknij" },
+  msg_changes_saved_profile: {
+    Português: "Todas as alterações foram guardadas no seu perfil com sucesso!",
+    Español: "¡Todos los cambios se han guardado en su perfil con éxito!",
+    "English": "All changes have been successfully saved to your profile!",
+    Français: "Toutes les modifications ont été enregistrées sur votre profil avec succès !",
+    "Polski": "Wszystkie zmiany zostały pomyślnie zapisane w Twoim profilu!"
+  },
+  msg_syncing_before_close: {
+    Português: "A sincronizar dados do perfil com o servidor antes de fechar...",
+    Español: "Sincronizando datos del perfil con el servidor antes de cerrar...",
+    "English": "Synchronizing profile data with the server before closing...",
+    Français: "Synchronisation des données du profil avec le serveur avant fermeture...",
+    "Polski": "Synchronizowanie danych profilu z serwerem przed zamknięciem..."
+  },
+  msg_data_saved_close_success: {
+    Português: "Todos os dados do seu perfil foram guardados com sucesso!",
+    Español: "¡Todos los datos de su perfil se han guardado con éxito!",
+    "English": "All your profile data has been saved successfully!",
+    Français: "Toutes les données de votre profil ont été enregistrées avec succès !",
+    "Polski": "Wszystkie dane z Twojego profilu zostały pomyślnie zapisane!"
+  },
+
 
   // --- PESQUISA GLOBAL ---
   search_category_clients: { Português: "Buscar Clientes", Español: "Buscar Clientes", "English": "Search Clients", Français: "Chercher Clients", "Polski": "Szukaj Klientów" },

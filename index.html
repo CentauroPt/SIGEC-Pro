@@ -164,7 +164,7 @@
         transform 0.95s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* Estado em repouso (SEM HOVER): apenas o botão .active fica visível */
+    /* Estado em repouso (SEM HOVER): apenas o botão .active fica visível após 1 segundo sem recolher */
     .nav-slide-bar:not(:hover) .nav-slide-btn:not(.active) {
       max-width: 0 !important;
       padding-left: 0 !important;
@@ -175,6 +175,7 @@
       transform: translateX(18px) !important;
       overflow: hidden !important;
       border: none !important;
+      transition-delay: 1s !important;
     }
 
     /* Botão ativo visível em repouso */
@@ -194,7 +195,7 @@
       color: #ffffff !important;
     }
 
-    /* Ao passar o cursor por cima da barra (HOVER): TODOS os botões deslizam para a esquerda */
+    /* Ao passar o cursor por cima da barra (HOVER): TODOS os botões deslizam de imediato */
     .nav-slide-bar:hover .nav-slide-btn {
       max-width: 300px;
       opacity: 1;
@@ -202,6 +203,7 @@
       pointer-events: auto;
       padding: 0.6rem 1.15rem;
       margin: 0 0.15rem;
+      transition-delay: 0s !important;
     }
 
     .nav-slide-bar:hover .nav-slide-btn:not(.active) {
@@ -514,6 +516,18 @@
       </nav>
 
       <div style="display: flex; gap: 0.5rem; align-items: center;">
+      <!-- BOTÃO DE PERFIL E DEFINIÇÕES PESSOAIS DO UTILIZADOR -->
+      <div class="header-user-profile-badge" id="headerUserProfileBadge" onclick="openCurrentUserSettingsModal()" title="Definições da Minha Conta" style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.14); padding: 0.35rem 0.75rem; border-radius: 8px; cursor: pointer; border: 1px solid rgba(255,255,255,0.25); transition: all 0.2s;">
+        <div style="width: 32px; height: 32px; border-radius: 50%; background: #ffffff; color: var(--primary-blue, #2563eb); display: flex; align-items: center; justify-content: center; font-size: 0.95rem; font-weight: 700;">
+          <i class="fa-solid fa-user-gear"></i>
+        </div>
+        <div style="display: flex; flex-direction: column; text-align: left; line-height: 1.2;">
+          <span id="headerActiveUserDisplayName" style="color: #ffffff; font-weight: 700; font-size: 0.84rem;">José Centúrio</span>
+          <span id="headerActiveUserRoleName" style="color: #bae6fd; font-size: 0.72rem; font-weight: 500;">Administrador</span>
+        </div>
+        <i class="fa-solid fa-gear" style="color: #ffffff; font-size: 0.85rem; margin-left: 0.25rem;"></i>
+      </div>
+
         <button type="button" class="header-action-compact-btn header-btn-save" onclick="saveProgramChangesInternal()"
           title="Guardar todas as alterações na base de dados interna do programa" id="btnSaveProgramChanges">
           <i class="fa-solid fa-floppy-disk" style="font-size: 1.05rem;"></i>
@@ -3712,7 +3726,8 @@
       <div style="font-size: 3.5rem; color: #10b981; margin-bottom: 1rem;">
         <i class="fa-solid fa-circle-check"></i>
       </div>
-      <h2 style="color: #1e3a8a; font-size: 1.5rem; margin-bottom: 0.75rem;">Dados Guardados com Sucesso!</h2>
+      <h2 style="color: #1e3a8a; font-size: 1.5rem; margin-bottom: 0.5rem;">Dados Guardados com Sucesso!</h2>
+      <div id="closeAppUserSubtitle" style="display: none; background: #e0f2fe; color: #0369a1; font-size: 0.82rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 9999px; margin-bottom: 1rem;"></div>
       <p style="color: var(--text-main); font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem;">
         A sua sessão foi encerrada com segurança e todas as informações de Clientes, Contactos e Projetos foram
         guardadas.
@@ -4318,9 +4333,9 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- Internationalization & Translations Engine -->
-  <script src="i18n.js?v=20260911_v65"></script>
+  <script src="i18n.js?v=20260911_v74"></script>
   <!-- Main JavaScript App -->
-  <script src="app.js?v=20260911_v69"></script>
+  <script src="app.js?v=20260911_v74"></script>
   <!-- Duplicates Management Engine -->
   <script src="duplicatesManager.js?v=20260911_v65"></script>
 
@@ -5348,6 +5363,158 @@
       <div class="modal-body" id="duplicate-merge-modal-body"
         style="padding: 1.5rem; max-height: 80vh; overflow-y: auto;">
         <!-- Rendered dynamically by openMergeModal() -->
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL DE DEFINIÇÕES PESSOAIS DO UTILIZADOR -->
+  <div id="currentUserSettingsModal" class="modal-overlay" style="z-index: 100060; display: none;" onclick="if(event.target === this) closeCurrentUserSettingsModal()">
+    <div class="modal-window modal-content" style="max-width: 650px; width: 95%; max-height: 90vh; background: #ffffff; border-radius: 12px; overflow: hidden; padding: 0; box-shadow: 0 20px 40px rgba(0,0,0,0.25); border: 1px solid #cbd5e1; display: flex; flex-direction: column;">
+      <!-- Modal Header -->
+      <div style="background: var(--header-bg, linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)); padding: 1.25rem 1.5rem; color: #ffffff; display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div style="width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+            <i class="fa-solid fa-user-gear"></i>
+          </div>
+          <div>
+            <h3 style="margin: 0; font-size: 1.15rem; font-weight: 700; color: #ffffff;" id="userSettingsModalTitle" data-i18n="user_settings_title">Definições do Utilizador</h3>
+            <p style="margin: 0.15rem 0 0 0; font-size: 0.8rem; color: #e0f2fe;" id="userSettingsModalSubtitle">José Centúrio • Administrador do Sistema</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeCurrentUserSettingsModal()" style="background: transparent; border: none; color: #ffffff; font-size: 1.25rem; cursor: pointer; padding: 0.25rem 0.5rem; border-radius: 4px;" title="Fechar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Modal Navigation Tabs -->
+      <div style="display: flex; background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 0 1rem;">
+        <button type="button" class="user-settings-tab-btn active" data-tab="security" onclick="switchUserSettingsTab('security')" id="tabBtnUserSettingsSecurity" style="padding: 0.75rem 1.25rem; font-weight: 600; font-size: 0.88rem; border: none; background: transparent; cursor: pointer; border-bottom: 3px solid var(--primary-blue, #2563eb); color: var(--primary-blue, #2563eb);">
+          <i class="fa-solid fa-key"></i> <span data-i18n="user_settings_tab_password">Alterar Palavra-Passe</span>
+        </button>
+        <button type="button" class="user-settings-tab-btn" data-tab="backup" onclick="switchUserSettingsTab('backup')" id="tabBtnUserSettingsBackup" style="padding: 0.75rem 1.25rem; font-weight: 600; font-size: 0.88rem; border: none; background: transparent; cursor: pointer; border-bottom: 3px solid transparent; color: #64748b;">
+          <i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="user_settings_tab_backup">Cópia & Restauro</span>
+        </button>
+        <button type="button" class="user-settings-tab-btn" data-tab="theme" onclick="switchUserSettingsTab('theme')" id="tabBtnUserSettingsTheme" style="padding: 0.75rem 1.25rem; font-weight: 600; font-size: 0.88rem; border: none; background: transparent; cursor: pointer; border-bottom: 3px solid transparent; color: #64748b;">
+          <i class="fa-solid fa-palette"></i> <span data-i18n="user_settings_tab_theme">Cores do Programa</span>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div style="padding: 1.5rem; max-height: 70vh; overflow-y: auto;">
+        <!-- TAB 1: SEGURANÇA / PALAVRA-PASSE -->
+        <div id="userSettingsTabSecurity" class="user-settings-tab-content">
+          <form id="formUserChangeOwnPassword" onsubmit="handleUserChangeOwnPassword(event)">
+            <div style="background: #f0f9ff; border-left: 4px solid var(--primary-blue, #2563eb); padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; margin-bottom: 1.25rem;">
+              <p style="margin: 0; font-size: 0.82rem; color: #0369a1; line-height: 1.45;">
+                <i class="fa-solid fa-circle-info"></i> <strong data-i18n="user_settings_sec_req_title">Requisitos de Segurança:</strong> <span data-i18n="user_settings_sec_req_text">A nova palavra-passe deve ter entre 8 e 12 caracteres, com pelo menos uma maiúscula e um número. Ao alterar com sucesso, o programa solicitará que inicie sessão novamente.</span>
+              </p>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; font-weight: 600; font-size: 0.84rem; color: #334155; margin-bottom: 0.35rem;" data-i18n="user_settings_lbl_current_pin">Palavra-Passe Atual (Velha) *</label>
+              <div style="position: relative;">
+                <input type="password" id="userSettingsCurrentPassword" class="form-control" required placeholder="Introduza a sua palavra-passe atual..." style="padding-right: 2.5rem;">
+                <button type="button" onclick="togglePinVisibility('userSettingsCurrentPassword', 'iconToggleCurrPass')" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; padding: 4px 8px;">
+                  <i class="fa-solid fa-eye" id="iconToggleCurrPass"></i>
+                </button>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; font-weight: 600; font-size: 0.84rem; color: #334155; margin-bottom: 0.35rem;" data-i18n="user_settings_lbl_new_pin">Nova Palavra-Passe (8 a 12 caracteres) *</label>
+              <div style="position: relative;">
+                <input type="password" id="userSettingsNewPassword" class="form-control" required placeholder="Introduza a nova palavra-passe..." style="padding-right: 2.5rem;" oninput="checkUserSettingsPasswordMatch()">
+                <button type="button" onclick="togglePinVisibility('userSettingsNewPassword', 'iconToggleNewPass')" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; padding: 4px 8px;">
+                  <i class="fa-solid fa-eye" id="iconToggleNewPass"></i>
+                </button>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 1.25rem;">
+              <label style="display: block; font-weight: 600; font-size: 0.84rem; color: #334155; margin-bottom: 0.35rem;" data-i18n="user_settings_lbl_confirm_pin">Repetir / Confirmar Nova Palavra-Passe *</label>
+              <div style="position: relative;">
+                <input type="password" id="userSettingsConfirmPassword" class="form-control" required placeholder="Repita a nova palavra-passe..." style="padding-right: 2.5rem;" oninput="checkUserSettingsPasswordMatch()">
+                <button type="button" onclick="togglePinVisibility('userSettingsConfirmPassword', 'iconToggleConfPass')" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; padding: 4px 8px;">
+                  <i class="fa-solid fa-eye" id="iconToggleConfPass"></i>
+                </button>
+              </div>
+            </div>
+
+            <div id="userSettingsPasswordMismatchAlert" style="display: none; background: #fee2e2; border-left: 4px solid #ef4444; color: #991b1b; padding: 0.75rem 1rem; border-radius: 0 6px 6px 0; margin-bottom: 1rem; font-size: 0.84rem; font-weight: 600;">
+              <i class="fa-solid fa-circle-exclamation"></i> <span data-i18n="user_settings_msg_mismatch">Aviso: A Nova Palavra-Passe e a Confirmação não coincidem. Por favor, verifique e corrija.</span>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+              <button type="button" class="btn btn-secondary" onclick="closeCurrentUserSettingsModal()" data-i18n="btn_cancel">Cancelar</button>
+              <button type="submit" class="btn btn-primary" id="btnSaveUserOwnPassword">
+                <i class="fa-solid fa-floppy-disk"></i> <span data-i18n="user_settings_btn_save_password">Gravar Nova Palavra-Passe</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- TAB 2: CÓPIA DE SEGURANÇA E RESTAURO DO PERFIL -->
+        <div id="userSettingsTabBackup" class="user-settings-tab-content" style="display: none;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+            <!-- Export Card -->
+            <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.25rem; text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <div style="width: 48px; height: 48px; border-radius: 50%; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; margin: 0 auto 0.75rem auto;">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+                <h4 style="margin: 0 0 0.35rem 0; font-size: 0.95rem; color: #0f172a;" data-i18n="user_settings_export_title">Exportar Cópia do Perfil</h4>
+                <p style="margin: 0 0 1rem 0; font-size: 0.78rem; color: #64748b; line-height: 1.4;" data-i18n="user_settings_export_desc">
+                  Gera e descarrega um ficheiro JSON com todos os registos exclusivos deste perfil de utilizador.
+                </p>
+              </div>
+              <button type="button" class="btn btn-primary" onclick="exportCurrentProfileBackup()" style="width: 100%;">
+                <i class="fa-solid fa-download"></i> <span data-i18n="user_settings_btn_export_profile">Fazer Backup dos Meus Registos</span>
+              </button>
+            </div>
+
+            <!-- Restore Card -->
+            <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.25rem; text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <div style="width: 48px; height: 48px; border-radius: 50%; background: #dcfce7; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; margin: 0 auto 0.75rem auto;">
+                  <i class="fa-solid fa-cloud-arrow-down"></i>
+                </div>
+                <h4 style="margin: 0 0 0.35rem 0; font-size: 0.95rem; color: #0f172a;" data-i18n="user_settings_restore_title">Restaurar Cópia no Perfil</h4>
+                <p style="margin: 0 0 1rem 0; font-size: 0.78rem; color: #64748b; line-height: 1.4;" data-i18n="user_settings_restore_desc">
+                  Restaura registos previamente exportados diretamente no seu perfil, sem afetar dados de outros utilizadores.
+                </p>
+              </div>
+              <input type="file" id="userProfileBackupFileInput" accept=".json" style="display: none;" onchange="handleUserProfileBackupFileSelected(event)">
+              <button type="button" class="btn btn-secondary" onclick="document.getElementById('userProfileBackupFileInput').click()" style="width: 100%; background: #ffffff; border-color: #cbd5e1; color: #0f172a;">
+                <i class="fa-solid fa-upload"></i> <span data-i18n="user_settings_btn_restore_profile">Restaurar Ficheiro JSON</span>
+              </button>
+            </div>
+          </div>
+
+          <div style="background: #f1f5f9; border-radius: 8px; padding: 0.75rem 1rem; font-size: 0.8rem; color: #475569;">
+            <i class="fa-solid fa-shield-halved" style="color: var(--primary-blue, #2563eb);"></i> <strong>Isolamento de Segurança:</strong> As operações de cópia e restauro afetam única e exclusivamente os registos atribuídos a este perfil.
+          </div>
+        </div>
+
+        <!-- TAB 3: CORES E TEMA VISUAL DO PROGRAMA -->
+        <div id="userSettingsTabTheme" class="user-settings-tab-content" style="display: none;">
+          <p style="margin: 0 0 1rem 0; font-size: 0.85rem; color: #475569;" data-i18n="user_settings_theme_desc">
+            Selecione a paleta de cores para personalizar o aspeto do programa de acordo com a sua preferência. A cor por defeito é o <strong>Azul Corporativo SIGEC-Pro</strong>.
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 0.85rem; margin-bottom: 1.5rem;" id="userThemePaletteGrid">
+            <!-- Palettes rendered by JavaScript -->
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+            <button type="button" class="btn btn-secondary" onclick="resetUserThemeToDefault()" data-i18n="user_settings_btn_reset_theme">
+              <i class="fa-solid fa-rotate-left"></i> <span data-i18n="user_settings_btn_reset_theme">Restaurar Cor Padrão</span>
+            </button>
+            <button type="button" class="btn btn-primary" onclick="saveUserThemeSelection()" data-i18n="user_settings_btn_save_theme">
+              <i class="fa-solid fa-check"></i> <span data-i18n="user_settings_btn_save_theme">Guardar Escolha de Cor</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
