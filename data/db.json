@@ -5370,6 +5370,30 @@
   ],
   "userLogs": [
     {
+      "id": "log-1789128502404-30306",
+      "usuarioId": "usr-1787381168601",
+      "usuarioNome": "Francisco",
+      "usuarioEmail": "Francisco@francisco.es",
+      "acao": "Definições do Utilizador",
+      "tipoAcao": "Definições do Utilizador",
+      "descricao": "Esquema de cores alterado para \"Bordeaux / Rubi Elegante\".",
+      "detalhes": {},
+      "extra": {},
+      "timestamp": "2026-09-11T12:08:22.404Z"
+    },
+    {
+      "id": "log-1789128496935-82923",
+      "usuarioId": "usr-1787381168601",
+      "usuarioNome": "Francisco",
+      "usuarioEmail": "Francisco@francisco.es",
+      "acao": "Definições do Utilizador",
+      "tipoAcao": "Definições do Utilizador",
+      "descricao": "Esquema de cores alterado para \"Azul Clássico SIGEC-Pro (Padrão)\".",
+      "detalhes": {},
+      "extra": {},
+      "timestamp": "2026-09-11T12:08:16.935Z"
+    },
+    {
       "id": "log-1789128390661-14455",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
