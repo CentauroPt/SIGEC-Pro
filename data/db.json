@@ -5419,36 +5419,6 @@
   ],
   "userLogs": [
     {
-      "id": "log-1789141442440-21560",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Gravação Manual",
-      "tipoAcao": "Gravação Manual",
-      "descricao": "Todas as alterações foram guardadas com sucesso no perfil de José Centúrio.",
-      "detalhes": {
-        "utilizador": "José Centúrio",
-        "userId": "usr-admin-001"
-      },
-      "extra": {
-        "utilizador": "José Centúrio",
-        "userId": "usr-admin-001"
-      },
-      "timestamp": "2026-09-11T15:44:02.440Z"
-    },
-    {
-      "id": "log-1789141379719-78530",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Atualização de Software",
-      "tipoAcao": "Atualização de Software",
-      "descricao": "Pacote de atualização \"SIGEC_V1.7.10_11-09-2026_17h42m.json\" gerado (Apenas Software - Sem dados de registo).",
-      "detalhes": {},
-      "extra": {},
-      "timestamp": "2026-09-11T15:42:59.719Z"
-    },
-    {
       "id": "log-1789140924611-18221",
       "usuarioId": "usr-1787381168601",
       "usuarioNome": "Francisco",
