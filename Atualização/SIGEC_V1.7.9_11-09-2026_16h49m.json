@@ -1,0 +1,26 @@
+{
+  "packageName": "SIGEC_V1.7.9_11-09-2026_16h49m",
+  "version": "SIGEC_V1.7.9",
+  "fileName": "SIGEC_V1.7.9_11-09-2026_16h49m.json",
+  "createdAt": "2026-09-11T14:49:00.801Z",
+  "dataHoraCriacao": "11/09/2026 16:49:00",
+  "system": "SIGEC-Pro",
+  "tipoPacote": "ATUALIZACAO_SOFTWARE_EXCLUSIVA",
+  "notes": "Pacote de atualização de software SIGEC_V1.7.9 gerado em 11/09/2026 16:49:00 - Otimização de Interface, Segurança e Funcionalidades do Sistema",
+  "software": {
+    "version": "SIGEC_V1.7.9",
+    "releasedAt": "2026-09-11T14:49:00.801Z",
+    "modules": [
+      "clientes",
+      "contactos",
+      "projetos",
+      "interacoes",
+      "estatais",
+      "configuracao",
+      "seguranca",
+      "backups",
+      "servidor_github"
+    ],
+    "requiresDataPreservation": true
+  }
+}
