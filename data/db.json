@@ -5365,19 +5365,14 @@
   ],
   "userLogs": [
     {
-      "id": "log-1789123733697-731",
+      "id": "log-1789124560428-742",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Início de Sessão",
-      "detalhes": "Acesso autorizado efetuado por José Centúrio (jmcenturio@alegria-activity.com).",
-      "extra": {
-        "utilizador": "José Centúrio",
-        "email": "jmcenturio@alegria-activity.com",
-        "cargo": "Administrador do Sistema",
-        "dispositivo": "Computador"
-      },
-      "timestamp": "2026-09-11T10:48:53.697Z"
+      "acao": "Ficha do Utilizador",
+      "detalhes": "Ficha do utilizador José Centúrio aberta após autenticação de Administrador.",
+      "extra": {},
+      "timestamp": "2026-09-11T11:02:40.428Z"
     }
   ],
   "orcamentos": [
