@@ -5220,10 +5220,114 @@ ${strength.message}`);
 window.handleUserChangeOwnPassword = handleUserChangeOwnPassword;
 
 // ==========================================
-// BACKUP E RESTAURO ISOLADO POR PERFIL
+// BACKUP E RESTAURO ISOLADO POR PERFIL E SERVIDOR
 // ==========================================
 
-function exportCurrentProfileBackup() {
+function getUserBackupFolderName(user) {
+  if (!user) {
+    const active = typeof getActiveLoggedInUser === 'function' ? getActiveLoggedInUser() : null;
+    if (active) user = active;
+  }
+  if (!user) return 'Geral';
+  let rawName = user.nome || user.email || user.username || 'Utilizador';
+  try {
+    if (rawName.includes('Ã')) {
+      rawName = decodeURIComponent(escape(rawName));
+    }
+  } catch(e) {}
+
+  const cleanName = rawName
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9_-]/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_|_$/g, '');
+
+  return cleanName || 'Utilizador';
+}
+window.getUserBackupFolderName = getUserBackupFolderName;
+
+async function ensureUserBackupFolderOnServer(user) {
+  if (!user) return;
+  const cfg = typeof getGitHubConfig === 'function' ? getGitHubConfig() : {};
+  const token = (cfg.token || '').trim();
+  const owner = (cfg.owner || 'centauropt').trim();
+  const repo = (cfg.repo || 'SIGEC-Pro').trim();
+  if (!token) return;
+
+  const folderName = getUserBackupFolderName(user);
+  const gitkeepPath = `Backup/${folderName}/.gitkeep`;
+  const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${gitkeepPath}`;
+
+  try {
+    const authHeadersToTry = [
+      token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`,
+      `token ${token}`,
+      `Bearer ${token}`
+    ];
+
+    let exists = false;
+    for (const authHdr of authHeadersToTry) {
+      try {
+        const checkRes = await fetch(apiUrl, {
+          method: 'GET',
+          headers: {
+            'Authorization': authHdr,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+        if (checkRes.status === 200) {
+          exists = true;
+          break;
+        }
+      } catch (e) {}
+    }
+
+    if (!exists) {
+      const initContent = typeof utf8ToBase64 === 'function' 
+        ? utf8ToBase64(`# Pasta de Cópia de Segurança: ${user.nome || folderName}\n`) 
+        : btoa(`# Pasta de Backup: ${folderName}\n`);
+
+      for (const authHdr of authHeadersToTry) {
+        try {
+          const createRes = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+              'Authorization': authHdr,
+              'Content-Type': 'application/json',
+              'Accept': 'application/vnd.github.v3+json'
+            },
+            body: JSON.stringify({
+              message: `Criar pasta de cópias de segurança para o utilizador: ${user.nome || folderName}`,
+              content: initContent
+            })
+          });
+          if (createRes.status === 200 || createRes.status === 201) {
+            break;
+          }
+        } catch (e) {}
+      }
+    }
+  } catch (err) {
+    console.warn('Tentativa de criação de pasta do utilizador no GitHub:', err);
+  }
+}
+window.ensureUserBackupFolderOnServer = ensureUserBackupFolderOnServer;
+
+async function ensureAllUsersBackupFoldersOnServer() {
+  if (Array.isArray(db.usuarios)) {
+    for (const u of db.usuarios) {
+      if (u && (u.nome || u.email)) {
+        try {
+          await ensureUserBackupFolderOnServer(u);
+        } catch (e) {}
+      }
+    }
+  }
+}
+window.ensureAllUsersBackupFoldersOnServer = ensureAllUsersBackupFoldersOnServer;
+
+async function exportCurrentProfileBackup() {
   const user = getActiveLoggedInUser();
   if (!user) return;
 
@@ -5235,8 +5339,8 @@ function exportCurrentProfileBackup() {
   const minutes = String(now.getMinutes()).padStart(2, '0');
   const seconds = String(now.getSeconds()).padStart(2, '0');
 
-  const cleanUserName = (user.nome || 'Utilizador').replace(/[^a-zA-Z0-9_-]/g, '_');
-  const fileName = `Backup_Perfil_${cleanUserName}_${day}-${month}-${year}_${hours}-${minutes}-${seconds}.json`;
+  const userFolder = getUserBackupFolderName(user);
+  const fileName = `Backup_Perfil_${userFolder}_${day}-${month}-${year}_${hours}-${minutes}-${seconds}.json`;
 
   const userClients = (db.clientes || []).filter(c => c && (c.userId === user.id || c.comercialAtribuidoId === user.id));
   const userContacts = (db.contactos || []).filter(ct => ct && (ct.userId === user.id || ct.comercialAtribuidoId === user.id));
@@ -5258,6 +5362,7 @@ function exportCurrentProfileBackup() {
       idioma: user.idioma,
       role: user.role
     },
+    pastaServidor: `Backup/${userFolder}`,
     resumo: {
       clientes: userClients.length,
       contactos: userContacts.length,
@@ -5277,6 +5382,8 @@ function exportCurrentProfileBackup() {
   };
 
   const jsonStr = JSON.stringify(backupData, null, 2);
+
+  // 1. Download Local para o Computador
   const blob = new Blob([jsonStr], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -5285,23 +5392,65 @@ function exportCurrentProfileBackup() {
   a.click();
   a.remove();
 
-  if (typeof logUserActivity === 'function') {
-    logUserActivity('Cópia de Segurança', `Cópia de segurança do perfil "${fileName}" descarregada com sucesso (${userClients.length} Clientes, ${userProjects.length} Projetos).`);
+  // 2. Upload para a pasta do utilizador no Servidor GitHub
+  const cfg = typeof getGitHubConfig === 'function' ? getGitHubConfig() : {};
+  const token = (cfg.token || '').trim();
+  const owner = (cfg.owner || 'centauropt').trim();
+  const repo = (cfg.repo || 'SIGEC-Pro').trim();
+  let uploadedToGitHub = false;
+
+  if (token) {
+    showToast(`A guardar cópia na pasta "${userFolder}" do servidor...`, 'info');
+    try {
+      const remotePath = `Backup/${userFolder}/${fileName}`;
+      const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${remotePath}`;
+      const contentBase64 = typeof utf8ToBase64 === 'function' ? utf8ToBase64(jsonStr) : btoa(unescape(encodeURIComponent(jsonStr)));
+
+      const authHeadersToTry = [
+        token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`,
+        `token ${token}`,
+        `Bearer ${token}`
+      ];
+
+      for (const authHdr of authHeadersToTry) {
+        try {
+          const res = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+              'Authorization': authHdr,
+              'Content-Type': 'application/json',
+              'Accept': 'application/vnd.github.v3+json'
+            },
+            body: JSON.stringify({
+              message: `Cópia de Segurança do Perfil (${user.nome || userFolder}): ${fileName}`,
+              content: contentBase64
+            })
+          });
+
+          if (res.status === 200 || res.status === 201) {
+            uploadedToGitHub = true;
+            break;
+          }
+        } catch (errUpload) {
+          console.warn('Tentativa de upload de backup de perfil:', errUpload);
+        }
+      }
+    } catch (err) {
+      console.error('Erro ao guardar cópia do perfil no servidor:', err);
+    }
   }
 
-  showToast('Cópia de segurança do perfil criada com sucesso!', 'success');
-  alert(`✅ Cópia de Segurança do Perfil Concluída!
+  if (typeof logUserActivity === 'function') {
+    logUserActivity('Cópia de Segurança', `Cópia de segurança do perfil "${fileName}" gerada (${userClients.length} Clientes, ${userProjects.length} Projetos).`);
+  }
 
-Ficheiro: ${fileName}
-
-Conteúdo Registado no Seu Perfil:
-- ${userClients.length} Clientes
-- ${userContacts.length} Contactos
-- ${userProjects.length} Projetos
-- ${userBudgets.length} Orçamentos
-- ${userInteractions.length} Interações
-
-O ficheiro foi descarregado para o seu computador.`);
+  if (uploadedToGitHub) {
+    showToast('Cópia do perfil criada e guardada na pasta do servidor com sucesso!', 'success');
+    alert(`✅ Cópia de Segurança do Perfil Concluída!\n\nFicheiro: ${fileName}\n\n✔️ Guardado na pasta "Backup/${userFolder}" do Servidor GitHub (${owner}/${repo})\n✔️ Ficheiro descarregado para o seu computador.\n\nConteúdo Registado no Seu Perfil:\n- ${userClients.length} Clientes\n- ${userContacts.length} Contactos\n- ${userProjects.length} Projetos\n- ${userBudgets.length} Orçamentos\n- ${userInteractions.length} Interações`);
+  } else {
+    showToast('Cópia de segurança do perfil criada com sucesso!', 'success');
+    alert(`✅ Cópia de Segurança do Perfil Concluída!\n\nFicheiro: ${fileName}\n\nFicheiro descarregado para o seu computador. Guarde-o na pasta "Backup/${userFolder}".\n\nConteúdo Registado no Seu Perfil:\n- ${userClients.length} Clientes\n- ${userContacts.length} Contactos\n- ${userProjects.length} Projetos\n- ${userBudgets.length} Orçamentos\n- ${userInteractions.length} Interações\n\nNota: Para envio automático direto para a pasta do servidor GitHub, certifique-se de que o Token PAT está configurado nas Definições.`);
+  }
 }
 window.exportCurrentProfileBackup = exportCurrentProfileBackup;
 
@@ -16139,6 +16288,10 @@ function handleUserSelfRegistration(event) {
 
   logUserActivity('Registo de Utilizador', `Novo utilizador ${nome} (${email}) registado no sistema com idioma ${idioma} (Acesso pendente de ativação pelo Administrador).`);
   
+  if (typeof ensureUserBackupFolderOnServer === 'function') {
+    ensureUserBackupFolderOnServer(newUser).catch(() => {});
+  }
+
   // Envio incondicional de emails de confirmação e alerta
   if (typeof sendUserRegistrationConfirmationEmail === 'function') {
     sendUserRegistrationConfirmationEmail(newUser).catch(() => {});
@@ -16642,6 +16795,9 @@ function handleUserRegistration(event) {
   renderUserSelectOptions();
 
   logUserActivity('Gestão de Utilizadores', `Utilizador ${nome} (${email}) adicionado à administração do sistema com idioma ${idioma}.`);
+  if (typeof ensureUserBackupFolderOnServer === 'function') {
+    ensureUserBackupFolderOnServer(newUser).catch(() => {});
+  }
   if (typeof sendNewUserRegistrationEmailNotification === 'function') {
     sendNewUserRegistrationEmailNotification(newUser).catch(() => {});
   }
@@ -17530,6 +17686,9 @@ document.addEventListener('DOMContentLoaded', function() {
 let pendingBackupRestoreData = null;
 
 async function exportDatabaseJSON() {
+  const activeUser = typeof getActiveLoggedInUser === 'function' ? getActiveLoggedInUser() : null;
+  const userFolder = getUserBackupFolderName(activeUser);
+
   const now = new Date();
   const day = String(now.getDate()).padStart(2, '0');
   const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -17538,13 +17697,20 @@ async function exportDatabaseJSON() {
   const minutes = String(now.getMinutes()).padStart(2, '0');
   const seconds = String(now.getSeconds()).padStart(2, '0');
 
-  const fileName = `Backup_SIGEC-Pro_${day}-${month}-${year}_${hours}-${minutes}-${seconds}.json`;
+  const fileName = `Backup_SIGEC-Pro_${userFolder}_${day}-${month}-${year}_${hours}-${minutes}-${seconds}.json`;
 
   // O ficheiro gerado contém APENAS dados de registo e nada referente ao software
   const backupData = {
     tipoFicheiro: "BACKUP_REGISTOS_SIGEC_PRO",
     dataExportacao: now.toISOString(),
     dataHoraFormatada: `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`,
+    utilizador: activeUser ? {
+      id: activeUser.id,
+      nome: activeUser.nome,
+      email: activeUser.email,
+      cargo: activeUser.cargo
+    } : null,
+    pastaServidor: `Backup/${userFolder}`,
     resumoRegistos: {
       clientes: Array.isArray(db.clientes) ? db.clientes.length : 0,
       contactos: Array.isArray(db.contactos) ? db.contactos.length : 0,
@@ -17582,7 +17748,7 @@ async function exportDatabaseJSON() {
   a.click();
   a.remove();
 
-  // 2. Upload Automático para o Servidor GitHub na pasta "Backup"
+  // 2. Upload Automático para o Servidor GitHub na pasta do Utilizador
   const cfg = getGitHubConfig();
   const token = (cfg.token || '').trim();
   const owner = (cfg.owner || 'centauropt').trim();
@@ -17590,11 +17756,11 @@ async function exportDatabaseJSON() {
   let uploadedToGitHub = false;
 
   if (token) {
-    showToast('A enviar cópia de segurança para a pasta Backup do servidor GitHub...', 'info');
+    showToast(`A enviar cópia de segurança para a pasta "${userFolder}" do servidor GitHub...`, 'info');
     try {
-      const remotePath = `Backup/${fileName}`;
+      const remotePath = `Backup/${userFolder}/${fileName}`;
       const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${remotePath}`;
-      const contentBase64 = utf8ToBase64(jsonStr);
+      const contentBase64 = typeof utf8ToBase64 === 'function' ? utf8ToBase64(jsonStr) : btoa(unescape(encodeURIComponent(jsonStr)));
 
       const authHeadersToTry = [
         token.startsWith('github_pat_') ? `Bearer ${token}` : `token ${token}`,
@@ -17612,7 +17778,7 @@ async function exportDatabaseJSON() {
               'Accept': 'application/vnd.github.v3+json'
             },
             body: JSON.stringify({
-              message: `Cópia de Segurança de Registos: ${fileName}`,
+              message: `Cópia de Segurança de Registos (${activeUser ? activeUser.nome : userFolder}): ${fileName}`,
               content: contentBase64
             })
           });
@@ -17635,28 +17801,36 @@ async function exportDatabaseJSON() {
   }
 
   if (uploadedToGitHub) {
-    showToast('Backup criado e guardado com sucesso na pasta Backup do servidor GitHub!');
-    alert(`✅ Cópia de Segurança Criada com Sucesso!\n\nFicheiro: ${fileName}\n\n✔️ Guardado na pasta "Backup" do Servidor GitHub (${owner}/${repo})\n✔️ Ficheiro descarregado para o seu computador.\n\nConteúdo Registado (Apenas Dados):\n- ${backupData.resumoRegistos.clientes} Clientes\n- ${backupData.resumoRegistos.contactos} Contactos\n- ${backupData.resumoRegistos.projetos} Projetos\n- ${backupData.resumoRegistos.interacoes} Interações`);
+    showToast('Backup criado e guardado com sucesso na pasta do utilizador no servidor GitHub!');
+    alert(`✅ Cópia de Segurança Criada com Sucesso!\n\nFicheiro: ${fileName}\n\n✔️ Guardado na pasta "Backup/${userFolder}" do Servidor GitHub (${owner}/${repo})\n✔️ Ficheiro descarregado para o seu computador.\n\nConteúdo Registado (Apenas Dados):\n- ${backupData.resumoRegistos.clientes} Clientes\n- ${backupData.resumoRegistos.contactos} Contactos\n- ${backupData.resumoRegistos.projetos} Projetos\n- ${backupData.resumoRegistos.interacoes} Interações`);
   } else {
     showToast('Cópia de segurança (Backup) criada com sucesso!');
-    alert(`✅ Cópia de Segurança Criada com Sucesso!\n\nFicheiro: ${fileName}\n\nFicheiro descarregado para o seu computador. Guarde-o na pasta "Backup".\n\nConteúdo Registado (Apenas Dados):\n- ${backupData.resumoRegistos.clientes} Clientes\n- ${backupData.resumoRegistos.contactos} Contactos\n- ${backupData.resumoRegistos.projetos} Projetos\n- ${backupData.resumoRegistos.interacoes} Interações\n\nNota: Para envio automático direto ao Servidor GitHub, certifique-se de que o Token PAT está configurado nas Definições.`);
+    alert(`✅ Cópia de Segurança Criada com Sucesso!\n\nFicheiro: ${fileName}\n\nFicheiro descarregado para o seu computador. Guarde-o na pasta "Backup/${userFolder}".\n\nConteúdo Registado (Apenas Dados):\n- ${backupData.resumoRegistos.clientes} Clientes\n- ${backupData.resumoRegistos.contactos} Contactos\n- ${backupData.resumoRegistos.projetos} Projetos\n- ${backupData.resumoRegistos.interacoes} Interações\n\nNota: Para envio automático direto ao Servidor GitHub, certifique-se de que o Token PAT está configurado nas Definições.`);
   }
 }
 
 async function triggerDatabaseRestore() {
+  const activeUser = typeof getActiveLoggedInUser === 'function' ? getActiveLoggedInUser() : null;
+  const userFolder = getUserBackupFolderName(activeUser);
+
   const cfg = getGitHubConfig();
   const token = (cfg.token || '').trim();
   const owner = (cfg.owner || 'centauropt').trim();
   const repo = (cfg.repo || 'SIGEC-Pro').trim();
 
-  showToast('A ligar ao servidor GitHub para procurar cópias de segurança...', 'info');
+  showToast(`A ligar ao servidor GitHub para procurar cópias de segurança na pasta "${userFolder}"...`, 'info');
 
-  const foldersToTry = ['Backup', 'Backups'];
+  const foldersToTry = [];
+  if (userFolder && userFolder !== 'Geral') {
+    foldersToTry.push(`Backup/${userFolder}`);
+  }
+  foldersToTry.push('Backup', 'Backups');
+
   let foundFiles = [];
-  let detectedFolder = 'Backup';
+  let detectedFolder = `Backup/${userFolder}`;
   let lastError = null;
 
-  // 1. Procura na pasta do servidor GitHub (tenta com Token e sem Token como fallback para repositórios públicos)
+  // 1. Procura prioritariamente na pasta do utilizador no servidor GitHub
   for (const folder of foldersToTry) {
     const listApiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${folder}`;
     const authHeadersList = [];
@@ -17698,7 +17872,7 @@ async function triggerDatabaseRestore() {
     foundFiles.sort((a, b) => b.name.localeCompare(a.name));
     const latestFile = foundFiles[0];
 
-    showToast(`Backup mais recente detetado: ${latestFile.name}. A descarregar registos...`, 'info');
+    showToast(`Backup mais recente detetado (${latestFile.name}). A descarregar registos do servidor...`, 'info');
 
     let parsedData = null;
 
@@ -17764,7 +17938,7 @@ async function triggerDatabaseRestore() {
 
     if (parsedData) {
       showToast('Cópia de segurança carregada com sucesso do servidor GitHub!');
-      openBackupRestoreModalWithData(parsedData, latestFile.name, 'github');
+      openBackupRestoreModalWithData(parsedData, latestFile.name, 'github', detectedFolder);
       return;
     } else {
       alert(`⚠️ Foi encontrado o ficheiro "${latestFile.name}" na pasta ${detectedFolder} do servidor GitHub, mas não foi possível descarregar o seu conteúdo automaticamente.\n\nPode selecionar o ficheiro de backup a partir do seu computador.`);
@@ -17776,9 +17950,9 @@ async function triggerDatabaseRestore() {
   // Se não encontrou nenhum ficheiro no servidor GitHub
   const confirmLocal = confirm(
     `🔍 Pesquisa no Servidor GitHub (${owner}/${repo}):\n\n` +
-    `Não foram encontradas cópias de segurança (.json) na pasta "Backup" do repositório GitHub.\n\n` +
+    `Não foram encontradas cópias de segurança (.json) na pasta "${detectedFolder}" do servidor GitHub.\n\n` +
     (token ? `✔️ Token de Acesso PAT configurado.\n\n` : `⚠️ Nota: Nenhum Token PAT configurado nas Definições.\n\n`) +
-    `Deseja procurar e selecionar um ficheiro de cópia de segurança (.json) guardado no seu computador?`
+    `Deseja procurar e selecionar um ficheiro de cópia de segurança (.json) guardado no seu computador (PC)?`
   );
 
   if (confirmLocal) {
@@ -17811,7 +17985,7 @@ function importDatabaseJSON(event) {
   reader.readAsText(file);
 }
 
-function openBackupRestoreModalWithData(parsed, fileName, source) {
+function openBackupRestoreModalWithData(parsed, fileName, source, detectedFolder) {
   if (!parsed) {
     alert('Erro: O ficheiro de backup selecionado está vazio ou inválido.');
     return;
@@ -17834,6 +18008,7 @@ function openBackupRestoreModalWithData(parsed, fileName, source) {
   pendingBackupRestoreData = {
     fileName: fileName || 'Backup_SIGEC-Pro.json',
     source: source || 'github',
+    detectedFolder: detectedFolder || 'Backup',
     _rawParsed: parsed, // Preserva o objecto completo para recuperação do token (_spcfg)
     data: {
       clientes,
@@ -17865,12 +18040,13 @@ function openBackupRestoreModalWithData(parsed, fileName, source) {
 
   if (badgeEl) {
     if (source === 'github') {
-      badgeEl.innerHTML = '<i class="fa-solid fa-cloud-check"></i> Servidor GitHub (Pasta Backup)';
+      const folderLabel = detectedFolder ? `Servidor GitHub (${detectedFolder})` : 'Servidor GitHub (Pasta Backup)';
+      badgeEl.innerHTML = `<i class="fa-solid fa-cloud-check"></i> ${folderLabel}`;
       badgeEl.style.background = '#dcfce7';
       badgeEl.style.color = '#15803d';
       badgeEl.style.borderColor = '#86efac';
     } else {
-      badgeEl.innerHTML = '<i class="fa-solid fa-hard-drive"></i> Ficheiro Local do Computador';
+      badgeEl.innerHTML = '<i class="fa-solid fa-hard-drive"></i> Ficheiro Local do Computador (PC)';
       badgeEl.style.background = '#e0f2fe';
       badgeEl.style.color = '#0369a1';
       badgeEl.style.borderColor = '#bae6fd';
@@ -17878,7 +18054,10 @@ function openBackupRestoreModalWithData(parsed, fileName, source) {
   }
 
   const modal = document.getElementById('backupRestoreConfirmationModal');
-  if (modal) modal.classList.add('active');
+  if (modal) {
+    modal.style.zIndex = '100100';
+    modal.classList.add('active');
+  }
 }
 
 function closeBackupRestoreModal() {

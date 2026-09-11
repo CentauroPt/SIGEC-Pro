@@ -246,6 +246,20 @@ const SIGEC_I18N = {
     Français: "Restaurer le Fichier JSON",
     "Polski": "Przywróć Plik JSON"
   },
+  user_settings_btn_restore_server: {
+    Português: "Restaurar do Servidor",
+    Español: "Restaurar del Servidor",
+    "English": "Restore from Server",
+    Français: "Restaurer du Serveur",
+    "Polski": "Przywróć z Serwera"
+  },
+  user_settings_btn_restore_pc: {
+    Português: "Procurar no PC...",
+    Español: "Buscar en el PC...",
+    "English": "Browse on PC...",
+    Français: "Parcourir sur le PC...",
+    "Polski": "Przeglądaj na PC..."
+  },
   user_settings_theme_desc: {
     Português: "Selecione a paleta de cores para personalizar o aspeto do programa de acordo com a sua preferência. A cor por defeito é o Azul Corporativo SIGEC-Pro.",
     Español: "Seleccione la paleta de colores para personalizar el aspecto del programa según su preferencia. El color predeterminado es el Azul Corporativo SIGEC-Pro.",
