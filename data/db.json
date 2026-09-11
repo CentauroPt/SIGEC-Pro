@@ -5365,6 +5365,66 @@
   ],
   "userLogs": [
     {
+      "id": "log-1789125067370-43376",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Ficha do Utilizador",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Dados de registo e PIN do utilizador José Centúrio atualizados pelo Administrador.",
+      "detalhes": {},
+      "extra": {},
+      "timestamp": "2026-09-11T11:11:07.370Z"
+    },
+    {
+      "id": "log-1789125061217-81066",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Ficha do Utilizador",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Dados de registo e PIN do utilizador José Centúrio atualizados pelo Administrador.",
+      "detalhes": {},
+      "extra": {},
+      "timestamp": "2026-09-11T11:11:01.217Z"
+    },
+    {
+      "id": "log-1789125033531-85159",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Ficha do Utilizador",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Ficha do utilizador José Centúrio aberta após autenticação de Administrador.",
+      "detalhes": {},
+      "extra": {},
+      "timestamp": "2026-09-11T11:10:33.531Z"
+    },
+    {
+      "id": "log-1789124985745-58690",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Ficha do Utilizador",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Ficha do utilizador José Centúrio aberta após autenticação de Administrador.",
+      "detalhes": {},
+      "extra": {},
+      "timestamp": "2026-09-11T11:09:45.745Z"
+    },
+    {
+      "id": "log-1789124937879-173",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Servidor GitHub",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "detalhes": {},
+      "extra": {},
+      "timestamp": "2026-09-11T11:08:57.879Z"
+    },
+    {
       "id": "log-1789124918834-67551",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
@@ -5396,7 +5456,9 @@
       "acao": "Ficha do Utilizador",
       "detalhes": "Ficha do utilizador José Centúrio aberta após autenticação de Administrador.",
       "extra": {},
-      "timestamp": "2026-09-11T11:03:04.025Z"
+      "timestamp": "2026-09-11T11:03:04.025Z",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Ficha do utilizador José Centúrio aberta após autenticação de Administrador."
     },
     {
       "id": "log-1789124575703-334",
@@ -5406,7 +5468,9 @@
       "acao": "Servidor GitHub",
       "detalhes": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
       "extra": {},
-      "timestamp": "2026-09-11T11:02:55.704Z"
+      "timestamp": "2026-09-11T11:02:55.704Z",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro)."
     },
     {
       "id": "log-1789124560428-742",
@@ -5416,7 +5480,9 @@
       "acao": "Ficha do Utilizador",
       "detalhes": "Ficha do utilizador José Centúrio aberta após autenticação de Administrador.",
       "extra": {},
-      "timestamp": "2026-09-11T11:02:40.428Z"
+      "timestamp": "2026-09-11T11:02:40.428Z",
+      "tipoAcao": "Ficha do Utilizador",
+      "descricao": "Ficha do utilizador José Centúrio aberta após autenticação de Administrador."
     }
   ],
   "orcamentos": [
