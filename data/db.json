@@ -5419,6 +5419,48 @@
   ],
   "userLogs": [
     {
+      "id": "log-1789147446989-21037",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Encerramento",
+      "tipoAcao": "Encerramento",
+      "descricao": "Sessão encerrada com gravação segura de todos os dados do perfil de José Centúrio.",
+      "detalhes": {
+        "utilizador": "José Centúrio",
+        "userId": "usr-admin-001"
+      },
+      "extra": {
+        "utilizador": "José Centúrio",
+        "userId": "usr-admin-001"
+      },
+      "timestamp": "2026-09-11T17:24:06.989Z"
+    },
+    {
+      "id": "log-1789147442273-30184",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Atualização de Software",
+      "tipoAcao": "Atualização de Software",
+      "descricao": "Pacote de atualização \"SIGEC_V1.7.11_11-09-2026_19h23m.json\" gerado (Apenas Software - Sem dados de registo).",
+      "detalhes": {},
+      "extra": {},
+      "timestamp": "2026-09-11T17:24:02.273Z"
+    },
+    {
+      "id": "log-1789147440708-90639",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Servidor GitHub",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "detalhes": {},
+      "extra": {},
+      "timestamp": "2026-09-11T17:24:00.708Z"
+    },
+    {
       "id": "log-1789147206627-61464",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
