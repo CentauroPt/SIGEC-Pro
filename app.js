@@ -3666,6 +3666,16 @@ function loadDatabase() {
     db.interacoes = deduplicateAndFilter(rawInteracoes !== null ? JSON.parse(rawInteracoes) : [], 'interacoes');
     db.interacoesProjetos = deduplicateAndFilter(rawInteracoesProjetos !== null ? JSON.parse(rawInteracoesProjetos) : [], 'interacoesProjetos');
     db.usuarios = deduplicateAndFilter(rawUsuarios !== null ? JSON.parse(rawUsuarios) : (typeof INITIAL_EXCEL_DATABASE !== 'undefined' && INITIAL_EXCEL_DATABASE.usuarios ? [...INITIAL_EXCEL_DATABASE.usuarios] : []), 'usuarios');
+    if (rawUserLogs !== null) {
+      try {
+        const parsedLogs = JSON.parse(rawUserLogs);
+        db.userLogs = Array.isArray(parsedLogs) ? parsedLogs : [];
+      } catch (e) {
+        db.userLogs = [];
+      }
+    } else {
+      db.userLogs = [];
+    }
     if (rawOrcamentos !== null) {
       db.orcamentos = deduplicateAndFilter(JSON.parse(rawOrcamentos), 'orcamentos');
     } else {
@@ -4476,6 +4486,19 @@ async function loadDatabaseFromGitHub(silent = false) {
           hasUpdates = true;
         } else {
           db.usuarios[idx] = { ...incUser, ...db.usuarios[idx] };
+        }
+      });
+    }
+
+    // Fusão e preservação perpétua de histórico de atividade
+    if (Array.isArray(remoteDb.userLogs)) {
+      if (!Array.isArray(db.userLogs)) db.userLogs = [];
+      remoteDb.userLogs.forEach(incLog => {
+        if (!incLog || !incLog.id) return;
+        const exists = db.userLogs.some(l => l && l.id === incLog.id);
+        if (!exists) {
+          db.userLogs.push(incLog);
+          hasUpdates = true;
         }
       });
     }
@@ -7738,6 +7761,11 @@ function saveInteraction(e) {
   } else {
     db.interacoes.push(intObj);
     showToast('Contacto realizado registado com sucesso!');
+  }
+
+  if (typeof logUserActivity === 'function') {
+    const clientObj = (db.clientes || []).find(c => c.id === currentClientId);
+    logUserActivity('Interação', `Registo de contacto/interação efetuado para o cliente "${clientObj ? clientObj.nome : 'Cliente'}".`, { cliente: clientObj ? clientObj.nome : '' });
   }
 
   saveDatabase();
@@ -14753,23 +14781,36 @@ function logUserActivity(acao, detalhes, extra = {}) {
     const activeUserId = (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('sigec_pro_active_user_id')) || 
                          (typeof localStorage !== 'undefined' && localStorage.getItem('sigec_pro_active_user_id')) || 
                          'usr-admin-001';
-    const activeUser = Array.isArray(db.usuarios) ? db.usuarios.find(u => u && u.id === activeUserId) : null;
-    const userName = (extra && extra.utilizador) || (activeUser ? activeUser.nome : 'Administrador');
+    const activeUser = (Array.isArray(db.usuarios) ? db.usuarios.find(u => u && u.id === activeUserId) : null) ||
+                       (Array.isArray(db.usuarios) ? db.usuarios.find(u => u && (u.role === 'admin' || u.id === 'usr-admin-001')) : null);
+    
+    const userName = (extra && extra.utilizador) || (activeUser ? activeUser.nome : 'José Centúrio');
     const userEmail = (extra && extra.email) || (activeUser ? activeUser.email : 'jmcenturio@alegria-activity.com');
 
+    const descStr = (typeof detalhes === 'string') 
+      ? detalhes 
+      : ((detalhes && detalhes.descricao) ? detalhes.descricao : ((extra && extra.descricao) ? extra.descricao : (acao || 'Atividade')));
+    
+    const detailsObj = (typeof detalhes === 'object' && detalhes !== null) 
+      ? { ...detalhes, ...(extra || {}) } 
+      : (extra ? { ...extra } : {});
+
     const logEntry = {
-      id: "log-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
+      id: "log-" + Date.now() + "-" + Math.floor(Math.random() * 100000),
       usuarioId: activeUser ? activeUser.id : activeUserId,
       usuarioNome: userName,
       usuarioEmail: userEmail,
       acao: acao || 'Atividade Geral',
-      detalhes: detalhes || '',
+      tipoAcao: acao || 'Atividade Geral',
+      descricao: descStr,
+      detalhes: detailsObj,
       extra: extra || {},
       timestamp: new Date().toISOString()
     };
 
     db.userLogs.unshift(logEntry);
-    if (db.userLogs.length > 500) db.userLogs = db.userLogs.slice(0, 500);
+    
+    // Preservação perpétua sem eliminação de registos
     if (typeof safeSetStorage === 'function') {
       safeSetStorage('sigec_pro_user_logs', JSON.stringify(db.userLogs));
     }
@@ -15996,7 +16037,15 @@ function renderUserProfileActivityTimeline() {
   const customDateInput = document.getElementById('userActivityCustomDate');
   const rangeMode = filterSelect ? filterSelect.value : 'all';
 
-  let userLogs = (db.userLogs || []).filter(l => l.usuarioId === userId);
+  // Procura por ID direto ou por email
+  const userEmail = (user && user.email) ? user.email.toLowerCase().trim() : '';
+  let userLogs = (db.userLogs || []).filter(l => {
+    if (!l) return false;
+    if (l.usuarioId === userId) return true;
+    if (userEmail && l.usuarioEmail && l.usuarioEmail.toLowerCase().trim() === userEmail) return true;
+    if (userId === 'usr-admin-001' && (l.usuarioId === 'usr-admin-001' || !l.usuarioId)) return true;
+    return false;
+  });
 
   const now = new Date();
   if (rangeMode === 'today') {
@@ -16032,20 +16081,44 @@ function renderUserProfileActivityTimeline() {
 
   timeline.innerHTML = userLogs.map(log => {
     const dateObj = new Date(log.timestamp);
-    const formattedDate = `${String(dateObj.getDate()).padStart(2, '0')}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${dateObj.getFullYear()} ${String(dateObj.getHours()).padStart(2, '0')}:${String(dateObj.getMinutes()).padStart(2, '0')}:${String(dateObj.getSeconds()).padStart(2, '0')}`;
+    const formattedDate = !isNaN(dateObj.getTime())
+      ? `${String(dateObj.getDate()).padStart(2, '0')}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${dateObj.getFullYear()} ${String(dateObj.getHours()).padStart(2, '0')}:${String(dateObj.getMinutes()).padStart(2, '0')}:${String(dateObj.getSeconds()).padStart(2, '0')}`
+      : (log.timestamp || '');
 
-    // Ícone e cor por tipo de ação
+    const actionTitle = log.tipoAcao || log.acao || 'Atividade Geral';
+    let actionDesc = log.descricao || '';
+    if (!actionDesc && typeof log.detalhes === 'string') {
+      actionDesc = log.detalhes;
+    } else if (!actionDesc && log.detalhes && typeof log.detalhes === 'object' && log.detalhes.descricao) {
+      actionDesc = log.detalhes.descricao;
+    } else if (!actionDesc && log.extra && log.extra.descricao) {
+      actionDesc = log.extra.descricao;
+    }
+    if (!actionDesc) actionDesc = actionTitle;
+
+    // Ícones e cores específicos por ação
     const iconMap = {
       'Início de Sessão': { icon: 'fa-right-to-bracket', color: '#16a34a', bg: '#dcfce7' },
       'Encerramento de Sessão': { icon: 'fa-right-from-bracket', color: '#dc2626', bg: '#fee2e2' },
       'Criação de Cliente': { icon: 'fa-building-circle-check', color: '#0284c7', bg: '#e0f2fe' },
       'Edição de Cliente': { icon: 'fa-building-user', color: '#0369a1', bg: '#e0f2fe' },
       'Eliminação de Cliente': { icon: 'fa-building-circle-xmark', color: '#dc2626', bg: '#fee2e2' },
+      'Transferência de Cliente': { icon: 'fa-arrow-right-arrow-left', color: '#0284c7', bg: '#e0f2fe' },
       'Criação de Contacto': { icon: 'fa-user-plus', color: '#7c3aed', bg: '#f3e8ff' },
       'Edição de Contacto': { icon: 'fa-user-pen', color: '#6d28d9', bg: '#f3e8ff' },
+      'Eliminação de Contacto': { icon: 'fa-user-xmark', color: '#dc2626', bg: '#fee2e2' },
+      'Associação de Contacto': { icon: 'fa-link', color: '#7c3aed', bg: '#f3e8ff' },
+      'Duplicação de Contacto': { icon: 'fa-clone', color: '#7c3aed', bg: '#f3e8ff' },
       'Criação de Projeto': { icon: 'fa-folder-plus', color: '#d97706', bg: '#fef3c7' },
       'Edição de Projeto': { icon: 'fa-folder-open', color: '#b45309', bg: '#fef3c7' },
       'Eliminação de Projeto': { icon: 'fa-folder-minus', color: '#dc2626', bg: '#fee2e2' },
+      'Orçamento': { icon: 'fa-file-invoice-dollar', color: '#059669', bg: '#d1fae5' },
+      'Gravação de Orçamento': { icon: 'fa-floppy-disk', color: '#059669', bg: '#d1fae5' },
+      'guardar_orcamento': { icon: 'fa-floppy-disk', color: '#059669', bg: '#d1fae5' },
+      'Impressão PDF': { icon: 'fa-file-pdf', color: '#dc2626', bg: '#fee2e2' },
+      'Exportação Word': { icon: 'fa-file-word', color: '#2563eb', bg: '#dbeafe' },
+      'Interação': { icon: 'fa-comments', color: '#0891b2', bg: '#cffafe' },
+      'Registo de Interação': { icon: 'fa-comments', color: '#0891b2', bg: '#cffafe' },
       'Cópia de Segurança': { icon: 'fa-cloud-arrow-up', color: '#0891b2', bg: '#cffafe' },
       'Restauro de Backup': { icon: 'fa-cloud-arrow-down', color: '#0e7490', bg: '#cffafe' },
       'Atualização de Software': { icon: 'fa-gear', color: '#64748b', bg: '#f1f5f9' },
@@ -16055,41 +16128,44 @@ function renderUserProfileActivityTimeline() {
       'Gestão de Utilizadores': { icon: 'fa-users-gear', color: '#7c3aed', bg: '#f3e8ff' },
       'Registo de Utilizador': { icon: 'fa-user-check', color: '#16a34a', bg: '#dcfce7' },
       'Ficha do Utilizador': { icon: 'fa-id-card', color: '#0284c7', bg: '#e0f2fe' },
+      'Notificação por Email': { icon: 'fa-envelope-circle-check', color: '#0284c7', bg: '#e0f2fe' },
+      'Email de Confirmação': { icon: 'fa-envelope-open-text', color: '#0284c7', bg: '#e0f2fe' },
+      'Conta Ativada': { icon: 'fa-user-check', color: '#16a34a', bg: '#dcfce7' },
       'Navegação': { icon: 'fa-compass', color: '#475569', bg: '#f8fafc' }
     };
-    const iconStyle = iconMap[log.tipoAcao] || { icon: 'fa-list-check', color: '#0284c7', bg: '#e0f2fe' };
+    const iconStyle = iconMap[actionTitle] || { icon: 'fa-list-check', color: '#0284c7', bg: '#e0f2fe' };
 
-    // Renderizar detalhes das alterações
+    // Formatação de detalhes estruturados
     let detalhesHTML = '';
-    if (log.detalhes) {
-      const d = log.detalhes;
+    const d = (typeof log.detalhes === 'object' && log.detalhes !== null) ? log.detalhes : ((typeof log.extra === 'object' && log.extra !== null) ? log.extra : null);
+    if (d) {
       const detalheItems = [];
-
-      if (d.utilizador) detalheItems.push(`<span style="color:#475569;"><strong>Utilizador:</strong> ${d.utilizador}</span>`);
-      if (d.email) detalheItems.push(`<span style="color:#475569;"><strong>Email:</strong> ${d.email}</span>`);
-      if (d.cargo && d.cargo !== d.utilizador) detalheItems.push(`<span style="color:#475569;"><strong>Cargo:</strong> ${d.cargo}</span>`);
-      if (d.dispositivo) detalheItems.push(`<span style="color:#475569;"><strong>Dispositivo:</strong> ${d.dispositivo}</span>`);
-      if (d.ficha && d.nome) detalheItems.push(`<span style="color:#475569;"><strong>${d.ficha}:</strong> ${d.nome}</span>`);
-      if (d.contribuinte) detalheItems.push(`<span style="color:#475569;"><strong>NIF:</strong> ${d.contribuinte}</span>`);
-      if (d.tipoCliente) detalheItems.push(`<span style="color:#475569;"><strong>Tipo:</strong> ${d.tipoCliente}</span>`);
-      if (d.tipo) detalheItems.push(`<span style="color:#475569;"><strong>Tipo:</strong> ${d.tipo}</span>`);
-      if (d.estado) detalheItems.push(`<span style="color:#475569;"><strong>Estado:</strong> ${d.estado}</span>`);
-      if (d.cliente) detalheItems.push(`<span style="color:#475569;"><strong>Cliente:</strong> ${d.cliente}</span>`);
-      if (d.clienteAssociado) detalheItems.push(`<span style="color:#475569;"><strong>Cliente:</strong> ${d.clienteAssociado}</span>`);
-      if (d.viatura) detalheItems.push(`<span style="color:#475569;"><strong>Viatura:</strong> ${d.viatura}</span>`);
-      if (d.matricula) detalheItems.push(`<span style="color:#475569;"><strong>Matrícula:</strong> ${d.matricula}</span>`);
+      if (d.utilizador && d.utilizador !== log.usuarioNome) detalheItems.push(`<span style="color:#475569;"><strong>Utilizador:</strong> ${escapeHtml(String(d.utilizador))}</span>`);
+      if (d.email && d.email !== log.usuarioEmail) detalheItems.push(`<span style="color:#475569;"><strong>Email:</strong> ${escapeHtml(String(d.email))}</span>`);
+      if (d.cargo && d.cargo !== d.utilizador) detalheItems.push(`<span style="color:#475569;"><strong>Cargo:</strong> ${escapeHtml(String(d.cargo))}</span>`);
+      if (d.dispositivo) detalheItems.push(`<span style="color:#475569;"><strong>Dispositivo:</strong> ${escapeHtml(String(d.dispositivo))}</span>`);
+      if (d.ficha && d.nome) detalheItems.push(`<span style="color:#475569;"><strong>${escapeHtml(String(d.ficha))}:</strong> ${escapeHtml(String(d.nome))}</span>`);
+      if (d.contribuinte) detalheItems.push(`<span style="color:#475569;"><strong>NIF:</strong> ${escapeHtml(String(d.contribuinte))}</span>`);
+      if (d.tipoCliente) detalheItems.push(`<span style="color:#475569;"><strong>Tipo:</strong> ${escapeHtml(String(d.tipoCliente))}</span>`);
+      if (d.tipo) detalheItems.push(`<span style="color:#475569;"><strong>Tipo:</strong> ${escapeHtml(String(d.tipo))}</span>`);
+      if (d.estado) detalheItems.push(`<span style="color:#475569;"><strong>Estado:</strong> ${escapeHtml(String(d.estado))}</span>`);
+      if (d.cliente) detalheItems.push(`<span style="color:#475569;"><strong>Cliente:</strong> ${escapeHtml(String(d.cliente))}</span>`);
+      if (d.clienteAssociado) detalheItems.push(`<span style="color:#475569;"><strong>Cliente:</strong> ${escapeHtml(String(d.clienteAssociado))}</span>`);
+      if (d.viatura) detalheItems.push(`<span style="color:#475569;"><strong>Viatura:</strong> ${escapeHtml(String(d.viatura))}</span>`);
+      if (d.matricula) detalheItems.push(`<span style="color:#475569;"><strong>Matrícula:</strong> ${escapeHtml(String(d.matricula))}</span>`);
+      if (d.numeroOrcamento) detalheItems.push(`<span style="color:#475569;"><strong>Nº Orçamento:</strong> ${escapeHtml(String(d.numeroOrcamento))}</span>`);
+      if (d.total) detalheItems.push(`<span style="color:#475569;"><strong>Valor:</strong> ${escapeHtml(String(d.total))}</span>`);
 
       if (d.camposAlterados && Array.isArray(d.camposAlterados) && d.camposAlterados.length > 0) {
         const alteracoesHTML = d.camposAlterados
-          .filter(c => c.campo && c.anterior !== undefined && c.novo !== undefined)
+          .filter(c => c && c.campo && (c.anterior !== undefined || c.novo !== undefined))
           .map(c => {
             if (!c.anterior && !c.novo) return '';
-            if (c.anterior === '' && c.novo === '') return '';
             if (c.anterior === c.novo) return '';
             return `<div style="display:flex;gap:0.4rem;align-items:center;flex-wrap:wrap;padding:0.2rem 0;">
-              <span style="font-weight:600;color:#334155;min-width:100px;">${c.campo}:</span>
-              ${ c.anterior ? `<span style="background:#fee2e2;color:#991b1b;padding:0.1rem 0.4rem;border-radius:3px;font-size:0.75rem;text-decoration:line-through;">${c.anterior}</span><i class="fa-solid fa-arrow-right" style="color:#94a3b8;font-size:0.65rem;"></i>` : '' }
-              <span style="background:#dcfce7;color:#166534;padding:0.1rem 0.4rem;border-radius:3px;font-size:0.75rem;">${c.novo || '(vazio)'}</span>
+              <span style="font-weight:600;color:#334155;min-width:100px;">${escapeHtml(String(c.campo))}:</span>
+              ${ c.anterior ? `<span style="background:#fee2e2;color:#991b1b;padding:0.1rem 0.4rem;border-radius:3px;font-size:0.75rem;text-decoration:line-through;">${escapeHtml(String(c.anterior))}</span><i class="fa-solid fa-arrow-right" style="color:#94a3b8;font-size:0.65rem;"></i>` : '' }
+              <span style="background:#dcfce7;color:#166534;padding:0.1rem 0.4rem;border-radius:3px;font-size:0.75rem;">${escapeHtml(String(c.novo || '(vazio)'))}</span>
             </div>`;
           }).filter(Boolean).join('');
 
@@ -16103,7 +16179,7 @@ function renderUserProfileActivityTimeline() {
       }
     }
 
-    const paginaBadge = log.pagina ? `<span style="font-size:0.7rem;background:#f1f5f9;color:#64748b;padding:0.1rem 0.4rem;border-radius:3px;border:1px solid #e2e8f0;"><i class="fa-solid fa-location-dot" style="margin-right:0.2rem;"></i>${log.pagina}</span>` : '';
+    const paginaBadge = log.pagina ? `<span style="font-size:0.7rem;background:#f1f5f9;color:#64748b;padding:0.1rem 0.4rem;border-radius:3px;border:1px solid #e2e8f0;"><i class="fa-solid fa-location-dot" style="margin-right:0.2rem;"></i>${escapeHtml(String(log.pagina))}</span>` : '';
 
     return `
       <div style="display:flex;gap:0.85rem;padding:0.9rem;border-bottom:1px solid #e2e8f0;align-items:flex-start;transition:background 0.15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
@@ -16113,19 +16189,18 @@ function renderUserProfileActivityTimeline() {
         <div style="flex:1;">
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.3rem;margin-bottom:0.2rem;">
             <div style="display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;">
-              <span style="font-weight:700;color:${iconStyle.color};font-size:0.88rem;">${log.tipoAcao}</span>
+              <span style="font-weight:700;color:${iconStyle.color};font-size:0.88rem;">${escapeHtml(actionTitle)}</span>
               ${paginaBadge}
             </div>
             <span style="font-size:0.75rem;color:#64748b;background:#f1f5f9;padding:0.15rem 0.55rem;border-radius:4px;font-weight:600;white-space:nowrap;">${formattedDate}</span>
           </div>
-          <p style="margin:0;font-size:0.84rem;color:#334155;line-height:1.45;">${log.descricao}</p>
+          <p style="margin:0;font-size:0.84rem;color:#334155;line-height:1.45;">${escapeHtml(actionDesc)}</p>
           ${detalhesHTML}
         </div>
       </div>
     `;
   }).join('');
 }
-
 async function deleteRegisteredUser(userId) {
   ensureUsersInitialized();
   const user = db.usuarios.find(u => u.id === userId);
@@ -18487,6 +18562,14 @@ window.duplicateCurrentBudget = duplicateCurrentBudget;
 function deleteSavedBudget(budgetId) {
   if (!confirm('Tem a certeza de que deseja apagar este registo do histórico de orçamentos? (O orçamento continuará guardado e intacto na ficha do cliente).')) return;
 
+  const targetBudget = (db.orcamentos || []).find(b => b.id === budgetId);
+  if (typeof logUserActivity === 'function') {
+    logUserActivity('Eliminação de Orçamento', `Orçamento ${targetBudget ? targetBudget.numero : ''} removido do histórico de orçamentos.`, {
+      numeroOrcamento: targetBudget ? targetBudget.numero : '',
+      cliente: targetBudget ? targetBudget.clienteNome : ''
+    });
+  }
+
   if (Array.isArray(db.orcamentos)) {
     db.orcamentos = db.orcamentos.filter(b => b.id !== budgetId);
   }
@@ -18942,6 +19025,16 @@ function generateBudgetContextualTexts(opts) {
 
 function printBudgetPDF() {
   const userLang = (typeof getActiveUserLanguage === 'function') ? getActiveUserLanguage() : 'Português';
+  try {
+    if (typeof logUserActivity === 'function') {
+      const numOrc = (document.getElementById('budgetNumero') ? document.getElementById('budgetNumero').value : '') || 'ORC';
+      const cliName = (document.getElementById('budgetCliente') ? document.getElementById('budgetCliente').value : '') || 'Cliente';
+      logUserActivity('Impressão PDF', `Gerou proposta técnica do orçamento ${numOrc} para "${cliName}" em PDF.`, {
+        numeroOrcamento: numOrc,
+        cliente: cliName
+      });
+    }
+  } catch (e) {}
   const docI18n = (typeof getBudgetDocumentI18n === 'function') ? getBudgetDocumentI18n(userLang) : {
     htmlLang: 'pt',
     docTitle: (ref, cli) => 'Proposta Técnica ' + ref + ' - ' + cli,
@@ -19326,6 +19419,16 @@ window.printBudgetPDF = printBudgetPDF;
 
 function exportBudgetToWord() {
   const userLang = (typeof getActiveUserLanguage === 'function') ? getActiveUserLanguage() : 'Português';
+  try {
+    if (typeof logUserActivity === 'function') {
+      const numOrc = (document.getElementById('budgetNumero') ? document.getElementById('budgetNumero').value : '') || 'ORC';
+      const cliName = (document.getElementById('budgetCliente') ? document.getElementById('budgetCliente').value : '') || 'Cliente';
+      logUserActivity('Exportação Word', `Exportou proposta técnica do orçamento ${numOrc} para "${cliName}" em formato Word.`, {
+        numeroOrcamento: numOrc,
+        cliente: cliName
+      });
+    }
+  } catch (e) {}
   const docI18n = (typeof getBudgetDocumentI18n === 'function') ? getBudgetDocumentI18n(userLang) : {
     htmlLang: 'pt',
     docTitle: (ref, cli) => 'Proposta Técnica ' + ref + ' - ' + cli,
