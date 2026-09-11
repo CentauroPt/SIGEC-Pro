@@ -5365,24 +5365,19 @@
   ],
   "userLogs": [
     {
-      "id": "log-1789083623163-993",
+      "id": "log-1789123733697-731",
       "usuarioId": "usr-admin-001",
       "usuarioNome": "José Centúrio",
       "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Notificação por Email",
-      "detalhes": "Alerta de registo emitido para josecenturio@gmail.com (José Centúrio (Teste de Sistema)).",
-      "extra": {},
-      "timestamp": "2026-09-10T23:40:23.163Z"
-    },
-    {
-      "id": "log-1789083565424-425",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
-      "acao": "Notificação por Email",
-      "detalhes": "Alerta de registo emitido para jmcenturio@alegria-activity.com (José Centúrio (Teste de Sistema)).",
-      "extra": {},
-      "timestamp": "2026-09-10T23:39:25.424Z"
+      "acao": "Início de Sessão",
+      "detalhes": "Acesso autorizado efetuado por José Centúrio (jmcenturio@alegria-activity.com).",
+      "extra": {
+        "utilizador": "José Centúrio",
+        "email": "jmcenturio@alegria-activity.com",
+        "cargo": "Administrador do Sistema",
+        "dispositivo": "Computador"
+      },
+      "timestamp": "2026-09-11T10:48:53.697Z"
     }
   ],
   "orcamentos": [
@@ -5465,12 +5460,6 @@
     }
   ],
   "ignoredDuplicates": [],
-  "config": {
-    "emailNotifyAddress": "josecenturio@gmail.com",
-    "emailNotifyEnabled": true,
-    "emailProvider": "web3forms",
-    "emailApiKey": ""
-  },
   "_spcfg": "NCE3GhVVYCc2TwYTM2JlcnAEewo1PA4ZMWYnARw1IxNkFGYbVRsULg==",
   "_deletedRegistry": {
     "clientes": [
