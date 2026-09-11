@@ -23191,7 +23191,10 @@ async function dispatchDirectEmail(targetEmail, subject, fields) {
 window.dispatchDirectEmail = dispatchDirectEmail;
 async function sendNewUserRegistrationEmailNotification(userData, isTest = false) {
   const settings = getEmailNotifySettings();
-  const targetEmail = settings.email || 'jmcenturio@alegria-activity.com';
+  if (!settings.enabled && !isTest) return false;
+  const targetEmail = (settings.email || '').trim();
+  if (!targetEmail) return false;
+
   const userName = userData.nome || 'Novo Utilizador';
   const userEmail = userData.email || 'Não especificado';
   const userCargo = userData.cargo || 'Não especificado';
@@ -23228,14 +23231,8 @@ async function sendNewUserRegistrationEmailNotification(userData, isTest = false
     empresa: `alegría-activity, S.L. - Sistema Integrado de Gestão de Clientes & Projetos SIGEC-Pro`
   };
 
-  // 1. Envio Direto para o Administrador Principal
+  // 1. Envio EXCLUSIVO para o email que consta no campo de Destino das Notificações
   dispatchDirectEmail(targetEmail, issueTitle, emailFields);
-
-  // Envio redundante para o email secundário de José Centúrio
-  const secondaryAdminEmail = 'josecenturio@gmail.com';
-  if (targetEmail.toLowerCase() !== secondaryAdminEmail.toLowerCase()) {
-    dispatchDirectEmail(secondaryAdminEmail, issueTitle, emailFields);
-  }
 
   // 2. Registo de Histórico no Servidor GitHub
   const cfg = typeof getGitHubConfig === 'function' ? getGitHubConfig() : {};
@@ -23276,7 +23273,12 @@ window.sendNewUserRegistrationEmailNotification = sendNewUserRegistrationEmailNo
 async function sendTestEmailNotification() {
   handleSaveEmailNotifySettings(false);
   const settings = getEmailNotifySettings();
-  const targetEmail = settings.email;
+  const targetEmail = (settings.email || '').trim();
+
+  if (!targetEmail) {
+    showToast('Por favor insira um email de destino válido antes de testar.', 'warning');
+    return;
+  }
 
   showToast(`A emitir email de notificação de teste para ${targetEmail}...`, 'info');
 
@@ -23289,7 +23291,7 @@ async function sendTestEmailNotification() {
   }, true);
 
   showToast(`Alerta de teste emitido com sucesso para ${targetEmail}!`, 'success');
-  alert(`✅ Notificação Emitida com Sucesso!\n\nO alerta foi emitido para o correio eletrónico:\n${targetEmail}\n\nReceberá o email com a confirmação oficial.`);
+  alert(`✅ Notificação Emitida com Sucesso!\n\nO alerta foi emitido exclusivamente para o correio eletrónico:\n${targetEmail}\n\nReceberá o email com a confirmação oficial.`);
 }
 window.sendTestEmailNotification = sendTestEmailNotification;
 
