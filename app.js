@@ -3669,7 +3669,14 @@ function loadDatabase() {
     if (rawUserLogs !== null) {
       try {
         const parsedLogs = JSON.parse(rawUserLogs);
-        db.userLogs = Array.isArray(parsedLogs) ? parsedLogs : [];
+        db.userLogs = (Array.isArray(parsedLogs) ? parsedLogs : []).map(l => {
+          if (!l) return null;
+          if (l.acao === 'undefined' || !l.acao) l.acao = l.tipoAcao || 'Ficha do Utilizador';
+          if (l.tipoAcao === 'undefined' || !l.tipoAcao) l.tipoAcao = l.acao || 'Ficha do Utilizador';
+          if (l.detalhes === 'undefined' || !l.detalhes) l.detalhes = l.descricao || 'Ficha do utilizador consultada no sistema.';
+          if (l.descricao === 'undefined' || !l.descricao) l.descricao = (typeof l.detalhes === 'string' ? l.detalhes : '') || 'Ficha do utilizador consultada no sistema.';
+          return l;
+        }).filter(Boolean);
       } catch (e) {
         db.userLogs = [];
       }
@@ -16085,16 +16092,26 @@ function renderUserProfileActivityTimeline() {
       ? `${String(dateObj.getDate()).padStart(2, '0')}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${dateObj.getFullYear()} ${String(dateObj.getHours()).padStart(2, '0')}:${String(dateObj.getMinutes()).padStart(2, '0')}:${String(dateObj.getSeconds()).padStart(2, '0')}`
       : (log.timestamp || '');
 
-    const actionTitle = log.tipoAcao || log.acao || 'Atividade Geral';
+    let actionTitle = log.tipoAcao || log.acao || log.action || log.title || 'Atividade Geral';
+    if (!actionTitle || actionTitle === 'undefined' || actionTitle === 'null') {
+      actionTitle = 'Ficha do Utilizador';
+    }
+
     let actionDesc = log.descricao || '';
-    if (!actionDesc && typeof log.detalhes === 'string') {
+    if (!actionDesc && typeof log.detalhes === 'string' && log.detalhes !== 'undefined' && log.detalhes !== 'null') {
       actionDesc = log.detalhes;
     } else if (!actionDesc && log.detalhes && typeof log.detalhes === 'object' && log.detalhes.descricao) {
       actionDesc = log.detalhes.descricao;
     } else if (!actionDesc && log.extra && log.extra.descricao) {
       actionDesc = log.extra.descricao;
     }
-    if (!actionDesc) actionDesc = actionTitle;
+    if (!actionDesc || actionDesc === 'undefined' || actionDesc === 'null') {
+      if (actionTitle === 'Ficha do Utilizador') {
+        actionDesc = 'Ficha do utilizador visualizada e consultada no sistema.';
+      } else {
+        actionDesc = actionTitle;
+      }
+    }
 
     // Ícones e cores específicos por ação
     const iconMap = {
