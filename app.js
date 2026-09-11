@@ -4505,6 +4505,57 @@ async function loadDatabaseFromGitHub(silent = false) {
   }
 }
 
+
+// ==========================================
+// ROTINA DE AUTO-SINCRONIZAÇÃO EM SEGUNDO PLANO A CADA 10 MINUTOS
+// ==========================================
+let _periodicBackgroundSyncTimer = null;
+
+async function autoSyncServerOnStartup() {
+  try {
+    const cfg = typeof getGitHubConfig === 'function' ? getGitHubConfig() : null;
+    if (cfg && cfg.token) {
+      await loadDatabaseFromGitHub(true);
+    }
+  } catch (e) {}
+}
+window.autoSyncServerOnStartup = autoSyncServerOnStartup;
+
+function initPeriodicBackgroundSync() {
+  if (_periodicBackgroundSyncTimer) {
+    clearInterval(_periodicBackgroundSyncTimer);
+    _periodicBackgroundSyncTimer = null;
+  }
+
+  const SYNC_INTERVAL_MS = 10 * 60 * 1000; // 10 minutos (600.000 ms)
+
+  _periodicBackgroundSyncTimer = setInterval(async () => {
+    try {
+      // 1. Verificar se existe sessão iniciada
+      const isAuth = typeof sessionStorage !== 'undefined' && sessionStorage.getItem('sigec_pro_authenticated') === 'true';
+      if (!isAuth) return;
+
+      // 2. Verificar se o servidor GitHub está configurado
+      const cfg = typeof getGitHubConfig === 'function' ? getGitHubConfig() : null;
+      if (!cfg || !cfg.token) return;
+
+      // 3. Execução 100% invisível e silenciosa em segundo plano (silent = true)
+      if (typeof syncDatabaseToGitHub === 'function') {
+        await syncDatabaseToGitHub(true);
+      }
+
+      if (typeof loadDatabaseFromGitHub === 'function') {
+        await loadDatabaseFromGitHub(true);
+      }
+    } catch (err) {
+      console.warn('[SIGEC-Pro Background Sync] Registo silencioso do ciclo:', err);
+    }
+  }, SYNC_INTERVAL_MS);
+
+  console.info('[SIGEC-Pro] Sincronização periódica em segundo plano ativada a cada 10 minutos (100% silenciosa).');
+}
+window.initPeriodicBackgroundSync = initPeriodicBackgroundSync;
+
 // ==========================================
 // 2. INICIALIZAÇÃO DA INTERFACE & NAVEGAÇÃO
 // ==========================================
@@ -4525,6 +4576,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Sincroniza automaticamente os dados salvaguardados no Servidor GitHub ao carregar a página se disponível
   if (typeof autoSyncServerOnStartup === 'function') {
     autoSyncServerOnStartup();
+  }
+
+  // Inicia a rotina de sincronização automática em segundo plano a cada 10 minutos (100% silenciosa)
+  if (typeof initPeriodicBackgroundSync === 'function') {
+    initPeriodicBackgroundSync();
   }
 
   // Escutar alterações nos campos para controlo de confirmação de edições
