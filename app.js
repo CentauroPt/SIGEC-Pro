@@ -16393,14 +16393,19 @@ function renderUserManagementGrid() {
   }).join('');
 }
 
-function toggleLoginRegisterMode(showRegister) {
-  const modal = document.getElementById('userRegisterModal');
-  if (modal) {
-    if (showRegister) {
-      modal.classList.add('active');
-    } else {
-      modal.classList.remove('active');
-    }
+function toggleLoginRegisterMode(isRegister) {
+  const loginMode = document.getElementById('loginFormMode');
+  const regMode = document.getElementById('registerFormMode');
+  const errorMsg = document.getElementById('loginErrorMessage');
+
+  if (errorMsg) errorMsg.style.display = 'none';
+
+  if (isRegister) {
+    if (loginMode) loginMode.style.display = 'none';
+    if (regMode) regMode.style.display = 'block';
+  } else {
+    if (regMode) regMode.style.display = 'none';
+    if (loginMode) loginMode.style.display = 'block';
   }
 }
 window.toggleLoginRegisterMode = toggleLoginRegisterMode;
