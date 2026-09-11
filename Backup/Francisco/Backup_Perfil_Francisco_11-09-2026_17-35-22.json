@@ -1,0 +1,296 @@
+{
+  "tipoFicheiro": "BACKUP_PERFIL_EXCLUSIVO_SIGEC_PRO",
+  "versaoSoftware": "20260911_v70",
+  "dataExportacao": "2026-09-11T15:35:22.921Z",
+  "dataHoraFormatada": "11/09/2026 17:35:22",
+  "perfilUtilizador": {
+    "id": "usr-1787381168601",
+    "nome": "Francisco",
+    "email": "Francisco@francisco.es",
+    "cargo": "Comercial",
+    "idioma": "Español",
+    "role": "user"
+  },
+  "pastaServidor": "Backup/Francisco",
+  "resumo": {
+    "clientes": 0,
+    "contactos": 0,
+    "projetos": 0,
+    "orcamentos": 0,
+    "interacoes": 0,
+    "historicoAtividade": 20
+  },
+  "database": {
+    "clientes": [],
+    "contactos": [],
+    "projetos": [],
+    "orcamentos": [],
+    "interacoes": [],
+    "userLogs": [
+      {
+        "id": "log-1789140914238-34111",
+        "usuarioId": "usr-1787381168601",
+        "usuarioNome": "Francisco",
+        "usuarioEmail": "Francisco@francisco.es",
+        "acao": "Início de Sessão",
+        "tipoAcao": "Início de Sessão",
+        "descricao": "Acesso autorizado efetuado por Francisco (Francisco@francisco.es).",
+        "detalhes": {
+          "utilizador": "Francisco",
+          "email": "Francisco@francisco.es",
+          "cargo": "Comercial",
+          "dispositivo": "Computador"
+        },
+        "extra": {
+          "utilizador": "Francisco",
+          "email": "Francisco@francisco.es",
+          "cargo": "Comercial",
+          "dispositivo": "Computador"
+        },
+        "timestamp": "2026-09-11T15:35:14.238Z"
+      },
+      {
+        "id": "log-1789131801242-71206",
+        "usuarioId": "usr-1787381168601",
+        "usuarioNome": "Francisco",
+        "usuarioEmail": "Francisco@francisco.es",
+        "acao": "Definições do Utilizador",
+        "tipoAcao": "Definições do Utilizador",
+        "descricao": "Esquema de cores alterado para \"Cor Personalizada (#c50202)\" (Intensidade: 50%).",
+        "detalhes": {
+          "tema": "custom",
+          "intensidade": 50,
+          "corCustom": "#c50202"
+        },
+        "extra": {
+          "tema": "custom",
+          "intensidade": 50,
+          "corCustom": "#c50202"
+        },
+        "timestamp": "2026-09-11T13:03:21.242Z"
+      },
+      {
+        "id": "log-1789131482275-42907",
+        "usuarioId": "usr-1787381168601",
+        "usuarioNome": "Francisco",
+        "usuarioEmail": "Francisco@francisco.es",
+        "acao": "Servidor GitHub",
+        "tipoAcao": "Servidor GitHub",
+        "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+        "detalhes": {},
+        "extra": {},
+        "timestamp": "2026-09-11T12:58:02.275Z"
+      },
+      {
+        "id": "log-1789130880636-59819",
+        "usuarioId": "usr-1787381168601",
+        "usuarioNome": "Francisco",
+        "usuarioEmail": "Francisco@francisco.es",
+        "acao": "Servidor GitHub",
+        "tipoAcao": "Servidor GitHub",
+        "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+        "detalhes": {},
+        "extra": {},
+        "timestamp": "2026-09-11T12:48:00.636Z"
+      },
+      {
+        "id": "log-1789130281798-61935",
+        "usuarioId": "usr-1787381168601",
+        "usuarioNome": "Francisco",
+        "usuarioEmail": "Francisco@francisco.es",
+        "acao": "Servidor GitHub",
+        "tipoAcao": "Servidor GitHub",
+        "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+        "detalhes": {},
+        "extra": {},
+        "timestamp": "2026-09-11T12:38:01.798Z"
+      },
+      {
+        "id": "log-1789129681139-57792",
+        "usuarioId": "usr-1787381168601",
+        "usuarioNome": "Francisco",
+        "usuarioEmail": "Francisco@francisco.es",
+        "acao": "Servidor GitHub",
+        "tipoAcao": "Servidor GitHub",
+        "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+        "detalhes": {},
+        "extra": {},
+        "timestamp": "2026-09-11T12:28:01.139Z"
+      },
+      {
+        "id": "log-1789129082253-7070",
+        "usuarioId": "usr-1787381168601",
+        "usuarioNome": "Francisco",
+        "usuarioEmail": "Francisco@francisco.es",
+        "acao": "Servidor GitHub",
+        "tipoAcao": "Servidor GitHub",
+        "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+        "detalhes": {},
+        "extra": {},
+        "timestamp": "2026-09-11T12:18:02.253Z"
+      },
+      {
+        "id": "log-1789128502404-30306",
+        "usuarioId": "usr-1787381168601",
+        "usuarioNome": "Francisco",
+        "usuarioEmail": "Francisco@francisco.es",
+        "acao": "Definições do Utilizador",
+        "tipoAcao": "Definições do Utilizador",
+        "descricao": "Esquema de cores alterado para \"Bordeaux / Rubi Elegante\".",
+        "detalhes": {},
+        "extra": {},
+        "timestamp": "2026-09-11T12:08:22.404Z"
+      },
+      {
+        "id": "log-1789128496935-82923",
+        "usuarioId": "usr-1787381168601",
+        "usuarioNome": "Francisco",
+        "usuarioEmail": "Francisco@francisco.es",
+        "acao": "Definições do Utilizador",
+        "tipoAcao": "Definições do Utilizador",
+        "descricao": "Esquema de cores alterado para \"Azul Clássico SIGEC-Pro (Padrão)\".",
+        "detalhes": {},
+        "extra": {},
+        "timestamp": "2026-09-11T12:08:16.935Z"
+      },
+      {
+        "id": "log-1789137759874-44284",
+        "usuarioId": "usr-1787381168601",
+        "usuarioNome": "Francisco",
+        "usuarioEmail": "Francisco@francisco.es",
+        "acao": "Servidor GitHub",
+        "tipoAcao": "Servidor GitHub",
+        "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+        "detalhes": {},
+        "extra": {},
+        "timestamp": "2026-09-11T14:42:39.874Z"
+      },
+      {
+        "id": "log-1789137758572-40269",
+        "usuarioId": "usr-1787381168601",
+        "usuarioNome": "Francisco",
+        "usuarioEmail": "Francisco@francisco.es",
+        "acao": "Encerramento",
+        "tipoAcao": "Encerramento",
+        "descricao": "Sessão encerrada com gravação segura de todos os dados do perfil de Francisco.",
+        "detalhes": {
+          "utilizador": "Francisco",
+          "userId": "usr-1787381168601"
+        },
+        "extra": {
+          "utilizador": "Francisco",
+          "userId": "usr-1787381168601"
+        },
+        "timestamp": "2026-09-11T14:42:38.572Z"
+      },
+      {
+        "id": "log-1789137161209-4890",
+        "usuarioId": "usr-1787381168601",
+        "usuarioNome": "Francisco",
+        "usuarioEmail": "Francisco@francisco.es",
+        "acao": "Servidor GitHub",
+        "tipoAcao": "Servidor GitHub",
+        "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+        "detalhes": {},
+        "extra": {},
+        "timestamp": "2026-09-11T14:32:41.209Z"
+      },
+      {
+        "id": "log-1789136560677-2574",
+        "usuarioId": "usr-1787381168601",
+        "usuarioNome": "Francisco",
+        "usuarioEmail": "Francisco@francisco.es",
+        "acao": "Servidor GitHub",
+        "tipoAcao": "Servidor GitHub",
+        "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+        "detalhes": {},
+        "extra": {},
+        "timestamp": "2026-09-11T14:22:40.677Z"
+      },
+      {
+        "id": "log-1789135960765-72842",
+        "usuarioId": "usr-1787381168601",
+        "usuarioNome": "Francisco",
+        "usuarioEmail": "Francisco@francisco.es",
+        "acao": "Servidor GitHub",
+        "tipoAcao": "Servidor GitHub",
+        "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+        "detalhes": {},
+        "extra": {},
+        "timestamp": "2026-09-11T14:12:40.765Z"
+      },
+      {
+        "id": "log-1789135361524-40084",
+        "usuarioId": "usr-1787381168601",
+        "usuarioNome": "Francisco",
+        "usuarioEmail": "Francisco@francisco.es",
+        "acao": "Servidor GitHub",
+        "tipoAcao": "Servidor GitHub",
+        "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+        "detalhes": {},
+        "extra": {},
+        "timestamp": "2026-09-11T14:02:41.524Z"
+      },
+      {
+        "id": "log-1789134761545-84654",
+        "usuarioId": "usr-1787381168601",
+        "usuarioNome": "Francisco",
+        "usuarioEmail": "Francisco@francisco.es",
+        "acao": "Servidor GitHub",
+        "tipoAcao": "Servidor GitHub",
+        "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+        "detalhes": {},
+        "extra": {},
+        "timestamp": "2026-09-11T13:52:41.545Z"
+      },
+      {
+        "id": "log-1789134161393-52885",
+        "usuarioId": "usr-1787381168601",
+        "usuarioNome": "Francisco",
+        "usuarioEmail": "Francisco@francisco.es",
+        "acao": "Servidor GitHub",
+        "tipoAcao": "Servidor GitHub",
+        "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+        "detalhes": {},
+        "extra": {},
+        "timestamp": "2026-09-11T13:42:41.393Z"
+      },
+      {
+        "id": "log-1789133560603-20275",
+        "usuarioId": "usr-1787381168601",
+        "usuarioNome": "Francisco",
+        "usuarioEmail": "Francisco@francisco.es",
+        "acao": "Servidor GitHub",
+        "tipoAcao": "Servidor GitHub",
+        "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+        "detalhes": {},
+        "extra": {},
+        "timestamp": "2026-09-11T13:32:40.603Z"
+      },
+      {
+        "id": "log-1789132960876-68989",
+        "usuarioId": "usr-1787381168601",
+        "usuarioNome": "Francisco",
+        "usuarioEmail": "Francisco@francisco.es",
+        "acao": "Servidor GitHub",
+        "tipoAcao": "Servidor GitHub",
+        "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+        "detalhes": {},
+        "extra": {},
+        "timestamp": "2026-09-11T13:22:40.876Z"
+      },
+      {
+        "id": "log-1789132361054-55692",
+        "usuarioId": "usr-1787381168601",
+        "usuarioNome": "Francisco",
+        "usuarioEmail": "Francisco@francisco.es",
+        "acao": "Servidor GitHub",
+        "tipoAcao": "Servidor GitHub",
+        "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+        "detalhes": {},
+        "extra": {},
+        "timestamp": "2026-09-11T13:12:41.054Z"
+      }
+    ]
+  }
+}
