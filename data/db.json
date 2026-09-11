@@ -5370,16 +5370,16 @@
   ],
   "userLogs": [
     {
-      "id": "log-1789127191184-7971",
-      "usuarioId": "usr-admin-001",
-      "usuarioNome": "José Centúrio",
-      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "id": "log-1789127345461-34777",
+      "usuarioId": "usr-1787381168601",
+      "usuarioNome": "Francisco",
+      "usuarioEmail": "Francisco@francisco.es",
       "acao": "Servidor GitHub",
       "tipoAcao": "Servidor GitHub",
       "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
       "detalhes": {},
       "extra": {},
-      "timestamp": "2026-09-11T11:46:31.184Z"
+      "timestamp": "2026-09-11T11:49:05.461Z"
     },
     {
       "id": "log-1789126464055-73868",
