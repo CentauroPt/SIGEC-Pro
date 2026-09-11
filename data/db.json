@@ -4624,10 +4624,10 @@
       "telefone": "",
       "telemovel": "",
       "email": "alexandre.barrigo@fea.pt",
+      "proximoContacto": null,
+      "inativo": false,
       "notas": "",
-      "createdAt": "2026-08-20T10:24:59.857Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "createdAt": "2026-08-20T10:24:59.857Z"
     },
     {
       "id": "con-1787221550396-221",
@@ -4685,10 +4685,9 @@
       "telemovel": "",
       "email": "gabinete.seamb@maen.gov.pt",
       "proximoContacto": "2026-09-16",
+      "inativo": false,
       "notas": "",
-      "createdAt": "2026-08-28T22:31:46.260Z",
-      "userId": "usr-admin-001",
-      "comercialAtribuidoId": "usr-admin-001"
+      "createdAt": "2026-08-28T22:31:46.260Z"
     },
     {
       "id": "con-1787955181030-19",
@@ -5321,6 +5320,48 @@
       "data": "2026-07-14T18:12",
       "descricao": "Reunião de apresentação",
       "createdAt": "2026-08-29T16:14:39.201Z"
+    },
+    {
+      "id": "int-1786604777168-157",
+      "clienteId": "cli-1786604620361-357",
+      "data": "2026-07-06T13:44",
+      "descricao": "Envio email de apresentação da empresa",
+      "createdAt": "2026-08-13T07:06:17.168Z"
+    },
+    {
+      "id": "int-1786604862406-696",
+      "clienteId": "cli-1786604620361-357",
+      "data": "2026-07-22T13:44",
+      "descricao": "Responde a manifestar interesse e eu respondo com datas e horários. Aguardo.",
+      "createdAt": "2026-08-13T07:07:42.406Z"
+    },
+    {
+      "id": "int-1786604903176-231",
+      "clienteId": "cli-1786604620361-357",
+      "data": "2026-08-13T13:44",
+      "descricao": "Por falta de resposta, envio novo email a solicitar reunião.",
+      "createdAt": "2026-08-13T07:08:23.176Z"
+    },
+    {
+      "id": "cpi-1786608067446-848",
+      "contactoId": "con-1786605035080-194",
+      "data": "2026-08-13T10:00",
+      "descricao": "retomo contacto a propor novamente datas para uma reunião",
+      "createdAt": "2026-08-13T08:01:07.446Z"
+    },
+    {
+      "id": "cpi-1786621547064-77",
+      "contactoId": "con-1785515478798-243",
+      "data": "2026-08-13T13:45",
+      "descricao": "Tentei o contacto por telefone, mas não atendeu.",
+      "createdAt": "2026-08-13T11:45:47.064Z"
+    },
+    {
+      "id": "cpi-1786701693964-382",
+      "contactoId": "con-1785515478798-243",
+      "data": "2026-08-11T12:01",
+      "descricao": "Tentei o contacto por telefone, mas não atendeu.",
+      "createdAt": "2026-08-14T10:01:33.965Z"
     }
   ],
   "interacoesProjetos": [],
@@ -5373,6 +5414,58 @@
     }
   ],
   "userLogs": [
+    {
+      "id": "log-1789137804372-83812",
+      "usuarioId": "usr-admin-001",
+      "usuarioNome": "José Centúrio",
+      "usuarioEmail": "jmcenturio@alegria-activity.com",
+      "acao": "Início de Sessão",
+      "tipoAcao": "Início de Sessão",
+      "descricao": "Acesso autorizado efetuado por José Centúrio (jmcenturio@alegria-activity.com).",
+      "detalhes": {
+        "utilizador": "José Centúrio",
+        "email": "jmcenturio@alegria-activity.com",
+        "cargo": "Administrador do Sistema",
+        "dispositivo": "Computador"
+      },
+      "extra": {
+        "utilizador": "José Centúrio",
+        "email": "jmcenturio@alegria-activity.com",
+        "cargo": "Administrador do Sistema",
+        "dispositivo": "Computador"
+      },
+      "timestamp": "2026-09-11T14:43:24.372Z"
+    },
+    {
+      "id": "log-1789137759874-44284",
+      "usuarioId": "usr-1787381168601",
+      "usuarioNome": "Francisco",
+      "usuarioEmail": "Francisco@francisco.es",
+      "acao": "Servidor GitHub",
+      "tipoAcao": "Servidor GitHub",
+      "descricao": "Dados sincronizados com sucesso no servidor GitHub (centauropt/SIGEC-Pro).",
+      "detalhes": {},
+      "extra": {},
+      "timestamp": "2026-09-11T14:42:39.874Z"
+    },
+    {
+      "id": "log-1789137758572-40269",
+      "usuarioId": "usr-1787381168601",
+      "usuarioNome": "Francisco",
+      "usuarioEmail": "Francisco@francisco.es",
+      "acao": "Encerramento",
+      "tipoAcao": "Encerramento",
+      "descricao": "Sessão encerrada com gravação segura de todos os dados do perfil de Francisco.",
+      "detalhes": {
+        "utilizador": "Francisco",
+        "userId": "usr-1787381168601"
+      },
+      "extra": {
+        "utilizador": "Francisco",
+        "userId": "usr-1787381168601"
+      },
+      "timestamp": "2026-09-11T14:42:38.572Z"
+    },
     {
       "id": "log-1789137161209-4890",
       "usuarioId": "usr-1787381168601",
@@ -5904,6 +5997,13 @@
       "key": "cli-1786727373519-853:::undefined",
       "id1": "cli-1786727373519-853",
       "ignoredAt": "2026-08-22T10:13:13.470Z",
+      "ignoredBy": "Sistema"
+    },
+    {
+      "type": "con-1787956306260-463",
+      "key": "con-1787049428085-481:::undefined",
+      "id1": "con-1787049428085-481",
+      "ignoredAt": "2026-09-11T14:44:25.691Z",
       "ignoredBy": "Sistema"
     }
   ],
